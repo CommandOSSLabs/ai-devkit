@@ -1,35 +1,18 @@
-# Development Documentation Guideline
+# Documentation Navigation
 
-## Context
-At CommandOSS, our development culture is shaped by a few core principles:
-- Engineers are expected to deeply understand the product — its goals, fundamentals, and constraints — and actively contribute to product evolution and ownership.
-- AI agents are first-class collaborators in our development workflow and are used extensively across planning, implementation, and iteration.
+## Directory Structure
 
-To support this AI-powered development workflow, we introduce a documentation guideline that ensures technical knowledge is structured, accessible, and actionable. This guideline aims to:
-
-- Establish the project repository as the single source of truth for progressive feature planning and technical solutions.
-- Provide structured context that both engineers and AI agents can rely on to make better decisions.
-- Minimize unnecessary resource usage (e.g., external MCP/HTTP/API calls) by keeping essential specifications directly within the repository.
-- Promote best practices in documentation structure and clarity.
-
-> **Note:** This is a guideline, not a rigid rulebook. The goal is not to create more files, but to create better structure — so both engineers and AI agents can work more effectively and with higher confidence. Engineers may use other tools (e.g., Notion, Google Docs, etc.) for drafting and collaboration. However, all finalized and development-critical documentation must be consolidated into the repository to maintain a single source of truth.
-
-We call this **Development Guideline #3: Project Repository as the Source of Truth for Technical Specifications**.  
-This repository provides the recommended documentation structure and templates that teams can adapt to their real projects.
-
-## Documentation Structure
-All documentation should be organized within the `/docs` directory, located at the project root.
 ```
 /docs
 ├── system-overview.md
 ├── codebase-summary.md
-├── AGENTS.md (CLAUDE.md)
+├── CLAUDE.md (AGENTS.md)
 ├── templates/
 │   ├── adr.md
 │   ├── feature-spec.md
 │   └── ...
 ├── rules/
-│   ├── AGENTS.md (CLAUDE.md)
+│   ├── CLAUDE.md (AGENTS.md)
 │   ├── common/
 │   │   ├── coding-style.md
 │   │   ├── security.md
