@@ -30,3 +30,6 @@ This principle aims to:
 
 ### Documentation Structure
 Refer to [`docs/README.md`](./docs/README.md) for documentation structure details.
+
+## Development Phases
+Refer to [`docs/reference/sdl-phases.md`](./docs/reference/sdl-phases.md) for development phases details.

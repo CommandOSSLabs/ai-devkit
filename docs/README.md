@@ -50,6 +50,11 @@ This directory is the source of truth for documentation in this repository.
 │   ├── AGENTS.md
 │   ├── README.md
 │   └── ...
+├── reference/
+│   ├── AGENTS.md
+│   ├── README.md
+│   ├── sdl-phases.md
+│   └── ...
 └── ...
 ```
 
@@ -59,6 +64,7 @@ This directory is the source of truth for documentation in this repository.
 - **`system-overview.md` (Recommended)** — High-level system architecture: tech stack, service connections, infrastructure layout, external dependencies, etc.
 - **`codebase-summary.md` (Recommended)** — Codebase structure and navigation: directories, modules, entry points.
 - **`guides/` (Recommended)** — Operational and onboarding docs, team decides what's needed (e.g. onboarding.md, local-dev.md, deployment.md).
+- **`reference/` (Recommended)** — Cross-cutting reference docs shared across phases and teams. See [`docs/reference/README.md`](./reference/README.md) for structure and conventions.
 - **`AGENTS.md`** — Agent navigation instructions for this docs subtree.
 
 ## Recommended Templates
