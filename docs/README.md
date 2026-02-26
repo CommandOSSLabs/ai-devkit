@@ -20,6 +20,8 @@ This directory is the source of truth for documentation in this repository.
 │   ├── AGENTS.md
 │   ├── README.md
 │   ├── common/
+│   │   ├── AGENTS.md
+│   │   ├── README.md
 │   │   ├── coding-style.md
 │   │   ├── security.md
 │   │   ├── git-workflow.md

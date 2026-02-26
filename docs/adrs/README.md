@@ -5,7 +5,8 @@ This directory contains system-wide architecture decisions for this repository.
 ## Canonical Placement
 
 - ADR template: [`docs/templates/adr.md`](../templates/adr.md)
-- ADR entry: `docs/adrs/<decision-id>.md`
+- ADR entry: `docs/adrs/{NNNN}-{decision-title}.md`
+- Example: `docs/adrs/0001-initial-architecture-decision.md`
 
 ## File Convention
 
@@ -15,5 +16,5 @@ This directory contains system-wide architecture decisions for this repository.
 
 ## How to Use
 
-1. Copy [`docs/templates/adr.md`](../templates/adr.md) and create `docs/adrs/<decision-id>.md`.
+1. Copy [`docs/templates/adr.md`](../templates/adr.md) and create `docs/adrs/{NNNN}-{decision-title}.md`.
 2. Fill context, choice, and rationale.

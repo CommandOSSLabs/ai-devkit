@@ -5,7 +5,8 @@ This directory contains one folder per feature specification.
 ## Canonical Placement
 
 - Reusable Feature Spec template: `docs/templates/feature-spec.md`
-- Feature spec entry: `docs/specs/<feature-id>/spec.md`
+- Feature spec entry: `docs/specs/{NNNN}-{feature-name}/spec.md`
+- Example: `docs/specs/0001-user-authentication/spec.md`
 
 ## Folder Convention
 
@@ -16,6 +17,6 @@ This directory contains one folder per feature specification.
 
 ## How to Use
 
-1. Copy [`docs/templates/feature-spec.md`](../templates/feature-spec.md) into a new feature folder under `docs/specs/<feature-id>/`.
+1. Copy [`docs/templates/feature-spec.md`](../templates/feature-spec.md) into a new feature folder under `docs/specs/{NNNN}-{feature-name}/`.
 2. Rename and fill it as `spec.md`.
 3. Keep `spec.md` updated as the latest source of truth.

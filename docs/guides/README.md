@@ -4,8 +4,9 @@ This directory contains operational and onboarding guides.
 
 ## Canonical Placement
 
-- Guide entry: `docs/guides/<guide-name>.md`
-- Optional supporting assets: `docs/guides/<guide-name>/...`
+- Guide entry: `docs/guides/{guide-name}.md`
+- Guide name format: `kebab-case` task or context name (for example: `local-dev.md`, `deployment.md`, `onboarding.md`, `troubleshooting.md`)
+- Optional supporting assets: `docs/guides/{guide-name}/...`
 
 ## File Convention
 
