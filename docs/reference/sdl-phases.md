@@ -44,3 +44,27 @@ This guide defines the standard software development lifecycle (SDL) phases used
 - Feature spec template: [`docs/templates/feature-spec.md`](../templates/feature-spec.md)
 - Engineering rules: [`docs/rules/README.md`](../rules/README.md)
 - Common baseline rules: [`docs/rules/common/README.md`](../rules/common/README.md)
+
+## Phase 1 Skills
+
+### Skills
+
+- Feature spec workflow:
+  - `.agents/skills/feature-spec-workflow/SKILL.md` (OpenCode-compatible)
+  - `.claude/skills/feature-spec-workflow/SKILL.md` (Claude Code-compatible)
+- ADR workflow:
+  - `.agents/skills/adr-workflow/SKILL.md` (OpenCode-compatible)
+  - `.claude/skills/adr-workflow/SKILL.md` (Claude Code-compatible)
+
+### Keeping Skills in Sync
+
+- Canonical source: `.agents/skills/*/SKILL.md`
+- Sync command: `bash scripts/sync-skills.sh`
+- Drift check (CI-friendly): `bash scripts/sync-skills.sh check`
+
+### Input Source Examples for Spec Shaping
+
+- Conversation-driven: "Use our discussion above to draft a feature spec for checkout retries"
+- Local-doc-driven: "Use `docs/specs/0004-payments/spec.md` and create a new spec for refund reconciliation"
+- External-link-driven: "Use this Notion/Google Doc link and shape the spec from it"
+- Direct-prompt-driven: "Draft a spec for tenant-level rate limiting with fallback behavior"
