@@ -14,9 +14,9 @@ Use this skill for:
 
 ## Canonical References
 
-- SDL phase definition: `docs/reference/sdl-phases.md`
-- Spec conventions: `docs/specs/README.md`
-- Spec template: `docs/templates/feature-spec.md`
+- Phase 1 baseline: `references/phase1-scope.md`
+- Spec conventions: `references/spec-conventions.md`
+- Spec template: `references/feature-spec-template.md`
 
 ## Supported Input Sources
 
@@ -33,9 +33,11 @@ Collect and synthesize from one or more of:
    - Target users/stakeholders
    - Constraints and assumptions
    - Open questions
-2. Map normalized input into template sections in `docs/templates/feature-spec.md`.
+2. Map normalized input into template sections in `references/feature-spec-template.md`.
+   - If the target repository already has an existing spec template/convention, align to that local standard.
 3. Apply canonical placement:
-   - New spec: `docs/specs/{NNNN}-{feature-name}/spec.md`
+   - New spec: use the repository's existing canonical spec path when available.
+   - Fallback path when no local convention exists: `docs/specs/{NNNN}-{feature-name}/spec.md`
    - Existing spec iteration: update existing `spec.md`
 4. Preserve traceability:
    - Update `Changelog`

@@ -14,9 +14,9 @@ Use this skill for:
 
 ## Canonical References
 
-- SDL phase definition: `docs/reference/sdl-phases.md`
-- ADR conventions: `docs/adrs/README.md`
-- ADR template: `docs/templates/adr.md`
+- Phase 1 baseline: `references/phase1-scope.md`
+- ADR conventions: `references/adr-conventions.md`
+- ADR template: `references/adr-template.md`
 
 ## Decision Scope Rule
 
@@ -28,8 +28,9 @@ For feature-scoped decisions, keep them in the feature `spec.md` under Technical
 1. Gather decision context from conversation/docs/links.
 2. Validate that decision scope is system-wide.
 3. Apply canonical placement:
-   - New ADR: `docs/adrs/{NNNN}-{decision-title}.md`
-4. Fill template fields:
+   - New ADR: use the repository's existing canonical ADR path when available.
+   - Fallback path when no local convention exists: `docs/adrs/{NNNN}-{decision-title}.md`
+4. Fill template fields from `references/adr-template.md` (or local repository ADR template when present):
    - Status
    - Date
    - Chose

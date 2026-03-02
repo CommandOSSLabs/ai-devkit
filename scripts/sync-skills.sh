@@ -29,16 +29,21 @@ for src_skill_dir in "$SRC_DIR"/*; do
   [[ -f "$src_file" ]] || continue
 
   dst_skill_dir="$DST_DIR/$skill_name"
-  dst_file="$dst_skill_dir/SKILL.md"
 
   if [[ "$MODE" == "check" ]]; then
-    if [[ ! -f "$dst_file" ]] || ! cmp -s "$src_file" "$dst_file"; then
-      printf "DRIFT: %s is missing or differs in .claude/skills\n" "$skill_name"
+    if [[ ! -d "$dst_skill_dir" ]]; then
+      printf "DRIFT: %s is missing in .claude/skills\n" "$skill_name"
+      drift=$((drift + 1))
+      continue
+    fi
+
+    if ! diff -qr "$src_skill_dir" "$dst_skill_dir" >/dev/null; then
+      printf "DRIFT: %s differs between .agents/skills and .claude/skills\n" "$skill_name"
       drift=$((drift + 1))
     fi
   else
-    mkdir -p "$dst_skill_dir"
-    cp "$src_file" "$dst_file"
+    rm -rf "$dst_skill_dir"
+    cp -R "$src_skill_dir" "$dst_skill_dir"
     copied=$((copied + 1))
   fi
 done
