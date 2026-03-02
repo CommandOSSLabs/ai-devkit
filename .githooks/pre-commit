@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+
+if [[ -x "$repo_root/scripts/sync-skills.sh" ]]; then
+  bash "$repo_root/scripts/sync-skills.sh"
+  git add "$repo_root/.claude/skills" "$repo_root/.agents/skills"
+fi

@@ -1,0 +1,27 @@
+name: Skills Sync Check
+
+on:
+  pull_request:
+    paths:
+      - ".agents/skills/**"
+      - ".claude/skills/**"
+      - "scripts/sync-skills.sh"
+      - ".github/workflows/skills-sync-check.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - ".agents/skills/**"
+      - ".claude/skills/**"
+      - "scripts/sync-skills.sh"
+      - ".github/workflows/skills-sync-check.yml"
+
+jobs:
+  check-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify skills are in sync
+        run: bash scripts/sync-skills.sh check

@@ -58,9 +58,11 @@ This guide defines the standard software development lifecycle (SDL) phases used
 
 ### Keeping Skills in Sync
 
-- Canonical source: `.agents/skills/*/SKILL.md`
+- Canonical source: `.agents/skills/*` (entire skill directory)
 - Sync command: `bash scripts/sync-skills.sh`
 - Drift check (CI-friendly): `bash scripts/sync-skills.sh check`
+- Local auto-sync hook install: `bash scripts/install-git-hooks.sh`
+- CI enforcement: `.github/workflows/skills-sync-check.yml`
 
 ### Input Source Examples for Spec Shaping
 
