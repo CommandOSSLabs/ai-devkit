@@ -43,14 +43,15 @@ Use when no ADR exists for the decision.
 Use when a decision has changed and the existing ADR needs to reflect the current state.
 
 1. Read the existing ADR in full before making changes.
-2. Identify what changed and why — new constraints, better alternatives discovered, lessons from implementation.
-3. Update the ADR in place:
+2. **Upstream check:** If `docs/system-design.md` exists, check whether the revised decision conflicts with current architecture. Warn the user if so.
+3. Identify what changed and why — new constraints, better alternatives discovered, lessons from implementation.
+4. Update the ADR in place:
    - **Revise Chose and Rationale** — reflect the current decision and why it shifted
    - **Update Alternatives** — add newly considered options or remove irrelevant ones
    - **Update Consequences** — revise based on actual impact observed
    - **Note what changed** — add a brief note in rationale explaining what shifted from the prior decision
-4. Update `Last updated` date.
-5. Transition status when appropriate:
+5. Update `Last updated` date.
+6. Transition status when appropriate:
    - `proposed` → `accepted` when the team agrees
    - `accepted` stays `accepted` when the decision evolves but remains active
 

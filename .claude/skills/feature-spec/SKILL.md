@@ -50,8 +50,9 @@ Use when no spec exists for the feature.
 Use when a spec already exists and needs to evolve.
 
 1. Read the existing spec in full before making changes.
-2. Identify what changed and why — from conversation, new requirements, resolved questions, user feedback, or technical discovery.
-3. Apply changes to the relevant sections:
+2. **Upstream check:** If upstream docs exist (`docs/prd.md`, `docs/system-design.md`), scan for conflicts with the changes being made. Warn the user if the update contradicts upstream scope, requirements, or architecture decisions.
+3. Identify what changed and why — from conversation, new requirements, resolved questions, user feedback, or technical discovery.
+4. Apply changes to the relevant sections:
    - **Revise sections** — rewrite content in place when the substance changes (e.g., Overview after scope shift, Requirements after new constraints)
    - **Add/remove requirements** — add new FR/NFR, revise existing ones, remove obsolete ones
    - **Add/remove flows** — add new flows for newly scoped behavior, remove flows that are descoped
@@ -59,8 +60,8 @@ Use when a spec already exists and needs to evolve.
    - **Update Technical Decisions** — record new choices or revise rationale when trade-offs shift
    - **Resolve Open Points** — when a decision is made, move the outcome into the relevant section and remove from Open Points
    - **Add Known Issues** — surface gaps discovered during development
-4. Preserve content that is still valid — do not rewrite sections that haven't changed.
-5. Update `Last updated` date.
+5. Preserve content that is still valid — do not rewrite sections that haven't changed.
+6. Update `Last updated` date.
 
 ## Quality Checklist
 

@@ -60,8 +60,9 @@ Use when no system design exists.
 Use when a system design already exists and needs to evolve.
 
 1. Read the existing system design in full before making changes.
-2. Identify what changed and why — from new requirements, tech stack changes, scaling needs, security findings, or resolved architecture questions.
-3. Apply changes to the relevant sections:
+2. **Upstream check:** If `docs/prd.md` exists, scan its scope, success criteria, and status. If the update conflicts with upstream PRD (e.g., addresses a descoped requirement, drops a success criterion), warn the user before proceeding.
+3. Identify what changed and why — from new requirements, tech stack changes, scaling needs, security findings, or resolved architecture questions.
+4. Apply changes to the relevant sections:
    - **Revise Mission or Design Principles** — rewrite when the system's purpose or guiding principles shift
    - **Update Tech Stack** — add, remove, or change technology choices with rationale
    - **Update Architecture** — add/remove/revise components, update diagrams, adjust boundaries
@@ -71,9 +72,9 @@ Use when a system design already exists and needs to evolve.
    - **Resolve Open Points** — when an architecture decision is made, move the outcome into the relevant section (or create an ADR) and remove from Open Points
    - **Update Architecture Rationale** — connect new ADRs into the narrative
    - **Update Related Documents** — link new specs, ADRs, or upstream PRD changes
-4. Preserve content that is still valid — do not rewrite sections that haven't changed.
-5. Update `Last updated` date.
-6. Transition status when appropriate:
+5. Preserve content that is still valid — do not rewrite sections that haven't changed.
+6. Update `Last updated` date.
+7. Transition status when appropriate:
    - `draft` → `active` when the design is agreed upon and implementation begins
    - `active` → `shipped` when the system is in production
    - Any → `deprecated` when the system is decommissioned
