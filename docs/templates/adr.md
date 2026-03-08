@@ -1,12 +1,16 @@
-<!-- Architecture Decision Record — captures a system-wide decision that
-affects multiple features or the entire codebase. One decision per file.
-Immutable once accepted — if reversed, write a new ADR that supersedes
-this one. -->
+# ADR-[NNNN]: [Title]
 
-# ADR-[NNN]: [Title]
-
-**Status:** proposed | accepted | superseded by ADR-[NNN]
+**Status:** proposed | accepted
 **Date:** YYYY-MM-DD
+**Last updated:** YYYY-MM-DD
 
 **Chose:** [X] over [Y, Z]
-**Rationale:** <!-- Why we chose this approach and what trade-offs we accepted. -->
+**Rationale:** <!-- Why this option and what trade-offs were accepted. -->
+
+## Alternatives Considered (Optional)
+
+- [Option] — benefits, drawbacks, and rejection reason
+
+## Consequences (Optional)
+
+- Short-term and long-term impact

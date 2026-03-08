@@ -48,6 +48,6 @@ Use this document to help readers quickly navigate the repository.
 
 ## Related Docs
 
-- [System Overview](../system-overview.md)
+- [System Design](../system-design.md)
 - [Feature Specs](../specs/README.md)
 - [Rules](../rules/README.md)

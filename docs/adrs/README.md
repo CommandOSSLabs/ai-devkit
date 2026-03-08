@@ -12,9 +12,10 @@ This directory contains system-wide architecture decisions for this repository.
 
 - Use one file per decision in `docs/adrs/`
 - Example file: `0001-initial-architecture-decision.md`
-- Keep accepted ADRs immutable; create a new ADR for superseding decisions
+- Update the ADR in place when the decision evolves
 
 ## How to Use
 
 1. Copy [`docs/templates/adr.md`](../templates/adr.md) and create `docs/adrs/{NNNN}-{decision-title}.md`.
 2. Fill context, choice, and rationale.
+3. When a decision changes, update the existing ADR rather than creating a new one.

@@ -1,35 +1,140 @@
 # AI DevKit
 
-A minimal set of AI agent commands, skills, and workflows built on clear documentation principles, guidelines, and templates to support AI-powered software development.
+Documentation-first skills for AI-powered software development. Agents and humans work from the same knowledge, memory, and context — structured docs are the shared state.
+
+## Install
+
+Install all skills:
+
+```bash
+npx skills add CommandOSSLabs/ai-devkit
+```
+
+Install specific skills:
+
+```bash
+npx skills add CommandOSSLabs/ai-devkit --skill docs
+npx skills add CommandOSSLabs/ai-devkit --skill prd
+npx skills add CommandOSSLabs/ai-devkit --skill system-design
+npx skills add CommandOSSLabs/ai-devkit --skill feature-spec
+npx skills add CommandOSSLabs/ai-devkit --skill adr
+npx skills add CommandOSSLabs/ai-devkit --skill codebase-summary
+```
+
+Contributing to this repo — install git hooks for auto-sync:
+
+```bash
+bash scripts/install-git-hooks.sh
+```
 
 ## Motivation
 
-At CommandOSS, our development culture is shaped by a few core principles:
-- We use AI agents across research, planning, implementation, and iteration.
+AI agents lose context between sessions. Teams repeat requirements, re-explain decisions, and re-establish scope every time a new conversation starts. There is no shared memory between agents and humans.
 
-Our existing process has several issues for an AI-first workflow:
-- Documentation is not structured for AI navigation, and there is no standard documentation guideline.
-- AI loses context between sessions
-- Teams repeat context and requirements across sessions.
-- There is no single source of truth for agent coordination and engineer collaboration.
+This devkit solves that by using structured documentation as the shared state. The repository becomes the single source of truth — agents read it to get up to speed, humans and agents write to it to preserve decisions, and both act on the same base of knowledge.
 
-In short, AI agents struggle to understand the current product context and development stage.
+> This is a guideline, not a rulebook. The goal is better structure, not more files. Teams can draft in Notion, Google Docs, or conversation — but finalized, development-critical context should live in the repository.
 
-To support this workflow, we provide a minimal and customizable set of AI commands, skills, and workflows based on practical documentation principles.
+## Skills
 
-## Documentation Principle
-At CommandOSS, we call this principle **Development Guideline #3: Project Repository as the Source of Truth for Technical Specifications**
+| Skill | Purpose |
+|---|---|
+| `cmk:docs` | Bootstrap or update the `/docs` directory structure |
+| `cmk:prd` | Create or iterate product requirements |
+| `cmk:system-design` | Create or iterate system architecture |
+| `cmk:feature-spec` | Create or iterate feature specifications |
+| `cmk:adr` | Create or update architecture decisions |
+| `cmk:codebase-summary` | Create or iterate codebase navigation docs |
 
-This principle aims to:
-- Establish the project repository as the single source of truth for progressive feature planning and technical solutions.
-- Provide structured context that both engineers and AI agents can rely on to make better decisions.
-- Minimize unnecessary resource usage (e.g., external MCP/HTTP/API calls) by keeping essential specifications directly within the repository.
-- Promote best practices in documentation structure and clarity.
+## Usage
 
-> **Note:** This is a guideline, not a rigid rulebook. The goal is not to create more files, but to create better structure so engineers and AI agents can work with higher confidence. Teams can use tools like Notion or Google Docs for drafting and collaboration. However, finalized, development-critical documentation should be consolidated in the repository.
+Skills trigger automatically from natural language. Just describe what you need and the right skill activates.
 
-### Documentation Structure
-Refer to [`docs/README.md`](./docs/README.md) for documentation structure details.
+### Docs — scaffold the `/docs` directory
 
-## Development Phases
-Refer to [`docs/reference/sdl-phases.md`](./docs/reference/sdl-phases.md) for development phases details.
+```
+Set up the docs structure for this project
+```
+```
+Check if our docs structure is up to date with the latest devkit
+```
+```
+We added a new service — update the docs scaffold to include it
+```
+
+### PRD — product requirements
+
+```
+We just discussed the billing system requirements — save that as a PRD
+```
+```
+Use this Notion doc to draft a PRD for the new onboarding flow: [link]
+```
+```
+Update the PRD — we're cutting the SSO requirement from v1
+```
+
+### System Design — architecture and tech stack
+
+```
+Draft a system design for our payments service
+```
+```
+Update the system design — we switched from PostgreSQL to DynamoDB
+```
+```
+We're adding a message queue between the API and worker — update the architecture
+```
+
+### Feature Spec — feature specifications
+
+```
+Create a feature spec for checkout retry logic
+```
+```
+Use this Notion doc to draft a feature spec for tenant-level rate limiting: [link]
+```
+```
+Update the retry spec — we changed the backoff strategy to exponential with jitter
+```
+
+### ADR — architecture decisions
+
+```
+We decided to use event sourcing over CRUD for the audit trail — record that as an ADR
+```
+```
+Record an ADR: chose Redis over Memcached for session caching because of pub/sub support
+```
+```
+Update ADR-0003 — we revisited the decision and switched from REST to gRPC
+```
+
+### Codebase Summary — repository navigation
+
+```
+Document the repository structure and key entry points
+```
+```
+Update the codebase summary — we reorganized the src/ directory
+```
+```
+Map the codebase so new contributors can get oriented quickly
+```
+
+### Slash Commands
+
+You can also invoke skills directly with slash commands:
+
+| Command | Action |
+|---|---|
+| `/cmk:docs` | Bootstrap or update docs structure |
+| `/cmk:prd` | Create or iterate a PRD |
+| `/cmk:system-design` | Create or iterate system design |
+| `/cmk:feature-spec` | Create or iterate a feature spec |
+| `/cmk:adr` | Create or iterate an ADR |
+| `/cmk:codebase-summary` | Create or iterate codebase summary |
+
+## Documentation Structure
+
+Refer to [`docs/README.md`](./docs/README.md) for the full directory structure and conventions.

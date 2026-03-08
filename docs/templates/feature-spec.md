@@ -1,74 +1,40 @@
 # [Feature Name]
 
-**Status:** draft | active | shipped | deprecated  
-**Owner:** @[handle]  
+**Status:** draft | active | shipped | deprecated
+**Owner:** @[handle]
 **Last updated:** YYYY-MM-DD
 
 ## Overview
 
-<!--
-What this feature is and why it exists.
-2-5 sentences covering the problem, target users, and high-level behavior.
-Someone reading only this section should understand the feature's purpose.
--->
+<!-- What this feature is, who it's for, and why it exists. -->
 
-## Design Principles
+## Requirements
 
-<!--
-Core concepts that shape this feature's design.
-Each principle should balance product needs and technical feasibility.
-For each principle, include:
-- A short concept explanation
-- Functional requirements
-- Non-functional requirements
-- Rationale and trade-offs
--->
+### Functional Requirements
 
-### [Principle Name]
+<!-- What the feature must do. Each requirement can be a one-liner or expanded with context, edge cases, and acceptance criteria as needed. -->
 
-<!--
-Explain the concept: what it is, how it works, and its role in this feature.
-Keep this to one paragraph focused on the idea, not implementation details.
--->
+### [Requirement Name]
 
-**Functional Requirements:**
+<!-- Use a subsection when a requirement needs more detail. -->
 
-- [Business rules and behaviors this concept must satisfy]
+**Acceptance Criteria:**
 
-**Non-functional Requirements:**
+- [Concrete, verifiable condition]
 
-- [Performance, scalability, security constraints if applicable]
+### Non-functional Requirements
 
-**Rationale:**
-
-<!--
-Why this approach was chosen over alternatives and what trade-offs were accepted.
--->
+<!-- Performance, scalability, security, reliability constraints. -->
 
 ## Data Model (Optional)
 
-<!--
-How the main entities relate to each other.
-Describe concepts and relationships, not field-by-field implementation.
-You may include schema snippets and data model diagrams.
--->
+<!-- Key entities and relationships. Concepts over field-by-field schemas. -->
 
 ## Flows
 
-<!--
-Key actions in this feature.
-Each flow should describe one distinct operation (user-triggered, event-driven,
-cron, or service-to-service), including success and failure paths.
--->
+<!-- One subsection per distinct operation. Include success and failure paths. -->
 
 ### [Flow Name]
-
-#### Sequence Diagram
-
-<!--
-Show actor interactions (user, service, database, external API), order of
-operations, and returned outcomes.
--->
 
 ```mermaid
 sequenceDiagram
@@ -76,18 +42,9 @@ sequenceDiagram
   [Service]-->>[Actor]: [response]
 ```
 
-#### Flowchart (Optional)
-
-<!--
-Add only when branching logic is complex and a sequence diagram is not enough.
--->
-
 ## Boundaries (Optional)
 
-<!--
-Define where this feature starts and stops to prevent scope creep and to help
-engineers find the right spec near system boundaries.
--->
+<!-- Where this feature starts and stops. -->
 
 ### Owns
 
@@ -95,69 +52,33 @@ engineers find the right spec near system boundaries.
 
 ### Does NOT own
 
-- [What is handled elsewhere] - owned by [where]
+- [What is handled elsewhere] — owned by [where]
 
 ### Adjacent Specs
 
-- [[Related Feature]](../related-feature/spec.md) - how it connects
+- [[Related Feature]](../related-feature/spec.md) — how it connects
 
 ## Technical Decisions
 
-<!--
-Feature-level implementation choices (storage format, queue vs cron, caching,
-etc.) that can change without redefining the feature's design.
-For system-wide choices (framework, infrastructure, protocol), link to
-/docs/adrs/.
--->
+<!-- Feature-scoped implementation choices. Link to ADRs for system-wide decisions. -->
 
 ### [Decision Title]
 
-<!-- Similar to ADRs, but scoped to this feature. -->
-
-**Chose:** [X] - **Over:** [Y, Z]  
+**Chose:** [X] — **Over:** [Y, Z]
 **Rationale:**
-
-<!-- Why this choice was made and what trade-off was accepted. -->
-
-## Changelog
-
-- [YYYY-MM-DD] - [Brief description of change]
-
-## Iteration Notes (Optional)
-
-<!--
-Use this section only to link significant iteration records.
-Store detailed iteration writeups in:
-`docs/specs/<feature-id>/iterations/YYYY-MM-DD.md`
-Keep this spec as the current source of truth; do not move core decisions out.
--->
-
-- [YYYY-MM-DD](./iterations/YYYY-MM-DD.md) - [Why this iteration happened and what changed]
 
 ## Open Points (Optional)
 
-<!--
-Decisions not yet made.
-When resolved, remove from here and move the outcome into the relevant section
-above to keep the spec current.
--->
+<!-- Unresolved decisions. Move to relevant sections when resolved. -->
 
-- [Question] - context and options being considered
+- [Question] — context and options being considered
 
 ## Known Issues (Optional)
 
-<!--
-Problems or gaps discovered during development.
-Keep entries here until fixed.
--->
+<!-- Gaps discovered during development. Remove when fixed. -->
 
-- [Issue] - context, impact, and planned resolution (if any)
+- [Issue] — context, impact, and planned resolution
 
 ## Notes and References (Optional)
-
-<!--
-Useful implementation notes: key files, gotchas, setup steps, diagrams,
-important PRs, and external docs.
--->
 
 - [Useful notes, links, and references]

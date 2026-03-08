@@ -7,6 +7,7 @@ This guide defines the standard software development lifecycle (SDL) phases used
 **Goal:** produce a feature specification that becomes the source of truth for implementation.
 
 - Primary output: `docs/specs/{NNNN}-{feature-name}/spec.md`
+- Upstream input: PRD (product requirements document) — captures the product/business "what and why" before technical design begins
 - Scope: bridge product context and technical design, with stronger emphasis on technical specification
 - Note: this is not a PRD, but including product context is encouraged when it helps implementation quality
 
@@ -40,6 +41,7 @@ This guide defines the standard software development lifecycle (SDL) phases used
 
 ## Related Docs
 
+- PRD template: [`docs/templates/prd.md`](../templates/prd.md)
 - Feature specs: [`docs/specs/README.md`](../specs/README.md)
 - Feature spec template: [`docs/templates/feature-spec.md`](../templates/feature-spec.md)
 - Engineering rules: [`docs/rules/README.md`](../rules/README.md)
@@ -49,12 +51,12 @@ This guide defines the standard software development lifecycle (SDL) phases used
 
 ### Skills
 
-- Feature spec workflow:
-  - `.agents/skills/feature-spec-workflow/SKILL.md` (OpenCode-compatible)
-  - `.claude/skills/feature-spec-workflow/SKILL.md` (Claude Code-compatible)
-- ADR workflow:
-  - `.agents/skills/adr-workflow/SKILL.md` (OpenCode-compatible)
-  - `.claude/skills/adr-workflow/SKILL.md` (Claude Code-compatible)
+- Feature spec:
+  - `.agents/skills/feature-spec/SKILL.md` (OpenCode-compatible)
+  - `.claude/skills/feature-spec/SKILL.md` (Claude Code-compatible)
+- ADR:
+  - `.agents/skills/adr/SKILL.md` (OpenCode-compatible)
+  - `.claude/skills/adr/SKILL.md` (Claude Code-compatible)
 
 ### Keeping Skills in Sync
 
