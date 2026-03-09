@@ -195,18 +195,28 @@ Draft a system design for the API gateway
 The `/docs` directory is the shared protocol. Any agent — research, architecture, planning, QA — can participate by reading from and writing to the same structure:
 
 ```
-┌─────────────┐     ┌──────────┐     ┌──────────────┐
-│ Research    │     │ PRD      │     │ Architecture │
-│ Agent       │────▶│ Agent    │────▶│ Agent        │
-│             │     │ (cmk:prd)│     │ (cmk:system- │
-│ writes to   │     │ reads    │     │  design)     │
-│ docs/       │     │ docs/    │     │ reads docs/  │
-└─────────────┘     └──────────┘     └──────────────┘
+┌──────────┐     ┌──────────┐     ┌──────────────┐
+│ Research │────▶│ PRD      │────▶│ System       │
+│ Agent    │     │ (cmk:prd)│     │ Design       │
+└──────────┘     └──────────┘     │ (cmk:system- │
+                                  │  design)     │
+      ┌───────────────────────────┘──────────────┘
+      │                           │
+      ▼                           ▼
+┌──────────┐               ┌──────────────┐
+│ Feature  │               │ Knowledge    │
+│ Specs    │               │ (cmk:learn)  │
+│ (cmk:    │               │      │       │
+│ feature- │               │      ▼       │
+│ spec)    │               │ Rules        │
+└──────────┘               │ (cmk:rule)   │
+                           └──────────────┘
 ```
 
-- A research agent saves findings to `docs/` — then `cmk:prd` reads them to draft requirements
-- A planning agent reads the feature spec — then breaks it into tasks
-- A QA agent reads the spec — then generates test cases from acceptance criteria
+- A research agent saves findings → `cmk:prd` reads them to draft requirements
+- A planning agent reads the feature spec → breaks it into tasks
+- A QA agent reads the spec → generates test cases from acceptance criteria
+- A debugging session surfaces gotchas → `cmk:learn` captures them → `cmk:rule` promotes to standards
 
 The docs are the interface between agents. Each agent reads what it needs, writes what it produces, and the next agent picks up where the last one left off.
 

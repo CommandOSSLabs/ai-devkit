@@ -30,6 +30,10 @@ Break the PRD into feature specs
 
 Read `references/spec-conventions.md` for placement rules and `references/feature-spec-template.md` for section structure.
 
+## Scope
+
+Feature specs capture implementation-level detail for a single feature. Product requirements belong in the PRD; architecture in system-design. Feature-scoped decisions stay here; system-wide decisions go in ADRs.
+
 ## Input
 
 Synthesize from whatever the user provides: conversation context, local docs, external links, direct prompts, or `docs/knowledge/` entries (when explicitly referenced).
