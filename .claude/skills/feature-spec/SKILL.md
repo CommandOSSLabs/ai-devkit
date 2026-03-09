@@ -1,6 +1,6 @@
 ---
 name: cmk:feature-spec
-description: Create or iterate feature specifications during requirements and design. Use whenever users ask to draft, refine, or restructure a feature spec from conversation notes, local docs, external links, or direct prompts.
+description: Create or iterate feature specifications. Use whenever someone wants to draft, refine, or update a feature spec — from conversation notes, local docs, external links, or direct prompts. Also triggers for "spec out this feature", "write up the requirements for X", "break this into a spec", or discussions about feature scope, flows, and acceptance criteria.
 metadata:
   sdl_phase: "1"
   domain: "feature-spec"
@@ -8,73 +8,54 @@ metadata:
 
 # Feature Spec
 
-Use this skill for:
-- Creating a new feature specification
-- Iterating an existing feature specification
+## Intents
 
-## Canonical References
+```
+Create a feature spec for checkout retry logic
+```
+```
+Use this Notion doc to draft a feature spec for tenant-level rate limiting: [link]
+```
+```
+Update the retry spec — we changed the backoff strategy to exponential with jitter
+```
+```
+Spec out the user authentication flow
+```
+```
+Break the PRD into feature specs
+```
 
-- Spec conventions: `references/spec-conventions.md`
-- Spec template: `references/feature-spec-template.md`
+## References
 
-## Supported Input Sources
+Read `references/spec-conventions.md` for placement rules and `references/feature-spec-template.md` for section structure.
 
-Collect and synthesize from one or more of:
-- Current conversation context and decisions
-- Local documents (existing specs, ADRs, notes)
-- External docs/links (Notion, Google Docs, RFC links)
-- Direct prompt requirements from the engineer
+## Input
 
-## Content Guidance
-
-Write what matters, skip what's obvious. The template is a starting point — adapt it to fit the context.
+Synthesize from whatever the user provides: conversation context, local docs, external links, direct prompts, or `docs/knowledge/` entries (when explicitly referenced).
 
 ## Workflow: Create
 
-Use when no spec exists for the feature.
-
-1. Normalize input into a shared decision log:
-   - Problem statement
-   - Target users/stakeholders
-   - Constraints and assumptions
-   - Open questions
-2. Map normalized input into template sections in `references/feature-spec-template.md`.
-   - If the target repository already has an existing spec template/convention, align to that local standard.
-3. Apply canonical placement:
-   - Use the repository's existing canonical spec path when available.
-   - Fallback path when no local convention exists: `docs/specs/{NNNN}-{feature-name}/spec.md`
-4. Mark unknowns in `Open Points` rather than guessing.
+1. Normalize input into feature context: problem, users, constraints, open questions.
+2. Map into template sections from `references/feature-spec-template.md`. Align to local convention if one exists.
+3. Place at the repository's existing path, or fallback: `docs/specs/{NNNN}-{feature-name}/spec.md`. Determine `{NNNN}` by scanning existing specs and incrementing (start at `0001` if none exist).
+4. Mark unknowns in `Open Points` — don't guess.
+5. Set status to `draft`.
 
 ## Workflow: Iterate
 
-Use when a spec already exists and needs to evolve.
+1. Read the existing spec in full.
+2. **Upstream check:** If upstream docs exist (`docs/prd.md`, `docs/system-design.md`), scan for conflicts. Warn the user if the update contradicts upstream scope, requirements, or architecture.
+3. Identify what changed and why.
+4. Update affected sections in place. Preserve unchanged content.
+5. Update `Last updated` date.
+6. Transition status when appropriate: `draft` → `active` → `shipped`, or any → `deprecated`.
 
-1. Read the existing spec in full before making changes.
-2. **Upstream check:** If upstream docs exist (`docs/prd.md`, `docs/system-design.md`), scan for conflicts with the changes being made. Warn the user if the update contradicts upstream scope, requirements, or architecture decisions.
-3. Identify what changed and why — from conversation, new requirements, resolved questions, user feedback, or technical discovery.
-4. Apply changes to the relevant sections:
-   - **Revise sections** — rewrite content in place when the substance changes (e.g., Overview after scope shift, Requirements after new constraints)
-   - **Add/remove requirements** — add new FR/NFR, revise existing ones, remove obsolete ones
-   - **Add/remove flows** — add new flows for newly scoped behavior, remove flows that are descoped
-   - **Update Boundaries** — adjust owns/does-not-own when scope or adjacent specs change
-   - **Update Technical Decisions** — record new choices or revise rationale when trade-offs shift
-   - **Resolve Open Points** — when a decision is made, move the outcome into the relevant section and remove from Open Points
-   - **Add Known Issues** — surface gaps discovered during development
-5. Preserve content that is still valid — do not rewrite sections that haven't changed.
-6. Update `Last updated` date.
+## Output
 
-## Quality Checklist
-
-- Overview explains problem, users, and intended outcome
+- Create: complete `spec.md` at canonical path
+- Iterate: targeted updates to affected sections only
+- Unresolved decisions go in `Open Points`
 - Requirements are concrete and evaluable (FR and NFR)
 - Flows include success and failure paths
 - Boundaries clearly define owns vs does-not-own
-- Technical decisions include rationale and trade-offs
-- Open Points only contains genuinely unresolved decisions (resolved items moved out)
-
-## Output Contract
-
-- If creating: produce a complete `spec.md` scaffold populated with known context
-- If iterating: apply targeted updates to affected sections while preserving valid existing content
-- Always call out unresolved decisions in `Open Points`
-- Always update `Last updated` date when iterating

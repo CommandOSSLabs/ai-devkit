@@ -1,6 +1,6 @@
 ---
 name: cmk:system-design
-description: Create or iterate system design documents. Use whenever users ask to draft, refine, or update a system design covering architecture, tech stack, components, and cross-cutting concerns.
+description: Create or iterate system design documents covering architecture, tech stack, components, and cross-cutting concerns. Use whenever someone wants to draft, refine, or update a system design — whether discussing architecture decisions, tech stack changes, infrastructure layout, or scaling strategy. Also triggers for "how should we build this", "design the backend", or "update the architecture".
 metadata:
   sdl_phase: "1"
   domain: "system-design"
@@ -8,91 +8,60 @@ metadata:
 
 # System Design
 
-Use this skill for:
-- Creating a new system design document
-- Iterating an existing system design
+## Intents
 
-## Canonical References
+```
+Draft a system design for our payments service
+```
+```
+Update the system design — we switched from PostgreSQL to DynamoDB
+```
+```
+We're adding a message queue between the API and worker — update the architecture
+```
+```
+How should we architect the notification system?
+```
+```
+Use the scaling knowledge from our load tests to update the design
+```
 
-- System design conventions: `references/system-design-conventions.md`
-- System design template: `references/system-design-template.md`
+## References
 
-## Supported Input Sources
+Read `references/system-design-conventions.md` for placement rules and `references/system-design-template.md` for section structure.
 
-Collect and synthesize from one or more of:
-- Current conversation context and decisions
-- Existing PRD (`docs/prd.md`)
-- Local documents (existing specs, ADRs, codebase)
-- External docs/links (architecture diagrams, vendor docs, RFC links)
-- Direct prompt requirements from the engineer
+## Scope
 
-## Content Guidance
+System design captures the technical "how" at architecture level. Product requirements belong in the PRD; implementation detail in feature specs. System-wide decisions should reference or create ADRs.
 
-Write what matters, skip what's obvious. The template is a starting point — adapt it to fit the context.
+## Input
 
-## Scope Rule
-
-System design captures the technical "how" at architecture level. Keep product requirements in the PRD and implementation detail in feature specs. System-wide decisions should reference or create ADRs.
+Synthesize from whatever the user provides: conversation context, existing PRD (`docs/prd.md`), local docs, external links, direct prompts, or `docs/knowledge/` entries (when explicitly referenced).
 
 ## Workflow: Create
 
-Use when no system design exists.
-
-1. Normalize input into architecture context:
-   - What the system does and who it serves (Mission)
-   - Opinionated design principles that break ties
-   - Technology choices per layer
-   - Component boundaries and communication patterns
-   - External dependencies and failure behavior
-   - Cross-cutting concerns (security, data, observability, performance, resilience)
-   - Architectural constraints
-2. Map normalized input into template sections in `references/system-design-template.md`.
-   - If the target repository already has an existing system design convention, align to that local standard.
-3. Apply canonical placement:
-   - Use the repository's existing system design path when available.
-   - Fallback path when no local convention exists: `docs/system-design.md`
-4. Mark unknowns in `Open Points` rather than guessing.
+1. Normalize input into architecture context: mission, design principles, tech stack, components, dependencies, cross-cutting concerns, constraints.
+2. Map into template sections from `references/system-design-template.md`. Align to local convention if one exists.
+3. Place at the repository's existing path, or fallback: `docs/system-design.md`.
+4. Mark unknowns in `Open Points` — don't guess.
 5. Link upstream PRD in `Related Documents` when one exists.
 6. Set status to `draft`.
 
 ## Workflow: Iterate
 
-Use when a system design already exists and needs to evolve.
+1. Read the existing system design in full.
+2. **Upstream check:** If `docs/prd.md` exists, scan its scope, success criteria, and status. Warn the user if the update conflicts with upstream PRD.
+3. Identify what changed and why.
+4. Update affected sections in place. Preserve unchanged content.
+5. Update `Last updated` date.
+6. Transition status when appropriate: `draft` → `active` → `shipped`, or any → `deprecated`.
 
-1. Read the existing system design in full before making changes.
-2. **Upstream check:** If `docs/prd.md` exists, scan its scope, success criteria, and status. If the update conflicts with upstream PRD (e.g., addresses a descoped requirement, drops a success criterion), warn the user before proceeding.
-3. Identify what changed and why — from new requirements, tech stack changes, scaling needs, security findings, or resolved architecture questions.
-4. Apply changes to the relevant sections:
-   - **Revise Mission or Design Principles** — rewrite when the system's purpose or guiding principles shift
-   - **Update Tech Stack** — add, remove, or change technology choices with rationale
-   - **Update Architecture** — add/remove/revise components, update diagrams, adjust boundaries
-   - **Update External Dependencies** — add new dependencies, update failure behavior
-   - **Update Cross-Cutting Concerns** — revise security assumptions/gaps/controls, update data architecture, adjust performance targets, add resilience patterns
-   - **Update Constraints** — add new constraints or remove lifted ones
-   - **Resolve Open Points** — when an architecture decision is made, move the outcome into the relevant section (or create an ADR) and remove from Open Points
-   - **Update Architecture Rationale** — connect new ADRs into the narrative
-   - **Update Related Documents** — link new specs, ADRs, or upstream PRD changes
-5. Preserve content that is still valid — do not rewrite sections that haven't changed.
-6. Update `Last updated` date.
-7. Transition status when appropriate:
-   - `draft` → `active` when the design is agreed upon and implementation begins
-   - `active` → `shipped` when the system is in production
-   - Any → `deprecated` when the system is decommissioned
+## Output
 
-## Quality Checklist
-
-- Mission is concise and explains what, who, and why
-- Design principles are opinionated and system-specific (no generic truisms)
-- Tech stack covers all relevant layers with version/constraint info
-- Architecture diagram exists and matches the component descriptions
-- Security section includes assumptions, known gaps, and notable controls
-- Constraints are genuine givens, not preferences
-- Open Points only contains genuinely unresolved decisions
-- No feature-level implementation detail (that belongs in specs)
-
-## Output Contract
-
-- If creating: produce a complete system design populated with known context at `docs/system-design.md`
-- If iterating: apply targeted updates to affected sections while preserving valid existing content
-- Always call out unresolved decisions in `Open Points`
-- Always update `Last updated` date when iterating
+- Create: complete system design at `docs/system-design.md`
+- Iterate: targeted updates to affected sections only
+- Unresolved decisions go in `Open Points`
+- Design principles are opinionated and system-specific
+- Architecture diagram matches component descriptions
+- Security section is always present — includes assumptions, gaps, and controls
+- No feature-level implementation detail

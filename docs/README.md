@@ -48,6 +48,10 @@ This directory is the source of truth for documentation in this repository.
 │   │   ├── spec.md
 │   │   └── ...
 │   └── ...
+├── knowledge/
+│   ├── AGENTS.md
+│   ├── README.md
+│   └── ...
 ├── guides/
 │   ├── AGENTS.md
 │   ├── README.md
@@ -66,6 +70,7 @@ This directory is the source of truth for documentation in this repository.
 - **`prd.md` (Recommended)** — Product requirements: problem, success criteria, user needs, scope. Upstream of system design and feature specs.
 - **`system-design.md` (Recommended)** — High-level system architecture: tech stack, service connections, infrastructure layout, external dependencies, etc.
 - **`codebase-summary.md` (Recommended)** — Codebase structure and navigation: directories, modules, entry points.
+- **`knowledge/` (Recommended)** — Accumulated knowledge: gotchas, non-obvious findings, hard-won insights. One file per topic. See [`docs/knowledge/README.md`](./knowledge/README.md) for structure and conventions.
 - **`guides/` (Recommended)** — Operational and onboarding docs, team decides what's needed (e.g. onboarding.md, local-dev.md, deployment.md).
 - **`reference/` (Recommended)** — Cross-cutting reference docs shared across phases and teams. See [`docs/reference/README.md`](./reference/README.md) for structure and conventions.
 - **`AGENTS.md`** — Agent navigation instructions for this docs subtree.

@@ -1,6 +1,6 @@
 ---
 name: cmk:codebase-summary
-description: Create or iterate codebase summary documents. Use whenever users ask to document, update, or map the repository structure, key entry points, core modules, and local development setup.
+description: Create or iterate codebase summary documents that map repository structure, key entry points, core modules, and local dev setup. Use whenever someone wants to document how the repo is organized, update the codebase map after restructuring, or help new contributors navigate the codebase. Also triggers for "map the repo", "document the project structure", or "where does everything live".
 metadata:
   sdl_phase: "1"
   domain: "codebase-summary"
@@ -8,68 +8,51 @@ metadata:
 
 # Codebase Summary
 
-Use this skill for:
-- Creating a new codebase summary for a repository
-- Updating the summary when the codebase structure changes
+## Intents
 
-## Canonical References
+```
+Document the repository structure and key entry points
+```
+```
+Update the codebase summary — we reorganized the src/ directory
+```
+```
+Map the codebase so new contributors can get oriented quickly
+```
+```
+Where does everything live in this project?
+```
 
-- Codebase summary conventions: `references/codebase-summary-conventions.md`
-- Codebase summary template: `references/codebase-summary-template.md`
+## References
 
-## Supported Input Sources
+Read `references/codebase-summary-conventions.md` for placement rules and `references/codebase-summary-template.md` for section structure.
 
-Collect and synthesize from one or more of:
-- Direct codebase exploration (directory structure, entry points, module boundaries)
-- Existing documentation (README, system-design, package.json, Cargo.toml, etc.)
-- Current conversation context
-- Direct prompt from the engineer
+## Scope
 
-## Content Guidance
+Codebase summary captures repository structure and navigation — how to find things. Architecture rationale belongs in system-design; feature behavior in specs.
 
-Write what matters, skip what's obvious. The template is a starting point — adapt it to fit the context.
+## Input
 
-## Scope Rule
-
-Codebase summary captures repository structure and navigation — how to find things and understand what lives where. Keep architecture rationale in system-design and feature behavior in specs.
+Synthesize from: direct codebase exploration (directories, entry points, modules), existing docs (README, package.json, etc.), conversation context, or direct prompts.
 
 ## Workflow: Create
 
-Use when no codebase summary exists.
-
-1. Explore the repository structure to understand layout, entry points, and module boundaries.
-2. Map findings into template sections in `references/codebase-summary-template.md`.
-   - If the target repository already has an existing convention, align to that local standard.
-3. Apply canonical placement:
-   - Use the repository's existing path when available.
-   - Fallback path when no local convention exists: `docs/codebase-summary.md`
-4. Include local development commands if discoverable from the codebase.
+1. Explore the repository to understand layout, entry points, and module boundaries.
+2. Map into template sections from `references/codebase-summary-template.md`. Align to local convention if one exists.
+3. Place at the repository's existing path, or fallback: `docs/codebase-summary.md`.
+4. Include local dev commands if discoverable.
 
 ## Workflow: Iterate
 
-Use when the codebase has changed and the summary needs to reflect the current state.
+1. Read the existing summary in full.
+2. Explore current codebase to identify what changed.
+3. Update affected sections in place. Preserve unchanged content.
+4. Update `Last updated` date.
 
-1. Read the existing codebase summary in full before making changes.
-2. Explore the current codebase structure to identify what changed.
-3. Apply changes to the relevant sections:
-   - **Update Repository Layout** — reflect new/moved/removed directories
-   - **Update Key Entry Points** — add new entry points, remove stale ones
-   - **Update Core Modules** — add new modules, revise responsibilities, remove deprecated ones
-   - **Update Data and Integration Paths** — reflect new flows or changed integrations
-   - **Update Local Development Commands** — reflect changed setup, test, or build commands
-4. Preserve content that is still valid — do not rewrite sections that haven't changed.
-5. Update `Last updated` date.
+## Output
 
-## Quality Checklist
-
-- Repository layout matches the actual directory structure
-- Entry points are accurate and current
-- Core modules table covers the important parts without listing every file
-- Local development commands are runnable
-- No architecture rationale (that belongs in system-design)
-
-## Output Contract
-
-- If creating: produce a complete codebase summary at `docs/codebase-summary.md`
-- If iterating: apply targeted updates to affected sections while preserving valid existing content
-- Always update `Last updated` date when iterating
+- Create: complete codebase summary at `docs/codebase-summary.md`
+- Iterate: targeted updates to affected sections only
+- Layout matches actual directory structure
+- Entry points and dev commands are current and runnable
+- No architecture rationale (belongs in system-design)

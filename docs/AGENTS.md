@@ -18,3 +18,4 @@ Before starting work, read the docs that apply to your task:
 - **Feature implementation:** [`specs/`](./specs/) — find the relevant feature spec
 - **System-level decision:** [`adrs/`](./adrs/) — existing architecture decisions
 - **Coding standards:** [`rules/`](./rules/) — engineering conventions and practices
+- **Prior knowledge:** [`knowledge/`](./knowledge/) — gotchas, non-obvious findings, hard-won insights

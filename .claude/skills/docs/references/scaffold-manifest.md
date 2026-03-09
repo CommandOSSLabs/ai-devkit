@@ -48,6 +48,7 @@ Before starting work, read the docs that apply to your task:
 - **Feature implementation:** [`specs/`](./specs/) — find the relevant feature spec
 - **System-level decision:** [`adrs/`](./adrs/) — existing architecture decisions
 - **Coding standards:** [`rules/`](./rules/) — engineering conventions and practices
+- **Accumulated knowledge:** [`knowledge/`](./knowledge/) — gotchas, non-obvious findings, hard-won insights
 ```
 
 ---
@@ -92,6 +93,10 @@ This directory is the source of truth for documentation in this repository.
 │   ├── AGENTS.md
 │   ├── README.md
 │   └── ...
+├── knowledge/
+│   ├── AGENTS.md
+│   ├── README.md
+│   └── ...
 ├── guides/
 │   ├── AGENTS.md
 │   ├── README.md
@@ -108,6 +113,7 @@ This directory is the source of truth for documentation in this repository.
 - **`prd.md` (Recommended)** — Product requirements: problem, success criteria, user needs, scope. Upstream of system design and feature specs.
 - **`system-design.md` (Recommended)** — High-level system architecture: tech stack, service connections, infrastructure layout, external dependencies, etc.
 - **`codebase-summary.md` (Recommended)** — Codebase structure and navigation: directories, modules, entry points.
+- **`knowledge/` (Recommended)** — Accumulated knowledge: gotchas, non-obvious findings, hard-won insights. One file per topic. See [`docs/knowledge/README.md`](./knowledge/README.md) for structure and conventions.
 - **`guides/` (Recommended)** — Operational and onboarding docs, team decides what's needed (e.g. onboarding.md, local-dev.md, deployment.md).
 - **`reference/` (Recommended)** — Cross-cutting reference docs shared across phases and teams. See [`docs/reference/README.md`](./reference/README.md) for structure and conventions.
 - **`AGENTS.md`** — Agent navigation instructions for this docs subtree.
@@ -319,6 +325,53 @@ This directory contains language-agnostic engineering rules.
 1. Start here before applying language-specific or framework-specific rules.
 2. Follow these rules as defaults when no narrower rule overrides them.
 3. Update rule files when team conventions change.
+```
+
+---
+
+## docs/knowledge/AGENTS.md
+
+**Path:** `docs/knowledge/AGENTS.md`
+
+```markdown
+# Agent Entry
+
+[`/docs/knowledge`](.) contains accumulated knowledge, gotchas, and non-obvious findings.
+
+It exists for two purposes:
+- Preserve hard-won insights discovered during development, research, and debugging
+- Provide structured input for downstream skills (rules, PRD, system-design, feature-spec)
+
+Start in [`README.md`](./README.md) in this folder for structure and conventions.
+```
+
+---
+
+## docs/knowledge/README.md
+
+**Path:** `docs/knowledge/README.md`
+
+```markdown
+# Learnings
+
+This directory contains accumulated knowledge — gotchas, non-obvious findings, and hard-won insights from development, research, debugging, and incidents.
+
+## Canonical Placement
+
+- Learning entry: `docs/knowledge/{topic}.md`
+- Examples: `docs/knowledge/infrastructure.md`, `docs/knowledge/api-quirks.md`
+
+## File Convention
+
+- One file per topic — entries accumulate within the file over time
+- Entries are listed newest first
+- Use `kebab-case` topic names by domain (not by date or session)
+
+## How to Use
+
+1. Capture knowledge during or after work sessions using `cmk:learn`.
+2. Browse and search entries to inform downstream work.
+3. Promote valuable entries to `docs/rules/` when they become established standards.
 ```
 
 ---

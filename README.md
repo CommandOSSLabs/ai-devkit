@@ -19,6 +19,8 @@ npx skills add CommandOSSLabs/ai-devkit --skill system-design
 npx skills add CommandOSSLabs/ai-devkit --skill feature-spec
 npx skills add CommandOSSLabs/ai-devkit --skill adr
 npx skills add CommandOSSLabs/ai-devkit --skill codebase-summary
+npx skills add CommandOSSLabs/ai-devkit --skill learn
+npx skills add CommandOSSLabs/ai-devkit --skill rule
 ```
 
 Contributing to this repo — install git hooks for auto-sync:
@@ -45,6 +47,8 @@ This devkit solves that by using structured documentation as the shared state. T
 | `cmk:feature-spec` | Create or iterate feature specifications |
 | `cmk:adr` | Create or update architecture decisions |
 | `cmk:codebase-summary` | Create or iterate codebase navigation docs |
+| `cmk:learn` | Extract and record non-obvious learnings and gotchas |
+| `cmk:rule` | Codify engineering standards into `docs/rules/` |
 
 ## Usage
 
@@ -119,6 +123,34 @@ Record an ADR: chose Redis over Memcached for session caching because of pub/sub
 Update ADR-0003 — we revisited the decision and switched from REST to gRPC
 ```
 
+### At any point: Capture Learnings — `cmk:learn`
+
+Extract non-obvious knowledge from any source — conversations, debugging, research, files. Saves to `docs/knowledge/` for downstream use.
+
+```
+That was a long research session — extract the key learnings
+```
+```
+Save that Redis connection pooling gotcha we just discovered
+```
+```
+Review our accumulated learnings on infrastructure
+```
+
+### At any point: Engineering Rules — `cmk:rule`
+
+Codify standards into `docs/rules/`. Create rules directly, or promote knowledge entries into enforceable standards.
+
+```
+Add a rule that all API endpoints must validate auth tokens before processing
+```
+```
+Promote the Redis pooling learning to an infrastructure rule
+```
+```
+Update the security rules — we now require CSP headers on all responses
+```
+
 ### At any point: Codebase Summary — `cmk:codebase-summary`
 
 Map the repository for navigation. Update as the codebase evolves.
@@ -150,7 +182,7 @@ Skills install as slash commands under `.claude/skills/`. Use natural language o
 We just discussed auth requirements — save that as a PRD
 ```
 
-### OpenCode / ohmyopencode
+### OpenCode
 
 Skills install under `.agents/skills/` — the standard OpenCode convention. Natural language triggers work the same way:
 
