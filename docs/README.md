@@ -8,13 +8,13 @@ This directory is the source of truth for documentation in this repository.
 /docs
 ├── README.md
 ├── AGENTS.md
-├── prd.md
+├── PRD.md
 ├── system-design.md
 ├── codebase-summary.md
 ├── templates/
 │   ├── adr.md
 │   ├── feature-spec.md
-│   ├── prd.md
+│   ├── PRD.md
 │   ├── system-design.md
 │   ├── codebase-summary.md
 │   └── ...
@@ -67,7 +67,7 @@ This directory is the source of truth for documentation in this repository.
 - **`adrs/` (Required)** — Architecture Decision Records. System-wide decisions that affect multiple features (e.g. framework choices, infrastructure, protocols). See [`docs/adrs/README.md`](./adrs/README.md) for structure and conventions.
 - **`specs/` (Required)** — Feature specifications. One folder per feature. `spec.md` is required as the entry point. See [`docs/specs/README.md`](./specs/README.md) for structure and conventions.
 - **`rules/` (Recommended)** — Coding rules, standards, conventions, and practices: code style, git workflow, testing, development practices, etc. See [`docs/rules/README.md`](./rules/README.md) for structure and conventions.
-- **`prd.md` (Recommended)** — Product requirements: problem, success criteria, user needs, scope. Upstream of system design and feature specs.
+- **`PRD.md` (Recommended)** — Product requirements: problem, success criteria, user needs, scope. Upstream of system design and feature specs.
 - **`system-design.md` (Recommended)** — High-level system architecture: tech stack, service connections, infrastructure layout, external dependencies, etc.
 - **`codebase-summary.md` (Recommended)** — Codebase structure and navigation: directories, modules, entry points.
 - **`knowledge/` (Recommended)** — Accumulated knowledge: gotchas, non-obvious findings, hard-won insights. One file per topic. See [`docs/knowledge/README.md`](./knowledge/README.md) for structure and conventions.
@@ -77,7 +77,7 @@ This directory is the source of truth for documentation in this repository.
 
 ## Recommended Templates
 
-- PRD template: [`docs/templates/prd.md`](./templates/prd.md)
+- PRD template: [`docs/templates/PRD.md`](./templates/PRD.md)
 - System design template: [`docs/templates/system-design.md`](./templates/system-design.md)
 - Codebase summary template: [`docs/templates/codebase-summary.md`](./templates/codebase-summary.md)
 - Feature spec template: [`docs/templates/feature-spec.md`](./templates/feature-spec.md)

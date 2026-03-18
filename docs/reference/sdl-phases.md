@@ -41,7 +41,7 @@ This guide defines the standard software development lifecycle (SDL) phases used
 
 ## Related Docs
 
-- PRD template: [`docs/templates/prd.md`](../templates/prd.md)
+- PRD template: [`docs/templates/PRD.md`](../templates/PRD.md)
 - Feature specs: [`docs/specs/README.md`](../specs/README.md)
 - Feature spec template: [`docs/templates/feature-spec.md`](../templates/feature-spec.md)
 - Engineering rules: [`docs/rules/README.md`](../rules/README.md)

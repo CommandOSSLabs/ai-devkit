@@ -49,7 +49,7 @@ Synthesize from whatever the user provides: conversation context, local docs, ex
 ## Workflow: Iterate
 
 1. Read the existing spec in full.
-2. **Upstream check:** If upstream docs exist (`docs/prd.md`, `docs/system-design.md`), scan for conflicts. Warn the user if the update contradicts upstream scope, requirements, or architecture.
+2. **Upstream check:** If upstream docs exist (`docs/PRD.md`, `docs/system-design.md`), scan for conflicts. Warn the user if the update contradicts upstream scope, requirements, or architecture.
 3. Identify what changed and why.
 4. Update affected sections in place. Preserve unchanged content.
 5. Update `Last updated` date.

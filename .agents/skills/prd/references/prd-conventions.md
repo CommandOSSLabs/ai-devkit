@@ -2,7 +2,7 @@
 
 ## Canonical Placement
 
-- PRD entry: `docs/prd.md`
+- PRD entry: `docs/PRD.md`
 - One PRD per repository (project-level product requirements)
 
 ## Status Lifecycle
@@ -23,5 +23,5 @@
 
 1. Start from `references/prd-template.md`.
 2. Populate known context first; leave unknowns in `Open Points`.
-3. Keep `docs/prd.md` current as the product source of truth.
+3. Keep `docs/PRD.md` current as the product source of truth.
 4. Link downstream feature specs in `Related Documents > Downstream Specs` as they are created.

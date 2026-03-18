@@ -91,7 +91,7 @@ graph TD
 
 ## Related Documents (Optional)
 
-- [PRD](../prd.md) — product requirements this design implements
+- [PRD](../PRD.md) — product requirements this design implements
 - [Codebase Summary](../codebase-summary.md) — repository layout
 - [Rules](../rules/README.md) — engineering standards
 - [ADRs](../adrs/README.md) — architecture decisions

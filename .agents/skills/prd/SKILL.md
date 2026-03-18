@@ -42,7 +42,7 @@ Synthesize from whatever the user provides: conversation context, user research,
 
 1. Normalize input into product context: problem, timing, success criteria, user needs, scope.
 2. Map into template sections from `references/prd-template.md`. Align to local convention if one exists.
-3. Place at the repository's existing PRD path, or fallback: `docs/prd.md`.
+3. Place at the repository's existing PRD path, or fallback: `docs/PRD.md`.
 4. Mark unknowns in `Open Points` — don't guess.
 5. Set status to `draft`.
 
@@ -56,7 +56,7 @@ Synthesize from whatever the user provides: conversation context, user research,
 
 ## Output
 
-- Create: complete PRD at `docs/prd.md` with known context populated
+- Create: complete PRD at `docs/PRD.md` with known context populated
 - Iterate: targeted updates to affected sections only
 - Unresolved decisions go in `Open Points`
 - Problem names a specific user segment with concrete pain

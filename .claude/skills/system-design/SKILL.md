@@ -36,7 +36,7 @@ System design captures the technical "how" at architecture level. Product requir
 
 ## Input
 
-Synthesize from whatever the user provides: conversation context, existing PRD (`docs/prd.md`), local docs, external links, direct prompts, or `docs/knowledge/` entries (when explicitly referenced).
+Synthesize from whatever the user provides: conversation context, existing PRD (`docs/PRD.md`), local docs, external links, direct prompts, or `docs/knowledge/` entries (when explicitly referenced).
 
 ## Workflow: Create
 
@@ -50,7 +50,7 @@ Synthesize from whatever the user provides: conversation context, existing PRD (
 ## Workflow: Iterate
 
 1. Read the existing system design in full.
-2. **Upstream check:** If `docs/prd.md` exists, scan its scope, success criteria, and status. Warn the user if the update conflicts with upstream PRD.
+2. **Upstream check:** If `docs/PRD.md` exists, scan its scope, success criteria, and status. Warn the user if the update conflicts with upstream PRD.
 3. Identify what changed and why.
 4. Update affected sections in place. Preserve unchanged content.
 5. Update `Last updated` date.

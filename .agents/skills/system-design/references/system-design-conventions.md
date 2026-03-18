@@ -15,7 +15,7 @@
 ## Scope Boundary
 
 - System design owns the technical "how" at architecture level
-- Product requirements belong in `docs/prd.md`
+- Product requirements belong in `docs/PRD.md`
 - Feature implementation detail belongs in `docs/specs/{NNNN}-{feature-name}/spec.md`
 - System-wide decisions should be recorded as ADRs in `docs/adrs/`
 
