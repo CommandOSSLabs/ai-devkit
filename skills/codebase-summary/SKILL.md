@@ -1,35 +1,16 @@
 ---
 name: cmk:codebase-summary
-description: Create or iterate codebase summary documents that map repository structure, key entry points, core modules, and local dev setup. Use whenever someone wants to document how the repo is organized, update the codebase map after restructuring, or help new contributors navigate the codebase. Also triggers for "map the repo", "document the project structure", or "where does everything live".
-metadata:
-  sdl_phase: "1"
-  domain: "codebase-summary"
+description: This skill should be used when the user asks to "map the repo", "document the project structure", "where does everything live", "update the codebase summary", or needs to create or iterate codebase summary documents that map repository structure, key entry points, core modules, and local dev setup.
+version: 0.1.0
 ---
 
 # Codebase Summary
 
-## Intents
-
-```
-Document the repository structure and key entry points
-```
-```
-Update the codebase summary — we reorganized the src/ directory
-```
-```
-Map the codebase so new contributors can get oriented quickly
-```
-```
-Where does everything live in this project?
-```
+Create or iterate codebase summary documents that map repository structure, key entry points, core modules, and local dev setup. Captures how to find things — not architecture rationale (belongs in system-design) or feature behavior (belongs in specs).
 
 ## References
 
 Read `references/codebase-summary-conventions.md` for placement rules and `references/codebase-summary-template.md` for section structure.
-
-## Scope
-
-Codebase summary captures repository structure and navigation — how to find things. Architecture rationale belongs in system-design; feature behavior in specs.
 
 ## Input
 

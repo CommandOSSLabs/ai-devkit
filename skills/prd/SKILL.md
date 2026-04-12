@@ -1,38 +1,16 @@
 ---
 name: cmk:prd
-description: Create or iterate product requirements documents. Use whenever someone wants to draft, refine, or update a PRD — whether from conversation notes, research sessions, user feedback, Notion docs, or direct instructions. Also triggers when users discuss product scope, success criteria, user needs, or say things like "save this as requirements" or "let's define what we're building".
-metadata:
-  sdl_phase: "1"
-  domain: "prd"
+description: This skill should be used when the user asks to "save this as requirements", "let's define what we're building", "draft a PRD", "update the PRD", or discusses product scope, success criteria, and user needs. Covers drafting, refining, or updating product requirements documents from conversation notes, research sessions, user feedback, Notion docs, or direct instructions.
+version: 0.1.0
 ---
 
 # PRD
 
-## Intents
-
-```
-We just discussed the billing system requirements — save that as a PRD
-```
-```
-Use this Notion doc to draft a PRD for the new onboarding flow: [link]
-```
-```
-Update the PRD — we're cutting the SSO requirement from v1
-```
-```
-Let's define what we're building for the payments feature
-```
-```
-Use our infrastructure knowledge to inform the PRD requirements
-```
+Create or iterate product requirements documents. PRDs capture product/business "what and why." Technical architecture belongs in system-design; implementation detail in feature specs.
 
 ## References
 
 Read `references/prd-conventions.md` for placement rules and `references/prd-template.md` for section structure.
-
-## Scope
-
-PRDs capture product/business "what and why." Technical architecture belongs in system-design; implementation detail in feature specs.
 
 ## Input
 

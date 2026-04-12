@@ -1,38 +1,16 @@
 ---
 name: cmk:adr
-description: Create or update architecture decision records for system-level technical choices. Use whenever someone needs to record, revise, or document a technical decision with trade-offs — like choosing a database, communication protocol, or infrastructure pattern. Also triggers for "record this decision", "we decided to use X over Y", or "document why we chose this approach".
-metadata:
-  sdl_phase: "1"
-  domain: "adr"
+description: This skill should be used when the user asks to "record this decision", "we decided to use X over Y", "document why we chose this approach", "record an ADR", "update ADR-0003", or needs to create or update architecture decision records for system-level technical choices like choosing a database, communication protocol, or infrastructure pattern.
+version: 0.1.0
 ---
 
 # ADR
 
-## Intents
-
-```
-We decided to use event sourcing over CRUD for the audit trail — record that as an ADR
-```
-```
-Record an ADR: chose Redis over Memcached for session caching because of pub/sub support
-```
-```
-Update ADR-0003 — we revisited the decision and switched from REST to gRPC
-```
-```
-Document why we chose Kafka over RabbitMQ
-```
-```
-What architecture decisions have we recorded?
-```
+Create or update architecture decision records for system-level technical choices — databases, protocols, infrastructure patterns, and other decisions with trade-offs that affect multiple features or core architecture.
 
 ## References
 
 Read `references/adr-conventions.md` for placement rules and `references/adr-template.md` for section structure.
-
-## Scope
-
-ADRs are for system-level decisions that affect multiple features or core architecture. Feature-scoped decisions belong in the feature `spec.md` under Technical Decisions.
 
 ## Workflow: Create
 

@@ -1,38 +1,16 @@
 ---
 name: cmk:system-design
-description: Create or iterate system design documents covering architecture, tech stack, components, and cross-cutting concerns. Use whenever someone wants to draft, refine, or update a system design — whether discussing architecture decisions, tech stack changes, infrastructure layout, or scaling strategy. Also triggers for "how should we build this", "design the backend", or "update the architecture".
-metadata:
-  sdl_phase: "1"
-  domain: "system-design"
+description: This skill should be used when the user asks to "how should we build this", "design the backend", "update the architecture", "draft a system design", or discusses architecture decisions, tech stack changes, infrastructure layout, or scaling strategy. Covers drafting, refining, or updating system design documents covering architecture, tech stack, components, and cross-cutting concerns.
+version: 0.1.0
 ---
 
 # System Design
 
-## Intents
-
-```
-Draft a system design for our payments service
-```
-```
-Update the system design — we switched from PostgreSQL to DynamoDB
-```
-```
-We're adding a message queue between the API and worker — update the architecture
-```
-```
-How should we architect the notification system?
-```
-```
-Use the scaling knowledge from our load tests to update the design
-```
+Create or iterate system design documents covering architecture, tech stack, components, and cross-cutting concerns. Captures the technical "how" at architecture level. Product requirements belong in the PRD; implementation detail in feature specs. System-wide decisions should reference or create ADRs.
 
 ## References
 
 Read `references/system-design-conventions.md` for placement rules and `references/system-design-template.md` for section structure.
-
-## Scope
-
-System design captures the technical "how" at architecture level. Product requirements belong in the PRD; implementation detail in feature specs. System-wide decisions should reference or create ADRs.
 
 ## Input
 

@@ -1,41 +1,16 @@
 ---
 name: cmk:rule
-description: Codify engineering standards into docs/rules/. Use whenever someone wants to create, update, or promote knowledge into enforceable coding rules and conventions that agents follow during development. Also triggers for "add a rule that...", "make this a standard", "promote this learning to a rule", "update our coding conventions", or "what are our engineering rules".
-metadata:
-  sdl_phase: "any"
-  domain: "rule"
+description: This skill should be used when the user asks to "add a rule that...", "make this a standard", "promote this learning to a rule", "update our coding conventions", "what are our engineering rules", or needs to codify engineering standards into docs/rules/ as enforceable rules and conventions that agents follow during development.
+version: 0.1.0
 ---
 
 # Rule
 
-## Intents
-
-```
-Add a rule that all API endpoints must validate auth tokens before processing
-```
-```
-Promote the Redis pooling learning to an infrastructure rule
-```
-```
-Update the security rules — we now require CSP headers on all responses
-```
-```
-Make it a standard that all services must have health check endpoints
-```
-```
-Review the knowledge entries and let me pick what to promote to rules
-```
+Codify engineering standards into `docs/rules/`. Rules are enforceable standards organized by domain — `common/` for language-agnostic, `{language}/` for language-specific, `{framework}/` for framework-specific.
 
 ## References
 
 Read `references/rule-conventions.md` for placement rules and directory structure.
-
-## Scope
-
-Rules are enforceable engineering standards in `docs/rules/` organized by domain:
-- `common/` — language-agnostic (coding style, git workflow, security, testing)
-- `{language}/` — language-specific (e.g., `typescript/`, `python/`)
-- `{framework}/` — framework-specific (e.g., `react/`, `nextjs/`)
 
 ## Input
 

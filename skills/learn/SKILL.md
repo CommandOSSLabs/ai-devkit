@@ -1,38 +1,16 @@
 ---
 name: cmk:learn
-description: Extract and record non-obvious learnings, gotchas, and valuable knowledge from any input — conversations, research sessions, debugging, files, or user instructions. Use whenever someone wants to capture what they learned, save a gotcha, or preserve insights for future reference. Also triggers for "remember this", "save this learning", "that was a long session — capture the key findings", or "what do we know about X".
-metadata:
-  sdl_phase: "any"
-  domain: "learn"
+description: This skill should be used when the user asks to "remember this", "save this learning", "capture the key findings", "what do we know about X", "save that gotcha", or needs to extract and record non-obvious learnings, gotchas, and valuable knowledge from conversations, research sessions, debugging, files, or user instructions.
+version: 0.1.0
 ---
 
 # Learn
 
-## Intents
-
-```
-That was a long research session — extract the key learnings
-```
-```
-Save that Redis connection pooling gotcha we just discovered
-```
-```
-Remember that the Stripe webhook retry window is 72h, not 24h
-```
-```
-Review our accumulated knowledge on infrastructure
-```
-```
-Learn that batch inserts above 1000 rows cause OOM in our ORM
-```
+Extract and record non-obvious learnings, gotchas, and valuable knowledge from any input. Accept whatever the user provides — conversation context, debugging sessions, research findings, files, links, direct statements, incident post-mortems, PR reviews. Understand the source from natural language context; never ask the user to categorize.
 
 ## References
 
 Read `references/learn-conventions.md` for placement rules and entry format. Read `references/learn-template.md` for the topic file structure.
-
-## Input
-
-Accept whatever the user provides — there is no fixed set of sources. Conversation context, debugging sessions, research findings, files, links, direct statements, incident post-mortems, PR reviews. Understand the source from natural language context; don't ask the user to categorize.
 
 ## Extraction Rule
 

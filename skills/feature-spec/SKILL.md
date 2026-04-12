@@ -1,38 +1,16 @@
 ---
 name: cmk:feature-spec
-description: Create or iterate feature specifications. Use whenever someone wants to draft, refine, or update a feature spec — from conversation notes, local docs, external links, or direct prompts. Also triggers for "spec out this feature", "write up the requirements for X", "break this into a spec", or discussions about feature scope, flows, and acceptance criteria.
-metadata:
-  sdl_phase: "1"
-  domain: "feature-spec"
+description: This skill should be used when the user asks to "spec out this feature", "write up the requirements for X", "break this into a spec", "create a feature spec", "update the spec", or discusses feature scope, flows, and acceptance criteria. Covers drafting, refining, or updating feature specifications from conversation notes, local docs, external links, or direct prompts.
+version: 0.1.0
 ---
 
 # Feature Spec
 
-## Intents
-
-```
-Create a feature spec for checkout retry logic
-```
-```
-Use this Notion doc to draft a feature spec for tenant-level rate limiting: [link]
-```
-```
-Update the retry spec — we changed the backoff strategy to exponential with jitter
-```
-```
-Spec out the user authentication flow
-```
-```
-Break the PRD into feature specs
-```
+Create or iterate feature specifications that capture implementation-level detail for a single feature. Product requirements belong in the PRD; architecture in system-design. Feature-scoped decisions stay here; system-wide decisions go in ADRs.
 
 ## References
 
 Read `references/spec-conventions.md` for placement rules and `references/feature-spec-template.md` for section structure.
-
-## Scope
-
-Feature specs capture implementation-level detail for a single feature. Product requirements belong in the PRD; architecture in system-design. Feature-scoped decisions stay here; system-wide decisions go in ADRs.
 
 ## Input
 

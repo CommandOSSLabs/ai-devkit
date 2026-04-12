@@ -1,27 +1,12 @@
 ---
 name: cmk:docs
-description: Bootstrap or update the /docs directory structure with navigation files, guides, and templates. Use when someone wants to set up docs for a new repo, check if their docs structure is current, or sync scaffolding after devkit updates. Also triggers when users mention "docs structure", "initialize docs", or "docs scaffold".
-metadata:
-  sdl_phase: "0"
-  domain: "docs"
+description: This skill should be used when the user asks to "set up docs", "initialize docs", "docs scaffold", "check if our docs structure is current", "update the docs structure", or needs to bootstrap or update the /docs directory structure with navigation files, guides, and templates.
+version: 0.1.0
 ---
 
 # Docs
 
-## Intents
-
-```
-Set up the docs structure for this project
-```
-```
-Check if our docs structure matches the latest devkit
-```
-```
-We added a new service — update the docs scaffold
-```
-```
-Are we missing any docs directories?
-```
+Bootstrap or update the `/docs` directory structure with navigation files, guides, and templates. Supports first-time scaffolding, re-syncing after devkit changes, and dry-run verification.
 
 ## References
 

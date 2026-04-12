@@ -1,14 +1,12 @@
 ---
 name: cmk:worktree-dev-env
-description: Set up worktree-isolated local development environments for any project. Creates deterministic port isolation, coherence validation, interactive and headless service runners, env file management, and agent instructions. Use this skill whenever someone wants to set up local dev that works across multiple worktrees, enable parallel isolated dev environments, make their project agent-friendly for local dev/testing, add headless dev mode for CI or AI agents, or iterate on their existing worktree dev setup. Also use when someone mentions port conflicts between worktrees, env file management across branches, or wants mprocs/process-compose configuration for local dev.
-metadata:
-  sdl_phase: "any"
-  domain: "devenv"
+description: This skill should be used when the user asks to "set up local dev", "worktree dev environment", "port conflicts between worktrees", "headless dev mode", "mprocs config", "process-compose setup", or needs to create or iterate worktree-isolated local development environments with deterministic port isolation, coherence validation, interactive and headless service runners, and env file management.
+version: 0.1.0
 ---
 
 # Worktree Dev Environment Setup
 
-You are helping an engineer set up (or improve) a worktree-isolated local development environment for their project. The goal is a system where multiple git worktrees of the same repo can run full local dev stacks simultaneously on the same machine — without port conflicts, stale configs, or cross-worktree contamination.
+Set up (or improve) a worktree-isolated local development environment. The goal is a system where multiple git worktrees of the same repo can run full local dev stacks simultaneously on the same machine — without port conflicts, stale configs, or cross-worktree contamination.
 
 This pattern is valuable for three audiences:
 - **Human developers** who want to work on multiple branches with live-reloading services
@@ -17,7 +15,7 @@ This pattern is valuable for three audiences:
 
 ## The Pattern (Stack-Agnostic)
 
-The system has seven components. Each is a shell script or config file. Adapt the implementation to the project's actual tech stack, but preserve the architectural boundaries — they exist because each component has a single responsibility and can fail independently.
+The system has seven components. Each is a shell script or config file. Adapt implementation to the project's actual tech stack, but preserve the architectural boundaries — they exist because each component has a single responsibility and can fail independently.
 
 ### 1. Port Isolation (`scripts/worktree-env.sh`)
 
@@ -84,7 +82,7 @@ export COMPOSE_PROJECT_NAME="myapp-$(basename "$REPO_ROOT" | tr '[:upper:]' '[:l
 - Any inter-service references (e.g., service A's URL for reaching service B) match the computed values
 - For file-based databases, the path prefix matches `REPO_ROOT`
 
-**Why this exists:** Without this check, it's easy to accidentally run with a stale `.env` file from before a port change, or to source config from a sibling worktree. These bugs are silent and maddening to debug — you get authentication failures, connection refused, or worse, you write to the wrong database. The coherence guard makes these bugs loud and immediate.
+**Why this exists:** Without this check, it's easy to accidentally run with a stale `.env` file from before a port change, or to source config from a sibling worktree. These bugs are silent and maddening to debug — authentication failures, connection refused, or worse, writes to the wrong database. The coherence guard makes these bugs loud and immediate.
 
 **Key rules:**
 - Support a `--quiet` flag that suppresses success output (for use in mprocs/headless wrappers)
@@ -182,24 +180,20 @@ export COMPOSE_PROJECT_NAME="myapp-$(basename "$REPO_ROOT" | tr '[:upper:]' '[:l
 
 For OpenCode (`AGENTS.md`), the content is identical — just placed in the file OpenCode reads.
 
-## Working With the Engineer
+## Workflow: Create
 
-This skill supports two modes:
+1. **Discover the project** — Read the project structure, identify services, databases, message queues, and existing dev setup (docker-compose files, Makefiles, existing scripts).
+2. **Identify ports and services** — List every network port the project uses (databases, APIs, frontends, caches, etc.).
+3. **Implement each component** in order (1-7 above), adapting to the project's tech stack.
+4. **Test the setup** — Run init, verify coherence, start services in headless mode, confirm health checks pass.
+5. **Update .gitignore** — Ensure `.local/`, `tmp/`, and any generated env files are gitignored.
 
-### Creating a new worktree dev environment
+## Workflow: Iterate
 
-1. **Discover the project** — Read the project structure, identify services, databases, message queues, and their existing dev setup (docker-compose files, Makefiles, existing scripts)
-2. **Identify ports and services** — List every network port the project uses (databases, APIs, frontends, caches, etc.)
-3. **Implement each component** in order (1-7 above), adapting to the project's tech stack
-4. **Test the setup** — Run init, verify coherence, start services in headless mode, confirm health checks pass
-5. **Update .gitignore** — Ensure `.local/`, `tmp/`, and any generated env files are gitignored
-
-### Iterating on an existing worktree dev environment
-
-1. **Understand what exists** — Read the current scripts, identify which components are implemented
-2. **Identify the gap or issue** — What's the engineer asking to change? New service? Flaky health check? Missing coherence check?
-3. **Make targeted changes** — Edit the specific component, preserving the architecture
-4. **Re-validate** — Run the coherence check and a headless start/stop cycle to verify
+1. **Understand what exists** — Read the current scripts, identify which components are implemented.
+2. **Identify the gap or issue** — Determine what to change: new service, flaky health check, missing coherence check.
+3. **Make targeted changes** — Edit the specific component, preserving the architecture.
+4. **Re-validate** — Run the coherence check and a headless start/stop cycle to verify.
 
 ## Adapting to Tech Stacks
 
