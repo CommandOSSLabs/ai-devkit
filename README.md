@@ -4,10 +4,20 @@ Documentation-first skills for AI-powered software development. Agents and human
 
 ## Install
 
-As a Claude Code plugin:
+### Claude Code
 
 ```bash
 claude plugin add CommandOSSLabs/ai-devkit
+```
+
+### OpenCode
+
+Add to `opencode.json`:
+
+```json
+{
+  "plugin": ["ai-devkit@git+https://github.com/CommandOSSLabs/ai-devkit.git"]
+}
 ```
 
 ## Motivation
@@ -161,6 +171,17 @@ Install as a plugin. Skills are auto-discovered from `skills/` and available as 
 ```
 ```
 We just discussed auth requirements — save that as a PRD
+```
+
+### OpenCode
+
+Install as a plugin via `opencode.json`. Skills are auto-registered and available via the native `skill` tool:
+
+```
+use skill tool to load ai-devkit/prd
+```
+```
+Draft a system design for the API gateway
 ```
 
 ### Specialized Agents
