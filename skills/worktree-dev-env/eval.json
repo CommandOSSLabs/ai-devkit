@@ -1,0 +1,89 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "nextjs-fastapi-monorepo",
+    "prompt": "I have a Next.js monorepo with a PostgreSQL database, a FastAPI Python backend for ML inference, and the Next.js frontend. We use pnpm workspaces. I'm starting to use Claude Code with worktrees and I need multiple branches running at the same time without port conflicts. The frontend is on port 3000, the API on 8000, and Postgres on 5432. We also have a Redis cache on 6379. Can you set up worktree-isolated local dev for this project?",
+    "assertions": [
+      "worktree-env.sh computes a deterministic offset from SHA256 of repo root",
+      "worktree-env.sh offsets all four ports (3000, 8000, 5432, 6379)",
+      "init-worktree-dev.sh sources worktree-env.sh and creates .local/ directory",
+      "init-worktree-dev.sh uses set -euo pipefail",
+      "ensure-worktree-coherence.sh validates DSN ports match computed ports",
+      "ensure-worktree-coherence.sh supports --quiet flag",
+      "start-headless.sh has both start and --stop modes",
+      "start-headless.sh writes PIDs to tmp/pids/ and logs to tmp/",
+      "start-headless.sh starts services in dependency order (infra first)",
+      "mprocs.yaml or process-compose.yaml is created with all services",
+      "CLAUDE.md section includes worktree-safe local dev instructions",
+      ".gitignore includes .local/ and tmp/"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "go-microservices",
+    "prompt": "We have a Go microservices project with 3 services: an API gateway (port 8080), a user service (port 8081), and a notification service (port 8082). We use MySQL on 3306 and RabbitMQ on 5672/15672. Everything runs in Docker but we want to be able to run services natively for faster iteration. I work on multiple features in parallel using git worktrees and keep hitting port conflicts. Help me set up worktree-isolated dev.",
+    "assertions": [
+      "worktree-env.sh offsets all 6 ports (8080, 8081, 8082, 3306, 5672, 15672)",
+      "Docker compose file uses env var substitution for port mapping (not hardcoded ports)",
+      "init-worktree-dev.sh generates MySQL DSN with computed port",
+      "ensure-worktree-coherence.sh checks all three service URLs and MySQL DSN",
+      "start-headless.sh includes health checks for at least the API gateway",
+      "Interactive mode config includes all 3 Go services with file-watching (air, gow, or similar)",
+      "CLAUDE.md worktree section is included"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "rails-react-iteration",
+    "prompt": "I already have a worktree dev setup for my Rails + React project but it's not working well. The coherence check is too basic — it only checks if files exist but doesn't validate ports. The headless mode doesn't have health checks so agents just blindly start services and hope they're up. And there's no env sync — the React app has a hardcoded localhost:3000 for the API URL instead of reading from the worktree env. Can you help me improve this setup?",
+    "assertions": [
+      "Coherence script is enhanced to validate port values in DSNs and URLs (not just file existence)",
+      "start-headless.sh gains health check logic with timeouts (curl or nc based)",
+      "A sync-service-envs.sh is created that generates frontend .env.local with dynamic API URL",
+      "The React app API URL becomes dynamic via env var (REACT_APP_API_URL or similar)",
+      "Existing working worktree-env.sh is preserved unchanged"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "rust-htmx-sqlite-minio",
+    "prompt": "I have a Rust web app using axum that serves HTMX templates with Askama. We use SQLite for the database (file-based, no server) and MinIO on port 9000 (API) and 9001 (console) for object storage. The axum server runs on port 3000. I'm using git worktrees heavily and need isolated local dev. The tricky part is SQLite — it's a file, not a network service, so each worktree needs its own DB file path rather than a different port. Can you set up worktree-isolated dev for this?",
+    "assertions": [
+      "worktree-env.sh offsets network ports (3000 for axum, 9000 and 9001 for MinIO)",
+      "SQLite database path is worktree-local (e.g., .local/dev.db or similar) rather than port-isolated",
+      "init-worktree-dev.sh handles both port-based and file-based service isolation",
+      "ensure-worktree-coherence.sh validates SQLite path is within current worktree (not pointing elsewhere)",
+      "start-headless.sh includes MinIO startup (via docker or binary)",
+      "Interactive mode uses cargo watch or cargo-watch for Rust live-reload",
+      "CLAUDE.md worktree section is included"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "elixir-phoenix-rust-sidecar",
+    "prompt": "We have a polyglot stack: an Elixir Phoenix web app (port 4000) with a Rust sidecar service for heavy ML inference (port 8080). We use Postgres on 5432 for the Phoenix app's OLTP data and ClickHouse on 8123 (HTTP) and 9000 (native) for analytics. The Phoenix app talks to the Rust sidecar over HTTP. We need worktree-isolated dev because our team works on multiple features in parallel and the port conflicts are killing us. Help set this up.",
+    "assertions": [
+      "worktree-env.sh offsets all 5 ports (4000, 8080, 5432, 8123, 9000)",
+      "init-worktree-dev.sh handles both Elixir and Rust service configuration",
+      "ensure-worktree-coherence.sh validates Phoenix-to-Rust-sidecar URL uses correct computed port",
+      "start-headless.sh starts services in correct dependency order (DBs, then Rust sidecar, then Phoenix)",
+      "Interactive mode uses mix phx.server for Phoenix and cargo watch for Rust",
+      "Docker compose handles both Postgres and ClickHouse with env var port substitution",
+      "CLAUDE.md worktree section is included"
+    ]
+  },
+  {
+    "eval_id": 6,
+    "eval_name": "django-go-grpc-nats",
+    "prompt": "Our project has a Django monolith (port 8000) that talks to a Go gRPC microservice (port 50051) for real-time data processing. We use Redis on 6379 for caching/sessions and NATS on 4222 (client) and 8222 (monitoring) for event streaming. The Django app calls the Go service via gRPC, and the Go service publishes events to NATS that Django consumes. I need worktree-isolated local dev — we have 4 developers using worktrees and constantly stepping on each other's ports.",
+    "assertions": [
+      "worktree-env.sh offsets all 5 ports (8000, 50051, 6379, 4222, 8222)",
+      "init-worktree-dev.sh generates gRPC service address with computed port for Django to connect to",
+      "ensure-worktree-coherence.sh validates gRPC address and NATS URL use correct computed ports",
+      "start-headless.sh includes health checks for the gRPC service (not just HTTP services)",
+      "Interactive mode uses appropriate dev tools (Django runserver, Go with air/gow)",
+      "NATS connection URLs in env files use computed port (not hardcoded 4222)",
+      "CLAUDE.md worktree section is included"
+    ]
+  }
+]
