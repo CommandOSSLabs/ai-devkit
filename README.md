@@ -4,21 +4,9 @@ Documentation-first skills for AI-powered software development. Agents and human
 
 ## Install
 
-### Claude Code
-
-```bash
-claude plugin add CommandOSSLabs/ai-devkit
-```
-
-### OpenCode
-
-Add to `opencode.json`:
-
-```json
-{
-  "plugin": ["ai-devkit@git+https://github.com/CommandOSSLabs/ai-devkit.git"]
-}
-```
+For detailed installation instructions, see the platform-specific guides:
+- **Claude Code:** [`.claude-plugin/INSTALL.md`](./.claude-plugin/INSTALL.md) — `claude plugin add CommandOSSLabs/ai-devkit`
+- **OpenCode:** [`.opencode/INSTALL.md`](./.opencode/INSTALL.md) — plugin via `opencode.json`
 
 ## Motivation
 
@@ -40,6 +28,7 @@ This devkit solves that by using structured documentation as the shared state. T
 | `cmk:codebase-summary` | Create or iterate codebase navigation docs |
 | `cmk:learn` | Extract and record non-obvious learnings and gotchas |
 | `cmk:rule` | Codify engineering standards into `docs/rules/` |
+| `cmk:worktree-dev-env` | Set up worktree-isolated local development environments |
 
 ## Usage
 
@@ -164,25 +153,11 @@ When an upstream doc changes (e.g., PRD scope shifts), review downstream docs fo
 
 ### Claude Code
 
-Install as a plugin. Skills are auto-discovered from `skills/` and available as slash commands:
-
-```
-/cmk:prd
-```
-```
-We just discussed auth requirements — save that as a PRD
-```
+Install as a plugin. Skills are auto-discovered and available as slash commands. See [Install](#install) for setup.
 
 ### OpenCode
 
-Install as a plugin via `opencode.json`. Skills are auto-registered and available via the native `skill` tool:
-
-```
-use skill tool to load ai-devkit/prd
-```
-```
-Draft a system design for the API gateway
-```
+Install as a plugin via `opencode.json`. Skills are auto-registered via the config hook. See [`.opencode/INSTALL.md`](./.opencode/INSTALL.md) for setup and troubleshooting.
 
 ### Specialized Agents
 
