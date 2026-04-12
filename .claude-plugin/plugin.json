@@ -1,0 +1,12 @@
+{
+  "name": "ai-devkit",
+  "version": "1.0.0",
+  "description": "Documentation-first skills for AI-powered software development",
+  "author": {
+    "name": "CommandOSS Labs",
+    "url": "https://github.com/CommandOSSLabs"
+  },
+  "repository": "https://github.com/CommandOSSLabs/ai-devkit",
+  "license": "MIT",
+  "keywords": ["documentation", "prd", "system-design", "feature-spec", "adr", "devkit"]
+}

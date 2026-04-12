@@ -4,29 +4,10 @@ Documentation-first skills for AI-powered software development. Agents and human
 
 ## Install
 
-Install all skills:
+As a Claude Code plugin:
 
 ```bash
-npx skills add CommandOSSLabs/ai-devkit
-```
-
-Install specific skills:
-
-```bash
-npx skills add CommandOSSLabs/ai-devkit --skill docs
-npx skills add CommandOSSLabs/ai-devkit --skill prd
-npx skills add CommandOSSLabs/ai-devkit --skill system-design
-npx skills add CommandOSSLabs/ai-devkit --skill feature-spec
-npx skills add CommandOSSLabs/ai-devkit --skill adr
-npx skills add CommandOSSLabs/ai-devkit --skill codebase-summary
-npx skills add CommandOSSLabs/ai-devkit --skill learn
-npx skills add CommandOSSLabs/ai-devkit --skill rule
-```
-
-Contributing to this repo — install git hooks for auto-sync:
-
-```bash
-bash scripts/install-git-hooks.sh
+claude plugin add CommandOSSLabs/ai-devkit
 ```
 
 ## Motivation
@@ -173,21 +154,13 @@ When an upstream doc changes (e.g., PRD scope shifts), review downstream docs fo
 
 ### Claude Code
 
-Skills install as slash commands under `.claude/skills/`. Use natural language or invoke directly:
+Install as a plugin. Skills are auto-discovered from `skills/` and available as slash commands:
 
 ```
 /cmk:prd
 ```
 ```
 We just discussed auth requirements — save that as a PRD
-```
-
-### OpenCode
-
-Skills install under `.agents/skills/` — the standard OpenCode convention. Natural language triggers work the same way:
-
-```
-Draft a system design for the API gateway
 ```
 
 ### Specialized Agents
