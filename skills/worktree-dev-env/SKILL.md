@@ -15,7 +15,7 @@ This pattern is valuable for three audiences:
 
 ## The Pattern (Stack-Agnostic)
 
-The system has seven components. Each is a shell script or config file. Adapt implementation to the project's actual tech stack, but preserve the architectural boundaries — they exist because each component has a single responsibility and can fail independently.
+The system has eight components. Each is a shell script or config file. Adapt implementation to the project's actual tech stack, but preserve the architectural boundaries — they exist because each component has a single responsibility and can fail independently.
 
 ### 1. Port Isolation (`scripts/worktree-env.sh`)
 
@@ -157,7 +157,61 @@ export COMPOSE_PROJECT_NAME="myapp-$(basename "$REPO_ROOT" | tr '[:upper:]' '[:l
 - The stop command should be graceful — try SIGTERM before SIGKILL
 - For non-HTTP services (gRPC, message brokers), use TCP port checks (`nc -z`) rather than HTTP probes
 
-### 7. Agent Instructions
+### 7. Service Logs (`scripts/logs.sh`)
+
+**Purpose:** Color-coded log viewer for headless services. Usable standalone by humans (`./scripts/logs.sh`) and called by `start-headless.sh --logs` internally.
+
+**Usage:**
+- `./scripts/logs.sh` — tail all services, color-coded
+- `./scripts/logs.sh api` — tail only the api service
+- `./scripts/logs.sh --no-follow` — dump current logs and exit (no live tail)
+
+**How it works:**
+- Discover services from `tmp/pids/*.pid` (same source of truth as headless start/stop)
+- Assign each service a distinct ANSI color from a rotating palette
+- Prefix every line with a colored `[service-name]` tag
+- Default is `--follow` (live tail); `--no-follow` dumps and exits
+
+**Template logic:**
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+COLORS=(36 33 32 35 34)  # cyan, yellow, green, magenta, blue
+follow=true
+service_filter=""
+
+for arg in "$@"; do
+  case "$arg" in
+    --no-follow) follow=false ;;
+    *) service_filter="$arg" ;;
+  esac
+done
+
+tail_cmd="tail"; $follow && tail_cmd="tail -f"
+
+color_idx=0
+for pidfile in "$REPO_ROOT"/tmp/pids/*.pid; do
+  svc="$(basename "$pidfile" .pid)"
+  logfile="$REPO_ROOT/tmp/${svc}.log"
+  [ -n "$service_filter" ] && [ "$svc" != "$service_filter" ] && continue
+  [ -f "$logfile" ] || continue
+
+  color="${COLORS[$((color_idx % ${#COLORS[@]}))]}"
+  color_idx=$((color_idx + 1))
+  $tail_cmd "$logfile" | sed "s/^/$(printf '\033[%sm' "$color")[${svc}]$(printf '\033[0m') /" &
+done
+
+[ $color_idx -eq 0 ] && echo "No service logs found in tmp/" && exit 1
+wait
+```
+
+**Integration with `start-headless.sh`:**
+- `start-headless.sh --logs [service]` delegates to `scripts/logs.sh` — no duplicated logic
+- After starting services and health checks pass, print a hint: `View logs: ./scripts/logs.sh`
+
+### 8. Agent Instructions
 
 **Purpose:** Tell AI agents how to use the dev environment. Without this, an agent will try to `npm start` or `docker-compose up` and get confused.
 
@@ -175,7 +229,7 @@ export COMPOSE_PROJECT_NAME="myapp-$(basename "$REPO_ROOT" | tr '[:upper:]' '[:l
 - Never bypass `scripts/ensure-worktree-coherence.sh`; if it fails, stop and report the mismatch.
 - For interactive human sessions, start services with `mprocs --config mprocs.yaml`.
 - For non-interactive/headless agent runs (no TTY), use `./scripts/start-headless.sh` (stop with `--stop`).
-  Logs go to `tmp/*.log`, PIDs to `tmp/pids/`.
+  View logs with `./scripts/logs.sh [service]`. Logs go to `tmp/*.log`, PIDs to `tmp/pids/`.
 ```
 
 For OpenCode (`AGENTS.md`), the content is identical — just placed in the file OpenCode reads.
@@ -184,7 +238,7 @@ For OpenCode (`AGENTS.md`), the content is identical — just placed in the file
 
 1. **Discover the project** — Read the project structure, identify services, databases, message queues, and existing dev setup (docker-compose files, Makefiles, existing scripts).
 2. **Identify ports and services** — List every network port the project uses (databases, APIs, frontends, caches, etc.).
-3. **Implement each component** in order (1-7 above), adapting to the project's tech stack.
+3. **Implement each component** in order (1-8 above), adapting to the project's tech stack.
 4. **Test the setup** — Run init, verify coherence, start services in headless mode, confirm health checks pass.
 5. **Update .gitignore** — Ensure `.local/`, `tmp/`, and any generated env files are gitignored.
 
@@ -236,7 +290,8 @@ project-root/
 │   ├── init-worktree-dev.sh         # Bootstrap entry point
 │   ├── ensure-worktree-coherence.sh # Hard-fail validation
 │   ├── sync-service-envs.sh         # Env propagation to service dirs
-│   └── start-headless.sh            # Headless start/stop
+│   ├── start-headless.sh            # Headless start/stop
+│   └── logs.sh                      # Color-coded service log viewer
 ├── mprocs.yaml                      # Interactive process multiplexer config
 ├── CLAUDE.md                        # Agent instructions for Claude Code
 └── AGENTS.md                        # Agent instructions for OpenCode
