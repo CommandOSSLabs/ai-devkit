@@ -1,0 +1,14 @@
+{
+  "eval_id": 4,
+  "eval_name": "rust-htmx-sqlite-minio",
+  "prompt": "I have a Rust web app using axum that serves HTMX templates with Askama. We use SQLite for the database (file-based, no server) and MinIO on port 9000 (API) and 9001 (console) for object storage. The axum server runs on port 3000. I'm using git worktrees heavily and need isolated local dev. The tricky part is SQLite — it's a file, not a network service, so each worktree needs its own DB file path rather than a different port. Can you set up worktree-isolated dev for this?",
+  "assertions": [
+    "worktree-env.sh offsets network ports (3000 for axum, 9000 and 9001 for MinIO)",
+    "SQLite database path is worktree-local (e.g., .local/dev.db or similar) rather than port-isolated",
+    "init-worktree-dev.sh handles both port-based and file-based service isolation",
+    "ensure-worktree-coherence.sh validates SQLite path is within current worktree (not pointing elsewhere)",
+    "start-headless.sh includes MinIO startup (via docker or binary)",
+    "Interactive mode uses cargo watch or cargo-watch for Rust live-reload",
+    "CLAUDE.md worktree section is included"
+  ]
+}

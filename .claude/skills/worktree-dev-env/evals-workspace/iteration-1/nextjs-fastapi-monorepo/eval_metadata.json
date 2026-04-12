@@ -1,0 +1,19 @@
+{
+  "eval_id": 1,
+  "eval_name": "nextjs-fastapi-monorepo",
+  "prompt": "I have a Next.js monorepo with a PostgreSQL database, a FastAPI Python backend for ML inference, and the Next.js frontend. We use pnpm workspaces. I'm starting to use Claude Code with worktrees and I need multiple branches running at the same time without port conflicts. The frontend is on port 3000, the API on 8000, and Postgres on 5432. We also have a Redis cache on 6379. Can you set up worktree-isolated local dev for this project?",
+  "assertions": [
+    "worktree-env.sh computes a deterministic offset from SHA256 of repo root",
+    "worktree-env.sh offsets all four ports (3000, 8000, 5432, 6379)",
+    "init-worktree-dev.sh sources worktree-env.sh and creates .local/ directory",
+    "init-worktree-dev.sh uses set -euo pipefail",
+    "ensure-worktree-coherence.sh validates DSN ports match computed ports",
+    "ensure-worktree-coherence.sh supports --quiet flag",
+    "start-headless.sh has both start and --stop modes",
+    "start-headless.sh writes PIDs to tmp/pids/ and logs to tmp/",
+    "start-headless.sh starts services in dependency order (infra first)",
+    "mprocs.yaml or process-compose.yaml is created with all services",
+    "CLAUDE.md section includes worktree-safe local dev instructions",
+    ".gitignore includes .local/ and tmp/"
+  ]
+}

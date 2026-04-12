@@ -1,0 +1,60 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Node
+node_modules/
+dist/
+build/
+.pnpm-store/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Rust
+target/
+
+# Go
+vendor/
+
+# Ruby
+.bundle/
+
+# Elixir
+_build/
+deps/
+
+# Databases & logs
+*.db
+*.sqlite
+*.sqlite3
+*.log
+
+# Docker overrides
+docker-compose.override.yml
+
+# Worktree dev env local state
+.local/
+
+# Eval generated outputs (keep eval_metadata.json only)
+**/evals-workspace/**/with_skill/
+**/evals-workspace/**/without_skill/
+**/evals-workspace/**/benchmark.json
