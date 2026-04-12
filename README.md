@@ -6,11 +6,15 @@ Documentation-first skills for AI-powered software development. Agents and human
 
 ### Claude Code
 
-Use the plugin marketplace: `/plugin` → search "ai-devkit"
+```bash
+claude plugin add CommandOSSLabs/ai-devkit
+```
 
 ### OpenCode
 
-Fetch and follow the instructions at [`.opencode/INSTALL.md`](https://github.com/CommandOSSLabs/ai-devkit/blob/main/.opencode/INSTALL.md).
+Tell OpenCode:
+
+`Fetch and follow the instructions at https://raw.githubusercontent.com/CommandOSSLabs/ai-devkit/refs/heads/main/.opencode/INSTALL.md.`
 
 ## Motivation
 
