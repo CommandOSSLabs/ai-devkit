@@ -4,9 +4,13 @@ Documentation-first skills for AI-powered software development. Agents and human
 
 ## Install
 
-For detailed installation instructions, see the platform-specific guides:
-- **Claude Code:** [`.claude-plugin/INSTALL.md`](./.claude-plugin/INSTALL.md) — `claude plugin add CommandOSSLabs/ai-devkit`
-- **OpenCode:** [`.opencode/INSTALL.md`](./.opencode/INSTALL.md) — plugin via `opencode.json`
+### Claude Code
+
+Use the plugin marketplace: `/plugin` → search "ai-devkit"
+
+### OpenCode
+
+Fetch and follow the instructions at [`.opencode/INSTALL.md`](https://github.com/CommandOSSLabs/ai-devkit/blob/main/.opencode/INSTALL.md).
 
 ## Motivation
 
@@ -157,7 +161,7 @@ Install as a plugin. Skills are auto-discovered and available as slash commands.
 
 ### OpenCode
 
-Install as a plugin via `opencode.json`. Skills are auto-registered via the config hook. See [`.opencode/INSTALL.md`](./.opencode/INSTALL.md) for setup and troubleshooting.
+Install as a plugin via `opencode.json`. Skills are auto-registered via the config hook. See [`.opencode/INSTALL.md`](https://github.com/CommandOSSLabs/ai-devkit/blob/main/.opencode/INSTALL.md) for setup and troubleshooting.
 
 ### Specialized Agents
 
