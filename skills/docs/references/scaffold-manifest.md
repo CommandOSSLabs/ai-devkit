@@ -42,7 +42,7 @@ Start in [`README.md`](./README.md) in this folder for documentation structure a
 
 Before starting work, read the docs that apply to your task:
 
-- **Any task:** [`codebase-summary.md`](./codebase-summary.md) — understand repo structure and entry points
+- **Any task:** [`ai/`](./ai/) — hierarchical, AI-navigable docs that point to the right source files
 - **New feature or product change:** [`PRD.md`](./PRD.md) — current product requirements and scope
 - **Architecture or technical work:** [`system-design.md`](./system-design.md) — system architecture and tech stack
 - **Feature implementation:** [`specs/`](./specs/) — find the relevant feature spec
@@ -69,13 +69,14 @@ This directory is the source of truth for documentation in this repository.
 ├── AGENTS.md
 ├── PRD.md
 ├── system-design.md
-├── codebase-summary.md
+├── ai/
+│   ├── README.md
+│   └── {area}/...
 ├── templates/
 │   ├── adr.md
 │   ├── feature-spec.md
 │   ├── PRD.md
 │   ├── system-design.md
-│   ├── codebase-summary.md
 │   └── ...
 ├── rules/
 │   ├── AGENTS.md
@@ -112,7 +113,7 @@ This directory is the source of truth for documentation in this repository.
 - **`rules/` (Recommended)** — Coding rules, standards, conventions, and practices: code style, git workflow, testing, development practices, etc. See [`docs/rules/README.md`](./rules/README.md) for structure and conventions.
 - **`PRD.md` (Recommended)** — Product requirements: problem, success criteria, user needs, scope. Upstream of system design and feature specs.
 - **`system-design.md` (Recommended)** — High-level system architecture: tech stack, service connections, infrastructure layout, external dependencies, etc.
-- **`codebase-summary.md` (Recommended)** — Codebase structure and navigation: directories, modules, entry points.
+- **`ai/` (Recommended)** — Hierarchical, AI-navigable docs that point to the right source files for each topic. Generated and updated by the `cmk:codebase-docs` skill.
 - **`knowledge/` (Recommended)** — Accumulated knowledge: gotchas, non-obvious findings, hard-won insights. One file per topic. See [`docs/knowledge/README.md`](./knowledge/README.md) for structure and conventions.
 - **`guides/` (Recommended)** — Operational and onboarding docs, team decides what's needed (e.g. onboarding.md, local-dev.md, deployment.md).
 - **`reference/` (Recommended)** — Cross-cutting reference docs shared across phases and teams. See [`docs/reference/README.md`](./reference/README.md) for structure and conventions.
@@ -122,7 +123,6 @@ This directory is the source of truth for documentation in this repository.
 
 - PRD template: [`docs/templates/PRD.md`](./templates/PRD.md)
 - System design template: [`docs/templates/system-design.md`](./templates/system-design.md)
-- Codebase summary template: [`docs/templates/codebase-summary.md`](./templates/codebase-summary.md)
 - Feature spec template: [`docs/templates/feature-spec.md`](./templates/feature-spec.md)
 - ADR template: [`docs/templates/adr.md`](./templates/adr.md)
 
@@ -476,6 +476,5 @@ The following templates should be copied from the devkit's `docs/templates/` dir
 
 - `docs/templates/PRD.md`
 - `docs/templates/system-design.md`
-- `docs/templates/codebase-summary.md`
 - `docs/templates/feature-spec.md`
 - `docs/templates/adr.md`

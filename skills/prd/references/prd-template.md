@@ -39,5 +39,5 @@ Use these sections in order unless the target repository has a stronger local co
 
 ## 9) Related Documents (Optional)
 
-- Links to system-design, codebase-summary.
+- Links to system-design, codebase docs (`docs/ai/`).
 - Downstream Specs subsection tracking feature specs that implement this PRD.

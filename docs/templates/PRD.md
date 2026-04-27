@@ -79,7 +79,7 @@ Scenarios ground abstract needs in real usage — skip formal user-story syntax.
 ## Related Documents (Optional)
 
 - [System Design](../system-design.md) — technical architecture
-- [Codebase Summary](../codebase-summary.md) — repository layout
+- [Codebase Docs](../ai/) — AI-navigable map of the repo
 
 ### Downstream Specs
 

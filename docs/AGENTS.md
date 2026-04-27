@@ -12,7 +12,7 @@ Start in [`README.md`](./README.md) in this folder for documentation structure a
 
 Before starting work, read the docs that apply to your task:
 
-- **Any task:** [`codebase-summary.md`](./codebase-summary.md) — understand repo structure and entry points
+- **Any task:** [`ai/`](./ai/) — hierarchical, AI-navigable docs that point to the right source files
 - **New feature or product change:** [`PRD.md`](./PRD.md) — current product requirements and scope
 - **Architecture or technical work:** [`system-design.md`](./system-design.md) — system architecture and tech stack
 - **Feature implementation:** [`specs/`](./specs/) — find the relevant feature spec

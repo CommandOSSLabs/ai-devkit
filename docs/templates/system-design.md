@@ -92,6 +92,6 @@ graph TD
 ## Related Documents (Optional)
 
 - [PRD](../PRD.md) — product requirements this design implements
-- [Codebase Summary](../codebase-summary.md) — repository layout
+- [Codebase Docs](../ai/) — AI-navigable map of the repo
 - [Rules](../rules/README.md) — engineering standards
 - [ADRs](../adrs/README.md) — architecture decisions

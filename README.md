@@ -33,7 +33,7 @@ This devkit solves that by using structured documentation as the shared state. T
 | `cmk:system-design` | Create or iterate system architecture |
 | `cmk:feature-spec` | Create or iterate feature specifications |
 | `cmk:adr` | Create or update architecture decisions |
-| `cmk:codebase-summary` | Create or iterate codebase navigation docs |
+| `cmk:codebase-docs` | Generate or update hierarchical, AI-navigable docs under `docs/ai/` |
 | `cmk:learn` | Extract and record non-obvious learnings and gotchas |
 | `cmk:rule` | Codify engineering standards into `docs/rules/` |
 | `cmk:worktree-dev-env` | Set up worktree-isolated local development environments |
@@ -139,18 +139,18 @@ Promote the Redis pooling learning to an infrastructure rule
 Update the security rules — we now require CSP headers on all responses
 ```
 
-### At any point: Codebase Summary — `cmk:codebase-summary`
+### At any point: Codebase Docs for AI — `cmk:codebase-docs`
 
-Map the repository for navigation. Update as the codebase evolves.
+Build a hierarchical tree of short docs under `docs/ai/` so AI (or a human skimming) can quickly find the right source file for a topic. Update as the codebase evolves.
 
 ```
-Document the repository structure and key entry points
+Set up AI docs for this repo
 ```
 ```
-Update the codebase summary — we reorganized the src/ directory
+Update the AI docs — I added a new TUI input handler
 ```
 ```
-Map the codebase so new contributors can get oriented quickly
+Refresh docs/ai/ for the rcp module
 ```
 
 ### Upstream changes

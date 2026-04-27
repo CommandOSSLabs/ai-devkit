@@ -1,0 +1,34 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "bootstrap-ai-devkit",
+    "prompt": "Set up AI navigation docs for this repository. Read skills/codebase-docs/SKILL.md and follow its bootstrap workflow. Output the full tree under docs/ai/.",
+    "assertions": [
+      "docs/ai/README.md exists and is one paragraph + a link menu (not a wall of text)",
+      "Top-level menu links every major area in the repo (skills/, docs/, .claude-plugin/, .opencode/ if relevant)",
+      "Each branch's README.md is a link menu of one-liners, not a re-explanation of children",
+      "Folder names mirror the repo's own vocabulary (e.g., 'skills' not 'plugins-and-skills')",
+      "Every leaf doc follows the what / (why) / where structure",
+      "Every file path referenced in docs is relative to the repo root, not bare filenames",
+      "Every referenced file path actually exists in the repo (no phantom paths)",
+      "Symbol hints (when present) are real grep-able strings, not invented names",
+      "No leaf doc duplicates code blocks longer than a couple of lines",
+      "No leaf doc exceeds ~200 lines",
+      "No tombstone references to the deleted codebase-summary skill",
+      "docs/ai/skills/README.md (or equivalent) lists codebase-docs as one of the skills"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "update-add-new-skill",
+    "prompt": "Assume docs/ai/ already exists with a tree describing this repo. I just added a new skill called 'cmk:foo' at skills/foo/SKILL.md. Read skills/codebase-docs/SKILL.md and follow its update workflow to refresh docs/ai/ for the new skill. Do not rewrite docs that still describe reality.",
+    "assertions": [
+      "Existing unrelated docs are not rewritten",
+      "skills/foo/SKILL.md is added as a new leaf or menu entry under docs/ai/skills/",
+      "Parent README's menu is updated to include the new skill in alphabetical or logical order",
+      "Update is in-place editing — no full bootstrap rerun",
+      "Symbol hints for the new skill point at real content in skills/foo/SKILL.md",
+      "No new doc speculates about features that don't exist yet"
+    ]
+  }
+]
