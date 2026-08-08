@@ -1,14 +1,15 @@
-# [System/Project Name] — System Design
+# Design: <topic>
 
 **Status:** draft | active | shipped | deprecated
 **Owner:** @[handle]
 **Last updated:** YYYY-MM-DD
+**Scope:** System-wide or feature-level — state which
 
-<!-- High-level system design: architecture, tech stack, components, cross-cutting concerns. -->
+<!-- Captures the technical "how": architecture, tech stack, components, cross-cutting concerns, or feature-level implementation detail. -->
 
 ## Mission
 
-<!-- What the system does, who it serves, why it exists. -->
+<!-- What the system or feature does, who it serves, why it exists. -->
 
 ## Design Principles
 
@@ -44,6 +45,12 @@ graph TD
 <!-- Third-party services and APIs: purpose and failure behavior. -->
 
 - [Service/API] — [purpose and failure behavior]
+
+## Acceptance Criteria (Feature-Level Docs Only)
+
+<!-- Functional and non-functional requirements for this feature. Each can be a one-liner or expanded with context, edge cases, and acceptance criteria — include acceptance criteria when the "done" definition isn't obvious from the requirement itself. -->
+
+- [Requirement] — [acceptance criteria]
 
 ## Cross-Cutting Concerns
 
@@ -81,17 +88,20 @@ graph TD
 
 ## Architecture Rationale (Optional)
 
-<!-- Why the system is shaped this way. Connects ADRs into a narrative. -->
+<!-- Why the system is shaped this way. Connects decisions into a narrative. -->
 
 ## Open Points (Optional)
 
-<!-- Unresolved architecture decisions. -->
+<!-- Unresolved design decisions. -->
 
 - [Question] — context and options being considered
 
 ## Related Documents (Optional)
 
-- [PRD](../PRD.md) — product requirements this design implements
 - [Codebase Docs](../ai/) — AI-navigable map of the repo
 - [Rules](../rules/README.md) — engineering standards
-- [ADRs](../adrs/README.md) — architecture decisions
+
+## Links
+
+- Requirements: [docs/requirements/<topic>.md](../requirements/) — what this design satisfies
+- Decisions: [docs/decisions/](../decisions/) — recorded constraints this design honors

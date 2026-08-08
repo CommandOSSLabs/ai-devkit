@@ -1,6 +1,6 @@
-# System Design Template (Portable Baseline)
+# Design Template (Portable Baseline)
 
-Use these sections in order unless the target repository has a stronger local convention.
+Use these sections in order unless the target repository has a stronger local convention. Covers system-wide design; for feature-level docs, see the Feature-Level Guidance in `design-conventions.md` and the Acceptance Criteria section in `../../../docs/templates/design.md`.
 
 ## 1) Mission
 
@@ -49,4 +49,4 @@ Only include subsections with something non-obvious to say:
 
 ## 10) Related Documents (Optional)
 
-- Links to PRD, codebase summary, rules, ADRs.
+- Links to requirements, codebase summary, rules, decisions.
