@@ -1,0 +1,41 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "init-empty-repo",
+    "prompt": "I just created a brand-new empty git repo for a small TypeScript CLI tool. Nothing is in it yet except a README. Can you bootstrap this repo with the devkit?",
+    "assertions": [
+      "the assess step reads the repo before proposing anything, even though it is nearly empty",
+      "a plan is presented listing every facet judged applicable and, for each skipped facet, the reason it was skipped",
+      "no file is created or modified before the plan is presented",
+      "the facet run order follows project-layout, toolchain, docs, agent-instructions, mcp-config, then local-stack/infra/cicd only if applicable",
+      "a repo with no deployable service and no local topology need is allowed to skip local-stack, infra, and/or cicd with a stated reason rather than forcing all eight facets",
+      "CLAUDE.md is seeded with a symlinked AGENTS.md as part of the agent-instructions facet"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "adopt-nonconforming-docs-tree",
+    "prompt": "We have an existing repo with two years of history. It has a docs/ folder, but it's just a flat pile of markdown files with no navigation READMEs, no decisions/requirements/design split, and a few stale files that duplicate what's in our CLAUDE.md. We want to adopt the devkit without losing anything. Can you help?",
+    "assertions": [
+      "adopt mode assesses the existing docs/ tree and maps it onto the canonical taxonomy rather than assuming it's empty",
+      "a migration plan proposes where each existing file would move or merge, presented for approval before any move happens",
+      "no existing file is deleted, overwritten, or bulk-moved without being called out individually in the plan",
+      "the plan distinguishes files that already fit the taxonomy from ones that need to move, rather than treating the whole tree as one bulk operation",
+      "stale content duplicating CLAUDE.md is flagged as a candidate for consolidation, not silently deleted",
+      "the response frames every destructive step as proposed, not executed"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "verify-partially-set-up-repo",
+    "prompt": "Someone on the team ran the devkit setup a while back but I'm not sure it's complete. We have a CLAUDE.md and a docs/ folder, but I don't know if the rules files exist, whether MCP is configured, or if CI matches what it's supposed to. Can you check what's actually set up without changing anything?",
+    "assertions": [
+      "verify mode runs and makes zero file changes",
+      "the report is broken down per facet rather than one pass/fail verdict",
+      "a facet like agent-instructions is checked for whether CLAUDE.md's docs/rules/ pointers actually resolve to existing files, not just whether CLAUDE.md exists",
+      "the report calls out any facet left half-applied, such as a present config file whose backing content is missing",
+      "facets with no evidence of ever being applied are reported as gaps, not silently skipped from the report",
+      "the report references each facet's own verify checks rather than inventing new ad-hoc criteria"
+    ]
+  }
+]
