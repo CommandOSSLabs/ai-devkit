@@ -3,53 +3,8 @@
 Complete file manifest for bootstrapping a repository's `/docs` structure.
 Each section defines a file path and its exact content.
 
----
-
-## Root AGENTS.md
-
-**Path:** `AGENTS.md`
-
-```markdown
-# Project Overview Entry
-
-[`/docs`](./docs) is the source of truth for this repository.
-
-It exists for two purposes:
-- Store essential and critical documentation for this repository
-- Organize living specs, decisions, and guides used during development
-
-Start in [`docs/AGENTS.md`](./docs/AGENTS.md) for navigation and task routing.
-```
-
----
-
-## docs/AGENTS.md
-
-**Path:** `docs/AGENTS.md`
-
-```markdown
-# Agent Entry
-
-[`/docs`](.) contains shared documentation that both humans and agents rely on.
-
-It exists for two purposes:
-- Store essential and critical documentation for this repository
-- Organize templates and living specs used during development
-
-Start in [`README.md`](./README.md) in this folder for documentation structure and conventions.
-
-## Orientation
-
-Before starting work, read the docs that apply to your task:
-
-- **Any task:** [`ai/`](./ai/) — hierarchical, AI-navigable docs that point to the right source files
-- **New feature or product change:** [`PRD.md`](./PRD.md) — current product requirements and scope
-- **Architecture or technical work:** [`system-design.md`](./system-design.md) — system architecture and tech stack
-- **Feature implementation:** [`specs/`](./specs/) — find the relevant feature spec
-- **System-level decision:** [`adrs/`](./adrs/) — existing architecture decisions
-- **Coding standards:** [`rules/`](./rules/) — engineering conventions and practices
-- **Accumulated knowledge:** [`knowledge/`](./knowledge/) — gotchas, non-obvious findings, hard-won insights
-```
+Every directory gets exactly one `README.md`: a map of what lives there and
+when to read it — not a mirror of the content.
 
 ---
 
@@ -57,192 +12,192 @@ Before starting work, read the docs that apply to your task:
 
 **Path:** `docs/README.md`
 
-```markdown
+````markdown
 # Documentation
 
 This directory is the source of truth for documentation in this repository.
 
 ## Directory Structure
 
-/docs
-├── README.md
-├── AGENTS.md
-├── PRD.md
-├── system-design.md
-├── ai/
-│   ├── README.md
-│   └── {area}/...
-├── templates/
-│   ├── adr.md
-│   ├── feature-spec.md
-│   ├── PRD.md
-│   ├── system-design.md
-│   └── ...
-├── rules/
-│   ├── AGENTS.md
-│   ├── README.md
-│   ├── common/
-│   │   ├── AGENTS.md
-│   │   ├── README.md
-│   │   └── ...
-│   └── ...
-├── adrs/
-│   ├── AGENTS.md
-│   ├── README.md
-│   └── ...
-├── specs/
-│   ├── AGENTS.md
-│   ├── README.md
-│   └── ...
-├── knowledge/
-│   ├── AGENTS.md
-│   ├── README.md
-│   └── ...
-├── guides/
-│   ├── AGENTS.md
-│   ├── README.md
-│   └── ...
-├── reference/
-│   ├── AGENTS.md
-│   ├── README.md
-│   └── ...
-└── ...
-
-- **`adrs/` (Required)** — Architecture Decision Records. System-wide decisions that affect multiple features (e.g. framework choices, infrastructure, protocols). See [`docs/adrs/README.md`](./adrs/README.md) for structure and conventions.
-- **`specs/` (Required)** — Feature specifications. One folder per feature. `spec.md` is required as the entry point. See [`docs/specs/README.md`](./specs/README.md) for structure and conventions.
-- **`rules/` (Recommended)** — Coding rules, standards, conventions, and practices: code style, git workflow, testing, development practices, etc. See [`docs/rules/README.md`](./rules/README.md) for structure and conventions.
-- **`PRD.md` (Recommended)** — Product requirements: problem, success criteria, user needs, scope. Upstream of system design and feature specs.
-- **`system-design.md` (Recommended)** — High-level system architecture: tech stack, service connections, infrastructure layout, external dependencies, etc.
-- **`ai/` (Recommended)** — Hierarchical, AI-navigable docs that point to the right source files for each topic. Generated and updated by the `cmk:codebase-docs` skill.
-- **`knowledge/` (Recommended)** — Accumulated knowledge: gotchas, non-obvious findings, hard-won insights. One file per topic. See [`docs/knowledge/README.md`](./knowledge/README.md) for structure and conventions.
-- **`guides/` (Recommended)** — Operational and onboarding docs, team decides what's needed (e.g. onboarding.md, local-dev.md, deployment.md).
-- **`reference/` (Recommended)** — Cross-cutting reference docs shared across phases and teams. See [`docs/reference/README.md`](./reference/README.md) for structure and conventions.
-- **`AGENTS.md`** — Agent navigation instructions for this docs subtree.
-
-## Recommended Templates
-
-- PRD template: [`docs/templates/PRD.md`](./templates/PRD.md)
-- System design template: [`docs/templates/system-design.md`](./templates/system-design.md)
-- Feature spec template: [`docs/templates/feature-spec.md`](./templates/feature-spec.md)
-- ADR template: [`docs/templates/adr.md`](./templates/adr.md)
-
-> **Note**: Engineers can add more files or folders as needed. This structure is a baseline, not a restriction.
 ```
+docs/
+├── README.md        # this navigation map
+├── decisions/       # Architecture Decision Records
+├── requirements/    # product/project requirements
+├── design/          # distilled system and feature design
+├── rules/           # engineering standards
+├── guides/          # how-to / integration guides
+├── runbooks/        # operational procedures
+├── reports/         # dated, immutable point-in-time records
+├── research/        # exploratory findings
+├── knowledge/       # gotchas, learnings, hard-won insights
+├── ai/              # AI navigation maps → source files
+└── templates/       # document templates
+```
+
+## When to read what
+
+- **Any task:** [`ai/`](./ai/) — find the right source files for a topic.
+- **New feature or scope change:** [`requirements/`](./requirements/) — what we're building and why.
+- **Architecture or implementation:** [`design/`](./design/) — how a subsystem works; check [`decisions/`](./decisions/) for constraints.
+- **Writing code:** [`rules/`](./rules/) — the standards for the area you're touching.
+- **Operating the system:** [`runbooks/`](./runbooks/).
+- **Before re-discovering anything:** [`knowledge/`](./knowledge/) and [`research/`](./research/).
+
+## Conventions
+
+- `decisions/`, `requirements/`, and `design/` are **canonical**: sources of
+  truth, progress-neutral and tracker-neutral in wording. No ticket IDs, no
+  delivery status. Progress lives in the tracker; facts live here.
+- Every canonical doc declares its links: a design doc names the requirements
+  it satisfies and the decisions that constrain it; a decision names the
+  designs it shapes. Orphan docs (nothing links to them) are a defect.
+- `reports/` entries are named `YYYY-MM-DD-<topic>.md` and are **immutable**
+  facts about a moment — never revised to stay current. Durable conclusions
+  get distilled into `design/` or `runbooks/`.
+- `decisions/` entries are named `NNNN-<slug>.md`; numbers are monotonic and
+  never reused.
+- Every directory has exactly one `README.md`: a map of what lives there and
+  when to read it — not a mirror of the content.
+- Engineers can add more files or folders as needed. This structure is a
+  baseline, not a restriction.
+````
 
 ---
 
-## docs/specs/AGENTS.md
+## docs/templates/README.md
 
-**Path:** `docs/specs/AGENTS.md`
+**Path:** `docs/templates/README.md`
 
-```markdown
-# Agent Entry
+````markdown
+# Templates
 
-[`/docs/specs`](.) contains living feature specifications for this repository.
+Document templates for this repository's canonical docs.
 
-It exists for two purposes:
-- Capture evolving feature context from research through implementation
-- Keep decisions, scope, and flows current as work evolves
+## Conventions
 
-Start in [`README.md`](./README.md) in this folder for structure and naming conventions.
-```
-
----
-
-## docs/specs/README.md
-
-**Path:** `docs/specs/README.md`
-
-```markdown
-# Feature Specifications
-
-This directory contains one folder per feature specification.
-
-## Canonical Placement
-
-- Reusable Feature Spec template: `docs/templates/feature-spec.md`
-- Feature spec entry: `docs/specs/{NNNN}-{feature-name}/spec.md`
-- Example: `docs/specs/0001-user-authentication/spec.md`
-
-## Folder Convention
-
-- Use one folder per feature inside `docs/specs/`
-- Example feature: `0001-user-authentication/`
-- `spec.md` is required as the entry point in each feature folder
-- Additional docs are optional (for example: `backend-design.md`, `api-reference.md`, `migration-plan.md`) and can be freely added by the team when needed
-
-## How to Use
-
-1. Copy [`docs/templates/feature-spec.md`](../templates/feature-spec.md) into a new feature folder under `docs/specs/{NNNN}-{feature-name}/`.
-2. Rename and fill it as `spec.md`.
-3. Keep `spec.md` updated as the latest source of truth.
-```
+- Copy the matching template when starting a new document: `requirements.md`
+  for [`../requirements/`](../requirements/), `design.md` for
+  [`../design/`](../design/), `adr.md` for [`../decisions/`](../decisions/).
+- Keep templates lean; project-specific sections belong in the documents
+  themselves.
+````
 
 ---
 
-## docs/adrs/AGENTS.md
+## docs/templates/requirements.md
 
-**Path:** `docs/adrs/AGENTS.md`
+**Path:** `docs/templates/requirements.md`
 
-```markdown
-# Agent Entry
-
-[`/docs/adrs`](.) contains architecture decisions that apply across features.
-
-It exists for two purposes:
-- Record system-level technical choices and trade-offs
-- Preserve stable decision context for future implementation work
-
-Start in [`README.md`](./README.md) in this folder for structure and naming conventions.
-```
+<!-- content added by template task -->
 
 ---
 
-## docs/adrs/README.md
+## docs/templates/design.md
 
-**Path:** `docs/adrs/README.md`
+**Path:** `docs/templates/design.md`
 
-```markdown
-# Architecture Decision Records
-
-This directory contains system-wide architecture decisions for this repository.
-
-## Canonical Placement
-
-- ADR template: [`docs/templates/adr.md`](../templates/adr.md)
-- ADR entry: `docs/adrs/{NNNN}-{decision-title}.md`
-- Example: `docs/adrs/0001-initial-architecture-decision.md`
-
-## File Convention
-
-- Use one file per decision in `docs/adrs/`
-- Example file: `0001-initial-architecture-decision.md`
-- Update the ADR in place when the decision evolves
-
-## How to Use
-
-1. Copy [`docs/templates/adr.md`](../templates/adr.md) and create `docs/adrs/{NNNN}-{decision-title}.md`.
-2. Fill context, choice, and rationale.
-3. When a decision changes, update the existing ADR rather than creating a new one.
-```
+<!-- content added by template task -->
 
 ---
 
-## docs/rules/AGENTS.md
+## docs/templates/adr.md
 
-**Path:** `docs/rules/AGENTS.md`
+**Path:** `docs/templates/adr.md`
 
-```markdown
-# Agent Entry
+<!-- content added by template task -->
 
-[`/docs/rules`](.) contains coding standards and workflow conventions.
+---
 
-It exists for two purposes:
-- Guide implementation decisions with consistent engineering practices
-- Reduce ambiguity in style, quality, and development workflow
+## docs/decisions/README.md
 
-Start in [`README.md`](./README.md) in this folder for structure and navigation.
-```
+**Path:** `docs/decisions/README.md`
+
+````markdown
+# Decisions
+
+Architecture Decision Records: the choices that shape this system, with the
+context and consequences that make them reviewable later.
+
+## Conventions
+
+- Name entries `NNNN-<slug>.md`; numbers are monotonic and never reused.
+- Record a decision that shapes system structure, crosses a component
+  boundary, or is costly to reverse — before the code that depends on it.
+  Implementation details and library picks are not decisions; they belong in
+  [`../design/`](../design/) or the change itself.
+- Start from [`../templates/adr.md`](../templates/adr.md).
+- Progress-neutral and tracker-neutral wording: no ticket IDs, no delivery
+  status.
+- Declare links: name the upstream docs this satisfies and the downstream docs
+  it constrains.
+- Update an entry in place while the decision holds; when the choice itself
+  changes, add a new entry that supersedes it.
+
+## When to read
+
+Before proposing an architecture change — to find the constraint you are about
+to break.
+````
+
+---
+
+## docs/requirements/README.md
+
+**Path:** `docs/requirements/README.md`
+
+````markdown
+# Requirements
+
+Product and project requirements: the problem, who has it, the success
+criteria, and the scope boundaries the system is built against.
+
+## Conventions
+
+- One file per product area or feature: `<topic>.md`.
+- Start from [`../templates/requirements.md`](../templates/requirements.md).
+- Progress-neutral and tracker-neutral wording: no ticket IDs, no delivery
+  status.
+- Declare links: name the upstream docs this satisfies and the downstream docs
+  it constrains.
+- State what must be true and why, not how to build it — the how lives in
+  [`../design/`](../design/).
+
+## When to read
+
+Before starting a feature or changing scope — to confirm what the work has to
+achieve.
+````
+
+---
+
+## docs/design/README.md
+
+**Path:** `docs/design/README.md`
+
+````markdown
+# Design
+
+Distilled system and feature design: how a subsystem works and why it is
+shaped that way.
+
+## Conventions
+
+- One file per subsystem or feature: `<topic>.md`; system-wide design lives in
+  `system.md`.
+- Start from [`../templates/design.md`](../templates/design.md).
+- Progress-neutral and tracker-neutral wording: no ticket IDs, no delivery
+  status.
+- Declare links: name the upstream docs this satisfies and the downstream docs
+  it constrains.
+- Distilled, not raw: a design doc is the curated source of truth, not a
+  transcript of the exploration behind it.
+
+## When to read
+
+Before implementing or changing a subsystem — and read
+[`../decisions/`](../decisions/) for the constraints it must honor.
+````
 
 ---
 
@@ -250,54 +205,26 @@ Start in [`README.md`](./README.md) in this folder for structure and navigation.
 
 **Path:** `docs/rules/README.md`
 
-```markdown
-# Engineering Rules
+````markdown
+# Rules
 
-This directory contains coding standards, conventions, and development practices.
+Engineering standards: the conventions code in this repository is expected to
+follow.
 
-## Canonical Placement
+## Conventions
 
-- Common rules index: [`docs/rules/common/README.md`](./common/README.md)
-- Common rules navigation: [`docs/rules/common/AGENTS.md`](./common/AGENTS.md)
-- Common rules docs (authoritative baseline): `docs/rules/common/*.md`
-- Language-specific rules: `docs/rules/{language}/*.md` (for example: `docs/rules/typescript/` or `docs/rules/rust/`)
-- Framework-specific rules: `docs/rules/{framework}/*.md` (for example: `docs/rules/react/` or `docs/rules/nextjs/`)
+- Shared, language-agnostic standards live in [`common/`](./common/).
+- Language and framework standards live in `rules/<language>/` and
+  `rules/<framework>/`; add a folder only when it is actively used.
+- One topic per file, `kebab-case`, written as actionable rules rather than
+  advice.
+- A narrower rule overrides a broader one; say so explicitly where it does.
 
-## Baseline vs Templates
+## When to read
 
-- Files in `docs/rules/common/*.md` are live baseline rules for this repository.
-- Keep reusable scaffolds in `docs/templates/` only when you need to bootstrap rules in other repositories.
-
-## Folder Convention
-
-- Keep shared rules in `common/`
-- Add language/framework folders only when they are actively used
-- Keep rules concise, actionable, and implementation-oriented
-
-## How to Use
-
-1. Start with `common/` rules for any task.
-2. Apply language/framework rules when the task requires them.
-3. Update relevant rule docs when conventions evolve.
-```
-
----
-
-## docs/rules/common/AGENTS.md
-
-**Path:** `docs/rules/common/AGENTS.md`
-
-```markdown
-# Agent Entry
-
-[`/docs/rules/common`](.) contains shared engineering rules that apply across languages and frameworks.
-
-It exists for two purposes:
-- Provide default implementation standards when task-specific rules are absent
-- Keep style, quality, and workflow decisions consistent across the repository
-
-Start in [`README.md`](./README.md) in this folder for structure and rule conventions.
-```
+Before writing or reviewing code — start with `common/`, then the language or
+framework folder that applies.
+````
 
 ---
 
@@ -305,92 +232,25 @@ Start in [`README.md`](./README.md) in this folder for structure and rule conven
 
 **Path:** `docs/rules/common/README.md`
 
-```markdown
+````markdown
 # Common Rules
 
-This directory contains language-agnostic engineering rules.
+Language-agnostic engineering standards: the defaults that apply everywhere in
+this repository.
 
-## Canonical Placement
+## Conventions
 
-- Rule entry: `docs/rules/common/{rule-topic}.md`
+- One topic per file: `<rule-topic>.md` (for example `coding-style.md`,
+  `testing.md`, `git-workflow.md`).
+- Keep guidance broadly applicable; anything language- or framework-specific
+  belongs in a sibling folder under [`../`](../).
+- These files state the current standard, not its history — update the rule
+  when the convention changes.
 
-## File Convention
+## When to read
 
-- Keep one topic per file
-- Use concise, actionable guidance
-- Keep guidance broadly applicable across languages and frameworks
-
-## How to Use
-
-1. Start here before applying language-specific or framework-specific rules.
-2. Follow these rules as defaults when no narrower rule overrides them.
-3. Update rule files when team conventions change.
-```
-
----
-
-## docs/knowledge/AGENTS.md
-
-**Path:** `docs/knowledge/AGENTS.md`
-
-```markdown
-# Agent Entry
-
-[`/docs/knowledge`](.) contains accumulated knowledge, gotchas, and non-obvious findings.
-
-It exists for two purposes:
-- Preserve hard-won insights discovered during development, research, and debugging
-- Provide structured input for downstream skills (rules, PRD, system-design, feature-spec)
-
-Start in [`README.md`](./README.md) in this folder for structure and conventions.
-```
-
----
-
-## docs/knowledge/README.md
-
-**Path:** `docs/knowledge/README.md`
-
-```markdown
-# Learnings
-
-This directory contains accumulated knowledge — gotchas, non-obvious findings, and hard-won insights from development, research, debugging, and incidents.
-
-## Canonical Placement
-
-- Learning entry: `docs/knowledge/{topic}.md`
-- Examples: `docs/knowledge/infrastructure.md`, `docs/knowledge/api-quirks.md`
-
-## File Convention
-
-- One file per topic — entries accumulate within the file over time
-- Entries are listed newest first
-- Use `kebab-case` topic names by domain (not by date or session)
-
-## How to Use
-
-1. Capture knowledge during or after work sessions using `cmk:learn`.
-2. Browse and search entries to inform downstream work.
-3. Promote valuable entries to `docs/rules/` when they become established standards.
-```
-
----
-
-## docs/guides/AGENTS.md
-
-**Path:** `docs/guides/AGENTS.md`
-
-```markdown
-# Agent Entry
-
-[`/docs/guides`](.) contains operational and onboarding procedures.
-
-It exists for two purposes:
-- Provide step-by-step workflows for common engineering tasks
-- Preserve practical runbooks for setup, deployment, and troubleshooting
-
-Start in [`README.md`](./README.md) in this folder for structure and naming conventions.
-```
+Before any implementation task, as the baseline no narrower rule overrides.
+````
 
 ---
 
@@ -398,83 +258,149 @@ Start in [`README.md`](./README.md) in this folder for structure and naming conv
 
 **Path:** `docs/guides/README.md`
 
-```markdown
+````markdown
 # Guides
 
-This directory contains operational and onboarding guides.
+How-to and integration guides: task-oriented walkthroughs for doing a specific
+thing in this repository.
 
-## Canonical Placement
+## Conventions
 
-- Guide entry: `docs/guides/{guide-name}.md`
-- Guide name format: `kebab-case` task or context name (for example: `local-dev.md`, `deployment.md`, `onboarding.md`, `troubleshooting.md`)
-- Optional supporting assets: `docs/guides/{guide-name}/...`
+- One file per task: `<guide-name>.md` in `kebab-case` (for example
+  `local-dev.md`, `adding-a-feature.md`).
+- Give prerequisites, ordered steps, and the expected outcome; verify every
+  command before publishing it.
+- A guide covers how to do something. How the system works belongs in
+  [`../design/`](../design/); how to operate it belongs in
+  [`../runbooks/`](../runbooks/).
 
-## File Convention
+## When to read
 
-- Use one file per guide topic when possible
-- Use descriptive, task-oriented names (for example: `local-dev.md`, `deployment.md`)
-- Keep steps runnable and verify commands before publishing
-
-## How to Use
-
-1. Start from the concrete goal (for example: run locally, deploy, troubleshoot).
-2. Add prerequisites, exact steps, and expected outcomes.
-3. Update guides when workflows, commands, or environments change.
-```
+When you know what you need to do and want the established way to do it.
+````
 
 ---
 
-## docs/reference/AGENTS.md
+## docs/runbooks/README.md
 
-**Path:** `docs/reference/AGENTS.md`
+**Path:** `docs/runbooks/README.md`
 
-```markdown
-# Agent Entry
+````markdown
+# Runbooks
 
-[`/docs/reference`](.) contains shared reference documents used across multiple phases and areas.
+Operational procedures: the steps for running, deploying, and recovering the
+system.
 
-It exists for two purposes:
-- Define stable cross-cutting concepts that guide execution
-- Provide reusable context without duplicating folder-specific instructions
+## Conventions
 
-Start in [`README.md`](./README.md) in this folder for structure and naming conventions.
-```
+- One file per procedure: `<procedure>.md` (for example `deploy.md`,
+  `rollback.md`, `incident-response.md`).
+- Every step states its expected result and its rollback path.
+- Write for someone under time pressure who has read nothing else.
 
----
+## When to read
 
-## docs/reference/README.md
-
-**Path:** `docs/reference/README.md`
-
-```markdown
-# References
-
-This directory contains cross-cutting reference documents used across phases and features.
-
-## Canonical Placement
-
-- Reference entry: `docs/reference/{reference-name}.md`
-- Reference name format: `kebab-case` noun-based name (for example: `sdl-phases.md`)
-
-## File Convention
-
-- Keep one cross-cutting topic per file
-- Keep definitions stable and link to executable docs (specs, rules, guides) instead of duplicating details
-
-## How to Use
-
-1. Use references for shared concepts that span multiple phases or folders.
-2. Link to references from root `README.md` and relevant subfolder READMEs.
-3. Update references when lifecycle or process definitions change.
-```
+While operating the system — deploying, rolling back, or responding to an
+incident.
+````
 
 ---
 
-## Templates
+## docs/reports/README.md
 
-The following templates should be copied from the devkit's `docs/templates/` directory into the target repository's `docs/templates/`:
+**Path:** `docs/reports/README.md`
 
-- `docs/templates/PRD.md`
-- `docs/templates/system-design.md`
-- `docs/templates/feature-spec.md`
-- `docs/templates/adr.md`
+````markdown
+# Reports
+
+Dated, immutable point-in-time records: what a specific run, gate, or proof
+actually produced, on a specific date, with the evidence.
+
+## Conventions
+
+- Name entries `YYYY-MM-DD-<topic>.md`.
+- A report is never revised to stay current — it is a fact about a moment.
+- Durable conclusions get distilled into [`../design/`](../design/) or
+  [`../runbooks/`](../runbooks/).
+
+## When to read
+
+Before re-running an experiment or gate someone may already have run.
+````
+
+---
+
+## docs/research/README.md
+
+**Path:** `docs/research/README.md`
+
+````markdown
+# Research
+
+Exploratory findings: investigations into options, prior art, and open
+questions, kept for the reasoning as much as the answer.
+
+## Conventions
+
+- One file per investigation: `<question>.md`, named for the question it
+  explored.
+- Record what was examined, what was found, and what is still unknown.
+- Research is an input, not a source of truth — conclusions that hold get
+  distilled into [`../design/`](../design/) or
+  [`../decisions/`](../decisions/).
+
+## When to read
+
+Before investigating a question someone may already have explored.
+````
+
+---
+
+## docs/knowledge/README.md
+
+**Path:** `docs/knowledge/README.md`
+
+````markdown
+# Knowledge
+
+Gotchas, learnings, and hard-won insights: the non-obvious facts that cost
+someone time to discover.
+
+## Conventions
+
+- One file per topic in `kebab-case`, named by domain rather than by date or
+  session (for example `infrastructure.md`, `api-quirks.md`).
+- Entries accumulate inside the file, newest first.
+- Promote an entry to [`../rules/`](../rules/) once it becomes an expected
+  standard.
+
+## When to read
+
+Before debugging something unfamiliar — and before re-discovering anything.
+````
+
+---
+
+## docs/ai/README.md
+
+**Path:** `docs/ai/README.md`
+
+````markdown
+# AI Navigation
+
+Maps from topic to source file: short what/where docs that point an agent at
+the right code instead of restating it.
+
+## Conventions
+
+- Mirror the shape of the codebase: one folder per area, each with its own
+  `README.md` index.
+- Name paths and packages; point at code rather than duplicating it. No ticket
+  IDs, no delivery status.
+- Update the affected map in the same change that moves or renames the code it
+  describes.
+
+## When to read
+
+First, on any task — to find which source files a topic lives in.
+````
