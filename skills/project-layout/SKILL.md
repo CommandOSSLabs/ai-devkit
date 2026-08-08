@@ -1,7 +1,7 @@
 ---
 name: cmk:project-layout
 description: This skill should be used when the user asks to "set up the repo structure", "organize the monorepo", "where should this package live", "restructure folders", "add a new package", or needs to establish or audit a role-first monorepo layout with per-ecosystem workspaces, library placement rules, and vendored-source conventions.
-version: 0.1.0
+version: 0.2.0
 ---
 
 # Project Layout
@@ -10,6 +10,18 @@ Establish or audit a monorepo's top-level layout: which directory a new
 package joins, how many workspaces each language ecosystem gets, when a
 shared library graduates out of a single role-area, and how vendored upstream
 source stays editable without becoming unmanageable.
+
+## Modes
+
+**Init** (default) — establish the role-first top level: pick the roles the
+product actually needs, place existing packages by the rubric, and set one
+workspace per ecosystem.
+
+**Update** — place a new package, promote a shared library, or add a role
+directory as the repo grows; change only what the request touches.
+
+**Verify** — report-only audit against the checks under `## Verify`;
+never mutates.
 
 ## Role-first top level
 
@@ -105,6 +117,11 @@ When it's unclear where a new thing goes, answer in this order:
 5. **Is it externally governed?** Source mirrored from an upstream
    repository with round-tripping obligations belongs in `external/`, not
    mixed into a product role area.
+6. **Still unresolved?** Don't force-fit. Derive a proposal from widely
+   accepted practice for the ecosystem, its conventions, and the repo's own
+   existing precedents — and when more than one placement remains genuinely
+   defensible, present the options, ask what the human has in mind, and help
+   carry that intent through rather than deciding silently.
 
 ## Verify
 
