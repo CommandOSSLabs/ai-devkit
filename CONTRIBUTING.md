@@ -19,8 +19,9 @@ a memory of how things used to work.
 
 - Frontmatter is exactly three fields, in order: `name: cmk:<skill>`,
   `description`, `version` (semver).
-- `SKILL.md` stays under 150 lines; move detail into `references/*.md` and
-  point to it from the skill.
+- `SKILL.md` stays within the 150-line budget (≤ 150); move detail into
+  `references/*.md` and point to it from the skill. Pre-existing exceptions
+  are allowlisted in `scripts/skill-lint.sh` and not granted to new skills.
 - A skill file never reaches outside its own package with a relative `../`
   path. Name a target-repo artifact repo-root-relative, and cite another
   skill by its `cmk:` name.
