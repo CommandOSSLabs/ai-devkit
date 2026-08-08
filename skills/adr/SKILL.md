@@ -1,7 +1,7 @@
 ---
 name: cmk:adr
 description: This skill should be used when the user asks to "record this decision", "we decided to use X over Y", "document why we chose this approach", "record an ADR", "update ADR-0003", or needs to create or update architecture decision records for system-level technical choices like choosing a database, communication protocol, or infrastructure pattern.
-version: 0.1.0
+version: 0.2.0
 ---
 
 # ADR
@@ -16,14 +16,14 @@ Read `references/adr-conventions.md` for placement rules and `references/adr-tem
 
 1. Gather decision context from conversation/docs/links.
 2. Validate scope is system-wide (not feature-scoped).
-3. Place at the repository's existing ADR path, or fallback: `docs/adrs/{NNNN}-{decision-title}.md`. Determine `{NNNN}` by scanning existing ADRs and incrementing (start at `0001` if none exist).
+3. Place at the repository's existing ADR path, or fallback: `docs/decisions/{NNNN}-{decision-title}.md`. Determine `{NNNN}` by scanning existing ADRs and incrementing, monotonically and never reusing a number (start at `0001` if none exist).
 4. Fill template from `references/adr-template.md` (or local template if present).
 5. Set status to `proposed`.
 
 ## Workflow: Iterate
 
 1. Read the existing ADR in full.
-2. **Upstream check:** If `docs/system-design.md` exists, check whether the revised decision conflicts with current architecture. Warn the user if so.
+2. **Upstream check:** If a relevant design doc exists under `docs/design/`, check whether the revised decision conflicts with current architecture. Warn the user if so.
 3. Identify what changed and why.
 4. Update in place: revise decision/rationale, update alternatives and consequences, note what shifted.
 5. Update `Last updated` date.

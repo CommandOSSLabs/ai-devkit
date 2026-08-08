@@ -14,3 +14,7 @@
 ## Consequences (Optional)
 
 - Short-term and long-term impact
+
+## Links
+
+- Designs: [docs/design/<topic>.md](../design/) — designs this decision constrains
