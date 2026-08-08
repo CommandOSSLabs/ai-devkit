@@ -123,7 +123,7 @@ End every run with a report the user can act on in one read:
 
 ```
 ## Delivered
-- TICKET-123 <title> — PR #N (base: <branch>), status: In Review
+- TICKET-123 <title> — PR #N (base: <branch>), status: review state
   - outcome summary, entry points, test evidence one-liner
   - acceptance: <n of m criteria checked with evidence; the rest by disposition>
 ## Decisions made autonomously

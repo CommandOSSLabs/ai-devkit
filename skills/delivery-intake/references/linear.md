@@ -17,7 +17,8 @@ From Linear, fetch and read:
 
 ## Estimates and labels
 
-Set the estimate on the relative Fibonacci scale (1/2/3/5/8), covering
+Set the estimate on the team's configured estimate scale (e.g. relative
+Fibonacci 1/2/3/5/8), covering
 implementation, review, tests, docs, and rollout. Estimate leaves only —
 parents roll up from children, and estimating both double-counts. An 8 is a
 signal to split before starting, not a size to carry into work.

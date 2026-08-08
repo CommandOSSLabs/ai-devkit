@@ -127,7 +127,8 @@ runs every relevant line:
 - **Config and secrets** — new knobs documented, defaults safe, secrets
   never in code or logs.
 - **Migrations and compatibility** — storage, wire, and API changes carry
-  a migration story, including this repo's consensus/wire invariants.
+  a migration story, including any consensus/wire invariants the repo
+  declares.
 - **Observability** — the logs and metrics needed to operate and debug it.
 - **Rollout and rollback** — how it deploys, reverts, and what breaks if
   half the system runs the old version.
@@ -144,13 +145,13 @@ carries the evidence in the PR and flags accepted gaps explicitly.
 
 `cmk:delivery-workflow` already covers the general discipline — reconcile
 at every phase boundary, record facts and rationale, extend the owning
-issue instead of duplicating. Two things live here because they are
+issue instead of duplicating. Three things live here because they are
 specific to an autonomous multi-phase run:
 
 - Follow `references/context-efficiency.md` for authoritative refreshes,
   delegation shaping, and subagent routing.
-- Every deferred task, split scope, or discovered issue gets a Fibonacci
-  effort estimate (leaves only) and links to the originating issue, PR, or
+- Every deferred task, split scope, or discovered issue gets an effort
+  estimate (leaves only) and links to the originating issue, PR, or
   review thread.
 - A replacement upstream handoff pin is a material state change: record
   the supersession and every invalidated downstream pin immediately —

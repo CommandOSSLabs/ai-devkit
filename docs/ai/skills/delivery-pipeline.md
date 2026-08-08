@@ -44,7 +44,7 @@ line already recorded on its durable surface.
 Orchestrates `cmk:delivery-intake`, `cmk:delivery-spec-plan`,
 `cmk:delivery-review`, `cmk:delivery-ship`, and `cmk:delivery-handoff` on
 top of `cmk:delivery-workflow`; chains into `superpowers:brainstorming`,
-`superpowers:writing-plans`, `superpowers:subagent-driven-development`,
-`superpowers:verification-before-completion`, and
-`superpowers:using-git-worktrees`, and explicitly never chains into
-`superpowers:finishing-a-development-branch`.
+`superpowers:writing-plans`, `superpowers:subagent-driven-development`, and
+`superpowers:using-git-worktrees` — and, via `cmk:delivery-ship`,
+`superpowers:verification-before-completion` — and explicitly never
+chains into `superpowers:finishing-a-development-branch`.

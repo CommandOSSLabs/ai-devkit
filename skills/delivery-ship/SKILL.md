@@ -101,7 +101,7 @@ Using Linear as your tracker? Read `references/linear.md`.
 
 This phase is the only one that may delete a phase-3 execution workspace —
 the ledger, task briefs, task reports, and review packages at the path the
-run profile records. Delete it only after the evidence it carries is
+run notes record. Delete it only after the evidence it carries is
 reflected on durable surfaces: the PR's test evidence, the tracker record,
 and any doc updates that shipped with the change. It is git-ignored scratch,
 so leaving it costs nothing and deleting it early costs a reviewer their

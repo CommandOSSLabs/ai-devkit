@@ -118,7 +118,7 @@ Using Linear as your tracker? Read `references/linear.md`.
 | Copying every update | Synchronize delivery changes and link |
 | Waiting until ship time to update the tracker | Reconcile on discovery and at every boundary |
 | Tracking only blockers and deferrals | Record every material change on its owning issue |
-| Splitting PR review across the issue and the PR | Keep it on one surface — the PR or its synced review thread |
+| Splitting PR review across the issue and the PR | Keep it on one surface — the PR or the tracker's synced review thread |
 | Copying a deferred finding into several places | Link the review thread and the new follow-up issue |
 | Treating merge as delivery | Verify acceptance before the done state |
 | Leaving the AC checklist untouched all run | Tick each criterion as its proof lands, evidence reachable |

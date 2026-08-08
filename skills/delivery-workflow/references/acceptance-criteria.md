@@ -58,6 +58,6 @@ decision and its rationale on the issue either way.
 Before the done state, each criterion is either checked with reachable
 evidence or has visibly moved to a named successor issue. A criterion that
 is neither is unfinished work, and merging does not change that. The PR or
-its review surface never quietly narrows the issue's contract — a review
+its synced review thread never quietly narrows the issue's contract — a review
 that discovers the delivered scope is smaller than the criteria promise is
 surfacing an undisposed criterion, not a footnote.

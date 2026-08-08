@@ -73,7 +73,7 @@ freely; completeness matters, sections don't):
 3. **Read first** — ordered absolute paths: the phase skill(s) to follow,
    the tracking contract (`cmk:delivery-workflow`), the context-efficiency
    reference, the receiver's runtime binding
-   (`.agents/bindings/<vendor>.md`), the run profile, this issue's context
+   (`.agents/bindings/<vendor>.md`), the run notes, this issue's context
    brief/spec/plan/review record, and the repo's `CLAUDE.md` (symlinked as
    `AGENTS.md`). State what each is.
 4. **State of the work** — what is done and *verified* (gates, evidence

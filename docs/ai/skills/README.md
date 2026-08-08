@@ -43,4 +43,4 @@ Docs-family skills follow the same shape: a "Workflow: Create" / "Workflow: Iter
 
 ## Cross-cutting
 
-- [conventions.md](./conventions.md) — shared shape across all skills (frontmatter, references folder, docs-family create/iterate pattern, setup-family facet shape).
+- [conventions.md](./conventions.md) — shared shape across all skills (frontmatter, references folder, docs-family create/iterate pattern, setup-family facet shape, delivery-family phase/gate shape, knowledge-family reference packs).

@@ -39,7 +39,7 @@ exact scope, fetch time, cursor/version/commit identity, whether the fetch
 completed without gaps, and the paths or artifacts derived from it.
 
 At reuse, prove that continuity and scope still hold, or refresh the
-authority. An old summary, chat transcript, run profile, or subagent
+authority. An old summary, chat transcript, run notes, or subagent
 return is never evidence that mutable state is current.
 
 ## Delegation and returns
