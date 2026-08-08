@@ -1,6 +1,7 @@
 # SDL Phases
 
 **Status:** active
+**Owner:** ai-devkit maintainers
 **Last updated:** 2026-08-08
 **Scope:** System-wide — the development lifecycle the `cmk:*` skills are shaped around
 

@@ -4,6 +4,6 @@
 
 It exists for two purposes:
 - Store essential and critical documentation for this repository
-- Organize living specs, decisions, and guides used during development
+- Organize living requirements, design, decisions, and rules used during development
 
-Start in [`docs/AGENTS.md`](./docs/AGENTS.md) for navigation and task routing.
+Start in [`docs/README.md`](./docs/README.md) for navigation and task routing.

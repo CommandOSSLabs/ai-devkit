@@ -9,8 +9,8 @@
 
 - `draft` — being written, not yet agreed upon
 - `active` — agreed upon, work in progress
-- `decomposed` — broken into feature specs, no longer the active working doc
-- `shipped` — all downstream specs shipped
+- `decomposed` — broken into feature-level design docs, no longer the active working doc
+- `shipped` — all downstream design docs shipped
 - `deprecated` — initiative abandoned
 
 ## Scope Boundary

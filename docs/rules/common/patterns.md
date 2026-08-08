@@ -7,7 +7,7 @@
 
 ## Decision Scope
 
-- Use feature specs for feature-level design decisions
+- Use feature-level design docs (`docs/design/`) for feature-level design decisions
 - Use ADRs for system-wide decisions that affect multiple features
 
 ## Error Handling

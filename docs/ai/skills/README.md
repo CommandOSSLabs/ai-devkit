@@ -2,7 +2,7 @@
 
 The eight `cmk:*` skill packages under [`skills/`](../../../skills/). Each is a directory with a `SKILL.md` (frontmatter `name`/`description`/`version` plus the body the agent reads), and most ship a `references/` folder of templates and conventions the workflow loads on demand.
 
-Every skill follows the same shape: a "Workflow: Create" / "Workflow: Iterate" pair, with placement rules and templates kept out of `SKILL.md` itself and cited via "Read `references/<file>.md`" lines.
+Most skills follow the same shape: a "Workflow: Create" / "Workflow: Iterate" pair, with placement rules and templates kept out of `SKILL.md` itself and cited via "Read `references/<file>.md`" lines. See [conventions.md](./conventions.md) for the exceptions.
 
 ## Skills in this repo
 
