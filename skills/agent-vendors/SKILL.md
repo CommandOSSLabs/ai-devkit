@@ -14,14 +14,14 @@ canonical skill; every vendor surface carries mechanics or discovery only.
 ## Vendor tiers
 
 - **Adapter-mirror** — vendors with native per-skill file discovery get a
-  thin generated adapter per skill (Claude Code `.claude/skills/<dir>/SKILL.md`,
-  Grok Build `.grok/skills/<dir>/SKILL.md`).
+  thin generated adapter per skill (Claude Code `.claude/skills/<skill-dir>/SKILL.md`,
+  Grok Build `.grok/skills/<skill-dir>/SKILL.md`).
 - **Direct-discovery** — vendors that can read the canonical home directly
   need no adapters (Codex reads `.agents/skills/` directly; OpenCode points
   its skill-paths config at it).
 - **Rule-mirror** — vendors whose unit is a rules file get a narrower mirror
   covering only the skills that function as standing rules (Cursor
-  `.cursor/rules/<dir>.mdc`).
+  `.cursor/rules/<skill-dir>.mdc`).
 - **Generic** — everything else reaches the repo's conventions through the
   root `AGENTS.md → CLAUDE.md` symlink.
 

@@ -10,9 +10,7 @@ Frontmatter declares three fields the host (Claude Code or OpenCode) reads to di
 - `description` — natural-language trigger phrases plus what the skill does. Used by the agent to auto-select the skill from user intent.
 - `version` — `0.2.0` on most docs-taxonomy skills (`adr`, `docs`, `learn`, `requirements`) and on `cmk:local-stack`; `cmk:design` is `0.3.0` since its conflict-check revision; `0.1.0` on the rest — the other nine setup-family skills, all eight delivery-family skills, both knowledge-family skills, and the two remaining docs-family skills (`rule`, `codebase-docs`).
 
-No skill file references outside its own package by relative path; a skill
-that needs a target-repo artifact names it repo-root-relative, and a skill
-that needs another skill cites it by `cmk:` name — see `cmk:agent-vendors`.
+No skill file references outside its own package by relative path — the rule binds a package's own references, not content it emits into a target repo; a skill that needs a target-repo artifact names it repo-root-relative, and a skill that needs another skill cites it by `cmk:` name — see `cmk:agent-vendors`.
 
 Docs-family skills (`adr`, `design`, `docs`, `learn`, `requirements`, `rule`) mostly expose two phases — `Workflow: Create` and `Workflow: Iterate` — and offload long-form templates and placement rules into `references/*.md` so the SKILL body stays scannable. The `references/` files are loaded on demand via "Read `references/<file>.md`" lines.
 

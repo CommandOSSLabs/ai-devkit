@@ -60,7 +60,7 @@ as exhaustive for all time.
     │                           #   skill. Verify: parses, one entry per
     │                           #   vendored skill.
     └── bindings/<vendor>.md    # cmk:agent-vendors — capability binding
-                                  #   mechanics only, never policy.
+                                #   mechanics only, never policy.
 ```
 
 Per-vendor adapter roots (`.claude/skills/cmk-<name>/`, `.grok/skills/cmk-<name>/`,

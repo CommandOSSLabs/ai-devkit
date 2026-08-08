@@ -51,6 +51,7 @@ the full vendored layout.
 ## Rules
 
 - One entry per vendored generic skill.
-- Project-owned skills get no entry.
+- Project-owned skills get no entry, and project-owned skills do not take the
+  `cmk-` prefix.
 - Deleting a vendored skill deletes its entry in the same change.
 - The lock lives at `.agents/skills.lock`, never inside `.agents/skills/`.
