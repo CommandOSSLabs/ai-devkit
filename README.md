@@ -227,7 +227,7 @@ Install via any path — vendored adapters, skills.sh, or the plugin. Skills are
 
 ### OpenCode
 
-Install as a plugin via `opencode.json`. Skills are auto-registered via the config hook. See [`.opencode/INSTALL.md`](https://github.com/CommandOSSLabs/ai-devkit/blob/main/.opencode/INSTALL.md) for setup and troubleshooting.
+Direct-discovery vendor: install via skills.sh, or vendor the skills and point OpenCode's skill-paths config at `.agents/skills/`. See [INSTALLATION.md](./INSTALLATION.md) for setup.
 
 ### Specialized Agents
 

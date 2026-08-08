@@ -3,7 +3,7 @@
 Maps from topic to source file: short what/where docs that point an agent at
 the right code instead of restating it.
 
-`ai-devkit` is a documentation-first toolkit shipped as a Claude Code / OpenCode plugin. It bundles a set of `cmk:*` skills that scaffold and maintain a `/docs` tree (requirements, design, decisions, rules, knowledge, and the rest of the canonical taxonomy), plus a `cmk:codebase-docs` skill that builds this very `docs/ai/` tree, plus a repo-setup facet family that scaffolds local dev, layout, toolchain, agent instructions, infra, CI/CD, MCP config, skill vendoring, and upstream sync. It also bundles a tracker-neutral delivery family that runs tracked work end to end (context intake through spec, implementation, review, and shipping) and a knowledge family of standalone domain reference packs consulted whenever their subject comes up. The repo itself is the canonical source of those skills — there is no application runtime to document, only skill content, plugin manifests, and the docs scaffold.
+`ai-devkit` is a documentation-first toolkit shipped as a Claude Code plugin and through standard install paths (skills.sh, vendored `.agents/skills/`). It bundles a set of `cmk:*` skills that scaffold and maintain a `/docs` tree (requirements, design, decisions, rules, knowledge, and the rest of the canonical taxonomy), plus a `cmk:codebase-docs` skill that builds this very `docs/ai/` tree, plus a repo-setup facet family that scaffolds local dev, layout, toolchain, agent instructions, infra, CI/CD, MCP config, skill vendoring, and upstream sync. It also bundles a tracker-neutral delivery family that runs tracked work end to end (context intake through spec, implementation, review, and shipping) and a knowledge family of standalone domain reference packs consulted whenever their subject comes up. The repo itself is the canonical source of those skills — there is no application runtime to document, only skill content, plugin manifests, and the docs scaffold.
 
 For the user-facing pitch and install instructions see the root [`README.md`](../../README.md).
 
@@ -11,7 +11,7 @@ For the user-facing pitch and install instructions see the root [`README.md`](..
 
 - [skills/](./skills/README.md) — the `cmk:*` skill packages that ship with the plugin.
 - [docs/](./docs/README.md) — the `/docs` taxonomy this repo defines, scaffolds, and dogfoods.
-- [integrations/](./integrations/README.md) — how the skills are exposed to Claude Code, OpenCode, and CI.
+- [integrations/](./integrations/README.md) — how the skills are exposed to Claude Code, other agents, and CI.
 
 ## Conventions
 

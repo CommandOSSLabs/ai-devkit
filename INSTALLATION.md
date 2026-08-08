@@ -49,19 +49,11 @@ Either way, treat skills.sh copies as read-only: `npx skills update` overwrites 
 
 ## Plugin trial (zero setup, read-only)
 
-Try the kit before vendoring anything into your repo. Plugin skills are immutable — you can't adapt them per-repo, and upgrades replace the whole kit at once.
-
-### Claude Code
+Try the kit before vendoring anything into your repo. Plugin skills are immutable — you can't adapt them per-repo, and upgrades replace the whole kit at once. Claude Code only; other agents install via skills.sh or the vendored path.
 
 ```bash
 claude plugin add CommandOSSLabs/ai-devkit
 ```
-
-### OpenCode
-
-Tell OpenCode:
-
-`Fetch and follow the instructions at https://raw.githubusercontent.com/CommandOSSLabs/ai-devkit/refs/heads/main/.opencode/INSTALL.md.`
 
 ## Switching paths
 

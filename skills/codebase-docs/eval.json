@@ -5,7 +5,7 @@
     "prompt": "Set up AI navigation docs for this repository. Read skills/codebase-docs/SKILL.md and follow its bootstrap workflow. Output the full tree under docs/ai/.",
     "assertions": [
       "docs/ai/README.md exists and is one paragraph + a link menu (not a wall of text)",
-      "Top-level menu links every major area in the repo (skills/, docs/, .claude-plugin/, .opencode/ if relevant)",
+      "Top-level menu links every major area in the repo (skills/, docs/, .claude-plugin/ if relevant)",
       "Each branch's README.md is a link menu of one-liners, not a re-explanation of children",
       "Folder names mirror the repo's own vocabulary (e.g., 'skills' not 'plugins-and-skills')",
       "Every leaf doc follows the what / (why) / where structure",
