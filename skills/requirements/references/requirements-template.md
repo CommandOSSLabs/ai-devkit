@@ -1,4 +1,4 @@
-# PRD Template (Portable Baseline)
+# Requirements Template (Portable Baseline)
 
 Use these sections in order unless the target repository has a stronger local convention.
 
@@ -21,7 +21,7 @@ Use these sections in order unless the target repository has a stronger local co
 
 ## 5) Scope
 
-- In Scope: what this PRD covers.
+- In Scope: what this requirements doc covers.
 - Out of Scope: what is excluded with rationale for each exclusion.
 
 ## 6) Risks and Assumptions (Optional)
@@ -39,5 +39,5 @@ Use these sections in order unless the target repository has a stronger local co
 
 ## 9) Related Documents (Optional)
 
-- Links to system-design, codebase docs (`docs/ai/`).
-- Downstream Specs subsection tracking feature specs that implement this PRD.
+- Links to design docs, codebase docs (`docs/ai/`).
+- Downstream Design subsection tracking design docs that implement this requirements doc.

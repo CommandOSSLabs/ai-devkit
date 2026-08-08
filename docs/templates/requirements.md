@@ -1,4 +1,4 @@
-# [Product/Feature Name] — PRD
+# Requirements: <topic>
 
 **Status:** draft | active | decomposed | shipped | deprecated
 **Owner:** @[handle]
@@ -42,7 +42,7 @@ Scenarios ground abstract needs in real usage — skip formal user-story syntax.
 
 ### In Scope
 
-- [What this PRD covers]
+- [What this requirements doc covers]
 
 ### Out of Scope
 
@@ -52,7 +52,7 @@ Scenarios ground abstract needs in real usage — skip formal user-story syntax.
 
 ### Risks
 
-<!-- Product-level risks, not technical architecture risks (those belong in system-design). -->
+<!-- Product-level risks, not technical architecture risks (those belong in design). -->
 
 | Risk | Likelihood | Impact | Why It Exists | Mitigation |
 |---|---|---|---|---|
@@ -78,11 +78,15 @@ Scenarios ground abstract needs in real usage — skip formal user-story syntax.
 
 ## Related Documents (Optional)
 
-- [System Design](../system-design.md) — technical architecture
 - [Codebase Docs](../ai/) — AI-navigable map of the repo
 
-### Downstream Specs
+### Downstream Design
 
-<!-- Feature specs that implement parts of this PRD. Update as specs are created. -->
+<!-- Design docs that implement parts of this requirements doc. Update as they are created. -->
 
-- [Spec name](../specs/NNNN-feature-name/spec.md) — what it covers
+- [Design name](../design/<topic>.md) — what it covers
+
+## Links
+
+- Design: [docs/design/<topic>.md](../design/) — how this is built (add when it exists)
+- Decisions: constraints from [docs/decisions/](../decisions/) that shape scope
