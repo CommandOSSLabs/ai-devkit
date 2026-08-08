@@ -212,7 +212,7 @@ main() {
     exit 1
   fi
 
-  echo "skill-lint: OK (skills/*/SKILL.md and skills/*/references/*.md)"
+  echo "skill-lint: OK (frontmatter, size, references, citations, paths, eval.json across skills/)"
 }
 
 main "$@"
