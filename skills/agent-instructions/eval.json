@@ -1,0 +1,41 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "thin-out-bloated-claude-md",
+    "prompt": "Our CLAUDE.md has grown enormous — it inlines our full naming conventions, testing standards, git workflow, and CLI rules, and it's way more than a screenful now. Can you help fix this?",
+    "assertions": [
+      "the resulting CLAUDE.md stays thin: project identity, layout map, the 2-5 invariants, build/test commands, and conditional pointers into docs/rules/ rather than inlined standards",
+      "detailed standards currently inlined in CLAUDE.md are moved out into the matching docs/rules/ topic files rather than deleted",
+      "each moved topic gets a conditional pointer row in CLAUDE.md (e.g. \"writing tests? read docs/rules/common/testing.md\") instead of the inlined text",
+      "AGENTS.md is set up as a symlink to CLAUDE.md, not a copy, so every vendor reading its own filename sees identical content",
+      "the existing CLAUDE.md is not silently overwritten wholesale; the reconciliation preserves project-specific content while extracting the bloat",
+      "the fixed lines (the docs/README.md pointer and the .local/tmp/ scratch line) are kept in the thinned file"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "fresh-repo-seeds-rules-and-pointers",
+    "prompt": "We just created a new repo and want to set up the root instruction file and engineering rules from scratch. Nothing exists yet.",
+    "assertions": [
+      "CLAUDE.md is seeded from the template with project identity, layout, invariants, build/test commands, and the rules pointer table filled from evidence in the repo, not aspiration",
+      "docs/rules/common/ is seeded with the six topic files: naming, doc-comments, testing, git-workflow, cli-surfaces, and agent-conduct",
+      "CLAUDE.md points into docs/rules/common/{topic}.md for each seeded topic rather than inlining the standards themselves",
+      "AGENTS.md is created as a symlink to CLAUDE.md",
+      "every pointer row added to CLAUDE.md's rules table resolves to a topic file that was actually seeded, with no row added for a file that wasn't created",
+      "a row is added or refreshed in docs/rules/README.md for each seeded topic"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "verify-instructions-and-rules-pointers",
+    "prompt": "Can you check whether our agent instructions setup is actually correct — CLAUDE.md, the AGENTS.md symlink, and the docs/rules/ pointers — without changing anything?",
+    "assertions": [
+      "verify mode runs and makes zero file changes",
+      "CLAUDE.md is checked for staying thin, with no inline naming/testing/git/CLI standard that belongs in a rules file instead",
+      "AGENTS.md is checked for being a symlink to CLAUDE.md rather than a copy, and a plain-file AGENTS.md is reported as a finding",
+      "every conditional pointer in CLAUDE.md is checked for resolving to a file that exists, and any pointer that does not resolve is reported",
+      "the .local/tmp/ scratch line's presence in CLAUDE.md is checked and reported if missing",
+      "findings are reported only; no CLAUDE.md, AGENTS.md, or docs/rules/ file is created, merged, or modified as a side effect of verifying"
+    ]
+  }
+]

@@ -1,0 +1,51 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "upstream-change-collides-with-local-adaptation",
+    "prompt": "We vendored a skill a while back and adapted one of its sections to fit how we work. I just noticed upstream changed that same section in a way that seems to contradict what we did locally. Can you sync our vendored skills with upstream?",
+    "assertions": [
+      "the reconcile computes the upstream delta base-to-theirs and re-expresses it over the repo's evolved copy semantically, rather than line-merging",
+      "the colliding section is surfaced as a genuine conflict for human decision, with both the upstream change and the local adaptation quoted alongside the base for context",
+      "the skill does not auto-resolve the conflict or pick a winner on its own",
+      "the skill does not blindly overwrite the local adaptation with the upstream version",
+      "the lock entry for that skill is not updated to a new ref or pristine hash since the reconcile did not complete",
+      "the report lists the skill as unreconciled rather than silently skipped or claimed as synced"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "baseline-after-vendoring-new-skill",
+    "prompt": "We just vendored a new skill into .agents/skills/ from upstream ai-devkit for the first time. Can you record it in the lock?",
+    "assertions": [
+      "a new [[skill]] entry is added to .agents/skills.lock",
+      "the entry records all three recorded facts: the upstream skill name (the join key), the upstream ref/SHA, and the content hash of the pristine upstream copy",
+      "the content hash is computed over the pristine upstream copy at the vendored ref, not over any local adaptation",
+      "the frontmatter name is used as the join key rather than assuming the directory name matches across upstream and vendored sides",
+      "the lock file remains at .agents/skills.lock, a sibling of .agents/skills/, not written inside it"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "project-owned-skill-untouched-by-sync",
+    "prompt": "Our repo has several vendored skills alongside one we wrote ourselves for our own deploy workflow. It isn't in the lock file. When you sync the vendored skills with upstream, make sure you don't mess with the one we own.",
+    "assertions": [
+      "the project-owned skill is left untouched: no reconcile, no lock entry written or expected for it",
+      "the report distinguishes the project-owned skill from the vendored ones rather than treating every skill directory the same",
+      "no attempt is made to fetch an upstream base or theirs for the project-owned skill, since it has no upstream counterpart to reconcile against",
+      "only the truly vendored skills go through the three-way reconcile"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "verify-lockfile-and-directory-consistency",
+    "prompt": "Before I trust our skills setup, can you check whether the lock file and the vendored skills directory actually agree with each other, without changing anything?",
+    "assertions": [
+      "verify mode runs and makes zero mutations to the lock file or any vendored skill",
+      ".agents/skills.lock is checked for existing and parsing",
+      "every vendored skill directory is checked for exactly one lock entry, and every lock entry is checked for a corresponding directory",
+      "mismatches, such as a directory with no lock entry or a lock entry with no directory, are reported rather than silently fixed",
+      "entries whose recorded ref is older than the newest upstream release are reported as drift candidates without being updated",
+      "the report is presented as findings only, with no lock or directory write happening as a side effect of verifying"
+    ]
+  }
+]
