@@ -1,8 +1,8 @@
 # Skills
 
-The fifteen `cmk:*` skill packages under [`skills/`](../../../skills/): seven docs-family skills plus eight setup-family skills. Each is a directory with a `SKILL.md` (frontmatter `name`/`description`/`version` plus the body the agent reads), and most ship a `references/` folder of templates and conventions the workflow loads on demand.
+The twenty-five `cmk:*` skill packages under [`skills/`](../../../skills/): seven docs-family skills, eight setup-family skills, eight delivery-family skills, and two knowledge-family skills. Each is a directory with a `SKILL.md` (frontmatter `name`/`description`/`version` plus the body the agent reads), and most ship a `references/` folder of templates and conventions the workflow loads on demand.
 
-Docs-family skills follow the same shape: a "Workflow: Create" / "Workflow: Iterate" pair, with placement rules and templates kept out of `SKILL.md` itself and cited via "Read `references/<file>.md`" lines. Setup-family skills instead follow a facet shape (modes and/or a single workflow, plus a report-only `## Verify` section). See [conventions.md](./conventions.md) for the exceptions and the full breakdown.
+Docs-family skills follow the same shape: a "Workflow: Create" / "Workflow: Iterate" pair, with placement rules and templates kept out of `SKILL.md` itself and cited via "Read `references/<file>.md`" lines. Setup-family skills instead follow a facet shape (modes and/or a single workflow, plus a report-only `## Verify` section). Delivery-family skills follow a tracker-neutral phase/gate shape and never carry a `## Verify` section — that contract is setup-family only. Knowledge-family skills are reference packs with no create/iterate or phase shape at all. See [conventions.md](./conventions.md) for the exceptions and the full breakdown.
 
 ## Docs family
 
@@ -24,6 +24,22 @@ Docs-family skills follow the same shape: a "Workflow: Create" / "Workflow: Iter
 - [infra.md](./infra.md) — `cmk:infra`, infrastructure-as-code packages and environment boundaries.
 - [cicd.md](./cicd.md) — `cmk:cicd`, CI, deployment, and policy automation around GitHub Actions.
 - [repo-setup.md](./repo-setup.md) — `cmk:repo-setup`, orchestrates every setup facet into one pass.
+
+## Delivery family
+
+- [delivery-workflow.md](./delivery-workflow.md) — `cmk:delivery-workflow`, the tracker-neutral contract every delivery skill operates inside.
+- [discover-efforts.md](./discover-efforts.md) — `cmk:discover-efforts`, reconciles an uncertain body of work into a tracker issue set.
+- [delivery-intake.md](./delivery-intake.md) — `cmk:delivery-intake`, context intake, branch/worktree setup, phase 1.
+- [delivery-spec-plan.md](./delivery-spec-plan.md) — `cmk:delivery-spec-plan`, spec and implementation plan, phase 2.
+- [delivery-review.md](./delivery-review.md) — `cmk:delivery-review`, multi-lens review with evidence and disposition, phase 4.
+- [delivery-ship.md](./delivery-ship.md) — `cmk:delivery-ship`, PR, verification evidence, tracker reconciliation, phase 5.
+- [delivery-handoff.md](./delivery-handoff.md) — `cmk:delivery-handoff`, relay prompt for a different agent at any phase boundary.
+- [delivery-pipeline.md](./delivery-pipeline.md) — `cmk:delivery-pipeline`, end-to-end orchestration across all five phases.
+
+## Knowledge family
+
+- [sui-sdk.md](./sui-sdk.md) — `cmk:sui-sdk`, gRPC-first guidance for talking to a Sui full node.
+- [sui-devstack.md](./sui-devstack.md) — `cmk:sui-devstack`, worktree-safe local Sui network setup for development and tests.
 
 ## Cross-cutting
 

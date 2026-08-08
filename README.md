@@ -44,6 +44,26 @@ This devkit solves that by using structured documentation as the shared state. T
 | `cmk:cicd` | Structure CI, deployment, and policy automation around GitHub Actions |
 | `cmk:repo-setup` | Orchestrate every setup facet into one bootstrap, adopt, update, or verify pass |
 
+### Delivery family
+
+| Skill | Purpose |
+|---|---|
+| `cmk:delivery-workflow` | The tracker-neutral contract every delivery skill operates inside — reconciliation loop, readiness vocabulary, acceptance criteria |
+| `cmk:discover-efforts` | Reconcile an uncertain body of work into a complete tracker issue set before delivery begins |
+| `cmk:delivery-intake` | Pull full context for a tracker issue, set up its branch/worktree, and move it to in-progress |
+| `cmk:delivery-spec-plan` | Produce a low-level design spec and an executable, dependency-aware implementation plan |
+| `cmk:delivery-review` | Multi-lens review — correctness, quality, spec/AC compliance, security, and more — with verified findings |
+| `cmk:delivery-ship` | Finalize delivery: verified evidence, a review-ready PR, and tracker reconciliation |
+| `cmk:delivery-handoff` | Generate a self-contained handoff prompt to continue tracked work in a different agent |
+| `cmk:delivery-pipeline` | End-to-end autonomous delivery of one issue, or a dependency-aware cluster, across all five phases |
+
+### Knowledge family
+
+| Skill | Purpose |
+|---|---|
+| `cmk:sui-sdk` | gRPC-first guidance for talking to a Sui full node — JSON-RPC is deprecated |
+| `cmk:sui-devstack` | Worktree-safe local Sui network setup for development and e2e tests |
+
 ## Usage
 
 Skills trigger automatically from natural language — just describe what you need. You can also invoke directly with slash commands (e.g. `/cmk:requirements`).
@@ -170,6 +190,20 @@ Make local dev worktree-safe
 ```
 ```
 Structure our CI
+```
+
+### Delivery — `cmk:delivery-pipeline`
+
+Deliver tracker-tracked work end to end — context intake, spec and plan, implementation, review, and shipping — autonomously, or invoke any phase skill standalone.
+
+```
+Work on TICKET-123
+```
+```
+Review this PR
+```
+```
+Generate a handoff prompt so I can continue this in another agent
 ```
 
 ## Works With
