@@ -45,14 +45,27 @@ as exhaustive for all time.
 │                               #   Verify: no cross-package imports, every
 │                               #   environment has a deploy path, no
 │                               #   embedded credentials.
-└── .github/workflows/          # cmk:cicd — path-filtered CI, one deploy
-                                #   workflow per deployable, taking the
-                                #   environment as input, as applicable.
-                                #   Verify: one gating CI workflow, 1:1:1
-                                #   stack/environment/deploy mapping,
-                                #   required checks pinned and matching,
-                                #   workflows/README.md current.
+├── .github/workflows/          # cmk:cicd — path-filtered CI, one deploy
+│                               #   workflow per deployable, taking the
+│                               #   environment as input, as applicable.
+│                               #   Verify: one gating CI workflow, 1:1:1
+│                               #   stack/environment/deploy mapping,
+│                               #   required checks pinned and matching,
+│                               #   workflows/README.md current.
+└── .agents/                    # cmk:agent-vendors — canonical vendored
+    ├── skills/cmk-<name>/      #   skill home, per-vendor adapters and
+    │                           #   bindings, as applicable. Verify:
+    │                           #   frontmatter valid, adapters in sync.
+    ├── skills.lock             # cmk:sync — upstream baseline per vendored
+    │                           #   skill. Verify: parses, one entry per
+    │                           #   vendored skill.
+    └── bindings/<vendor>.md    # cmk:agent-vendors — capability binding
+                                  #   mechanics only, never policy.
 ```
+
+Per-vendor adapter roots (`.claude/skills/cmk-<name>/`, `.grok/skills/cmk-<name>/`,
+`.cursor/rules/cmk-<name>.mdc`, as applicable) are also `cmk:agent-vendors`'s —
+see `cmk:agent-vendors` for the full tree and which vendor gets which tier.
 
 `cmk:project-layout` doesn't add a single line of its own to this tree — it
 governs the *shape* every other facet's files land inside (role-first

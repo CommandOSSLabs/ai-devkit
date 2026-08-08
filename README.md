@@ -42,6 +42,8 @@ This devkit solves that by using structured documentation as the shared state. T
 | `cmk:local-stack` | Create or iterate worktree-isolated local development stacks |
 | `cmk:infra` | Establish or audit infrastructure-as-code packages and environment boundaries |
 | `cmk:cicd` | Structure CI, deployment, and policy automation around GitHub Actions |
+| `cmk:agent-vendors` | Vendor the kit's skills into one canonical home with per-vendor adapters |
+| `cmk:sync` | Reconcile vendored skills with upstream without flattening local evolution |
 | `cmk:repo-setup` | Orchestrate every setup facet into one bootstrap, adopt, update, or verify pass |
 
 ### Delivery family
@@ -190,6 +192,21 @@ Make local dev worktree-safe
 ```
 ```
 Structure our CI
+```
+
+### Vendoring & sync — `cmk:agent-vendors` + `cmk:sync`
+
+`cmk:agent-vendors` establishes one canonical `.agents/skills/` home per repo
+and generates the thinnest adapter each coding-agent vendor needs to discover
+it. `cmk:sync` keeps that vendored copy current with upstream ai-devkit
+through a lock-tracked, semantic three-way reconciliation — never a blind
+overwrite of local adaptations.
+
+```
+Vendor the devkit skills into this repo
+```
+```
+Sync our vendored skills with upstream
 ```
 
 ### Delivery — `cmk:delivery-pipeline`

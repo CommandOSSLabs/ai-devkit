@@ -1,6 +1,6 @@
 {
   "name": "ai-devkit",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Documentation-first skills for AI-powered software development",
   "author": {
     "name": "CommandOSS Labs",
@@ -8,5 +8,5 @@
   },
   "repository": "https://github.com/CommandOSSLabs/ai-devkit",
   "license": "MIT",
-  "keywords": ["documentation", "requirements", "design", "adr", "rules", "knowledge", "devkit", "repo-setup", "local-dev", "cicd", "infra", "delivery", "tracker", "linear", "sui"]
+  "keywords": ["documentation", "requirements", "design", "adr", "rules", "knowledge", "devkit", "repo-setup", "local-dev", "cicd", "infra", "delivery", "tracker", "linear", "sui", "sync", "vendoring"]
 }

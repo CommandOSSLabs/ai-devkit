@@ -1,6 +1,6 @@
 ---
 name: cmk:repo-setup
-description: This skill should be used when the user asks to "set up this repo", "bootstrap this repo", "update this repo with the devkit", "adopt the devkit", "check repo setup", or needs to orchestrate every setup facet (project layout, toolchain, docs, agent instructions, MCP config, local stack, infra, CI/CD) into one bootstrap, adoption, update, or verification pass over a repository.
+description: This skill should be used when the user asks to "set up this repo", "bootstrap this repo", "update this repo with the devkit", "adopt the devkit", "check repo setup", or needs to orchestrate every setup facet (project layout, toolchain, docs, agent instructions, MCP config, local stack, infra, CI/CD, vendoring, sync) into one bootstrap, adoption, update, or verification pass over a repository.
 version: 0.1.0
 ---
 
@@ -34,11 +34,14 @@ owns each line.
    mutating anything.
 3. **Run facets**, in dependency order, skipping any that don't apply:
    `project-layout` → `toolchain` → `docs` (`cmk:docs`) → `agent-instructions`
-   → `mcp-config` → `local-stack` → `infra` → `cicd`. Layout and toolchain come
-   first because every later facet's files land inside the layout they
-   establish; docs and agent-instructions come before the facets that point
-   into `docs/rules/`; local-stack, infra, and cicd come last because they're
-   the most likely to be skipped entirely.
+   → `mcp-config` → `local-stack` → `infra` → `cicd` → `agent-vendors`. Layout
+   and toolchain come first because every later facet's files land inside the
+   layout they establish; docs and agent-instructions come before the facets
+   that point into `docs/rules/`; local-stack, infra, and cicd come near the
+   end because they're the most likely to be skipped entirely; `agent-vendors`
+   runs last because it vendors the finished skill set. `sync` isn't part of
+   this chain — it runs on demand thereafter, once a baseline is recorded at
+   vendor time.
 4. **Verify** — compose every facet's own checks into one report (see below).
 
 ## Facets
@@ -53,6 +56,8 @@ owns each line.
 | `cmk:local-stack` | Worktree-isolated local dev stack(s): identity/coherence and the interactive/headless runners. |
 | `cmk:infra` | Isolated IaC packages under `infra/`, first-class environments. |
 | `cmk:cicd` | GitHub Actions structure: CI validation, deploy/release, policy and auth. |
+| `cmk:agent-vendors` | Canonical `.agents/skills/` home, per-vendor adapters and bindings, the check-only adapter-sync CI. |
+| `cmk:sync` | Upstream baseline per vendored skill (`.agents/skills.lock`) and semantic reconciliation with the kit. |
 
 ## Applicability judgment
 
