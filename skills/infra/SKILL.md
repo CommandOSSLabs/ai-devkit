@@ -1,7 +1,7 @@
 ---
 name: cmk:infra
 description: This skill should be used when the user asks to "set up infra", "add IaC", "structure the infrastructure code", "add an environment", "isolate infra stacks", or needs to establish or audit infrastructure-as-code packages, environment boundaries, and their pipeline wiring.
-version: 0.1.0
+version: 0.2.0
 ---
 
 # Infra
@@ -9,6 +9,17 @@ version: 0.1.0
 Establish or audit a repo's infrastructure-as-code layout: how IaC packages
 are isolated from each other, how environments are named and bounded, and
 where cloud-provider specifics live versus what stays in the shared pattern.
+
+## Modes
+
+**Init** (default) — create isolated IaC packages per deployment concern and
+declare each package's environments.
+
+**Update** — add an environment or package; preserve code-and-pipeline
+isolation between stacks.
+
+**Verify** — report-only audit against the checks under `## Verify`;
+never mutates.
 
 ## `infra/` holds isolated IaC packages
 

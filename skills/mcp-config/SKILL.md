@@ -1,7 +1,7 @@
 ---
 name: cmk:mcp-config
 description: This skill should be used when the user asks to "set up MCP", "configure MCP servers", "add serena", "connect the tracker MCP", ".mcp.json", or needs a checked-in, per-vendor Model Context Protocol server configuration for a repo.
-version: 0.1.0
+version: 0.2.0
 ---
 
 # MCP Config
@@ -10,6 +10,17 @@ Establish or audit a repo's Model Context Protocol (MCP) server
 configuration: one checked-in server set every clone and agent shares, wired
 into each agent vendor's own registration mechanism, with secrets kept out
 of the repo.
+
+## Modes
+
+**Init** (default) — create the checked-in server set and wire each vendor's
+registration at it.
+
+**Update** — add or remove a server in the checked-in config once;
+per-vendor registration follows from it.
+
+**Verify** — report-only audit against the checks under `## Verify`;
+never mutates.
 
 ## Checked-in server set
 

@@ -1,7 +1,7 @@
 ---
 name: cmk:toolchain
 description: This skill should be used when the user asks to "set up gitignore", "pin the toolchain", "configure the workspace", "which tool does what", "add a formatter/linter", or needs to assign unambiguous tool roles, pin runtime versions, and establish a gitignore baseline for a repo.
-version: 0.1.0
+version: 0.2.0
 ---
 
 # Toolchain
@@ -9,6 +9,17 @@ version: 0.1.0
 Establish or audit a repo's toolchain: which tool owns which job, which
 versions are pinned and where, and what a baseline gitignore should cover so
 agents and humans never guess.
+
+## Modes
+
+**Init** (default) — assign every tool its role, check in runtime pins, and
+seed the gitignore baseline.
+
+**Update** — add or swap a tool or pin; keep one resolver and one
+lockfile per ecosystem.
+
+**Verify** — report-only audit against the checks under `## Verify`;
+never mutates.
 
 ## Explicit tool-role assignment
 

@@ -1,7 +1,7 @@
 ---
 name: cmk:cicd
 description: This skill should be used when the user asks to "set up CI", "speed up CI", "add a deploy workflow", "structure GitHub Actions", "self-hosted runners", "protect the main branch", or needs to structure CI, deployment, and policy automation around GitHub Actions.
-version: 0.1.0
+version: 0.2.0
 ---
 
 # CI/CD
@@ -9,6 +9,17 @@ version: 0.1.0
 Structure a repo's GitHub Actions automation into three concerns that stay
 separated: what validates every change, what ships a specific commit
 somewhere, and what gates or authenticates either one.
+
+## Modes
+
+**Init** (default) — stand up the path-filtered CI pipeline, per-environment
+deploy workflows, policy gates, and the workflows README.
+
+**Update** — add, rename, or retire a workflow; update the README
+table and required checks in the same change.
+
+**Verify** — report-only audit against the checks under `## Verify`;
+never mutates.
 
 ## Three facets, one split
 

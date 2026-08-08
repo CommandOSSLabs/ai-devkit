@@ -1,7 +1,7 @@
 ---
 name: cmk:local-stack
 description: This skill should be used when the user asks to "set up local dev", "make dev worktree-safe", "add a local stack", "port conflicts between worktrees", "headless dev mode", "run services locally for agents/CI", or needs to create or iterate worktree-isolated local development stacks with deterministic identity, coherence validation, and interactive/headless runners.
-version: 0.2.0
+version: 0.3.0
 ---
 
 # Local Stack
@@ -11,6 +11,17 @@ worktrees of the same repo run local service topologies simultaneously, on the
 same machine, without port collisions, stale config, or cross-worktree
 contamination. Serves three audiences: human developers, AI agents running
 headless, and CI.
+
+## Modes
+
+**Init** (default) — derive the worktree identity, install the coherence
+guard, and stand up the first stack config with both runner modes.
+
+**Update** — add a stack, config, instance, or runner mode as needs
+grow; never touch another worktree's or instance's state.
+
+**Verify** — report-only audit against the checks under `## Verify`;
+never mutates.
 
 ## Model
 
