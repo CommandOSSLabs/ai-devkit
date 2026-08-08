@@ -29,10 +29,9 @@ This devkit solves that by using structured documentation as the shared state. T
 | Skill | Purpose |
 |---|---|
 | `cmk:docs` | Bootstrap or update the `/docs` directory structure |
-| `cmk:prd` | Create or iterate product requirements |
-| `cmk:system-design` | Create or iterate system architecture |
-| `cmk:feature-spec` | Create or iterate feature specifications |
-| `cmk:adr` | Create or update architecture decisions |
+| `cmk:requirements` | Create or iterate product/feature requirements in docs/requirements/ |
+| `cmk:design` | Create or iterate distilled design in docs/design/ — system-wide or per-feature |
+| `cmk:adr` | Create or update decisions in docs/decisions/ |
 | `cmk:codebase-docs` | Generate or update hierarchical, AI-navigable docs under `docs/ai/` |
 | `cmk:learn` | Extract and record non-obvious learnings and gotchas |
 | `cmk:rule` | Codify engineering standards into `docs/rules/` |
@@ -40,7 +39,7 @@ This devkit solves that by using structured documentation as the shared state. T
 
 ## Usage
 
-Skills trigger automatically from natural language — just describe what you need. You can also invoke directly with slash commands (e.g. `/cmk:prd`).
+Skills trigger automatically from natural language — just describe what you need. You can also invoke directly with slash commands (e.g. `/cmk:requirements`).
 
 Docs build on each other. Follow this order when starting a new project:
 
@@ -55,23 +54,23 @@ Set up the docs structure for this project
 Check if our docs structure is up to date with the latest devkit
 ```
 
-### Step 2. Product Requirements — `cmk:prd`
+### Step 2. Product Requirements — `cmk:requirements`
 
 Define what to build and why. This is the upstream source of truth — everything downstream references it.
 
 ```
-We just discussed the billing system requirements — save that as a PRD
+We just discussed the billing system requirements — save that as requirements
 ```
 ```
-Use this Notion doc to draft a PRD for the new onboarding flow: [link]
+Use this Notion doc to draft requirements for the new onboarding flow: [link]
 ```
 ```
-Update the PRD — we're cutting the SSO requirement from v1
+Update the requirements — we're cutting the SSO requirement from v1
 ```
 
-### Step 3. System Design — `cmk:system-design`
+### Step 3. Design — `cmk:design`
 
-Design how to build it. Informed by the PRD — the skill checks for conflicts with upstream scope and success criteria.
+Design how to build it, system-wide or per-feature. Informed by the requirements — the skill checks for conflicts with upstream scope and success criteria.
 
 ```
 Draft a system design for our payments service
@@ -82,24 +81,19 @@ Update the system design — we switched from PostgreSQL to DynamoDB
 ```
 We're adding a message queue between the API and worker — update the architecture
 ```
-
-### Step 4. Feature Specs — `cmk:feature-spec`
-
-Break the system design into implementable features. Informed by both the PRD and system design — the skill checks for upstream conflicts.
-
 ```
-Create a feature spec for checkout retry logic
+Create a feature-level design for checkout retry logic
 ```
 ```
-Use this Notion doc to draft a feature spec for tenant-level rate limiting: [link]
+Use this Notion doc to draft a feature design for tenant-level rate limiting: [link]
 ```
 ```
-Update the retry spec — we changed the backoff strategy to exponential with jitter
+Update the retry design — we changed the backoff strategy to exponential with jitter
 ```
 
 ### At any point: Architecture Decisions — `cmk:adr`
 
-Record system-level decisions as they come up during any step. The skill checks for conflicts with the current system design.
+Record system-level decisions as they come up during any step. The skill checks for conflicts with the current design.
 
 ```
 We decided to use event sourcing over CRUD for the audit trail — record that as an ADR
@@ -155,7 +149,7 @@ Refresh docs/ai/ for the rcp module
 
 ### Upstream changes
 
-When an upstream doc changes (e.g., PRD scope shifts), review downstream docs for consistency. Skills will warn when they detect conflicts with upstream — you decide how to resolve them.
+When an upstream doc changes (e.g., requirements scope shifts), review downstream docs for consistency. Skills will warn when they detect conflicts with upstream — you decide how to resolve them.
 
 ## Works With
 
@@ -172,27 +166,25 @@ Install as a plugin via `opencode.json`. Skills are auto-registered via the conf
 The `/docs` directory is the shared protocol. Any agent — research, architecture, planning, QA — can participate by reading from and writing to the same structure:
 
 ```
-┌──────────┐     ┌──────────┐     ┌──────────────┐
-│ Research │────▶│ PRD      │────▶│ System       │
-│ Agent    │     │ (cmk:prd)│     │ Design       │
-└──────────┘     └──────────┘     │ (cmk:system- │
-                                  │  design)     │
-      ┌───────────────────────────┘──────────────┘
-      │                           │
-      ▼                           ▼
-┌──────────┐               ┌──────────────┐
-│ Feature  │               │ Knowledge    │
-│ Specs    │               │ (cmk:learn)  │
-│ (cmk:    │               │      │       │
-│ feature- │               │      ▼       │
-│ spec)    │               │ Rules        │
-└──────────┘               │ (cmk:rule)   │
-                           └──────────────┘
+┌──────────┐     ┌────────────────────┐     ┌──────────────┐
+│ Research │────▶│ Requirements       │────▶│ Design       │
+│ Agent    │     │ (cmk:requirements) │     │ (cmk:design) │
+└──────────┘     └────────────────────┘     └──────────────┘
+                                                   │
+                                                   ▼
+                                            ┌──────────────┐
+                                            │ Knowledge    │
+                                            │ (cmk:learn)  │
+                                            │      │       │
+                                            │      ▼       │
+                                            │ Rules        │
+                                            │ (cmk:rule)   │
+                                            └──────────────┘
 ```
 
-- A research agent saves findings → `cmk:prd` reads them to draft requirements
-- A planning agent reads the feature spec → breaks it into tasks
-- A QA agent reads the spec → generates test cases from acceptance criteria
+- A research agent saves findings → `cmk:requirements` reads them to draft requirements
+- A planning agent reads the design → breaks it into tasks
+- A QA agent reads the design → generates test cases from acceptance criteria
 - A debugging session surfaces gotchas → `cmk:learn` captures them → `cmk:rule` promotes to standards
 
 The docs are the interface between agents. Each agent reads what it needs, writes what it produces, and the next agent picks up where the last one left off.
