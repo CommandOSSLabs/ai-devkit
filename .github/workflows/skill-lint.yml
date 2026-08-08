@@ -1,0 +1,22 @@
+name: Skill Lint
+
+on:
+  pull_request:
+    paths:
+      - "skills/**"
+      - "scripts/skill-lint.sh"
+      - ".github/workflows/skill-lint.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "skills/**"
+      - "scripts/skill-lint.sh"
+      - ".github/workflows/skill-lint.yml"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash scripts/skill-lint.sh
