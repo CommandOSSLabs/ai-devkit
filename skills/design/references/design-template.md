@@ -1,6 +1,6 @@
 # Design Template (Portable Baseline)
 
-Use these sections in order unless the target repository has a stronger local convention. Covers system-wide design; for feature-level docs, see the Feature-Level Guidance in `design-conventions.md` and the Acceptance Criteria section in `../../../docs/templates/design.md`.
+Use these sections in order unless the target repository has a stronger local convention. Covers system-wide design; for feature-level docs, see the Feature-Level Guidance in `design-conventions.md` and the Acceptance Criteria section in `docs/templates/design.md`.
 
 ## 1) Mission
 

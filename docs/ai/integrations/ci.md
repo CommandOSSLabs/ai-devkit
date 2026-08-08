@@ -1,9 +1,11 @@
 # CI
 
 ## What
-GitHub Actions workflow that runs on PRs and pushes to `main`. Its job is to verify skills are in sync across distribution paths.
+ai-devkit currently ships no CI workflows of its own. The sync-check CI
+pattern — a check-only validator that keeps vendor adapters byte-identical to
+their canonical skills in a consuming repo — is defined by `cmk:agent-vendors`.
+Upstream baseline tracking for vendored skills is defined by `cmk:sync`.
 
 ## Where
-- Workflow: `.github/workflows/skills-sync-check.yml` — job `check-sync`, step "Verify skills are in sync".
-- Trigger paths it watches: `.agents/skills/**`, `.claude/skills/**`, `scripts/sync-skills.sh`, and the workflow file itself.
-- The check command: `bash scripts/sync-skills.sh check` — referenced by the workflow but the script is not currently present in the repo tree, so the check will only fire once that script lands.
+- Sync-check CI convention: `skills/agent-vendors/references/sync-check-ci.md`.
+- Upstream baseline (`.agents/skills.lock`) format: `skills/sync/references/skills-lock.md`.
