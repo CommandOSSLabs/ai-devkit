@@ -1,0 +1,83 @@
+---
+name: cmk:cicd
+description: This skill should be used when the user asks to "set up CI", "speed up CI", "add a deploy workflow", "structure GitHub Actions", "self-hosted runners", "protect the main branch", or needs to structure CI, deployment, and policy automation around GitHub Actions.
+version: 0.1.0
+---
+
+# CI/CD
+
+Structure a repo's GitHub Actions automation into three concerns that stay
+separated: what validates every change, what ships a specific commit
+somewhere, and what gates or authenticates either one.
+
+## Three facets, one split
+
+- **CI structure** — one path-filtered validation pipeline gating everything
+  that runs on a push or PR. Read `references/ci-structure.md` when setting up
+  or speeding up CI.
+- **Deploy & release** — dispatch-against-ref deployment of a reviewed commit
+  to a named environment, plus release integrity for anything irreversible.
+  Read `references/deploy-and-release.md` when adding or changing a deploy or
+  release workflow.
+- **Policy & auth** — required-check gates, branch-protection rulesets, and
+  automation credentials. Read `references/policy-and-auth.md` when wiring a
+  gate or an automation identity.
+
+Never fold validation and deployment into one workflow: a push that only
+changes docs must not queue behind a deploy, and a deploy must never
+accidentally run on every push that happens to touch the workflow file.
+
+## GitHub ↔ IaC mapping is this skill's contract
+
+`cmk:infra` names environments as first-class, tool-neutral entities
+(`production`, `staging`, `dev`, `canary`, plus ephemeral per-effort stacks)
+and requires each to have a deploy path; this skill specifies that path. The
+contract is **1:1:1**: every IaC stack pairs with exactly one GitHub
+Environment of the same name and exactly one deploy workflow that targets it.
+Secrets live only in that protected GitHub Environment, never in
+repository-wide secrets or plain variables. Read `cmk:infra` for the
+environment vocabulary itself; read `references/deploy-and-release.md` here
+for how the pairing is wired.
+
+## `workflows/README.md` is the operating doc
+
+Every workflow gets one row in a table at `.github/workflows/README.md`:
+name, purpose, and trigger. A workflow with a non-obvious contract (a release
+gate's promotion rule, a reconciliation job's opt-in variable) gets its own
+subsection below the table. Adding, renaming, or retiring a workflow updates
+this table in the same change — it is the first thing a reader or another
+agent opens to learn what automation exists, not a changelog reconciled
+later.
+
+## What this teaches vs. what a project owns
+
+This skill teaches shapes and the traps around them — never a frozen workflow
+catalog to copy verbatim. Recognize and avoid: **cold-cache poisoning** (a
+scheduled cold job whose own setup step silently re-warms a shared cache, so
+the regression it exists to catch can no longer show up); **skipped-job-
+reports-success** (a path-filtered job that didn't run still reports a green
+check, so the gating job itself, not the per-area jobs, must be what's
+required); **workflow-token-doesn't-trigger-CI** (automation that pushes with
+the built-in workflow token produces commits that never fire downstream CI,
+silently leaving a rewritten ref unverified).
+
+Projects own: which area jobs exist and their path filters; runner labels and
+pool sizing; which policy gates are enabled; deploy-leg composition; label
+names, schedules, and cache backends; which checks become required in the
+ruleset.
+
+## Verify
+
+Report-only — never mutate:
+
+- Exactly one path-filtered CI workflow exists, with a required
+  change-detection job every other CI job depends on.
+- Every deployable has exactly one deploy workflow, and it takes a commit SHA
+  and a target environment as explicit inputs — never an implicit
+  branch-only trigger for anything promotable.
+- Required checks are pinned by name in a branch-protection ruleset and match
+  actual workflow job names — no drift between the two.
+- No long-lived cloud credential sits in a secret where OIDC federation is
+  available.
+- `.github/workflows/README.md` lists every workflow and is current with the
+  workflows on disk.
