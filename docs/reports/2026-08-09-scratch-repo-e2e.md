@@ -3,7 +3,7 @@
 **Date:** 2026-08-09
 **Kit revision validated:** `a42c6f57f3c7e159fc9215759a24011fb1527db8`
 (branch `phase-e-validation-polish`); one fix landed mid-run, ending revision
-`18584917646ad682481537632793f8b5c7a32f11`.
+`b819803e1bf2fa1bc6112b5d8116e8bd54655b34`.
 
 ## What this is
 

@@ -245,7 +245,5 @@ kit.
 
 ## Statement
 
-Nothing was written to the target repository
-(`/Users/daniellam258/orca/workspaces/dopamint-arena/cmk-ai-devkit`,
-i.e. `CommandOSSLabs/dopamint-arena`) at any point during this task. All
-output is this report, committed to this repository only.
+Nothing was written to the target repository at any point during this task.
+All output is this report, committed to this repository only.
