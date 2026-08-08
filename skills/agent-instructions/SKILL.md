@@ -59,6 +59,10 @@ pointer names:
 - Adding or changing a CLI command? `references/rules-cli-surfaces.md` → `docs/rules/common/cli-surfaces.md`
 - Any long-running or background work? `references/rules-agent-conduct.md` → `docs/rules/common/agent-conduct.md`
 
+After seeding files into `docs/rules/common/`, add or refresh a row for each
+seeded topic in `docs/rules/README.md` — the index `cmk:rule` maintains
+afterward.
+
 Each is seeded once as a ready-to-use starting point, not a frozen mandate —
 the repository owns and evolves its copy afterward (`cmk:rule` maintains
 rules going forward; this skill only seeds the baseline).
@@ -76,10 +80,10 @@ success for a file that was actually left untouched.
 
 ## Template
 
-Read `references/claude-md-template.md` for the fenced `CLAUDE.md` template,
-its bracketed slots, the fixed lines every seed must keep (the `.local/tmp/`
-scratch pointer, the `docs/rules/` pointer table, the `docs/README.md`
-pointer), and the seeding instructions that follow it.
+Seeding or reconciling `CLAUDE.md`? Read `references/claude-md-template.md`
+for the fenced template, its bracketed slots, the fixed lines every seed must
+keep (the `.local/tmp/` scratch pointer, the `docs/rules/` pointer table, the
+`docs/README.md` pointer), and the seeding instructions that follow it.
 
 ## Verify
 

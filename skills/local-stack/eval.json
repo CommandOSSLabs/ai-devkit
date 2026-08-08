@@ -54,14 +54,14 @@
   },
   {
     "eval_id": 5,
-    "eval_name": "phoenix-rust-sidecar-parallel-services",
+    "eval_name": "web-app-inference-sidecar-parallel-services",
     "prompt": "We have a polyglot stack: a web app (port 4000) with a sidecar service for heavy inference (port 8080). We use Postgres on 5432 for OLTP data and an analytics database on 8123 (HTTP) and 9000 (native). The web app talks to the sidecar over HTTP. We need a worktree-isolated local stack because our team works on multiple features in parallel and port conflicts are killing us. Help set this up.",
     "assertions": [
       "all 5 ports (4000, 8080, 5432, 8123, 9000) derive from the worktree identity",
       "the coherence guard validates the web-app-to-sidecar URL uses the currently computed port",
       "the headless runner starts services in dependency order (databases, then sidecar, then web app)",
       "each language's interactive dev command uses its own live-reload tooling",
-      "the object-store/database compose config uses env var port substitution, not a hardcoded mapping"
+      "the analytics-database compose config uses env var port substitution, not a hardcoded mapping"
     ]
   },
   {

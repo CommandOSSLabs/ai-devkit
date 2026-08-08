@@ -3,7 +3,7 @@
 Maps from topic to source file: short what/where docs that point an agent at
 the right code instead of restating it.
 
-`ai-devkit` is a documentation-first toolkit shipped as a Claude Code / OpenCode plugin. It bundles a set of `cmk:*` skills that scaffold and maintain a `/docs` tree (requirements, design, decisions, rules, knowledge, and the rest of the canonical taxonomy), plus a `cmk:codebase-docs` skill that builds this very `docs/ai/` tree. The repo itself is the canonical source of those skills — there is no application runtime to document, only skill content, plugin manifests, and the docs scaffold.
+`ai-devkit` is a documentation-first toolkit shipped as a Claude Code / OpenCode plugin. It bundles a set of `cmk:*` skills that scaffold and maintain a `/docs` tree (requirements, design, decisions, rules, knowledge, and the rest of the canonical taxonomy), plus a `cmk:codebase-docs` skill that builds this very `docs/ai/` tree, plus a repo-setup facet family that scaffolds local dev, layout, toolchain, agent instructions, infra, CI/CD, and MCP config. The repo itself is the canonical source of those skills — there is no application runtime to document, only skill content, plugin manifests, and the docs scaffold.
 
 For the user-facing pitch and install instructions see the root [`README.md`](../../README.md).
 

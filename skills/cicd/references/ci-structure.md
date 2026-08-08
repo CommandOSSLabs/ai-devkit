@@ -85,9 +85,9 @@ Isolate deliberately, after setup, not instead of it:
   run: |
     cold_home="$(mktemp -d)"
     echo "TOOL_CACHE_HOME=$cold_home" >> "$GITHUB_ENV"
-- name: Assert the cache is actually cold
-  run: test -z "$(ls -A "$TOOL_CACHE_HOME" 2>/dev/null)"
 - run: <dependency-resolve command>
+- name: Assert the resolve step respected the cold override
+  run: test -n "$(ls -A "$TOOL_CACHE_HOME" 2>/dev/null)"
 ```
 
 Run this job on a schedule against the tip of the trunk branch with no path
@@ -101,7 +101,7 @@ A test suite (in whatever language the repo's automation scripts already use)
 pins the CI workflow's own job IDs, human-readable job names, and runner
 assignments as data, then asserts the live YAML matches. Renaming a job or
 moving it to a different runner class without updating the ruleset (see
-`references/policy-and-auth.md`) becomes a CI failure instead of a silently
+`policy-and-auth.md`) becomes a CI failure instead of a silently
 broken required check.
 
 ## Label-gated diagnostic jobs

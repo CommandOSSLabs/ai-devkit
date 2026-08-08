@@ -23,6 +23,8 @@ on:
     inputs:
       environment:
         type: choice
+        # production is absent: it's reached only via Promotion below,
+        # never dispatched to directly.
         options: [dev, staging, canary]
       commit:
         description: Full 40-character commit SHA

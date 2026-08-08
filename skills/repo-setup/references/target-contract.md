@@ -12,7 +12,7 @@ as exhaustive for all time.
 
 ```
 <repo>/
-├── CLAUDE.md                  # cmk:agent-instructions — thin: identity, layout
+├── CLAUDE.md                   # cmk:agent-instructions — thin: identity, layout
 │                               #   map, invariants, commands, pointers into
 │                               #   docs/rules/. Verify: exists, stays thin,
 │                               #   every pointer resolves.
@@ -46,11 +46,12 @@ as exhaustive for all time.
 │                               #   environment has a deploy path, no
 │                               #   embedded credentials.
 └── .github/workflows/          # cmk:cicd — path-filtered CI, one deploy
-                                 #   workflow per deployable per environment,
-                                 #   as applicable. Verify: one gating CI
-                                 #   workflow, 1:1:1 stack/environment/deploy
-                                 #   mapping, required checks pinned and
-                                 #   matching, workflows/README.md current.
+                                #   workflow per deployable, taking the
+                                #   environment as input, as applicable.
+                                #   Verify: one gating CI workflow, 1:1:1
+                                #   stack/environment/deploy mapping,
+                                #   required checks pinned and matching,
+                                #   workflows/README.md current.
 ```
 
 `cmk:project-layout` doesn't add a single line of its own to this tree — it

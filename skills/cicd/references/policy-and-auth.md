@@ -24,7 +24,7 @@ remember to check by hand:
 ## Branch-protection ruleset contract
 
 - Required checks are pinned **by exact job name**, and the change-detection
-  job (see `references/ci-structure.md`) is itself required — a
+  job (see `ci-structure.md`) is itself required — a
   path-filtered job that doesn't run for a given diff still reports success,
   so if only the per-area jobs were required, an unrelated PR would pass
   every gate for free.

@@ -43,8 +43,8 @@ themselves.
 
 ## GitHub ↔ IaC mapping is `cmk:cicd`'s contract
 
-Every environment above pairs with exactly one IaC stack and exactly one
-deploy workflow — a 1:1:1 mapping from Git activity to stack to environment.
+The contract is **1:1:1**: every IaC stack pairs with exactly one GitHub
+Environment of the same name and exactly one deploy workflow that targets it.
 This skill names that pairing and requires it to exist; the workflow
 triggers, branch/tag rules, and approval gates that implement it are
 `cmk:cicd`'s facet. Read `cmk:cicd` when wiring the deploy path itself.
