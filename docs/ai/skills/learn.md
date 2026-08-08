@@ -4,7 +4,7 @@
 Skill that extracts non-obvious learnings — gotchas, validated assumptions, hard-won fixes, discovered constraints — from any input (conversations, debugging, files, links) and files them into `docs/knowledge/{topic}.md`.
 
 ## Approach
-Has an explicit extraction rule that filters out common knowledge, decisions (which belong in ADRs), and requirements (PRD/feature-spec). The workflow surfaces conflicts with existing entries to the user before writing — replace, keep both, or discard is the user's call, not the skill's.
+Has an explicit extraction rule that filters out common knowledge, decisions (which route to `cmk:adr`), and requirements (which route to `cmk:requirements` / `cmk:design`). The workflow surfaces conflicts with existing entries to the user before writing — replace, keep both, or discard is the user's call, not the skill's.
 
 ## Where
 - Skill body: `skills/learn/SKILL.md` — sections `Extraction Rule`, `Workflow: Extract`, `Workflow: Review`, `Output`.

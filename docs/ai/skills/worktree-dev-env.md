@@ -12,4 +12,3 @@ The `description` frontmatter contains the trigger phrases ("set up local dev", 
 - Skill body: `skills/worktree-dev-env/SKILL.md` — sections `The Pattern (Stack-Agnostic)` (with subsections 1–8), `Workflow: Create`, `Workflow: Iterate`, `Adapting to Tech Stacks`, `Common Pitfalls`, `File Layout Reference`.
 - Eight numbered components: grep `### [1-8]\.` in `skills/worktree-dev-env/SKILL.md`.
 - Eval scenarios: `skills/worktree-dev-env/eval.json`.
-- Empty references slot reserved for future expansion: `skills/worktree-dev-env/references/`.

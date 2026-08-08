@@ -1,28 +1,18 @@
-# Engineering Rules
+# Rules
 
-This directory contains coding standards, conventions, and development practices.
+Engineering standards: the conventions code in this repository is expected to
+follow.
 
-## Canonical Placement
+## Conventions
 
-- Common rules index: [`docs/rules/common/README.md`](./common/README.md)
-- Common rules navigation: [`docs/rules/common/AGENTS.md`](./common/AGENTS.md)
-- Common rules docs (authoritative baseline): `docs/rules/common/*.md`
-- Language-specific rules: `docs/rules/{language}/*.md` (for example: `docs/rules/typescript/` or `docs/rules/rust/`)
-- Framework-specific rules: `docs/rules/{framework}/*.md` (for example: `docs/rules/react/` or `docs/rules/nextjs/`)
+- Shared, language-agnostic standards live in [`common/`](./common/).
+- Language and framework standards live in `rules/<language>/` and
+  `rules/<framework>/`; add a folder only when it is actively used.
+- One topic per file, `kebab-case`, written as actionable rules rather than
+  advice.
+- A narrower rule overrides a broader one; say so explicitly where it does.
 
-## Baseline vs Templates
+## When to read
 
-- Files in `docs/rules/common/*.md` are live baseline rules for this repository.
-- Keep reusable scaffolds in `docs/templates/` only when you need to bootstrap rules in other repositories.
-
-## Folder Convention
-
-- Keep shared rules in `common/`
-- Add language/framework folders only when they are actively used
-- Keep rules concise, actionable, and implementation-oriented
-
-## How to Use
-
-1. Start with `common/` rules for any task.
-2. Apply language/framework rules when the task requires them.
-3. Update relevant rule docs when conventions evolve.
+Before writing or reviewing code — start with `common/`, then the language or
+framework folder that applies.

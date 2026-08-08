@@ -1,21 +1,18 @@
 # Guides
 
-This directory contains operational and onboarding guides.
+How-to and integration guides: task-oriented walkthroughs for doing a specific
+thing in this repository.
 
-## Canonical Placement
+## Conventions
 
-- Guide entry: `docs/guides/{guide-name}.md`
-- Guide name format: `kebab-case` task or context name (for example: `local-dev.md`, `deployment.md`, `onboarding.md`, `troubleshooting.md`)
-- Optional supporting assets: `docs/guides/{guide-name}/...`
+- One file per task: `<guide-name>.md` in `kebab-case` (for example
+  `local-dev.md`, `adding-a-feature.md`).
+- Give prerequisites, ordered steps, and the expected outcome; verify every
+  command before publishing it.
+- A guide covers how to do something. How the system works belongs in
+  [`../design/`](../design/); how to operate it belongs in
+  [`../runbooks/`](../runbooks/).
 
-## File Convention
+## When to read
 
-- Use one file per guide topic when possible
-- Use descriptive, task-oriented names (for example: `local-dev.md`, `deployment.md`)
-- Keep steps runnable and verify commands before publishing
-
-## How to Use
-
-1. Start from the concrete goal (for example: run locally, deploy, troubleshoot).
-2. Add prerequisites, exact steps, and expected outcomes.
-3. Update guides when workflows, commands, or environments change.
+When you know what you need to do and want the established way to do it.

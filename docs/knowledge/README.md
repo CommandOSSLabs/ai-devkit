@@ -1,20 +1,16 @@
 # Knowledge
 
-This directory contains accumulated knowledge — gotchas, non-obvious findings, and hard-won insights from development, research, debugging, and incidents.
+Gotchas, learnings, and hard-won insights: the non-obvious facts that cost
+someone time to discover.
 
-## Canonical Placement
+## Conventions
 
-- Knowledge entry: `docs/knowledge/{topic}.md`
-- Examples: `docs/knowledge/infrastructure.md`, `docs/knowledge/api-quirks.md`
+- One file per topic in `kebab-case`, named by domain rather than by date or
+  session (for example `infrastructure.md`, `api-quirks.md`).
+- Entries accumulate inside the file, newest first.
+- Promote an entry to [`../rules/`](../rules/) once it becomes an expected
+  standard.
 
-## File Convention
+## When to read
 
-- One file per topic — entries accumulate within the file over time
-- Entries are listed newest first
-- Use `kebab-case` topic names by domain (not by date or session)
-
-## How to Use
-
-1. Capture knowledge during or after work sessions using `cmk:learn`.
-2. Browse and search entries to inform downstream work.
-3. Promote valuable entries to `docs/rules/` when they become established standards.
+Before debugging something unfamiliar — and before re-discovering anything.
