@@ -12,8 +12,12 @@
 docs/rules/
 ├── README.md
 ├── common/              ← language-agnostic (required)
+│   ├── agent-conduct.md
+│   ├── cli-surfaces.md
 │   ├── coding-style.md
+│   ├── doc-comments.md
 │   ├── git-workflow.md
+│   ├── naming.md
 │   ├── patterns.md
 │   ├── security.md
 │   └── testing.md
@@ -21,6 +25,11 @@ docs/rules/
 ├── react/               ← add when needed
 └── {framework}/         ← add when needed
 ```
+
+`agent-conduct.md`, `cli-surfaces.md`, `doc-comments.md`, `git-workflow.md`,
+`naming.md`, and `testing.md` are typically seeded by `cmk:agent-instructions`
+during initial setup; this skill owns and evolves every one of them
+afterward, alongside any topic a repository adds directly.
 
 ## File Convention
 
