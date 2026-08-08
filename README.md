@@ -1,63 +1,16 @@
 # AI DevKit
 
-Documentation-first skills for AI-powered software development. Agents and humans work from the same knowledge, memory, and context — structured docs are the shared state.
+Evolvable agent skills for the full software development lifecycle — requirements, design, decisions, repo setup, and delivery. Vendored into your repo, they adapt to how your team works and still sync with upstream.
+
+Documentation-first: agents and humans work from the same knowledge, memory, and context — structured docs are the shared state.
 
 ## Install
 
-Three paths. What separates them is **evolvability**: these skills are living documents meant to be adapted to the repo they serve — a team's adapted copy is the expected end state, not a fork gone stale. Only the vendored path preserves that evolution across upgrades; the other two give you read-only copies.
-
-| Path | Scope | Evolvable | Upgrades |
-|---|---|---|---|
-| Vendored with sync (recommended) | repo | Yes — edit freely | `cmk:sync` semantic merge; your adaptations survive |
-| skills.sh | repo (default) or user (`-g`) | No — treat as read-only | `npx skills update` overwrites local edits |
-| Plugin trial | user | No — immutable plugin content | wholesale plugin update |
-
-### Vendored with sync (recommended)
-
-Give your agent access to the upstream skills first — clone this repository somewhere it can read, or install one of the read-only paths below as the source — then tell it:
+Three paths — vendored with sync (recommended, fully evolvable), skills.sh, or a zero-setup plugin trial. The install path decides whether your per-repo adaptations survive upgrades; [INSTALLATION.md](./INSTALLATION.md) covers every scenario and its consequences. Tell your agent:
 
 ```
-Vendor the ai-devkit skills into this repo and set up adapters for Claude Code
+Fetch and follow https://raw.githubusercontent.com/CommandOSSLabs/ai-devkit/refs/heads/main/INSTALLATION.md
 ```
-
-This runs `cmk:agent-vendors` to establish the canonical `.agents/skills/cmk-<name>/` home and generate the adapters your vendors need, then `cmk:sync` to record the upstream baseline in `.agents/skills.lock`. Upgrades later go through `cmk:sync`'s semantic three-way reconcile against that baseline — never a blind overwrite of local adaptations (more under Usage below). When a local improvement turns out to be generic, `cmk:sync`'s contribute mode prepares it as a PR back upstream.
-
-Per-vendor guide, by discovery tier:
-
-- **Claude Code** — adapter-mirror: a generated `.claude/skills/cmk-<name>/SKILL.md` per skill.
-- **Grok Build** — adapter-mirror: the same generated-adapter treatment at `.grok/skills/cmk-<name>/SKILL.md`.
-- **Codex** — direct-discovery: reads `.agents/skills/` directly, no adapter needed.
-- **OpenCode** — direct-discovery: points its skill-paths config at `.agents/skills/` directly.
-- **Cursor** — rule-mirror: a narrower `.cursor/rules/cmk-<name>.mdc` covering only the skills that function as standing rules.
-
-### skills.sh (quick install)
-
-The [skills.sh](https://skills.sh) CLI copies the skills into each detected agent's own directory (e.g. `.claude/skills/`):
-
-```bash
-npx skills add CommandOSSLabs/ai-devkit        # repo scope — preferred
-npx skills add CommandOSSLabs/ai-devkit -g     # user scope — read the caveat below
-```
-
-The two scopes have different consequences. **Repo scope** (the default) writes into the current repository, so each repo carries its own copy and nothing leaks between projects. **User scope** (`-g`) writes one shared copy under your home directory (e.g. `~/.claude/skills/`) that every repo on the machine sees: any edit leaks into all of them, two repos that need the skill to behave differently conflict, and there is no per-repo baseline to reconcile against. Prefer repo scope.
-
-Either way, treat skills.sh copies as read-only: `npx skills update` overwrites local edits with upstream — there is no merge. The moment you want to adapt a skill to your repo, graduate to the vendored path above. Don't mix both in one repo — skills.sh copies and vendored adapters would give your agent two competing versions of each skill.
-
-### Plugin trial (zero setup)
-
-Try the kit before vendoring anything into your repo. Plugin skills are immutable — you can't adapt them per-repo, and upgrades replace the whole kit at once.
-
-#### Claude Code
-
-```bash
-claude plugin add CommandOSSLabs/ai-devkit
-```
-
-#### OpenCode
-
-Tell OpenCode:
-
-`Fetch and follow the instructions at https://raw.githubusercontent.com/CommandOSSLabs/ai-devkit/refs/heads/main/.opencode/INSTALL.md.`
 
 ## Motivation
 
@@ -270,7 +223,7 @@ Generate a handoff prompt so I can continue this in another agent
 
 ### Claude Code
 
-Install via any path above — vendored adapters, skills.sh, or the plugin. Skills are auto-discovered and available as slash commands. See [Install](#install) for setup.
+Install via any path — vendored adapters, skills.sh, or the plugin. Skills are auto-discovered and available as slash commands. See [INSTALLATION.md](./INSTALLATION.md) for setup.
 
 ### OpenCode
 
