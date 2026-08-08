@@ -1,7 +1,7 @@
 ---
 name: cmk:design
 description: This skill should be used when the user asks "how should we build this", "design the backend", "update the architecture", "draft a system design", "create a feature spec", "spec out this feature", or discusses architecture, tech stack changes, component design, or infrastructure layout. Covers drafting, refining, or updating distilled design documents under docs/design/ — system-wide or per-feature — checking for conflicts with upstream requirements and recorded decisions.
-version: 0.2.0
+version: 0.3.0
 ---
 
 # Design
@@ -29,10 +29,11 @@ Synthesize from whatever the user provides: conversation context, existing requi
 
 1. Read the existing design doc in full.
 2. **Upstream check:** read the linked doc in `docs/requirements/` and flag conflicts with scope or success criteria; check `docs/decisions/` for constraining decisions and flag conflicts rather than silently overriding.
-3. Identify what changed and why.
-4. Update affected sections in place. Preserve unchanged content.
-5. Update `Last updated` date.
-6. Transition status when appropriate: `draft` → `active` → `shipped`, or any → `deprecated`.
+3. **System conflict check (feature-scoped docs only):** if the `Scope:` header is narrower than system-wide, read the system-level design doc and flag any conflict with its architecture or components — surface it, never silently override system design from a feature doc.
+4. Identify what changed and why.
+5. Update affected sections in place. Preserve unchanged content.
+6. Update `Last updated` date.
+7. Transition status when appropriate: `draft` → `active` → `shipped`, or any → `deprecated`.
 
 ## Output
 

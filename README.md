@@ -35,7 +35,14 @@ This devkit solves that by using structured documentation as the shared state. T
 | `cmk:codebase-docs` | Generate or update hierarchical, AI-navigable docs under `docs/ai/` |
 | `cmk:learn` | Extract and record non-obvious learnings and gotchas |
 | `cmk:rule` | Codify engineering standards into `docs/rules/` |
-| `cmk:worktree-dev-env` | Set up worktree-isolated local development environments |
+| `cmk:project-layout` | Establish or audit a role-first monorepo layout and package placement |
+| `cmk:toolchain` | Assign tool roles, pin runtime versions, and set a gitignore baseline |
+| `cmk:agent-instructions` | Maintain a thin, multi-vendor root instruction file backed by `docs/rules/` |
+| `cmk:mcp-config` | Set up checked-in, per-vendor MCP server configuration |
+| `cmk:local-stack` | Create or iterate worktree-isolated local development stacks |
+| `cmk:infra` | Establish or audit infrastructure-as-code packages and environment boundaries |
+| `cmk:cicd` | Structure CI, deployment, and policy automation around GitHub Actions |
+| `cmk:repo-setup` | Orchestrate every setup facet into one bootstrap, adopt, update, or verify pass |
 
 ## Usage
 
@@ -150,6 +157,20 @@ Refresh docs/ai/ for the rcp module
 ### Upstream changes
 
 When an upstream doc changes (e.g., requirements scope shifts), review downstream docs for consistency. Skills will warn when they detect conflicts with upstream — you decide how to resolve them.
+
+### Repo setup — `cmk:repo-setup`
+
+`cmk:repo-setup` orchestrates the setup facets (project layout, toolchain, agent instructions, MCP config, local stack, infra, CI/CD) through init, adopt, update, and verify passes; each facet is also independently invocable on its own.
+
+```
+Set up this repo
+```
+```
+Make local dev worktree-safe
+```
+```
+Structure our CI
+```
 
 ## Works With
 
