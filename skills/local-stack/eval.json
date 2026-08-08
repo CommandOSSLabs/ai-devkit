@@ -1,0 +1,79 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "nextjs-fastapi-monorepo",
+    "prompt": "I have a Next.js monorepo with a PostgreSQL database, a FastAPI Python backend for ML inference, and the Next.js frontend. We use pnpm workspaces. I'm starting to use Claude Code with worktrees and I need multiple branches running at the same time without port conflicts. The frontend is on port 3000, the API on 8000, and Postgres on 5432. We also have a Redis cache on 6379. Can you set up a worktree-isolated local stack for this project?",
+    "assertions": [
+      "an identity derivation combines a normalized branch label, a normalized worktree label, and a path hash",
+      "all four ports (3000, 8000, 5432, 6379) derive from the worktree identity rather than being hardcoded",
+      "an init script derives identity, writes env files, and validates coherence before starting infra",
+      "a coherence guard fails loudly (non-zero exit, descriptive message) on any port/identity mismatch rather than auto-fixing",
+      "a headless runner exposes start, status, logs, and stop subcommands",
+      "start is idempotent and gates readiness on real health checks",
+      "an interactive runner (mprocs-style) brings up infra and apps together with live-reload",
+      ".local/ is created with tmp/, logs/, pids/, and per-stack state subdirectories",
+      ".gitignore covers .local/"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "go-microservices",
+    "prompt": "We have a Go microservices project with 3 services: an API gateway (port 8080), a user service (port 8081), and a notification service (port 8082). We use MySQL on 3306 and a message broker on 5672/15672. Everything runs in Docker but we want to be able to run services natively for faster iteration. I work on multiple features in parallel using git worktrees and keep hitting port conflicts. Help me set up a worktree-isolated local stack.",
+    "assertions": [
+      "all 6 ports (8080, 8081, 8082, 3306, 5672, 15672) derive from the worktree identity, none hardcoded",
+      "the compose/orchestrator config substitutes the derived ports via env vars rather than hardcoding a mapping",
+      "a coherence guard checks every service URL and the MySQL DSN against the currently computed ports",
+      "the headless runner's start command brings services up in dependency order (infra before app services) and health-checks at least the API gateway",
+      "interactive mode uses each Go service's own file-watching wrapper rather than a plain run command",
+      "the .local/ convention (tmp/, logs/, pids/, per-stack state) is present"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "rails-react-iteration",
+    "prompt": "I already have a worktree-isolated local stack for my Rails + React project but it's not working well. The coherence check is too basic — it only checks if files exist but doesn't validate ports. The headless mode doesn't have health checks so agents just blindly start services and hope they're up. And there's no env sync — the React app has a hardcoded localhost:3000 for the API URL instead of reading from the worktree's computed value. Can you help me improve this setup?",
+    "assertions": [
+      "the coherence guard is enhanced to validate ports in DSNs/URLs against the current worktree's derived values, not just file existence",
+      "the headless start subcommand gains real health-check gating (HTTP or TCP probe) with a bounded timeout before declaring services ready",
+      "the React app's API URL becomes derived from the worktree's computed port rather than a hardcoded literal",
+      "an existing, working identity derivation is preserved unchanged rather than rewritten"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "rust-htmx-sqlite-object-store",
+    "prompt": "I have a Rust web app using axum that serves HTMX templates. We use SQLite for the database (file-based, no server) and a local object store on port 9000 (API) and 9001 (console). The axum server runs on port 3000. I'm using git worktrees heavily and need an isolated local stack. The tricky part is SQLite — it's a file, not a network service, so each worktree needs its own DB file path rather than a different port. Can you set this up?",
+    "assertions": [
+      "network ports (3000, 9000, 9001) derive from the worktree identity",
+      "the SQLite database path is worktree-local (e.g. under .local/) rather than port-isolated, since it isn't a network service",
+      "the coherence guard validates the SQLite path resolves inside the current worktree rather than pointing elsewhere",
+      "the headless runner's start subcommand brings up the object-store component and health-checks it",
+      "interactive mode uses a Rust file-watching wrapper rather than a plain build-and-run command",
+      "the instance's state root for any config lives under .local/<stack>/<config>/<instance>/"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "phoenix-rust-sidecar-parallel-services",
+    "prompt": "We have a polyglot stack: a web app (port 4000) with a sidecar service for heavy inference (port 8080). We use Postgres on 5432 for OLTP data and an analytics database on 8123 (HTTP) and 9000 (native). The web app talks to the sidecar over HTTP. We need a worktree-isolated local stack because our team works on multiple features in parallel and port conflicts are killing us. Help set this up.",
+    "assertions": [
+      "all 5 ports (4000, 8080, 5432, 8123, 9000) derive from the worktree identity",
+      "the coherence guard validates the web-app-to-sidecar URL uses the currently computed port",
+      "the headless runner starts services in dependency order (databases, then sidecar, then web app)",
+      "each language's interactive dev command uses its own live-reload tooling",
+      "the object-store/database compose config uses env var port substitution, not a hardcoded mapping"
+    ]
+  },
+  {
+    "eval_id": 6,
+    "eval_name": "monolith-grpc-sidecar-event-bus",
+    "prompt": "Our project has a monolith (port 8000) that talks to a gRPC microservice (port 50051) for real-time data processing. We use Redis on 6379 for caching/sessions and an event bus on 4222 (client) and 8222 (monitoring). The monolith calls the gRPC service, and it publishes events to the bus that the monolith consumes. I need a worktree-isolated local stack — we have 4 developers using worktrees and constantly stepping on each other's ports.",
+    "assertions": [
+      "all 5 ports (8000, 50051, 6379, 4222, 8222) derive from the worktree identity",
+      "the coherence guard validates the gRPC address and event-bus URL both use the currently computed ports",
+      "the headless runner's start subcommand health-checks the gRPC service (not only HTTP services)",
+      "event-bus connection URLs in generated env files use the computed port rather than a hardcoded default",
+      "the two runner modes (interactive, headless) are both documented as available for this stack"
+    ]
+  }
+]
