@@ -4,13 +4,37 @@ Documentation-first skills for AI-powered software development. Agents and human
 
 ## Install
 
-### Claude Code
+Two paths: vendor the skills into your repo with sync-backed upgrades (recommended), or try the kit first with zero setup.
+
+### Vendored with sync (recommended)
+
+Tell your agent:
+
+```
+Vendor the ai-devkit skills into this repo and set up adapters for Claude Code
+```
+
+This runs `cmk:agent-vendors` to establish the canonical `.agents/skills/cmk-<name>/` home and generate the adapters your vendors need, then `cmk:sync` to record the upstream baseline in `.agents/skills.lock`. Upgrades later go through `cmk:sync`'s semantic three-way reconcile against that baseline — never a blind overwrite of local adaptations (more under Usage below).
+
+Per-vendor guide, by discovery tier:
+
+- **Claude Code** — adapter-mirror: a generated `.claude/skills/cmk-<name>/SKILL.md` per skill.
+- **Grok Build** — adapter-mirror: the same generated-adapter treatment at `.grok/skills/cmk-<name>/SKILL.md`.
+- **Codex** — direct-discovery: reads `.agents/skills/` directly, no adapter needed.
+- **OpenCode** — direct-discovery: points its skill-paths config at `.agents/skills/` directly.
+- **Cursor** — rule-mirror: a narrower `.cursor/rules/cmk-<name>.mdc` covering only the skills that function as standing rules.
+
+### Plugin trial (zero setup)
+
+Try the kit before vendoring anything into your repo.
+
+#### Claude Code
 
 ```bash
 claude plugin add CommandOSSLabs/ai-devkit
 ```
 
-### OpenCode
+#### OpenCode
 
 Tell OpenCode:
 
@@ -264,3 +288,11 @@ The docs are the interface between agents. Each agent reads what it needs, write
 ## Documentation Structure
 
 Refer to [`docs/README.md`](./docs/README.md) for the full directory structure and conventions.
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for how skill changes are proposed, reviewed, and upstreamed from a repo that vendored them.
+
+## License
+
+[MIT](./LICENSE) © 2026 CommandOSS Labs
