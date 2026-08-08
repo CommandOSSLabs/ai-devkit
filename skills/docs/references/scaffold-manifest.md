@@ -427,6 +427,9 @@ Before implementing or changing a subsystem — and read
 
 **Path:** `docs/rules/README.md`
 
+The `## Topics` table below starts empty: `cmk:agent-instructions` adds a row
+when it seeds a topic, and `cmk:rule` keeps the index current afterward.
+
 ````markdown
 # Rules
 
@@ -441,6 +444,11 @@ follow.
 - One topic per file, `kebab-case`, written as actionable rules rather than
   advice.
 - A narrower rule overrides a broader one; say so explicitly where it does.
+
+## Topics
+
+| Topic | File |
+|---|---|
 
 ## When to read
 

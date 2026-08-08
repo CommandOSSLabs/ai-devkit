@@ -12,6 +12,16 @@ follow.
   advice.
 - A narrower rule overrides a broader one; say so explicitly where it does.
 
+## Topics
+
+| Topic | File |
+|---|---|
+| Coding Style | [`common/coding-style.md`](./common/coding-style.md) |
+| Git Workflow | [`common/git-workflow.md`](./common/git-workflow.md) |
+| Patterns | [`common/patterns.md`](./common/patterns.md) |
+| Security | [`common/security.md`](./common/security.md) |
+| Testing | [`common/testing.md`](./common/testing.md) |
+
 ## When to read
 
 Before writing or reviewing code — start with `common/`, then the language or
