@@ -17,3 +17,4 @@ Most taxonomy directories ship as README-only scaffolding. The exceptions:
 - `docs/rules/common/` — the live baseline rules (see [rules.md](./rules.md)).
 - `docs/templates/` — the baseline templates (see [templates.md](./templates.md)).
 - [`docs/design/sdl-phases.md`](../../design/sdl-phases.md) — the development lifecycle the `cmk:*` skills are shaped around, and which phase produces which document.
+- `docs/reports/` — dated point-in-time records of this repo's own validation runs (see [`docs/reports/`](../../../docs/reports/)).

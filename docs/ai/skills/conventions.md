@@ -8,11 +8,11 @@ Frontmatter declares three fields the host (Claude Code or OpenCode) reads to di
 
 - `name` — `cmk:<short-name>`, used as the slash command and skill ID.
 - `description` — natural-language trigger phrases plus what the skill does. Used by the agent to auto-select the skill from user intent.
-- `version` — `0.2.0` on most docs-taxonomy skills (`adr`, `docs`, `learn`, `requirements`) and on `cmk:local-stack`; `cmk:design` is `0.3.0` since its conflict-check revision; `0.1.0` on the rest — the other nine setup-family skills, all eight delivery-family skills, both knowledge-family skills, and the two remaining docs-family skills (`rule`, `codebase-docs`).
+- `version` — `0.2.0` on most docs-family skills (`adr`, `docs`, `learn`, `requirements`) and on `cmk:local-stack`; `cmk:design` is `0.3.0` since its conflict-check revision; `0.1.0` on the rest — the other nine setup-family skills, all eight delivery-family skills, both knowledge-family skills, and the two remaining docs-family skills (`rule`, `codebase-docs`).
 
 No skill file references outside its own package by relative path — the rule binds a package's own references, not content it emits into a target repo; a skill that needs a target-repo artifact names it repo-root-relative, and a skill that needs another skill cites it by `cmk:` name — see `cmk:agent-vendors`.
 
-Docs-family skills (`adr`, `design`, `docs`, `learn`, `requirements`, `rule`) mostly expose two phases — `Workflow: Create` and `Workflow: Iterate` — and offload long-form templates and placement rules into `references/*.md` so the SKILL body stays scannable. The `references/` files are loaded on demand via "Read `references/<file>.md`" lines.
+Docs-family skills (`adr`, `codebase-docs`, `design`, `docs`, `learn`, `requirements`, `rule`) mostly expose two phases — `Workflow: Create` and `Workflow: Iterate` — and offload long-form templates and placement rules into `references/*.md` so the SKILL body stays scannable. The `references/` files are loaded on demand via "Read `references/<file>.md`" lines.
 
 Three docs-family skills break the create/iterate pattern: `cmk:learn` uses `Workflow: Extract` / `Workflow: Review`, `cmk:codebase-docs` uses `Bootstrap workflow` / `Update workflow`, and `cmk:docs` uses `Modes` (Init/Update/Verify) plus a single `Workflow`. `cmk:rule` adds a third phase, `Workflow: Promote`.
 
@@ -25,7 +25,7 @@ Knowledge-family skills (`sui-sdk`, `sui-devstack`) are domain reference packs s
 ## Where
 - Frontmatter, on every skill: open any `skills/<name>/SKILL.md` and read lines 1–5.
 - Skills with `references/`: `skills/adr/`, `skills/agent-instructions/`, `skills/agent-vendors/`, `skills/cicd/`, `skills/design/`, `skills/docs/`, `skills/infra/`, `skills/learn/`, `skills/local-stack/`, `skills/project-layout/`, `skills/repo-setup/`, `skills/requirements/`, `skills/rule/`, `skills/sync/`, `skills/toolchain/`, `skills/delivery-workflow/`, `skills/discover-efforts/`, `skills/delivery-intake/`, `skills/delivery-review/`, `skills/delivery-ship/`, `skills/delivery-pipeline/`, `skills/sui-devstack/`. Skills without one: `skills/codebase-docs/`, `skills/mcp-config/`, `skills/delivery-spec-plan/`, `skills/delivery-handoff/`, `skills/sui-sdk/`.
-- Skills with `eval.json`: `skills/codebase-docs/eval.json`, `skills/local-stack/eval.json`, `skills/repo-setup/eval.json`. No delivery-family or knowledge-family skill ships one.
+- Skills with `eval.json`: `skills/agent-instructions/eval.json`, `skills/codebase-docs/eval.json`, `skills/local-stack/eval.json`, `skills/repo-setup/eval.json`, `skills/sync/eval.json`. No delivery-family or knowledge-family skill ships one.
 - The shared docs-family workflow shape: grep for `^## Workflow: Create` and `^## Workflow: Iterate` across `skills/*/SKILL.md`.
 - The shared setup-family Verify contract: grep for the exact heading `^## Verify$` across `skills/*/SKILL.md` — every hit is a setup-family skill. `skills/delivery-review/SKILL.md` has a similarly named but distinct `## Verify before acting` section (adversarial verification of review findings, not a report-only facet check) — match on the exact heading, not the prefix, to tell them apart.
 - The delivery-family tracker binding: grep for `references/linear.md` across `skills/delivery-*/SKILL.md` and `skills/discover-efforts/SKILL.md`, then confirm each hit is the sole conditional pointer line, not body prose.

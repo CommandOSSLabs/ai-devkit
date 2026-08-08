@@ -34,6 +34,7 @@ section.
   doctrine (rewording is not a conflict; behavior/contract disagreement is),
   the `## Project adaptations` seam, upstream-contribution candidates, and
   failure honesty (an incomplete reconcile keeps its old lock entry).
+- Eval scenarios: `skills/sync/eval.json`.
 
 ## Links
 - Vendored layout and adapters: `cmk:agent-vendors`.

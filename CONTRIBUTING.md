@@ -9,10 +9,11 @@ the diff, not the intent.
 ## The kit's bar
 
 Every skill stays generic: no product name, repo name, or team-specific
-vocabulary in `skills/`. Knowledge-family skills (`cmk:sui-sdk`,
-`cmk:sui-devstack`) exist to correct stale model knowledge with the current,
-official answer — cite an official source, not a memory of how things used
-to work.
+vocabulary in `skills/`. The knowledge family (see the roster in
+[README.md](./README.md)) is the one deliberate exception: each of those
+skills exists to correct stale model knowledge about one specific external
+technology with the current, official answer — cite an official source, not
+a memory of how things used to work.
 
 ## House style
 

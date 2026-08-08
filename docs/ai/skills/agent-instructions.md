@@ -36,3 +36,4 @@ overwritten; `cmk:rule` maintains every topic file going forward.
   - `references/rules-agent-conduct.md` — long-running or background work → `agent-conduct.md`.
 - Canonical `docs/rules/common/` topic set (shared vocabulary with
   `cmk:rule`): `skills/rule/references/rule-conventions.md`.
+- Eval scenarios: `skills/agent-instructions/eval.json`.
