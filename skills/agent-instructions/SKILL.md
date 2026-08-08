@@ -1,7 +1,7 @@
 ---
 name: cmk:agent-instructions
 description: This skill should be used when the user asks to "set up CLAUDE.md", "set up AGENTS.md", "agent instructions", "add engineering rules", "make the instructions thinner", or needs to establish or maintain a thin, multi-vendor root instruction file backed by on-demand engineering rules under docs/rules/.
-version: 0.1.0
+version: 0.2.0
 ---
 
 # Agent Instructions
@@ -16,7 +16,10 @@ The root instruction file carries only: project identity, a layout map,
 the 2-5 invariants that must never break, build/test commands, and
 *conditional pointers* into `docs/rules/` ("writing tests? read
 `docs/rules/common/testing.md`"). Detailed standards never live inline — they live
-in a rules file, loaded only when the triggering task comes up. Target
+in a rules file, loaded only when the triggering task comes up. A rules
+file's `Load when:` line means exactly that — read the file before acting
+whenever the named situation applies; otherwise it stays unloaded. Load
+when needed, never preloaded wholesale. Target
 length: readable in one screenful-ish. When a section keeps growing, that is
 pressure to extract a rules file and replace the section with a pointer, not
 license to let the root file grow indefinitely.
