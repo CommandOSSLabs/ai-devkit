@@ -34,7 +34,7 @@ Each entry follows this structure:
 - **Date:** YYYY-MM-DD
 - **Context:** [Where this came from — session, debugging, PR, incident, etc.]
 - **Learning:** [The insight itself — concise and actionable]
-- **Applies to:** [Downstream tags — e.g., system-design, deployment, feature-spec]
+- **Applies to:** [Downstream tags — e.g., design, deployment]
 ```
 
 ## Conflict Resolution
@@ -48,8 +48,7 @@ When a new learning contradicts an existing entry:
 
 Learnings are inputs for other skills:
 - Feed a learning into `cmk:rule` to codify it as an engineering standard
-- Feed a learning into `cmk:prd` to inform product requirements
-- Feed a learning into `cmk:system-design` to update architecture
-- Feed a learning into `cmk:feature-spec` to refine implementation details
+- Feed a learning into `cmk:requirements` to inform product requirements
+- Feed a learning into `cmk:design` to update architecture or implementation details
 
 The knowledge directory is a staging area — not the final destination for all insights.

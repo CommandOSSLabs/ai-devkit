@@ -10,7 +10,6 @@
 
 ```
 docs/rules/
-├── AGENTS.md
 ├── README.md
 ├── common/              ← language-agnostic (required)
 │   ├── coding-style.md

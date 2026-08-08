@@ -22,7 +22,7 @@ Use OpenCode's native `skill` tool:
 
 ```
 use skill tool to list skills
-use skill tool to load ai-devkit/prd
+use skill tool to load ai-devkit/requirements
 ```
 
 ## Updating

@@ -8,5 +8,5 @@
   },
   "repository": "https://github.com/CommandOSSLabs/ai-devkit",
   "license": "MIT",
-  "keywords": ["documentation", "prd", "system-design", "feature-spec", "adr", "devkit"]
+  "keywords": ["documentation", "requirements", "design", "adr", "devkit"]
 }

@@ -1,7 +1,7 @@
 ---
 name: cmk:learn
 description: This skill should be used when the user asks to "remember this", "save this learning", "capture the key findings", "what do we know about X", "save that gotcha", or needs to extract and record non-obvious learnings, gotchas, and valuable knowledge from conversations, research sessions, debugging, files, or user instructions.
-version: 0.1.0
+version: 0.2.0
 ---
 
 # Learn
@@ -16,7 +16,7 @@ Read `references/learn-conventions.md` for placement rules and entry format. Rea
 
 Extract knowledge that is **non-obvious, non-trivial, and worth preserving**: gotchas, counter-intuitive behavior, validated assumptions, hard-won fixes, discovered constraints.
 
-Skip: common knowledge, decisions (→ `cmk:adr`), requirements (→ `cmk:prd` / `cmk:feature-spec`), opinions without evidence.
+Skip: common knowledge, decisions (→ `cmk:adr`), requirements (→ `cmk:requirements` / `cmk:design`), opinions without evidence.
 
 ## Workflow: Extract
 
@@ -32,7 +32,7 @@ Skip: common knowledge, decisions (→ `cmk:adr`), requirements (→ `cmk:prd` /
 
 1. Read all files in `docs/knowledge/`.
 2. Present summary: topics, entry count, date range.
-3. Support: search by keyword/tag, clean up outdated entries, or promote entries to downstream skills (`cmk:rule`, `cmk:prd`, etc.).
+3. Support: search by keyword/tag, clean up outdated entries, or promote entries to downstream skills (`cmk:rule`, `cmk:requirements`, etc.).
 
 ## Output
 
