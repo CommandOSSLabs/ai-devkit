@@ -32,8 +32,13 @@ references, not its templated output. Rationale: vendored packages travel
 independently — a relative parent-directory escape resolves in one layout
 and dangles in every other.
 
-## Unsupported-vendor roots
+## The vendor set is open
 
-Repos should keep an explicit list of vendor directories that must NOT
-exist (retired or unmaintained integrations) so a stale surface can't
-silently diverge; verify enforces the list.
+The supported vendors are whichever ones a repo generates adapters or
+config for — the tiers above cover any coding agent, and a new vendor joins
+by adding its thin adapter or config entry, never by changing the canonical
+skills. When a repo retires a vendor, delete its root in the same change; a
+repo that wants a guard against a retired root silently coming back lists
+the retired directories under `[vendors] retired` in `.agents/skills.lock`
+(see `cmk:sync`'s `references/skills-lock.md`), and verify reports any
+listed root that reappears. The list is optional — no entry, no check.

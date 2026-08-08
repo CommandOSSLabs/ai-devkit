@@ -23,6 +23,13 @@ content_hash = "sha256:…"              # pristine upstream copy at vendor/sync
 
 One `[[skill]]` table per vendored generic skill.
 
+An optional `[vendors]` table guards retired integrations:
+
+```toml
+[vendors]
+retired = [".windsurf/skills/"]   # roots that must not reappear
+```
+
 ## Field semantics
 
 - `schema_version` — the lock format's own version; bump it only when the
@@ -39,6 +46,9 @@ One `[[skill]]` table per vendored generic skill.
   computed over its files in sorted relative-path order (path + bytes per
   file). This is what lets a consumer prove which pristine content the local
   copy diverged from — the pristine copy, never the local adaptation.
+- `vendors.retired` — optional; vendor roots that must not exist (retired
+  integrations). `cmk:agent-vendors` verify reports any listed root that
+  reappears; omit the table entirely when the repo has retired nothing.
 
 ## Naming mapping
 
