@@ -1,12 +1,22 @@
 ---
 name: cmk:glossary
-description: This skill should be used when the user asks to "create a glossary", "add a term to the glossary", "what do we call this", "define our vocabulary", "lock the terminology", or whenever requirements, design, tickets, or conversation need a shared, normative vocabulary for systems, sub-systems, components, actors, and states.
+description: This skill should be used when the user asks to "create a glossary", "add a term to the glossary", "what do we call this", "define our vocabulary", "lock the terminology" — and proactively, in any conversation or SDLC phase, whenever a new system/component/actor/state gets named, one word is carrying two meanings, two words are carrying one, or a doc, ticket, or identifier drifts from the established vocabulary.
 version: 0.1.0
 ---
 
 # Glossary
 
 Create or maintain the repository's shared glossary: the normative vocabulary for how the team — humans and agents — refers to systems, sub-systems, components, actors, roles, and states. One term, one meaning, used identically in requirements, design, decisions, code, tickets, and conversation. Together with the naming conventions (precise, concrete, self-descriptive names), the glossary is the primary defense against misalignment: without it, every conversation renegotiates what words mean.
+
+## Cross-cutting trigger
+
+The glossary is not a standalone phase — it is a concern that runs through every SDLC stage and every kind of conversation. Fire this skill mid-task, without being asked, whenever any of these happens:
+
+- A new system, component, actor, role, or state gets a name — in a requirements or design doc, an ADR, a spec, a ticket, code, or plain discussion.
+- Vocabulary is ambiguous or contested: one word carrying two meanings, two words carrying one, or participants visibly meaning different things by the same term.
+- A doc, identifier, or ticket drifts from an established glossary term.
+
+When a hooked skill's workflow reaches its glossary step (`cmk:requirements`, `cmk:design`, `cmk:adr`, `cmk:delivery-spec-plan`) or the triggers above surface a gap, run the Iterate workflow inline — add or sharpen the term as part of the change at hand, not as a deferred follow-up. If no glossary exists yet, propose creating one before locking new vocabulary.
 
 ## Placement
 

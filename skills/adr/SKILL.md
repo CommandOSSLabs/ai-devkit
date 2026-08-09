@@ -17,7 +17,7 @@ Read `references/adr-conventions.md` for placement and lifecycle rules and `refe
 1. Gather decision context from conversation/docs/links.
 2. Validate scope is system-wide (not feature-scoped).
 3. Place at the repository's existing ADR path, or fallback: `docs/decisions/{NNNN}-{decision-title}.md`. Determine `{NNNN}` by scanning existing ADRs and incrementing, monotonically and never reusing a number (start at `0001` if none exist).
-4. Fill the record shape from `references/adr-template.md` (or the local template if present): the forces in Context, the choice in Decision ("We do X"), and Consequences — what becomes easier, what becomes harder, what is now committed, and what was explicitly *not* done.
+4. Fill the record shape from `references/adr-template.md` (or the local template if present): the forces in Context, the choice in Decision ("We do X"), and Consequences — what becomes easier, what becomes harder, what is now committed, and what was explicitly *not* done. Name systems, components, and actors with glossary terms (see `cmk:glossary`); a decision that coins a new term adds it to the glossary in the same change.
 5. Set status to `Proposed`.
 6. Add a one-line entry to the `docs/decisions/` index (its README), so the decision set stays scannable.
 

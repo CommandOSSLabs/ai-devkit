@@ -59,7 +59,10 @@ Iterate until solid; one spec per issue.
    repo's role-first layout (`cmk:project-layout`), boundaries and who owns
    them, error modes, and how the change composes with what exists. Name
    things so an unfamiliar reader gets the correct first-pass mental model
-   (`docs/rules/common/naming.md`, seeded by `cmk:agent-instructions`).
+   (`docs/rules/common/naming.md`, seeded by `cmk:agent-instructions`),
+   using glossary terms where the repo keeps a glossary (`cmk:glossary`);
+   a spec that coins a new system/component/actor term adds it there as
+   part of the change.
 4. **Invariant check.** Changes touching security, authorization, consensus,
    wire-format or cross-language parity vectors, settlement, or randomness
    invariants get the full-depth treatment (`docs/rules/common/testing.md`) —

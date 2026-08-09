@@ -2,7 +2,7 @@
 
 **Status:** active
 **Owner:** ai-devkit maintainers
-**Last updated:** 2026-08-08
+**Last updated:** 2026-08-09
 **Scope:** System-wide — the development lifecycle the `cmk:*` skills are shaped around
 
 This document defines the software development lifecycle (SDL) phases the
@@ -65,7 +65,9 @@ standards.
 - Phase 2: `cmk:design` — `skills/design/SKILL.md`; `cmk:adr` —
   `skills/adr/SKILL.md` for decisions that constrain it
 - Any phase: `cmk:learn` writes non-obvious findings into `docs/knowledge/`;
-  `cmk:rule` promotes them into `docs/rules/`
+  `cmk:rule` promotes them into `docs/rules/`; `cmk:glossary` keeps the
+  shared vocabulary normative — it fires whenever a term is coined,
+  contested, or drifting, in any phase, not on request alone
 
 ## Links
 
