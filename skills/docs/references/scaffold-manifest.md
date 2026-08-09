@@ -97,6 +97,7 @@ Document templates for this repository's canonical docs.
 **Last updated:** YYYY-MM-DD
 
 <!-- Captures the product/business "what and why" before technical design begins. -->
+<!-- The sections below are a menu, not a form: shape the doc to the product, drop what has nothing to say, and keep normative vocabulary (MUST/SHOULD/MAY) consistent once adopted. -->
 
 ## Problem
 
@@ -198,7 +199,8 @@ Scenarios ground abstract needs in real usage — skip formal user-story syntax.
 **Last updated:** YYYY-MM-DD
 **Scope:** System-wide or feature-level — state which
 
-<!-- Captures the technical "how": architecture, tech stack, components, cross-cutting concerns, or feature-level implementation detail. -->
+<!-- Captures the technical "how" as a spec: approach, mechanism, and guarantees, independent of the implementing language/framework; architecture, components, cross-cutting concerns, or feature-level detail. -->
+<!-- The sections below are a menu, not a form: shape the doc to the system and drop what has nothing to say. -->
 
 ## Mission
 
@@ -307,22 +309,26 @@ graph TD
 **Path:** `docs/templates/adr.md`
 
 ````markdown
-# ADR-[NNNN]: [Title]
+# NNNN — [short title]
 
-**Status:** proposed | accepted
-**Date:** YYYY-MM-DD
-**Last updated:** YYYY-MM-DD
+- **Status**: Proposed | Accepted | Superseded by NNNN
+- **Date**: YYYY-MM-DD
 
-**Chose:** [X] over [Y, Z]
-**Rationale:** <!-- Why this option and what trade-offs were accepted. -->
+## Context
+
+<!-- The forces at play: the problem, constraint, or ambiguity that two reasonable people could resolve differently. -->
+
+## Decision
+
+<!-- The choice, in one or two sentences. Active voice: "We do X." -->
 
 ## Alternatives Considered (Optional)
 
 - [Option] — benefits, drawbacks, and rejection reason
 
-## Consequences (Optional)
+## Consequences
 
-- Short-term and long-term impact
+<!-- What becomes easier, what becomes harder, what we're now committed to, and what we explicitly chose not to do. -->
 
 ## Links
 
@@ -349,6 +355,9 @@ context and consequences that make them reviewable later.
   Implementation details and library picks are not decisions; they belong in
   [`../design/`](../design/) or the change itself.
 - Start from [`../templates/adr.md`](../templates/adr.md).
+- Status moves `Proposed → Accepted → (Superseded by NNNN)`. Never delete a
+  superseded record — mark it and link forward; keep this index's one-liners
+  current.
 - Progress-neutral and tracker-neutral wording: no ticket IDs, no delivery
   status.
 - Declare links: name the upstream docs this satisfies and the downstream docs
