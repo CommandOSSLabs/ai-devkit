@@ -12,6 +12,47 @@ Three paths — vendored with sync (recommended, fully evolvable), skills.sh, or
 Fetch and follow https://raw.githubusercontent.com/CommandOSSLabs/ai-devkit/refs/heads/main/INSTALLATION.md
 ```
 
+## Quick Start
+
+Skills trigger from natural language — describe what you need and the right one picks it up (slash commands like `/cmk:requirements` work too). Straight after installing, try any of these:
+
+```
+Set up this repo
+```
+```
+We just discussed the billing system requirements — save that as requirements
+```
+```
+We decided to use event sourcing over CRUD for the audit trail — record that as an ADR
+```
+```
+Work on TICKET-123
+```
+
+Each request lands in the right skill, which asks only what it must and writes the result where it belongs under `/docs`. The rest of this README is depth — the skills work without reading it.
+
+## How It Works
+
+One mental model runs through every skill: **the SDLC is a flow of documents that build on each other**, and the repository's `/docs` tree is where that flow lives.
+
+```
+Requirements ──▶ Design ──▶ Plan ──▶ Implement ──▶ Review ──▶ Ship
+ what & why      how, as an          └────── delivery family ─────┘
+                 implementation-
+                 agnostic spec
+
+  cross-cutting at every stage:
+  Decisions (cmk:adr) · Glossary (cmk:glossary) · Learnings (cmk:learn) · Rules (cmk:rule)
+```
+
+Three principles keep the flow coherent:
+
+- **Guidance over forms.** The requirements and design skills follow shaping directives, not fixed templates — they interview when the input is still an idea and distill documents specific to your product rather than generic ones.
+- **Coherence cascades.** Docs cross-reference each other, so changing one means checking what it links to and what links back. Skills detect conflicts — a design contradicting a locked decision, a term drifting from the glossary — and flag them for you to resolve instead of silently overriding.
+- **Progressive disclosure.** Every docs folder README is a concise navigation index; depth lives one level down. Agents and humans read only what the task at hand needs.
+
+The full phase definitions live in [`docs/design/sdl-phases.md`](./docs/design/sdl-phases.md).
+
 ## Motivation
 
 AI agents lose context between sessions. Teams repeat requirements, re-explain decisions, and re-establish scope every time a new conversation starts. There is no shared memory between agents and humans.
@@ -65,160 +106,104 @@ This devkit solves that by using structured documentation as the shared state. T
 
 ## Usage
 
-Skills trigger automatically from natural language — just describe what you need. You can also invoke directly with slash commands (e.g. `/cmk:requirements`).
+A deeper tour, in the order docs build on each other when starting a new project. Every line in the blocks below is a real trigger — paste and go.
 
-Docs build on each other. Follow this order when starting a new project:
+### 1. Scaffold — `cmk:docs`
 
-### Step 1. Scaffold — `cmk:docs`
-
-Set up the `/docs` directory structure. Do this once, then use it to verify or update as the project grows.
+Set up the `/docs` structure once; re-run it to verify or update as the project grows.
 
 ```
 Set up the docs structure for this project
-```
-```
 Check if our docs structure is up to date with the latest devkit
 ```
 
-### Step 2. Product Requirements — `cmk:requirements`
+### 2. Requirements — `cmk:requirements`
 
-Define what to build and why. This is the upstream source of truth — everything downstream references it.
+Define what to build and why — the upstream source of truth everything downstream references. Works from conversation, Notion/Google Docs links, or an interview when all you have is an idea.
 
 ```
 We just discussed the billing system requirements — save that as requirements
-```
-```
 Use this Notion doc to draft requirements for the new onboarding flow: [link]
-```
-```
 Update the requirements — we're cutting the SSO requirement from v1
 ```
 
-### Step 3. Design — `cmk:design`
+### 3. Design — `cmk:design`
 
-Design how to build it, system-wide or per-feature. Informed by the requirements — the skill checks for conflicts with upstream scope and success criteria.
+Design how to build it as an implementation-agnostic spec — system-wide or per-feature. Checks upstream requirements and decisions for conflicts; cascades accepted changes downstream.
 
 ```
 Draft a system design for our payments service
-```
-```
+Create a feature-level design for checkout retry logic
 Update the system design — we switched from PostgreSQL to DynamoDB
 ```
-```
-We're adding a message queue between the API and worker — update the architecture
-```
-```
-Create a feature-level design for checkout retry logic
-```
-```
-Use this Notion doc to draft a feature design for tenant-level rate limiting: [link]
-```
-```
-Update the retry design — we changed the backoff strategy to exponential with jitter
-```
 
-### At any point: Architecture Decisions — `cmk:adr`
+### Any stage: Decisions — `cmk:adr`
 
-Record system-level decisions as they come up during any step. The skill checks for conflicts with the current design.
+Record system-level decisions as numbered ADRs as they come up. A decision that changes direction gets a new record that supersedes the old one — history stays readable.
 
 ```
 We decided to use event sourcing over CRUD for the audit trail — record that as an ADR
-```
-```
-Record an ADR: chose Redis over Memcached for session caching because of pub/sub support
-```
-```
 Update ADR-0003 — we revisited the decision and switched from REST to gRPC
 ```
 
-### At any point: Capture Learnings — `cmk:learn`
+### Any stage: Glossary — `cmk:glossary`
 
-Extract non-obvious knowledge from any source — conversations, debugging, research, files. Saves to `docs/knowledge/` for downstream use.
+Lock the shared vocabulary — one term, one meaning, used identically in docs, code, and tickets. Fires on its own whenever a term is coined, contested, or drifting.
 
 ```
-That was a long research session — extract the key learnings
+Create a glossary from our existing requirements and design docs
+We keep saying relay and router for the same thing — lock one term in the glossary
 ```
+
+### Any stage: Learnings & rules — `cmk:learn` + `cmk:rule`
+
+Capture non-obvious knowledge into `docs/knowledge/`, then promote what should be enforced into `docs/rules/`.
+
 ```
 Save that Redis connection pooling gotcha we just discovered
-```
-```
-Review our accumulated learnings on infrastructure
-```
-
-### At any point: Engineering Rules — `cmk:rule`
-
-Codify standards into `docs/rules/`. Create rules directly, or promote knowledge entries into enforceable standards.
-
-```
+Promote the Redis pooling learning to an infrastructure rule
 Add a rule that all API endpoints must validate auth tokens before processing
 ```
-```
-Promote the Redis pooling learning to an infrastructure rule
-```
-```
-Update the security rules — we now require CSP headers on all responses
-```
 
-### At any point: Codebase Docs for AI — `cmk:codebase-docs`
+### Any stage: Codebase docs for AI — `cmk:codebase-docs`
 
-Build a hierarchical tree of short docs under `docs/ai/` so AI (or a human skimming) can quickly find the right source file for a topic. Update as the codebase evolves.
+Maintain a hierarchical tree of short navigation docs under `docs/ai/` so an agent (or a human skimming) finds the right source file fast.
 
 ```
 Set up AI docs for this repo
-```
-```
 Update the AI docs — I added a new TUI input handler
 ```
-```
-Refresh docs/ai/ for the rcp module
-```
 
-### Upstream changes
+### Repo setup — `cmk:repo-setup` and its facets
 
-When an upstream doc changes (e.g., requirements scope shifts), review downstream docs for consistency. Skills will warn when they detect conflicts with upstream — you decide how to resolve them.
-
-### Repo setup — `cmk:repo-setup`
-
-`cmk:repo-setup` orchestrates the setup facets (project layout, toolchain, agent instructions, MCP config, local stack, infra, CI/CD) through init, adopt, update, and verify passes; each facet is also independently invocable on its own.
+Orchestrates project layout, toolchain, agent instructions, MCP config, local stack, infra, and CI/CD through init, adopt, update, and verify passes; each facet also runs standalone.
 
 ```
 Set up this repo
-```
-```
 Make local dev worktree-safe
-```
-```
 Structure our CI
 ```
 
 ### Vendoring & sync — `cmk:agent-vendors` + `cmk:sync`
 
-`cmk:agent-vendors` establishes one canonical `.agents/skills/` home per repo
-and generates the thinnest adapter each coding-agent vendor needs to discover
-it. `cmk:sync` keeps that vendored copy current with upstream ai-devkit
-through a lock-tracked, semantic three-way reconciliation — never a blind
-overwrite of local adaptations.
+One canonical `.agents/skills/` home with the thinnest adapter each coding-agent vendor needs, kept current with upstream through lock-tracked semantic reconciliation — never a blind overwrite of local adaptations.
 
 ```
 Vendor the devkit skills into this repo
-```
-```
 Sync our vendored skills with upstream
 ```
 
-### Delivery — `cmk:delivery-pipeline`
+### Delivery — `cmk:delivery-pipeline` and its phases
 
-Deliver tracker-tracked work end to end — context intake, spec and plan, implementation, review, and shipping — autonomously, or invoke any phase skill standalone.
+Deliver tracker-tracked work end to end — intake, spec and plan, implementation, review, ship — autonomously, or invoke any phase skill standalone.
 
 ```
 Work on TICKET-123
-```
-```
 Review this PR
-```
-```
 Generate a handoff prompt so I can continue this in another agent
 ```
+
+Throughout, skills warn when a change conflicts with an upstream doc — requirements scope, a recorded decision, a glossary term — and you decide how to resolve it; accepted changes cascade downstream.
 
 ## Works With
 
