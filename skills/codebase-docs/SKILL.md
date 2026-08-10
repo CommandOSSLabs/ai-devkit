@@ -1,7 +1,7 @@
 ---
 name: cmk:codebase-docs
 description: Generate or update hierarchical, AI-navigable documentation for a codebase under `docs/ai/`. Use whenever the user asks to "document the codebase for AI", "bootstrap AI docs", "generate codebase map", "set up AI navigation docs", "update AI docs", "refresh docs after change", or mentions building progressive-disclosure docs so an AI can find the right source files quickly. Produces a tree of concise docs that *point to* code rather than duplicate it. Use even when the user only says "document this repo" without specifying the structure.
-version: 0.1.0
+version: 0.1.1
 ---
 
 # Codebase Docs for AI Navigation
@@ -71,7 +71,7 @@ Use a named symbol when one exists — function, class, struct, type, const, rou
 
 **Coherence over splitting.** If a topic is naturally one story, keep it in one doc even if it runs a bit long. Only split when there's a genuinely bounded sub-concept *and* the parent is getting unwieldy — see the split heuristic below.
 
-**Match the code's vocabulary.** Use the same names the code uses. If the source folder is `rcp/` (or the package is `@org/rcp`, or the module is `rcp`), the doc folder is `rcp/` — not a more "descriptive" alias like `remote-control-protocol/`. The doc's job is to be findable from the code's own terms.
+**Match the code's vocabulary.** Use the same names the code uses (the folder-naming rule under "Output location and shape") — the doc's job is to be findable from the code's own terms, never through a more "descriptive" alias.
 
 ## Split heuristic
 
@@ -122,27 +122,7 @@ Rule of thumb: a good branch doc is ~30–80 lines. A good leaf doc is ~20–120
 
 ## Working example (sketch)
 
-The shape is the same regardless of stack — the folder names just mirror whatever the codebase calls its parts. A typical tree for a multi-area repo:
-
-```
-docs/ai/
-├── README.md                         # one paragraph: what the repo is + a menu of areas
-├── <area-1>/
-│   ├── README.md                     # menu of sub-topics in this area
-│   ├── <topic-a>.md                  # leaf: what / (why) / where
-│   ├── <topic-b>.md
-│   └── <sub-area>/
-│       ├── README.md
-│       └── <topic-c>.md
-├── <area-2>/
-│   ├── README.md
-│   ├── <topic-d>.md
-│   └── <topic-e>.md
-└── <area-3>/
-    └── README.md                     # small enough to stay single-doc
-```
-
-Concrete shape examples for different stacks:
+The shape is the same regardless of stack — the tree under "Output location and shape" above, with folder names mirroring whatever the codebase calls its parts. Concrete shape examples for different stacks:
 
 - **TS monorepo (`apps/`, `packages/`)** — top-level menu mirrors workspace members: `docs/ai/apps/<app>/`, `docs/ai/packages/<pkg>/`.
 - **Rust workspace (`crates/`)** — top-level menu mirrors crate names: `docs/ai/<crate>/`.
@@ -179,8 +159,7 @@ That's the whole doc — ~15 lines, three clear hooks into the code, no copied s
 - **Paraphrased code.** If the doc is explaining control flow line-by-line, delete that and just point to the function.
 - **Essay-style prose.** Bullets and short paragraphs beat flowing prose for skim-reading.
 - **Phantom references.** Never invent a function or file name. If you're unsure, open the file and check.
-- **Over-splitting.** Eight three-line leaves are harder to navigate than one thirty-line doc. Err toward keeping related things together.
-- **Under-splitting.** A single 500-line `README.md` with everything is exactly what this skill is trying to replace.
+- **Over- or under-splitting.** Apply the split heuristic; both directions are covered there.
 - **Documenting aspirations.** Only describe what's in the code now.
 
 ## Final check before finishing

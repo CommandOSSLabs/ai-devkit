@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-pipeline
 description: This skill should be used when the user asks to "work on", "deliver", "tackle", "pick up", or "implement" a tracker issue (TICKET-123), a list of issues, or a body of tracked work expected to finish without supervision — even if they never say "pipeline". Also use when handed a cluster of related issues, or a single issue whose surrounding cluster should be derived from tracker dependencies, expecting dependency-aware sequencing across worktrees.
-version: 0.2.0
+version: 0.3.0
 ---
 
 # Delivery Pipeline

@@ -1,7 +1,7 @@
 ---
 name: cmk:discover-efforts
 description: This skill should be used when the user asks to "discover the delivery efforts here", "audit this body of work before we file issues", "reconcile these prompts, requirements, designs, or code against the tracker", "figure out what issues we actually need before starting", or hands over an uncertain body of work that needs a reconciled tracker issue set before delivery begins.
-version: 0.1.0
+version: 0.1.1
 ---
 
 # Discover Efforts
@@ -82,9 +82,8 @@ relations.
 
 ## Exit and hand off
 
-Before exit, reconcile every affected issue and relation, then read back
-exact IDs, descriptions or changed fields, statuses, estimates, parents,
-children, blockers, related issues, and duplicate dispositions.
+Before exit, reconcile every affected issue and relation and read every
+write back.
 
 Return an exit report with: source identities and completeness; each
 ledger row's outcome, classification, matching coverage, and action; every

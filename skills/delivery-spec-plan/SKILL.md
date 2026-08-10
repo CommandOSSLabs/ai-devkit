@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-spec-plan
 description: This skill should be used when the user asks for a "spec", "design", "implementation plan", or "how should we build this" for a tracker issue, after context intake for any non-trivial change, and as phase 2 of the cmk:delivery-pipeline skill.
-version: 0.2.0
+version: 0.2.1
 ---
 
 # Delivery Spec & Plan
@@ -26,10 +26,9 @@ the record; durable conclusions reach `docs/design/`, `docs/decisions/`, the
 tracker, and the PR description.
 
 Read `cmk:delivery-workflow` and `cmk:delivery-pipeline`'s context-efficiency
-reference before relying on the intake brief. Refresh mutable tracker,
-code-host, repository HEAD, and ancestry inputs before planning when their
-recorded source identity is no longer proven current — an intake brief
-cannot authorize planning after continuity, scope, or provenance is lost.
+reference before relying on the intake brief — the brief is a capsule, and
+the context-efficiency continuity rules decide when mutable inputs must be
+refreshed before planning on them.
 
 Apply `cmk:delivery-pipeline`'s engineering-principles reference throughout:
 decide everything yourself, staff-level bar without overengineering, existing
@@ -127,9 +126,7 @@ them — an AC with no task is a hole in the plan, and so is a
 surface-inventory item with no covering task. Planning is the cheapest
 moment to find out a criterion will not land: if no task can honestly
 satisfy one, take its disposition now, on the issue, per `cmk:delivery-workflow`'s
-`references/acceptance-criteria.md`. A criterion carried into implementation
-on the hope it works out becomes a ship-time surprise, which is the same
-decision made later with worse options.
+`references/acceptance-criteria.md`.
 
 A plan whose tasks all serialize on one file is worth re-partitioning before
 it executes; sequential-by-accident is different from sequential-by-necessity,

@@ -1,7 +1,7 @@
 ---
 name: cmk:adr
 description: This skill should be used when the user asks to "record this decision", "we decided to use X over Y", "document why we chose this approach", "record an ADR", "update ADR-0003", or needs to create or update architecture decision records for system-level technical choices like choosing a database, communication protocol, or infrastructure pattern.
-version: 0.3.0
+version: 0.3.1
 ---
 
 # ADR
@@ -26,7 +26,7 @@ Read `references/adr-conventions.md` for placement and lifecycle rules and `refe
 1. Read the existing ADR in full.
 2. **Upstream check:** If a relevant design doc exists under `docs/design/`, check whether the revised decision conflicts with current architecture. Warn the user if so.
 3. A decision that *evolves without changing direction* updates in place: refine consequences, note what shifted and why. Move `Proposed` → `Accepted` when the team agrees.
-4. A decision that *changes direction* is a new ADR: write the replacement under its own number, mark the old record `Superseded by NNNN`, and link forward. Never delete or rewrite a superseded ADR — the history stays readable. Partial supersession is stated on the old record ("the X portion superseded by NNNN") rather than pretending the whole decision flipped.
+4. A decision that *changes direction* is a new ADR under its own number; the supersession mechanics — forward links, partial supersession, never deleting or rewriting the old record — follow `references/adr-conventions.md` § Lifecycle.
 5. Refresh the index one-liners for every record the change touched.
 
 ## Output
