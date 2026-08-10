@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-workflow
 description: This skill should be used when the user asks to "start tracked work", "reconcile the tracker", "check if this is ready to ship", "keep the issue useful", or "check acceptance criteria" — or needs the tracking contract every other delivery skill operates inside.
-version: 0.1.0
+version: 0.2.0
 ---
 
 # Delivery Workflow

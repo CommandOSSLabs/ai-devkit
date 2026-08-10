@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-pipeline
 description: This skill should be used when the user asks to "work on", "deliver", "tackle", "pick up", or "implement" a tracker issue (TICKET-123), a list of issues, or a body of tracked work expected to finish without supervision — even if they never say "pipeline". Also use when handed a cluster of related issues, or a single issue whose surrounding cluster should be derived from tracker dependencies, expecting dependency-aware sequencing across worktrees.
-version: 0.1.0
+version: 0.2.0
 ---
 
 # Delivery Pipeline
@@ -79,7 +79,7 @@ reads this instead of rediscovering it — keep it to those four things.
 | Phase | Skill / engine | CMK adds |
 |---|---|---|
 | 1. Intake | `cmk:delivery-intake` | all of it — the tracker has no superpowers equivalent |
-| 2. Spec & plan | `cmk:delivery-spec-plan`, via `superpowers:brainstorming` + `superpowers:writing-plans` | design-doc inputs; `Depends on:`, `File scope:`, and binding obligations inside each task body |
+| 2. Spec & plan | `cmk:delivery-spec-plan`, via `superpowers:brainstorming` + `superpowers:writing-plans` | design-doc inputs; `Depends on:`, `File scope:`, `Exclusive resources:`, and binding obligations inside each task body |
 | 3. Implement | `superpowers:subagent-driven-development` (below) | wave dispatch and its safety fixes |
 | 4. Review | `cmk:delivery-review` | lenses, evidence bar, adversarial verification, disposition, depth disclosure |
 | 5. Ship | `cmk:delivery-ship` | PR, tracker reconciliation, evidence |

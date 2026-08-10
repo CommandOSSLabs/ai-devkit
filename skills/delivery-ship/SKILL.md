@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-ship
 description: This skill should be used when the user asks to "ship this", "open the PR", "push this to review", "update the tracker and open a PR", or "close out this ticket" — when implementation and review are done, and as phase 5 of the cmk:delivery-pipeline skill.
-version: 0.1.0
+version: 0.2.0
 ---
 
 # Delivery Ship
@@ -54,7 +54,10 @@ consequential transition.
 
 Keep a straight-line history: rebase on the base branch, replaying only this branch's own
 commits, new commits over amend, no AI attribution. The branch carries the
-issue ID. Every merge-eligible PR targets the canonical integration branch;
+issue ID. No `wip:`-prefixed commit may remain in the PR range — verify
+with `git log --oneline <base>..HEAD`, never assume; wave snapshots (see
+`cmk:delivery-pipeline`'s `references/worktree-wave-execution.md`) are
+absorbed before a PR exists. Every merge-eligible PR targets the canonical integration branch;
 a stacked issue's PR may open early against its parent's branch as a draft,
 but the final destination is always canonical — never a feature branch.
 Automated stacked-PR reconciliation (retarget on parent merge, exact-ancestry
