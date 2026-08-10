@@ -57,6 +57,16 @@ Contract — a single entry point exposing these subcommands:
   one), release any port-broker reservations the instance held, and leave
   state on disk intact — stopping is not the same operation as wiping an
   instance.
+- **`reclaim`** — recover from runs that died without `stop`. Inventory
+  resources stamped with a worktree identity — containers by compose
+  project/label, processes by the identity marker in their environment,
+  recorded port reservations, instance state roots — and diff that against
+  what PID files and instance records still account for. Report each stray
+  with the evidence that attributes it, then remove it. Scope strictly to
+  the current worktree's identity, or to an identity whose worktree
+  directory no longer exists (a deleted worktree cannot object). Anything
+  unattributable is reported, never killed, and there is no machine-wide
+  prune mode.
 
 Additional rules:
 
@@ -71,6 +81,12 @@ Additional rules:
 - Before recording or acting on a PID found on disk, confirm the process it
   names is actually still owned by this worktree/instance (not just "some
   process happens to have this PID now") before trusting or killing it.
+- Stamping is what makes ownership checkable: start every child process with
+  the worktree identity exported in its environment, so a process stays
+  attributable even after its PID file is lost or a run crashes. Process
+  ancestry is never the check — a single agent session runs across multiple
+  worktrees, so walking parent/child PID trees kills another worktree's
+  services.
 
 ## Choosing a mode
 

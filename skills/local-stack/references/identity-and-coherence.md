@@ -37,6 +37,10 @@ silently sharing state, not the hash's uniqueness alone.
   instance primitive for how instance-level ports layer on top).
 - The env-file name(s) this worktree writes and reads.
 - The root of every stack's state directory under `.local/`.
+- The ownership stamp on every started resource — container labels and the
+  identity marker exported into each child process's environment — so
+  dangling resources stay attributable to their worktree after records are
+  lost (see `runners.md` on reclaim).
 
 Write the derived identity to a small file under `.local/` on init (atomically
 — write to a temp file, then rename) so later commands can compare against it

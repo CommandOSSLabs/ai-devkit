@@ -1,7 +1,7 @@
 ---
 name: cmk:local-stack
-description: This skill should be used when the user asks to "set up local dev", "make dev worktree-safe", "add a local stack", "port conflicts between worktrees", "headless dev mode", "run services locally for agents/CI", or needs to create or iterate worktree-isolated local development stacks with deterministic identity, coherence validation, and interactive/headless runners.
-version: 0.3.1
+description: This skill should be used when the user asks to "set up local dev", "make dev worktree-safe", "add a local stack", "port conflicts between worktrees", "headless dev mode", "run services locally for agents/CI", "clean up dangling services", or hits orphaned containers/processes, "port already in use" from leftover runs, stale state from a deleted worktree, or needs worktree-isolated local development stacks with deterministic identity, coherence validation, and interactive/headless runners.
+version: 0.4.0
 ---
 
 # Local Stack
@@ -114,6 +114,28 @@ outlives its starter, and it is stopped through its own explicit lifecycle:
 never left up by accident, and never blanket-killed by another session's
 cleanup.
 
+Cooperative `stop` only reaches what the runner's own records still account
+for. Crashed runs leave real dangling state — containers with no PID file,
+processes that outlived their records, instances of a since-deleted worktree
+— and reclaiming that safely requires ownership stamped on the resource
+itself:
+
+- **Stamp identity at creation.** Everything a stack starts carries the
+  worktree identity it belongs to: the compose project name and a label on
+  each container, the identity exported into every child process's
+  environment, every state root under `.local/`. A resource that cannot name
+  its owner cannot be reclaimed safely.
+- **Never attribute by process ancestry.** One agent session runs across
+  many worktrees, so parent/child PID relationships are not ownership —
+  killing a session's process tree sweeps services belonging to other
+  worktrees. Attribute by the stamped identity: labels, environment markers,
+  recorded port ownership.
+- **Reclaim in two scopes only.** A reclaim pass (`references/runners.md`)
+  inventories stamped resources, diffs them against what the records still
+  account for, and removes strays attributed to the current worktree — or to
+  an identity whose worktree directory no longer exists. Anything it cannot
+  attribute it reports and leaves alone. There is no global prune.
+
 ## Test-infrastructure composition
 
 Test groups join a shared instance by default. Select distinct instances to
@@ -140,3 +162,9 @@ Report-only — never mutate:
 - A coherence guard exists and runs on the init path before anything starts.
 - No env file references another worktree's absolute path.
 - Each stack's state root lives under `.local/`, not elsewhere.
+- Every resource a runner starts is stamped with the worktree identity:
+  compose project name and container labels, an identity marker in each
+  child process's environment, identity-derived state root paths.
+- A reclaim path exists, attributes strays by stamped identity — never by
+  process ancestry — and scopes to one worktree identity or to identities
+  whose worktree directory is gone, never the whole machine.

@@ -82,3 +82,8 @@ mechanism.
   `<stack>/<config>/` directory, or touching another instance's paths — those
   operations look similar but destroy state that a sibling instance, or a
   human, may still be relying on.
+- **Reclaim** — an instance whose worktree directory no longer exists is the
+  one case where acting on another worktree's resources is safe: nothing can
+  still be relying on it. Attribution still comes from the stamped identity
+  (see `runners.md` on reclaim), never from guessing by age, name pattern,
+  or process ancestry.
