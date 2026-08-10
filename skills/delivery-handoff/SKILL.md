@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-handoff
 description: This skill should be used when the user asks for "a handoff prompt", "a prompt for codex/grok/claude", "something I can paste into another agent", or wants to continue tracked work in a different tool — and at any phase boundary of the cmk:delivery-pipeline skill when the operator prefers a different agent for the next phase.
-version: 0.2.0
+version: 0.2.1
 ---
 
 # Delivery Handoff
@@ -71,10 +71,11 @@ freely; completeness matters, sections don't):
    rule. For clusters: the issue → worktree/branch/base table plus where
    the orchestration plan lives and which wave is active. For a handoff
    mid-way through a phase-3 wave, additionally enumerate every live task
-   worktree — path, task branch, wave-base SHA, and join state (pending /
-   integrated / escalated), from the wave manifest in the ledger — and
-   state that task worktrees follow the wave protocol's retention rules,
-   never ad-hoc cleanup.
+   worktree — path, task branch, and wave-base SHA from the ledger's wave
+   manifest, plus each task's join status (pending / integrated /
+   escalated) reconstructed from the ledger's join and escalation records —
+   and state that task worktrees follow the wave protocol's retention
+   rules, never ad-hoc cleanup.
 3. **Read first** — ordered absolute paths: the phase skill(s) to follow,
    the tracking contract (`cmk:delivery-workflow`), the context-efficiency
    reference, the receiver's runtime binding

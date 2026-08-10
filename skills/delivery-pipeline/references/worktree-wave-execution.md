@@ -51,7 +51,11 @@ Tasks may share a wave only when all three hold:
    member task IDs, the wave-base SHA, and each task's worktree path and
    branch name. This manifest is what a crashed run resumes from — without
    it, a resuming controller cannot tell an already-integrated task from one
-   that was never dispatched.
+   that was never dispatched. A resuming controller MUST check the ledger for
+   an incomplete wave manifest before any dispatch step and continue that
+   wave from its recorded wave-base SHA — never re-snapshot or pin a new
+   base while a manifest's wave is unfinished — and MUST verify each
+   leftover task branch forks from that recorded base before resuming it.
 3. **Create one worktree per task.**
    `git worktree add <path> -b <ticket-branch>--task-<N> <wave-base-sha>`,
    under the runtime's native worktree area — never an ad-hoc path — with the
@@ -82,8 +86,8 @@ Tasks may share a wave only when all three hold:
    so it starts warm: prefer a copy-on-write clone (`cp -c -R` on macOS/APFS,
    `cp --reflink=auto -R` on Linux — `auto` degrades to a plain copy on
    filesystems without reflink), fall back to a plain copy, and accept a cold
-   build only when copying is unattractive. Seed only into a destination that
-   does not exist yet: `cp -R` into an existing directory nests
+   build only when copying is unattractive. Seeding MUST target a destination
+   that does not exist yet: `cp -R` into an existing directory nests
    (`target/target/…`) instead of merging, silently leaving stale artifacts
    in charge — so a resumed worktree keeps the build state it already has and
    is never re-seeded. Seeding MUST happen while no build runs in the parent
@@ -108,10 +112,15 @@ task number):
    this task's work out of a shared branch; its remaining job is the overflow
    check. Build the package with the repo's review-package script where one
    exists (per `phase-3-execution.md`), giving each task an explicit per-task
-   output path and the task's declared scope and commits, so edits outside
-   the declared scope are appended to the package for review and surfaced as
-   a distinct non-zero exit, which the controller MUST handle as a scope
-   violation — never as a generic failure to retry blindly.
+   output path and the task's declared scope and its own commits. Commits a
+   controller-recorded peer pull cherry-picked from another task stay out of
+   that commit list: they are the source task's work, reviewed in its own
+   package, and listing them under this task's disjoint scope would surface
+   as a false scope violation (the scope filter already keeps their content
+   out of the package body). Edits outside the declared scope are appended
+   to the package for review and surfaced as a distinct non-zero exit, which
+   the controller MUST handle as a scope violation — never as a generic
+   failure to retry blindly.
 2. **Integrate — two moves, each from the worktree that owns the branch.**
    First, *inside the task worktree*, rebase the task branch onto the current
    ticket branch tip. Then, *from the ticket worktree*, advance the ticket
@@ -137,8 +146,8 @@ task number):
    branch (its commits are reachable from the ticket branch, so the delete
    loses nothing — never delete the branch before the merge). If removal
    refuses because the worktree is dirty, that is unreported, uncommitted
-   work — escalate to the worker's fix round instead of forcing; `--force`
-   is reserved for explicit abandonment. A failed or escalated task MUST
+   work — the controller MUST escalate to the worker's fix round instead of
+   forcing; `--force` is reserved for explicit abandonment. A failed or escalated task MUST
    retain its worktree and branch for the fix round. `git worktree prune`
    runs at phase close.
 
@@ -160,7 +169,11 @@ repeats if the controller has new WIP.
   and verify during A's rebase that the cherry-picked commits drop as
   patch-identical duplicates — if they survive (the patch drifted after the
   pick), treat it as a conflict and escalate rather than landing B's work
-  twice. Unmediated peer merging is prohibited — it recreates the
+  twice. If B fails, is escalated, or its work materially changes before its
+  own join, A's pick is stale: the controller MUST either rewrite A's task
+  branch to drop the picked commits (recorded in the ledger) or hold A's
+  join until B lands — never integrate A carrying commits whose source never
+  shipped. Unmediated peer merging is prohibited — it recreates the
   cross-contamination this protocol removes.
 
 ## Shared state has one writer
