@@ -1,7 +1,7 @@
 ---
 name: cmk:local-stack
 description: This skill should be used when the user asks to "set up local dev", "make dev worktree-safe", "add a local stack", "port conflicts between worktrees", "headless dev mode", "run services locally for agents/CI", or needs to create or iterate worktree-isolated local development stacks with deterministic identity, coherence validation, and interactive/headless runners.
-version: 0.3.0
+version: 0.3.1
 ---
 
 # Local Stack
@@ -103,6 +103,16 @@ No home-directory state (`~/.<tool>` singletons), no global processes, no
 fixed ports. Never source another worktree's env files. Never wipe a stack
 other than the one explicitly selected instance — no global prune, no deleting
 `.local/<stack>` wholesale.
+
+## Lifecycle discipline
+
+Whoever starts a stack owns stopping it. An agent or CI job that brings up
+services for its own task stops them when the task ends — a dangling stack
+silently starves the next run's ports, memory, and CPU. Only a deliberately
+persistent instance — a long-lived stack other sessions are meant to join —
+outlives its starter, and it is stopped through its own explicit lifecycle:
+never left up by accident, and never blanket-killed by another session's
+cleanup.
 
 ## Test-infrastructure composition
 

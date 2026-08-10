@@ -81,6 +81,12 @@ sessions depend on. The two modes may coexist against different stacks in the
 same worktree, but never against the same instance at the same time — running
 both is a resource fight, not a supported layout.
 
+Headless persistence is a deliberate choice, not a default to hide behind. A
+run that started a stack for its own task calls `stop` before it finishes;
+only a stack other sessions are meant to join stays up, and that intent
+belongs to the invoking layer, stated explicitly — never an accident of a
+forgotten teardown.
+
 ## Log hygiene
 
 Keep one colorized aggregate log (interleaved, each line tagged with its
