@@ -22,30 +22,39 @@ own model and effort; its "REQUIRED" caution exists for a stock agent that
 declares neither. The role also requires the worker to report each commit
 SHA, which is what the scope check below consumes.
 
-CMK changes exactly one thing: **independent tasks run in the same wave.**
-SDD serializes implementers because concurrent commits contaminate its
-`BASE..HEAD` review packages — not merely because of file conflicts. Tasks
-with no `Depends on:` and disjoint `File scope:` may be dispatched together
-once three things hold:
+CMK changes exactly one thing: **independent tasks run in the same wave,
+each in its own worktree.** SDD serializes implementers for two reasons,
+and per-task worktrees remove both: concurrent commits contaminate a
+shared branch's `BASE..HEAD` review packages, and a shared mutable build
+root — one Cargo `target/` and its exclusive lock — serializes
+"independent" tasks into lock-thrash where every worker turn blocks and
+nothing progresses.
 
-1. **Review packages are path-scoped.** SDD's own review-package assembly
-   cannot take a pathspec and lives in a plugin cache that is overwritten
-   on update, so use a path-scoped review-package script the repo may
-   provide — appending `-- <File scope>` to the same commit range —
-   otherwise assemble the diff with `git diff` scoped to the task's file
-   list.
-2. **Each package has its own output path.** A commit-range-only filename
-   is keyed by BASE and HEAD alone, so two tasks in one wave sharing a
-   range resolve to the *same file* and one silently overwrites the other.
-   Give each its own name, e.g. `review-task-<N>-<base7>..<head7>.diff`.
-3. **Commits are checked against the declared scope.** A path-scoped diff
-   hides edits made outside that scope, so they would ship unreviewed.
-   Compare each task's actual commits against its `File scope:`; append
-   any overflow to the package so it still gets reviewed, and surface the
-   violation to the controller rather than silently reading past it.
+Wave eligibility: no `Depends on:`, disjoint `File scope:`, and no
+intersecting `Exclusive resources:`. Disjoint scopes make independence
+*checkable*, not guaranteed — never describe it as proven.
 
-Disjoint scopes make independence *checkable*, not guaranteed. Never
-describe it as proven.
+The dispatch, join, reconciliation, and cleanup protocol — parent-WIP
+snapshot commits, pinned wave base, per-task branches, cache seeding,
+rebase-then-ff-only integration, retention on failure, and every guard —
+is `references/worktree-wave-execution.md`. Follow it exactly; its MUSTs
+are load-bearing.
+
+Review packages are per task branch: the range `wave-base..task-head`.
+SDD's own review-package assembly cannot take a pathspec and lives in a
+plugin cache overwritten on update, so use the repo's review-package
+script where one exists — with an explicit per-task output path (a
+range-keyed default silently collides between tasks sharing a base), the
+task's `File scope:`, and its commits — otherwise assemble the diff with
+`git diff` over the range. Either way, check each task's commits against
+its declared scope: append any overflow to the package so it still gets
+reviewed, and surface the violation to the controller rather than
+silently reading past it.
+
+**Thrash detection.** Lock-wait build output or repeated no-progress
+timeouts are a scheduling fault, not a task fault: stop the affected
+tasks, re-serialize or isolate the contended resource, and record it in
+the ledger — never let the loop tick for hours against a lock.
 
 Reading the ledger under waves: lines are keyed `Task <N>:`, so filter by
 task ID **before** taking "the last line." Sequentially, the file's last

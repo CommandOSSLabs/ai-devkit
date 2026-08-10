@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-spec-plan
 description: This skill should be used when the user asks for a "spec", "design", "implementation plan", or "how should we build this" for a tracker issue, after context intake for any non-trivial change, and as phase 2 of the cmk:delivery-pipeline skill.
-version: 0.1.0
+version: 0.2.0
 ---
 
 # Delivery Spec & Plan
@@ -89,13 +89,14 @@ dispositions, the doc-impact list from the spec, tracker reconciliation duty,
 the production-readiness tasks, and any invariant the change goes near with
 the suites that prove it — one line each, exact values verbatim.
 
-**Every task then carries three things in its own `## Task N` body:**
+**Every task then carries these in its own `## Task N` body:**
 
 ```markdown
 ## Task 3: Persist the session ledger
 
 Depends on: Task 1
 File scope: libs/session/src/ledger.rs, libs/session/tests/ledger.rs
+Exclusive resources: none
 
 <what to build, the behavior to prove, the gate command that verifies it>
 <plus the Global Constraints obligations that apply to THIS task, restated>
@@ -104,10 +105,15 @@ File scope: libs/session/src/ledger.rs, libs/session/tests/ledger.rs
 - **`Depends on:`** — genuine ordering requirements only, by task number.
   Omit it, or write `none`, when the task has none. This is what execution
   schedules from.
-- **`File scope:`** — every path the task may touch. Two tasks may run
-  concurrently only when their scopes are disjoint, and execution checks
+- **`File scope:`** — every path the task may touch. Disjoint scopes are
+  necessary for two tasks to share a wave, not sufficient (execution also
+  isolates worktrees and honors exclusive resources), and execution checks
   each task's commits against this list afterwards, so an inaccurate scope
   surfaces as a scope violation rather than silently permitting a race.
+- **`Exclusive resources:`** — non-path shared services the task needs
+  exclusively: a Docker daemon, a shared local chain or database, an
+  external sandbox. Write `none` when there are none. Tasks with
+  intersecting declarations never share an execution wave.
 - **The obligations, restated inside the task body.** This duplication is
   deliberate and load-bearing. An execution engine builds an implementer's
   brief by slicing the plan at the task heading, so a header-level Global
