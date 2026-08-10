@@ -59,6 +59,21 @@ Add tokens only to restore domain or semantic context that would otherwise
 be lost — not to repeat an enclosing namespace or narrate implementation
 details already visible in the type.
 
+## Names are never work-tracking coordinates
+
+A ticket ID, an acceptance-criterion number (`ac4`), a review-round or
+finding label, or a requirement/workstream code with no in-repo definition
+must not appear in an identifier, file, directory, binary, module, stack, or
+test name. Such a name records where the work was tracked, not what the
+thing is; a reader of the code has no guaranteed access to the tracker, and
+the reference rots the day the ticket closes. Name the capability or
+behavior instead — the binary that proves chain anchoring is
+`chain-anchor-proof`, not `proj424-proof`. Citing an in-repo canonical
+artifact (a decision record number, a `docs/…` path) is fine inside a
+comment, but never as a substitute for a self-descriptive name. An existing
+deployed identity that already carries such a name changes only under the
+compatibility-aware rename rule below.
+
 ## Renames are atomic and compatibility-aware
 
 Update every call site, import, test, and doc reference in the same change.
