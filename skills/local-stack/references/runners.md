@@ -66,7 +66,11 @@ Contract — a single entry point exposing these subcommands:
   the current worktree's identity, or to an identity whose worktree
   directory no longer exists (a deleted worktree cannot object). Anything
   unattributable is reported, never killed, and there is no machine-wide
-  prune mode.
+  prune mode. Every record supporting attribution on the cooperative path —
+  PID files, port reservations, the identity file, any manifest of started
+  resources — lives under the worktree's own `.local/`, never a shared temp
+  directory; the stamp on the resource itself is what survives when
+  `.local/` disappears with its worktree.
 
 Additional rules:
 

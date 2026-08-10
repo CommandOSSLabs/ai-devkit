@@ -106,35 +106,19 @@ other than the one explicitly selected instance — no global prune, no deleting
 
 ## Lifecycle discipline
 
-Whoever starts a stack owns stopping it. An agent or CI job that brings up
-services for its own task stops them when the task ends — a dangling stack
-silently starves the next run's ports, memory, and CPU. Only a deliberately
-persistent instance — a long-lived stack other sessions are meant to join —
-outlives its starter, and it is stopped through its own explicit lifecycle:
-never left up by accident, and never blanket-killed by another session's
-cleanup.
+Whoever starts a stack owns stopping it: an agent or CI job stops what it
+brought up when its task ends — a dangling stack silently starves the next
+run's ports, memory, and CPU. Only a deliberately persistent instance other
+sessions are meant to join outlives its starter, through its own explicit
+lifecycle — never by accident, and never blanket-killed by another session.
 
-Cooperative `stop` only reaches what the runner's own records still account
-for. Crashed runs leave real dangling state — containers with no PID file,
-processes that outlived their records, instances of a since-deleted worktree
-— and reclaiming that safely requires ownership stamped on the resource
-itself:
-
-- **Stamp identity at creation.** Everything a stack starts carries the
-  worktree identity it belongs to: the compose project name and a label on
-  each container, the identity exported into every child process's
-  environment, every state root under `.local/`. A resource that cannot name
-  its owner cannot be reclaimed safely.
-- **Never attribute by process ancestry.** One agent session runs across
-  many worktrees, so parent/child PID relationships are not ownership —
-  killing a session's process tree sweeps services belonging to other
-  worktrees. Attribute by the stamped identity: labels, environment markers,
-  recorded port ownership.
-- **Reclaim in two scopes only.** A reclaim pass (`references/runners.md`)
-  inventories stamped resources, diffs them against what the records still
-  account for, and removes strays attributed to the current worktree — or to
-  an identity whose worktree directory no longer exists. Anything it cannot
-  attribute it reports and leaves alone. There is no global prune.
+Cooperative `stop` reaches only what this worktree's `.local/` records still
+account for, and `.local/` dies with a deleted worktree — so reclamation
+rests on the identity stamped on each started resource (compose
+project/labels, child-process env marker, state roots), never on process
+ancestry: one agent session spans many worktrees. Reclaim only this worktree
+or identities whose worktree directory is gone; report, never kill, the
+unattributable — no global prune. `references/runners.md` owns the contract.
 
 ## Test-infrastructure composition
 
@@ -162,9 +146,5 @@ Report-only — never mutate:
 - A coherence guard exists and runs on the init path before anything starts.
 - No env file references another worktree's absolute path.
 - Each stack's state root lives under `.local/`, not elsewhere.
-- Every resource a runner starts is stamped with the worktree identity:
-  compose project name and container labels, an identity marker in each
-  child process's environment, identity-derived state root paths.
-- A reclaim path exists, attributes strays by stamped identity — never by
-  process ancestry — and scopes to one worktree identity or to identities
-  whose worktree directory is gone, never the whole machine.
+- Started resources carry the identity stamp; reclaim attributes strays by
+  stamp, never ancestry, scoped to one worktree or deleted-worktree identities.
