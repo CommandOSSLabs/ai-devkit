@@ -27,15 +27,7 @@ Teams define their own topics based on what they're working on.
 
 ## Entry Format
 
-Each entry follows this structure:
-
-```markdown
-### [Clear, specific title]
-- **Date:** YYYY-MM-DD
-- **Context:** [Where this came from — session, debugging, PR, incident, etc.]
-- **Learning:** [The insight itself — concise and actionable]
-- **Applies to:** [Downstream tags — e.g., design, deployment]
-```
+Each entry follows the structure in `references/learn-template.md`.
 
 ## Conflict Resolution
 

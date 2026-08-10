@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-workflow
 description: This skill should be used when the user asks to "start tracked work", "reconcile the tracker", "check if this is ready to ship", "keep the issue useful", or "check acceptance criteria" — or needs the tracking contract every other delivery skill operates inside.
-version: 0.2.0
+version: 0.2.1
 ---
 
 # Delivery Workflow
@@ -121,10 +121,7 @@ Using Linear as your tracker? Read `references/linear.md`.
 | Splitting PR review across the issue and the PR | Keep it on one surface — the PR or the tracker's synced review thread |
 | Copying a deferred finding into several places | Link the review thread and the new follow-up issue |
 | Treating merge as delivery | Verify acceptance before the done state |
-| Leaving the AC checklist untouched all run | Tick each criterion as its proof lands, evidence reachable |
-| Checking a criterion because it feels done | Check it only against reachable proof; intent is not evidence |
-| Shrinking the AC to match what got built | Rescope explicitly, move removed criteria to a tracked successor, say why |
-| Delivering a narrow slice under a broad AC | Rewrite the AC to the honest outcome and track the remainder |
+| Shrinking the AC to match what got built | Rescope explicitly: successor tracked, description rewritten, reason recorded (`references/acceptance-criteria.md`) |
 | Trusting only auto-linking | Keep the issue ID in the branch and the PR body |
 | Treating the template as a form | Use any clear structure that serves the same review goals |
 | Claiming tests passed without proof | Include reproducible automation and its passing result |

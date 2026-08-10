@@ -13,7 +13,9 @@
 
 - **System-wide** — the whole platform: layers, dependency direction,
   component map, sub-system composition.
-- **Sub-system / track** — one product line or major component.
+- **Sub-system / track** — one product line or major component: its
+  responsibilities, protocols, and how it composes the shared core without
+  leaking into it.
 - **Feature-level** — one feature, scoped by a `Scope:` header.
 - Lower levels reference upward and never silently contradict the level
   above; conflicts are surfaced and resolved at the higher level.
