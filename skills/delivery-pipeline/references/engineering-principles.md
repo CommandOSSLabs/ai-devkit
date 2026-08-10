@@ -114,6 +114,31 @@ bookkeeping follows the human-decision-boundary rules above. In an
 unattended run, consultation applies only when it was requested up front —
 otherwise decide and record.
 
+## One code path across infra profiles
+
+Product, protocol, and core/shared logic are profile-invariant: identical
+across the local development stack and every deployed environment, with
+environment differences living only at named composition or
+materialization surfaces. In this pipeline that means:
+
+- **Spec/plan:** every environment difference is placed at a named
+  composition or materialization surface (launcher, IaC, config and
+  secret delivery, credential source). A spec that puts an environment
+  conditional inside product/protocol/core code is reworked before
+  implementation.
+- **Implementation:** prefer extending the local materialization of a
+  missing production element over branching the shared path around it.
+- **Review:** audit for profile leakage into shared code the same way
+  other architectural boundaries are audited.
+- **Evidence:** local-stack proof is the default execution evidence for
+  profile-invariant logic; environment-specific evidence is reserved for
+  the composition/materialization surfaces that own it. A shared-logic
+  defect first seen on a deployed environment is a parity failure to
+  root-cause, not a normal find.
+
+Where the repository declares its own infra-profile standard, that
+standard refines this rule and takes precedence.
+
 ## Production readiness
 
 Every change is designed, built, reviewed, and shipped as something that
@@ -174,12 +199,10 @@ what you don't otherwise hand them does not exist for them.
 
 The role definition carries model, effort, and preloaded skills —
 superpowers skills are named inline by whichever phase needs them, not
-chosen through a separate lookup. That leaves a delegation prompt only
-five things to state: task and file scope disjoint from every concurrently
-running subagent, skills to invoke by name, source identity or an
-instruction to refresh it, stop/escalation conditions, and the evidence
-artifact the subagent must write to scratch (what it read, ran, changed,
-or found, with file:line traces).
+chosen through a separate lookup. The delegation-prompt and return
+contracts are owned by `references/context-efficiency.md` § Delegation
+and returns; the required evidence artifact goes to scratch with what the
+subagent read, ran, changed, or found, with file:line traces.
 
 A subagent result without its evidence artifact is rejected and re-run.
 Evidence, not elapsed time, is how a hollow run is detected. Verify

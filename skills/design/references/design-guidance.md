@@ -16,6 +16,18 @@ Implementation-agnostic never means vague: the spec must be thorough and
 detailed enough that two independent implementations would agree on behavior
 — and specific enough to disagree with.
 
+## Profile neutrality
+
+Mechanisms are specified once, neutral to the infrastructure environment
+that will run them. Environment differences (local stack vs cloud
+environments) appear only in composition and topology sections as
+materialization choices — which launcher assembles the parts, which plane
+delivers config and secrets, which infrastructure declares the boundary. A
+design that forks product, protocol, or core behavior per environment is a
+defect: push the difference down to a composition surface or redesign.
+Where the repository declares its own infra-profile standard, that
+standard refines this rule and takes precedence.
+
 ## What the document must accomplish
 
 Whatever its shape, a reader must be able to extract:
@@ -35,18 +47,9 @@ Whatever its shape, a reader must be able to extract:
 
 ## Design levels
 
-Design is layered, and each layer is its own doc (or tree):
-
-- **System-wide** — the whole platform: layers, dependency direction,
-  component map, composition of sub-systems.
-- **Sub-system / track** — one product line or major component: its
-  responsibilities, protocols, and how it composes the shared core without
-  leaking into it.
-- **Feature-level** — one feature: scope, flows (success and failure),
-  boundaries, acceptance criteria when "done" isn't obvious.
-
-Lower levels reference upward and never silently contradict the level above;
-a conflict is surfaced and resolved at the higher level.
+Design is layered, and each layer is its own doc (or tree); the level
+definitions and the never-silently-contradict rule live in
+`references/design-conventions.md` § Design Levels.
 
 ## Multi-doc design trees
 
