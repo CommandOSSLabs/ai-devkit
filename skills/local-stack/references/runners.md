@@ -59,14 +59,16 @@ Contract — a single entry point exposing these subcommands:
   instance.
 - **`reclaim`** — recover from runs that died without `stop`. Inventory
   resources stamped with a worktree identity — containers by compose
-  project/label, processes by the identity marker in their environment,
-  recorded port reservations, instance state roots — and diff that against
-  what PID files and instance records still account for. Report each stray
-  with the evidence that attributes it, then remove it. Scope strictly to
-  the current worktree's identity, or to an identity whose worktree
-  directory no longer exists (a deleted worktree cannot object). Anything
-  unattributable is reported, never killed, and there is no machine-wide
-  prune mode. Every record supporting attribution on the cooperative path —
+  project/label, processes by command lines resolving into the identity's
+  own paths (service binaries, state roots), recorded port reservations,
+  instance state roots — and diff that against what PID files and instance
+  records still account for. Report each stray with the evidence that
+  attributes it, then remove it. Scope strictly to the current worktree's
+  identity, or to an identity whose worktree directory no longer exists (a
+  deleted worktree cannot object). Anything unattributable — including
+  anything whose attribution is ambiguous — is reported, never killed and
+  never silently skipped, and there is no machine-wide prune mode. Every
+  record supporting attribution on the cooperative path —
   PID files, port reservations, the identity file, any manifest of started
   resources — lives under the worktree's own `.local/`, never a shared temp
   directory; the stamp on the resource itself is what survives when
@@ -85,12 +87,16 @@ Additional rules:
 - Before recording or acting on a PID found on disk, confirm the process it
   names is actually still owned by this worktree/instance (not just "some
   process happens to have this PID now") before trusting or killing it.
-- Stamping is what makes ownership checkable: start every child process with
-  the worktree identity exported in its environment, so a process stays
-  attributable even after its PID file is lost or a run crashes. Process
-  ancestry is never the check — a single agent session runs across multiple
-  worktrees, so walking parent/child PID trees kills another worktree's
-  services.
+- Stamping is what makes ownership checkable, and for processes the durable
+  stamp is the command line: a service binary or state path resolving inside
+  the worktree, matched against the stack's own known entry points, stays
+  attributable even after its PID file is lost or a run crashes. Export the
+  worktree identity into every child environment too, as defense-in-depth —
+  but never as the only stamp: hardened OSes (macOS under SIP, for one)
+  refuse to show one process another's environment, so an env-only stamp is
+  unverifiable exactly when reclaim needs it. Process ancestry is never the
+  check — a single agent session runs across multiple worktrees, so walking
+  parent/child PID trees kills another worktree's services.
 
 ## Choosing a mode
 

@@ -1,7 +1,7 @@
 ---
 name: cmk:local-stack
 description: This skill should be used when the user asks to "set up local dev", "make dev worktree-safe", "add a local stack", "port conflicts between worktrees", "headless dev mode", "run services locally for agents/CI", "clean up dangling services", or hits orphaned containers/processes, "port already in use" from leftover runs, stale state from a deleted worktree, or needs worktree-isolated local development stacks with deterministic identity, coherence validation, and interactive/headless runners.
-version: 0.4.0
+version: 0.4.1
 ---
 
 # Local Stack
@@ -115,7 +115,7 @@ lifecycle — never by accident, and never blanket-killed by another session.
 Cooperative `stop` reaches only what this worktree's `.local/` records still
 account for, and `.local/` dies with a deleted worktree — so reclamation
 rests on the identity stamped on each started resource (compose
-project/labels, child-process env marker, state roots), never on process
+project/labels, process command paths, state roots), never on process
 ancestry: one agent session spans many worktrees. Reclaim only this worktree
 or identities whose worktree directory is gone; report, never kill, the
 unattributable — no global prune. `references/runners.md` owns the contract.

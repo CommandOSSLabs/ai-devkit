@@ -77,15 +77,16 @@
     ]
   },
   {
-    "eval_id": 6,
+    "eval_id": 7,
     "eval_name": "dangling-resource-reclamation",
     "prompt": "Our coding agents use git worktrees heavily with a worktree-isolated local stack: compose-managed infra, native service processes, and a local chain devstack. After crashed or careless agent runs we accumulate dangling state — docker containers still running with no PID file, orphaned service processes whose run ended long ago, stale instance state under .local/ from worktrees that were already deleted. One cleanup attempt killed the agent process tree, but a single agent session runs across multiple worktrees, so that took down services belonging to a different, active worktree. Design the cleanup story for this stack so the next run always finds its resources free.",
     "assertions": [
       "every started resource is stamped with the worktree identity at creation: compose project name plus a label per container, the identity exported into each child process environment, and identity-derived state roots under .local/",
       "attribution never uses parent/child process relationships, explicitly because one agent session spans multiple worktrees",
-      "a reclaim subcommand inventories resources by stamped identity (container labels/compose project, process environment marker, recorded port reservations, instance state roots) and diffs against what PID files and instance records still account for",
+      "a reclaim subcommand inventories resources by stamped identity (container labels/compose project, process command lines resolving into the identity's own binary or state paths, recorded port reservations, instance state roots) and diffs against what PID files and instance records still account for",
+      "process attribution works without reading other processes' environments (hardened OSes such as macOS under SIP forbid it); the exported environment marker is defense-in-depth, never the only stamp",
       "reclaim removes only strays attributed to the current worktree identity, or to an identity whose worktree directory no longer exists",
-      "anything unattributable is reported and left alone; no machine-wide prune exists",
+      "anything unattributable or ambiguously attributable is reported and left alone, never silently skipped; no machine-wide prune exists",
       "stopping an instance is kept distinct from wiping its state root"
     ]
   }
