@@ -1,7 +1,7 @@
 ---
 name: cmk:rule
 description: This skill should be used when the user asks to "add a rule that...", "make this a standard", "promote this learning to a rule", "update our coding conventions", "what are our engineering rules", or needs to codify engineering standards into docs/rules/ as enforceable rules and conventions that agents follow during development.
-version: 0.3.0
+version: 0.4.0
 ---
 
 # Rule
@@ -49,6 +49,19 @@ A rule that lands while the codebase still contradicts it teaches the exception,
 5. **Expect the pattern to reappear on the base branch while the change is in review.** Other work merges against the old convention, so a hand sweep is correct exactly once. Treat the recurrence as the argument for landing a mechanical gate, not as a reason to keep sweeping — and if the gate is out of scope here, leave it tracked rather than implied.
 
 A cosmetic sweep is not automatically behavior-free. A contract check that pins a file's identity by whole-content hash fails on any edit to that file, however trivial, and such checks usually omit an auto-update flag on purpose so that re-pinning stays a human re-approval. Prove the guarded property is untouched, then disclose the pin change in review as a judgment call rather than folding it in as a mechanical fixup.
+
+## Workflow: Gate
+
+A hand sweep is correct once; a gate is what keeps a rule true. Build it from the residual search the audit committed, and expect the first draft to be both too loud and too quiet.
+
+1. **Calibrate the pattern against the real tree before designing it.** Run the candidate over the whole repository and read the hits. A rule expressed as a shape rather than a roster usually collapses here — the shape that catches the thing you mean also catches identifiers, fixtures, and standard names that merely look like it, and a gate that cries wolf gets suppressed everywhere. Prefer an explicit list of the things you actually mean, with the one-line edit to extend it.
+2. **Assume the boundaries are where it fails, and test each one.** Case, because the same token arrives lowercase through a branch name and uppercase through a citation. Word boundaries, because `_` is a word character, so a trailing `\b` cannot end a match before one and silently misses every snake_case and SCREAMING_CASE spelling. File-type scope, because an extension allowlist fails open on whatever you did not think of. Write the offending spelling as a fixture for each boundary and watch it fail before you fix it.
+3. **Scan contents and the tracked path list as two passes.** The same reason as the audit, and the same failure if you skip one.
+4. **Give every exemption the narrowest scope that fits its reason.** An immutable string that recurs everywhere is exempted as a token, not as forty file entries that restate one decision and break on unrelated edits nearby. A file whose subject matter is the pattern is exempted whole-file with the count you approved. Each carries a written reason, and anything blocked behind a migration carries the issue that owns its retirement.
+5. **Make the approved count measure what the exemption admits.** If the exemption matches by pattern, count matches — counting raw substrings drifts in both directions at once, inflating the budget with text no rule would flag while letting a differently-spelled instance through uncounted. A budget that does not measure the thing it bounds is not a control.
+6. **Prefer a carve-out the repository itself validates.** When the exemption is a property of the tree — a citation whose target exists — compute it instead of approving it. Nobody has to maintain it, and it lapses on its own when the property stops holding.
+7. **Pin the check's own exemption.** A check that must spell out what it detects exempts itself, so assert that set is exactly those files. A self-exempting check that can quietly adopt more files stops being a check.
+8. **Verify against a committed tree, not a working one.** A gate that reads the tracked file list cannot see files you have not added yet, so a clean local run before `git add` proves nothing about the very files you just wrote. This is how a gate ships flagging its own new sources.
 
 ## Output
 
