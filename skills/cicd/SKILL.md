@@ -1,7 +1,7 @@
 ---
 name: cmk:cicd
 description: This skill should be used when the user asks to "set up CI", "speed up CI", "add a deploy workflow", "structure GitHub Actions", "self-hosted runners", "protect the main branch", or needs to structure CI, deployment, and policy automation around GitHub Actions.
-version: 0.2.0
+version: 0.2.1
 ---
 
 # CI/CD

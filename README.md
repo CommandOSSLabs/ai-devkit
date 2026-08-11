@@ -81,6 +81,8 @@ This devkit solves that by using structured documentation as the shared state. T
 | `cmk:infra` | Establish or audit infrastructure-as-code packages and environment boundaries |
 | `cmk:cicd` | Structure CI, deployment, and policy automation around GitHub Actions |
 | `cmk:test-resources` | Share an expensive test resource (container, database, external service) safely across a parallel test runner |
+| `cmk:rust` | Idiomatic Rust practices — error handling, module boundaries, feature flags, lint/test wiring, dependency hygiene — inside a design-decided crate |
+| `cmk:testcontainers` | Start and share a throwaway service container from Rust test code via the `testcontainers` crate |
 | `cmk:agent-vendors` | Vendor the kit's skills into one canonical home with per-vendor adapters |
 | `cmk:sync` | Reconcile vendored skills with upstream without flattening local evolution |
 | `cmk:repo-setup` | Orchestrate every setup facet into one bootstrap, adopt, update, or verify pass |

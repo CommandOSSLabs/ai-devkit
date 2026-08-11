@@ -8,6 +8,14 @@ version: 0.1.0
 
 Design how a test suite shares an expensive-to-start resource (a container, a database, an external service) across tests, without the sharing silently doing nothing or silently racing.
 
+## Modes
+
+**Init** (default) — design a new resource-sharing pattern for a test suite from scratch: verify the process model, pick the sharing shape, wire namespacing.
+
+**Update** — revise an existing pattern after a new resource is added or the test runner changes, without re-deriving the process-model check from zero.
+
+**Verify** — report-only audit against the checks under `## Verify`; never mutates.
+
 ## The core mistake this exists to prevent
 
 A resource-sharing optimization is designed against an assumed execution model — usually "all tests in this binary or file run in one process" — that the actual test runner does not honor. Many modern parallel runners (Rust's `cargo-nextest`, for instance) execute **each test as its own OS process**, even when they compile into one binary. In-process shared state (a `static`, a lazily-initialized singleton, a process-wide connection pool) never persists across tests under that model — every test starts fresh, the "sharing" degrades silently into "works, but shares nothing," and no test fails to reveal it.
