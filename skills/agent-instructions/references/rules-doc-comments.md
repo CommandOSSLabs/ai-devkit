@@ -58,9 +58,12 @@ than no comment.
 ## Never reference the issue tracker from source
 
 A doc comment, test name, or identifier must never name a tracked issue,
-pull request, review round, or finding label — the reader of the code has no
-guaranteed access to that system, and the reference rots the day the ticket
-does. Write the reasoning the ticket stood for, in the code's own words,
-even if that duplicates wording that also lives in the tracker. A path to
-another file inside the same repository (a design doc, a decision record) is
-fine, since anyone with the repository can open it.
+pull request, review round, finding label, acceptance-criterion number
+(`AC4`), or requirement/workstream label with no in-repo definition — the
+reader of the code has no guaranteed access to that system, and the
+reference rots the day the ticket does. Write the reasoning the ticket stood
+for, in the code's own words, even if that duplicates wording that also
+lives in the tracker. A path to another file inside the same repository (a
+design doc, a decision record) is fine, since anyone with the repository can
+open it. A label is canonical only if the repository itself defines it; a
+delivery report merely quoting it does not count.
