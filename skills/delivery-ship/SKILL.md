@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-ship
 description: This skill should be used when the user asks to "ship this", "open the PR", "push this to review", "update the tracker and open a PR", or "close out this ticket" — when implementation and review are done, and as phase 5 of the cmk:delivery-pipeline skill.
-version: 0.2.0
+version: 0.2.1
 ---
 
 # Delivery Ship
@@ -32,6 +32,8 @@ output. Walk the acceptance criteria one final time against actual
 behavior, checking each off in the tracker against the evidence that proves
 it. This is a reconciliation, not a discovery: a criterion that turns out
 unmet here should already have been rescoped or blocked when it was found.
+
+Run each gate exactly as the pipeline runs it, not an approximation of it: one CI step routinely chains sub-gates — a formatter, a build — that a local typecheck-and-test shortcut never executes, so read the job's own command and copy it verbatim rather than reconstructing what you assume it does. Before owning a failure this change appears to have caused, reproduce it against a clean checkout of the base; a failure that already existed there and a stale dependency install after a lockfile change both impersonate a regression until they are attributed. When comparing the two runs, diff the failing test *names* rather than the counts — a suite with timeout-prone cases varies run to run, so equal counts prove nothing and unequal counts mean nothing on their own.
 
 Confirm the final cumulative review ran to completion for this issue or
 branch at its selected depth, and that its verdict discloses that depth —
