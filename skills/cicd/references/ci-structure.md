@@ -47,6 +47,15 @@ jobs:
 - **Warm dependency-resolve jobs** run inside the same cache scope as normal
   CI so day-to-day resolution stays fast; a *separate* scheduled job (below)
   exists specifically to prove the cold path still works.
+- **Group build variants instead of rebuilding the workspace per variant.** A
+  check that would otherwise run once per feature combination, target, or
+  lint pass pays a full workspace compile that many times over. Compute the
+  union of what needs checking and cover it in one `--workspace --all-targets`
+  pass; reserve a second pass only for a genuinely narrow proof the grouped
+  pass can't express (one feature forced off to check a specific invariant),
+  not as a second full workspace universe alongside the first. `cmk:rust`'s
+  feature-flags facet covers the Rust-specific mechanic — a mechanically
+  computed feature union, not a hand-maintained list.
 
 ## Tiered runners are configuration, not a workflow edit
 
