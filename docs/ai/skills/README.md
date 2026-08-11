@@ -1,6 +1,6 @@
 # Skills
 
-The twenty-nine `cmk:*` skill packages under [`skills/`](../../../skills/): eight docs-family skills, ten setup-family skills, nine delivery-family skills, and two knowledge-family skills. Each is a directory with a `SKILL.md` (frontmatter `name`/`description`/`version` plus the body the agent reads), and most ship a `references/` folder of guidance, templates, and conventions the workflow loads on demand.
+The thirty-two `cmk:*` skill packages under [`skills/`](../../../skills/): eight docs-family skills, thirteen setup-family skills, nine delivery-family skills, and two knowledge-family skills. Each is a directory with a `SKILL.md` (frontmatter `name`/`description`/`version` plus the body the agent reads), and most ship a `references/` folder of guidance, templates, and conventions the workflow loads on demand.
 
 Docs-family skills follow the same shape: a "Workflow: Create" / "Workflow: Iterate" pair, with placement rules, shaping guidance, and templates kept out of `SKILL.md` itself and cited via "Read `references/<file>.md`" lines. Setup-family skills instead follow a facet shape (modes and/or a single workflow, plus a report-only `## Verify` section). Delivery-family skills follow a tracker-neutral phase/gate shape and never carry a `## Verify` section — that contract is setup-family only. Knowledge-family skills are reference packs with no create/iterate or phase shape at all. See [conventions.md](./conventions.md) for the exceptions and the full breakdown.
 
@@ -24,6 +24,9 @@ Docs-family skills follow the same shape: a "Workflow: Create" / "Workflow: Iter
 - [local-stack.md](./local-stack.md) — `cmk:local-stack`, worktree-isolated local development stacks.
 - [infra.md](./infra.md) — `cmk:infra`, infrastructure-as-code packages and environment boundaries.
 - [cicd.md](./cicd.md) — `cmk:cicd`, CI, deployment, and policy automation around GitHub Actions.
+- [test-resources.md](./test-resources.md) — `cmk:test-resources`, sharing an expensive test resource safely across a parallel test runner.
+- [rust.md](./rust.md) — `cmk:rust`, idiomatic Rust inside a design-decided crate: error handling, module boundaries, feature flags, lint/test wiring, dependency hygiene.
+- [testcontainers.md](./testcontainers.md) — `cmk:testcontainers`, starting and sharing a throwaway service container from Rust test code.
 - [agent-vendors.md](./agent-vendors.md) — `cmk:agent-vendors`, canonical `.agents/skills/` home, per-vendor adapters and bindings.
 - [sync.md](./sync.md) — `cmk:sync`, upstream baseline per vendored skill and semantic reconciliation.
 - [repo-setup.md](./repo-setup.md) — `cmk:repo-setup`, orchestrates every setup facet into one pass.

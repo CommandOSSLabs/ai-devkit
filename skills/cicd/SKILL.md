@@ -1,7 +1,7 @@
 ---
 name: cmk:cicd
 description: This skill should be used when the user asks to "set up CI", "speed up CI", "add a deploy workflow", "structure GitHub Actions", "self-hosted runners", "protect the main branch", or needs to structure CI, deployment, and policy automation around GitHub Actions.
-version: 0.2.0
+version: 0.2.1
 ---
 
 # CI/CD
@@ -70,7 +70,14 @@ reports-success** (a path-filtered job that didn't run still reports a green
 check, so the gating job itself, not the per-area jobs, must be what's
 required); **workflow-token-doesn't-trigger-CI** (automation that pushes with
 the built-in workflow token produces commits that never fire downstream CI,
-silently leaving a rewritten ref unverified).
+silently leaving a rewritten ref unverified); **speedup misattribution** (a
+multi-part change to CI's wall-clock cuts the total, and every part gets
+credited — but tracing the win to its actual cause can reveal that one part
+did all of it and a sibling part is silently inert, contributing nothing
+while looking identical to the part that worked). Isolate which specific
+change moved the number before crediting any of them; `cmk:test-resources`
+covers the same trap one layer down, inside a test suite's own resource
+model rather than CI's orchestration.
 
 Projects own: which area jobs exist and their path filters; runner labels and
 pool sizing; which policy gates are enabled; deploy-leg composition; label
@@ -92,3 +99,6 @@ Report-only — never mutate:
   available.
 - `.github/workflows/README.md` lists every workflow and is current with the
   workflows on disk.
+- A claimed speedup names the specific job, step, or mechanism it traces to —
+  not just a before/after total — so a sibling change that contributed
+  nothing doesn't ride along uncredited and unverified.

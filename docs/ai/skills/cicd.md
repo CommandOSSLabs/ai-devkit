@@ -20,7 +20,11 @@ ruleset with the change-detection job itself required, and automation uses
 pinned actions, non-persisted checkout credentials, GitHub App identities
 where pushes must trigger CI, and OIDC over static cloud keys. Specifies the
 GitHub ↔ IaC 1:1:1 mapping (stack ↔ GitHub Environment ↔ deploy workflow)
-that `cmk:infra` names but leaves to this skill to wire. Ends with a
+that `cmk:infra` names but leaves to this skill to wire. Names
+speedup misattribution as a named trap alongside cold-cache poisoning,
+skipped-job-reports-success, and workflow-token-doesn't-trigger-CI — a
+multi-part change to CI's wall-clock gets every part credited for the total
+unless the win is traced to the specific part that produced it. Ends with a
 `## Verify` section for report-only checks a caller can run against a target
 repo.
 
@@ -46,3 +50,6 @@ repo.
 ## Links
 - `cmk:infra` — names the environment vocabulary and requires a deploy path
   for each; this skill specifies and wires that path.
+- `cmk:test-resources` — the same "verify the mechanism, not the metric"
+  principle, applied one layer down inside a test suite's own resource
+  model rather than CI orchestration.
