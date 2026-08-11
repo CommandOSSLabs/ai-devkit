@@ -74,6 +74,15 @@ comment, but never as a substitute for a self-descriptive name. An existing
 deployed identity that already carries such a name changes only under the
 compatibility-aware rename rule below.
 
+The test is resolvability, not shape. A label passes if a reader holding only
+this repository, or a public specification, can resolve it — a decision record
+number, a `docs/…` path, a published standard (`RFC-7519`), an algorithm name
+(`SHA-256`). It fails if it resolves only inside a tracker, and a delivery
+report that quotes one does not define it. Shape decides nothing on its own:
+seat identifiers, invoice fixtures, and cipher names all look like `ABC-123`.
+A coordinate embedded in a path that resolves in the repository is likewise a
+reference, and stops being one the day that file is deleted.
+
 ## Renames are atomic and compatibility-aware
 
 Update every call site, import, test, and doc reference in the same change.
