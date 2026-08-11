@@ -68,10 +68,13 @@ Then:
    execution has begun.
 7. **Cluster assurance.** A join triggers a targeted review over the
    combined diff: interface consistency, duplicated logic, naming and docs
-   alignment, integration behavior. Run the full review over every
-   completed issue and over the final combined output. Findings route to
-   the owning issue's disposition flow; the cluster review holds no
-   separate disposition authority.
+   alignment, integration behavior. After each issue's phase 3 join (and
+   after a multi-feeder join onto a combined branch), run phase 3b Simplify
+   on that joined branch before its pre-ship review — see
+   `phase-3b-simplify.md`. Run the full review over every completed issue
+   and over the final combined output. Findings route to the owning issue's
+   disposition flow; the cluster review holds no separate disposition
+   authority.
 
 If an issue fails or blocks, don't stall the run: finish everything not
 downstream of it, record the blocker on that issue, and report it.

@@ -36,8 +36,8 @@ Each request lands in the right skill, which asks only what it must and writes t
 One mental model runs through every skill: **the SDLC is a flow of documents that build on each other**, and the repository's `/docs` tree is where that flow lives.
 
 ```
-Requirements ──▶ Design ──▶ Plan ──▶ Implement ──▶ Review ──▶ Ship
- what & why      how, as an          └────── delivery family ─────┘
+Requirements ──▶ Design ──▶ Plan ──▶ Implement ──▶ Simplify ──▶ Review ──▶ Ship
+ what & why      how, as an          └────────── delivery family ──────────┘
                  implementation-
                  agnostic spec
 
@@ -92,10 +92,11 @@ This devkit solves that by using structured documentation as the shared state. T
 | `cmk:discover-efforts` | Reconcile an uncertain body of work into a complete tracker issue set before delivery begins |
 | `cmk:delivery-intake` | Pull full context for a tracker issue, set up its branch/worktree, and move it to in-progress |
 | `cmk:delivery-spec-plan` | Produce a low-level design spec and an executable, dependency-aware implementation plan |
+| `cmk:delivery-simplify` | Behavior-preserving quality cleanup (reuse, simplification, efficiency, altitude) — phase 3b after implement |
 | `cmk:delivery-review` | Multi-lens review — correctness, quality, spec/AC compliance, security, and more — with verified findings |
 | `cmk:delivery-ship` | Finalize delivery: verified evidence, a review-ready PR, and tracker reconciliation |
 | `cmk:delivery-handoff` | Generate a self-contained handoff prompt to continue tracked work in a different agent |
-| `cmk:delivery-pipeline` | End-to-end autonomous delivery of one issue, or a dependency-aware cluster, across all five phases |
+| `cmk:delivery-pipeline` | End-to-end autonomous delivery of one issue, or a dependency-aware cluster, across phases 1–5 (incl. 3b) |
 
 ### Knowledge family
 

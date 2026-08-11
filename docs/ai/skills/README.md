@@ -1,6 +1,6 @@
 # Skills
 
-The twenty-eight `cmk:*` skill packages under [`skills/`](../../../skills/): eight docs-family skills, ten setup-family skills, eight delivery-family skills, and two knowledge-family skills. Each is a directory with a `SKILL.md` (frontmatter `name`/`description`/`version` plus the body the agent reads), and most ship a `references/` folder of guidance, templates, and conventions the workflow loads on demand.
+The twenty-nine `cmk:*` skill packages under [`skills/`](../../../skills/): eight docs-family skills, ten setup-family skills, nine delivery-family skills, and two knowledge-family skills. Each is a directory with a `SKILL.md` (frontmatter `name`/`description`/`version` plus the body the agent reads), and most ship a `references/` folder of guidance, templates, and conventions the workflow loads on demand.
 
 Docs-family skills follow the same shape: a "Workflow: Create" / "Workflow: Iterate" pair, with placement rules, shaping guidance, and templates kept out of `SKILL.md` itself and cited via "Read `references/<file>.md`" lines. Setup-family skills instead follow a facet shape (modes and/or a single workflow, plus a report-only `## Verify` section). Delivery-family skills follow a tracker-neutral phase/gate shape and never carry a `## Verify` section — that contract is setup-family only. Knowledge-family skills are reference packs with no create/iterate or phase shape at all. See [conventions.md](./conventions.md) for the exceptions and the full breakdown.
 
@@ -34,10 +34,11 @@ Docs-family skills follow the same shape: a "Workflow: Create" / "Workflow: Iter
 - [discover-efforts.md](./discover-efforts.md) — `cmk:discover-efforts`, reconciles an uncertain body of work into a tracker issue set.
 - [delivery-intake.md](./delivery-intake.md) — `cmk:delivery-intake`, context intake, branch/worktree setup, phase 1.
 - [delivery-spec-plan.md](./delivery-spec-plan.md) — `cmk:delivery-spec-plan`, spec and implementation plan, phase 2.
+- [delivery-simplify.md](./delivery-simplify.md) — `cmk:delivery-simplify`, behavior-preserving quality cleanup, phase 3b.
 - [delivery-review.md](./delivery-review.md) — `cmk:delivery-review`, multi-lens review with evidence and disposition, phase 4.
 - [delivery-ship.md](./delivery-ship.md) — `cmk:delivery-ship`, PR, verification evidence, tracker reconciliation, phase 5.
 - [delivery-handoff.md](./delivery-handoff.md) — `cmk:delivery-handoff`, relay prompt for a different agent at any phase boundary.
-- [delivery-pipeline.md](./delivery-pipeline.md) — `cmk:delivery-pipeline`, end-to-end orchestration across all five phases.
+- [delivery-pipeline.md](./delivery-pipeline.md) — `cmk:delivery-pipeline`, end-to-end orchestration across phases 1–5 (incl. 3b).
 
 ## Knowledge family
 

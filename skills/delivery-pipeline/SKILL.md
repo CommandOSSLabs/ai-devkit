@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-pipeline
 description: This skill should be used when the user asks to "work on", "deliver", "tackle", "pick up", or "implement" a tracker issue (TICKET-123), a list of issues, or a body of tracked work expected to finish without supervision — even if they never say "pipeline". Also use when handed a cluster of related issues, or a single issue whose surrounding cluster should be derived from tracker dependencies, expecting dependency-aware sequencing across worktrees.
-version: 0.3.0
+version: 0.4.0
 ---
 
 # Delivery Pipeline
@@ -70,9 +70,10 @@ and the PR.
 
 Once per run, write to git-ignored scratch (e.g.
 `docs/plans/<issue>-run-notes.md`): the active runtime, the worktree path
-per issue, the path of phase 3's execution workspace, and any review depth
-the operator explicitly chose. Every later phase and handoff receiver
-reads this instead of rediscovering it — keep it to those four things.
+per issue, the path of phase 3's execution workspace, any review depth the
+operator explicitly chose, and the phase-3b simplify outcome once known.
+Every later phase and handoff receiver reads this instead of rediscovering
+it — keep it to those fields only.
 
 ## The phases
 
@@ -81,6 +82,7 @@ reads this instead of rediscovering it — keep it to those four things.
 | 1. Intake | `cmk:delivery-intake` | all of it — the tracker has no superpowers equivalent |
 | 2. Spec & plan | `cmk:delivery-spec-plan`, via `superpowers:brainstorming` + `superpowers:writing-plans` | design-doc inputs; `Depends on:`, `File scope:`, `Exclusive resources:`, and binding obligations inside each task body |
 | 3. Implement | `superpowers:subagent-driven-development` (below) | wave dispatch and its safety fixes |
+| 3b. Simplify | `cmk:delivery-simplify` | whole-branch quality cleanup after implement (Claude `/simplify` contract) |
 | 4. Review | `cmk:delivery-review` | lenses, evidence bar, adversarial verification, disposition, depth disclosure |
 | 5. Ship | `cmk:delivery-ship` | PR, tracker reconciliation, evidence |
 | (any boundary) | `cmk:delivery-handoff` | relay prompt for another agent |
@@ -91,12 +93,13 @@ file directly. Phases are checkpoints, not ceremonies: a one-line config
 fix does not need a design spec, but it still needs intake, task proof,
 review, and ship. Scale phase depth to the change; never skip one outright.
 
-Executing phase 3? Read `references/phase-3-execution.md`.
+Executing phase 3? Read `references/phase-3-execution.md`. Phase 3b?
+Read `references/phase-3b-simplify.md`.
 
 ## Single-issue mode
 
 One issue (or one issue plus sub-issues jointly delivering one outcome):
-run phases 1–5 in order inside one worktree.
+run phases 1–5 in order inside one worktree (including 3b after 3).
 
 ## Cluster mode
 
@@ -137,13 +140,10 @@ End every run with a report the user can act on in one read:
 ```
 
 A run that narrowed an issue says so in its own section rather than
-folding it into deferrals — a deferral is extra work found along the way,
-a rescope is the accepted outcome getting smaller — and when review ran
-below full depth, plain words say which issue, what depth, who asked for
-it, and that the run shipped below its standard gate: no reader can
-recover that difference unless it is written down. Every line in that
-report must already exist on its durable surface; the report summarizes
-the track record, and is never its only copy.
+folding it into deferrals. When review ran below full depth, or phase 3b
+was skipped or single-pass, plain words say so — no reader recovers that
+unless it is written down. Every line must already exist on its durable
+surface; the report summarizes the track record, never its only copy.
 
 Delegating or refreshing state anywhere in this pipeline? Read
 `references/engineering-principles.md` and `references/context-efficiency.md`.

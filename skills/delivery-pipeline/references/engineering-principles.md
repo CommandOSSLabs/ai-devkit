@@ -193,9 +193,11 @@ the correction where it matters.
 
 Use subagents for speed *and* rigor — through your platform's native
 mechanism and its committed delivery roles (`cmk-delivery-scout`,
-`-implementer`, `-reviewer`, `-verifier`). Subagents inherit neither your
-context nor your loaded skills, except the repo's root instruction file:
-what you don't otherwise hand them does not exist for them.
+`-implementer`, `-reviewer`, `-verifier`). Phase 3b Simplify fans out angle
+workers on the reviewer role and applies with the implementer role (or the
+orchestrator); it does not add a fifth permanent role. Subagents inherit
+neither your context nor your loaded skills, except the repo's root
+instruction file: what you don't otherwise hand them does not exist for them.
 
 The role definition carries model, effort, and preloaded skills —
 superpowers skills are named inline by whichever phase needs them, not
