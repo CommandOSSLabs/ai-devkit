@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-review
 description: This skill should be used when the user asks to "review my changes", "review this PR", "take a look at this diff", or "is this ready to ship" — before shipping tracked work (phase 4 of cmk:delivery-pipeline) or standalone against any pull request or local diff.
-version: 0.1.0
+version: 0.1.1
 ---
 
 # Delivery Review
@@ -21,9 +21,10 @@ First assemble the same context an author would have: the issue and its
 acceptance criteria, the spec including its production-readiness section,
 the relevant `docs/design/` and `docs/requirements/` pages, and any
 `docs/decisions/` ADRs governing the touched area — refreshed against the
-current diff, HEAD, and PR state before dispatch. **Reviewing a diff
-without its contract only catches typos** — that is the whole reason this
-skill exists rather than a bare reviewer.
+current diff, HEAD, and PR state before dispatch. On pipeline pre-ship,
+re-read HEAD after phase 3b; do not re-apply simplify (review judges).
+**Reviewing a diff without its contract only catches typos** — that is why
+this skill exists rather than a bare reviewer.
 
 ## Review depth
 

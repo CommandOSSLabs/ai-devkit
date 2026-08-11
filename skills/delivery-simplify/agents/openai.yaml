@@ -1,0 +1,4 @@
+interface:
+  display_name: "Delivery Simplify"
+  short_description: "Behavior-preserving cleanup: reuse, simplification, efficiency, altitude"
+  default_prompt: "Use $cmk-delivery-simplify to clean up the changed code without changing behavior, then re-verify."
