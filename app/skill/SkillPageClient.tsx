@@ -5,6 +5,8 @@ import { Drawer } from "vaul";
 import { GlowingWave } from "@/components/GlowingWave";
 import { NotificationStack, type NotificationStackItem } from "@/components/motion/notification-stack";
 import { CircuitBoard } from "@/components/motion/circuit-board";
+import { DecryptReveal } from "@/components/motion/decrypt-reveal";
+import BendingMarquee from "@/components/motion/bending-marquee";
 import { type RealSkill, CATEGORY_LABELS } from "@/lib/skill-types";
 import {
   Check,
@@ -150,39 +152,50 @@ const EMPTY_REPO_META: RepoMeta = {
 let repoMetaCache: RepoMeta | null = null;
 let repoMetaPromise: Promise<RepoMeta> | null = null;
 
-function fetchRepoMeta(): Promise<RepoMeta> {
-  if (repoMetaCache) return Promise.resolve(repoMetaCache);
-  if (repoMetaPromise) return repoMetaPromise;
-
-  repoMetaPromise = Promise.all([
+function loadRepoMetaOnce(): Promise<RepoMeta> {
+  return Promise.all([
     fetch("https://api.github.com/repos/CommandOSSLabs/ai-devkit").then((r) => (r.ok ? r.json() : null)),
     fetch("https://api.github.com/repos/CommandOSSLabs/ai-devkit/commits/main").then((r) => (r.ok ? r.json() : null)),
     fetch("https://api.github.com/repos/CommandOSSLabs/ai-devkit/tags?per_page=1").then((r) => (r.ok ? r.json() : null)),
     fetch("https://api.github.com/repos/CommandOSSLabs/ai-devkit/pulls?state=closed&sort=updated&direction=desc&per_page=8").then((r) =>
       r.ok ? r.json() : null
     ),
-  ])
-    .then(([repo, commit, tags, pulls]) => {
-      const recentMerges: MergedPR[] = Array.isArray(pulls)
-        ? pulls
-            .filter((pr) => pr?.merged_at)
-            .slice(0, 3)
-            .map((pr) => ({ number: pr.number, title: pr.title, mergedAt: pr.merged_at }))
-        : [];
+  ]).then(([repo, commit, tags, pulls]) => {
+    const recentMerges: MergedPR[] = Array.isArray(pulls)
+      ? pulls
+          .filter((pr) => pr?.merged_at)
+          .slice(0, 3)
+          .map((pr) => ({ number: pr.number, title: pr.title, mergedAt: pr.merged_at }))
+      : [];
 
-      const meta: RepoMeta = {
-        stars: repo?.stargazers_count ?? null,
-        license: repo?.license?.spdx_id ?? null,
-        pushedAt: repo?.pushed_at ?? null,
-        commitSha: commit?.sha ? String(commit.sha).slice(0, 7) : null,
-        latestTag: Array.isArray(tags) && tags[0]?.name ? tags[0].name : null,
-        recentMerges,
-      };
+    return {
+      stars: repo?.stargazers_count ?? null,
+      license: repo?.license?.spdx_id ?? null,
+      pushedAt: repo?.pushed_at ?? null,
+      commitSha: commit?.sha ? String(commit.sha).slice(0, 7) : null,
+      latestTag: Array.isArray(tags) && tags[0]?.name ? tags[0].name : null,
+      recentMerges,
+    };
+  });
+}
+
+function fetchRepoMeta(): Promise<RepoMeta> {
+  if (repoMetaCache) return Promise.resolve(repoMetaCache);
+  if (repoMetaPromise) return repoMetaPromise;
+
+  // One retry on transient failure (flaky network, momentary GitHub API
+  // hiccup) — a single failed fetch used to permanently poison the page to
+  // all-dashes/no-notifications with no way to recover short of a reload.
+  repoMetaPromise = loadRepoMetaOnce()
+    .catch(() => loadRepoMetaOnce())
+    .then((meta) => {
       repoMetaCache = meta;
       return meta;
     })
     .catch(() => {
-      repoMetaCache = EMPTY_REPO_META;
+      // Both attempts failed — don't cache the failure, so the next mount
+      // (e.g. a later navigation within the same session) can try again.
+      repoMetaPromise = null;
       return EMPTY_REPO_META;
     });
 
@@ -374,10 +387,54 @@ function mergesToNotifications(merges: MergedPR[]): NotificationStackItem[] {
   }));
 }
 
-function Hero({ theme }: { theme: "dark" | "light" }) {
-  const isDark = theme === "dark";
+function FloatingNotifications() {
   const repoMeta = useRepoMeta();
   const notifications = mergesToNotifications(repoMeta.recentMerges);
+
+  // A real toast, not a permanent fixture: shows once (expanded) when merge
+  // data arrives, then fades away for good after a few unhovered seconds —
+  // hovering pauses the countdown so a reader mid-read never has it yanked away.
+  const [hovered, setHovered] = useState(false);
+  const [fading, setFading] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+
+  useEffect(() => {
+    if (dismissed || hovered || notifications.length === 0) return;
+    const timer = setTimeout(() => setFading(true), 7000);
+    return () => clearTimeout(timer);
+  }, [notifications.length, hovered, dismissed]);
+
+  useEffect(() => {
+    if (!fading) return;
+    const timer = setTimeout(() => setDismissed(true), 300);
+    return () => clearTimeout(timer);
+  }, [fading]);
+
+  if (notifications.length === 0 || dismissed) return null;
+
+  return (
+    <div
+      className={`fixed bottom-4 right-4 z-50 hidden transition-opacity duration-300 sm:block ${
+        fading && !hovered ? "opacity-0" : "opacity-100"
+      }`}
+      onMouseEnter={() => {
+        setHovered(true);
+        setFading(false);
+      }}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <NotificationStack
+        items={notifications}
+        defaultExpanded
+        collapsedLabel="Recent merges"
+        emptyLabel="No recent merges"
+      />
+    </div>
+  );
+}
+
+function Hero({ theme }: { theme: "dark" | "light" }) {
+  const isDark = theme === "dark";
 
   return (
     <section
@@ -435,18 +492,8 @@ function Hero({ theme }: { theme: "dark" | "light" }) {
             </a>
           </div>
 
-          {/* Bottom-right corner stack: notifications sit like a toast,
-              pinned above the install card rather than floating into the
-              hero's main content area near the headline/photo. */}
-          <div className="absolute bottom-4 right-4 z-20 flex w-[calc(100%-2rem)] flex-col items-end gap-3 sm:bottom-6 sm:right-6 sm:w-96">
-            <div className="hidden sm:block">
-              <NotificationStack
-                items={notifications}
-                collapsedLabel="Recent merges"
-                emptyLabel="No recent merges"
-              />
-            </div>
-
+          {/* Floating install-command card, bottom-right */}
+          <div className="absolute bottom-4 right-4 z-20 w-[calc(100%-2rem)] sm:bottom-6 sm:right-6 sm:w-96">
             <div className="w-full space-y-3 rounded-[14px] border border-[#1E2127] bg-[#101216]/95 p-4 shadow-xl backdrop-blur-sm">
               <div className="flex items-center gap-2 font-mono text-[12px] text-[#6B7280]">
                 <span className="h-2 w-2 rounded-full bg-[var(--syntax-string)]" />
@@ -571,6 +618,24 @@ function Quickstart() {
 
 /* ─── Section 4: How It Works / Architecture (§2, §4, §7) ─────────────── */
 
+// Real docs/ folder taxonomy, verbatim from docs/README.md's directory
+// structure — not a forced 1:1 stage mapping (Plan and Implement don't get
+// their own folder, that's code), just the honest answer to "where does
+// this actually get written."
+const DOCS_FOLDERS: { name: string; purpose: string }[] = [
+  { name: "decisions/", purpose: "Architecture Decision Records" },
+  { name: "requirements/", purpose: "product/project requirements" },
+  { name: "design/", purpose: "distilled system and feature design" },
+  { name: "rules/", purpose: "engineering standards" },
+  { name: "guides/", purpose: "how-to / integration guides" },
+  { name: "runbooks/", purpose: "operational procedures" },
+  { name: "reports/", purpose: "dated, immutable point-in-time records" },
+  { name: "research/", purpose: "exploratory findings" },
+  { name: "knowledge/", purpose: "gotchas, learnings, hard-won insights" },
+  { name: "ai/", purpose: "AI navigation maps → source files" },
+  { name: "templates/", purpose: "document templates (kit assets)" },
+];
+
 function Architecture() {
   return (
     <section id="how-it-works" className="border-b border-[var(--border-subtle)] px-4 py-16 sm:px-6 md:py-20">
@@ -603,20 +668,32 @@ function Architecture() {
                   </div>
                   <span className="text-[var(--text-tertiary)]">Document tree</span>
                 </div>
-                <div className="overflow-x-auto p-4">
+                <DecryptReveal
+                  className="p-4"
+                  background="#101216"
+                  color="#82AAFF"
+                  radius={220}
+                  cell={9}
+                  passthrough={0.1}
+                  scramble={0.08}
+                >
+                  {/* Snake layout: top row reads left-to-right, drops straight
+                      down at the last column (dx=0, so the connector can't
+                      cross another node), bottom row continues right-to-left.
+                      Fits one frame at this panel's width — no scroll needed. */}
                   <CircuitBoard
-                    width={1060}
-                    height={110}
-                    gridSize={24}
+                    width={560}
+                    height={210}
+                    gridSize={20}
                     variant="auto"
                     nodes={[
-                      { id: "requirements", x: 60, y: 55, label: "Requirements", status: "active", size: "md", icon: <Search size={16} /> },
-                      { id: "design", x: 220, y: 55, label: "Design", status: "active", size: "md", icon: <Layers size={16} /> },
-                      { id: "plan", x: 380, y: 55, label: "Plan", status: "processing", size: "md", icon: <Workflow size={16} /> },
-                      { id: "implement", x: 540, y: 55, label: "Implement", status: "active", size: "md", icon: <Code2 size={16} /> },
-                      { id: "simplify", x: 700, y: 55, label: "Simplify", status: "active", size: "md", icon: <Sparkles size={16} /> },
-                      { id: "review", x: 860, y: 55, label: "Review", status: "processing", size: "md", icon: <ShieldCheck size={16} /> },
-                      { id: "ship", x: 1000, y: 55, label: "Ship", status: "active", size: "md", icon: <Zap size={16} /> },
+                      { id: "requirements", x: 60, y: 45, label: "Requirements", status: "active", size: "md", icon: <Search size={16} /> },
+                      { id: "design", x: 220, y: 45, label: "Design", status: "active", size: "md", icon: <Layers size={16} /> },
+                      { id: "plan", x: 380, y: 45, label: "Plan", status: "processing", size: "md", icon: <Workflow size={16} /> },
+                      { id: "implement", x: 500, y: 45, label: "Implement", status: "active", size: "md", icon: <Code2 size={16} /> },
+                      { id: "simplify", x: 500, y: 160, label: "Simplify", status: "active", size: "md", icon: <Sparkles size={16} /> },
+                      { id: "review", x: 340, y: 160, label: "Review", status: "processing", size: "md", icon: <ShieldCheck size={16} /> },
+                      { id: "ship", x: 180, y: 160, label: "Ship", status: "active", size: "md", icon: <Zap size={16} /> },
                     ]}
                     connections={[
                       { from: "requirements", to: "design", animated: true },
@@ -641,7 +718,7 @@ function Architecture() {
                     <span className="text-[var(--border-strong)]">·</span>
                     <span className="flex items-center gap-1.5 text-[#82AAFF]"><Settings2 size={13} /> cmk:rule</span>
                   </div>
-                </div>
+                </DecryptReveal>
               </div>
             </div>
           </div>
@@ -675,50 +752,144 @@ function Architecture() {
             </div>
           </div>
         </div>
+
+        {/* Where each stage's output actually lands — the diagram above shows
+            what gets built when; this answers where it's written. Real
+            folders from docs/README.md, not invented. */}
+        <div className="mt-6">
+          <div className="mb-3 flex items-center gap-3 font-mono text-[12px] text-[var(--text-tertiary)]">
+            <span className="uppercase tracking-wide">docs/ — where it all lives</span>
+            <span className="h-px flex-1 bg-[var(--border-subtle)]" />
+          </div>
+          <div className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-[var(--border-subtle)] bg-[var(--border-subtle)] sm:grid-cols-3 lg:grid-cols-4">
+            {DOCS_FOLDERS.map((f) => (
+              <div key={f.name} className="flex flex-col gap-1 bg-[var(--bg-surface)] p-3">
+                <span className="font-mono text-[12px] font-semibold text-[#82AAFF]">{f.name}</span>
+                <span className="text-[12px] leading-[1.4] text-[var(--text-tertiary)]">{f.purpose}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
+  );
+}
+
+/* ─── Section 4.5: Motivation (README.md § Motivation, verbatim) ─────── */
+
+function Motivation() {
+  return (
+    <section className="border-b border-[var(--border-subtle)] px-4 py-16 sm:px-6 md:py-20">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-12 grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-end">
+          <div className="lg:col-span-6">
+            <h2 className="text-[clamp(24px,3vw,36px)] font-semibold leading-[1.15] tracking-[-0.03em] text-[var(--text-primary)]">
+              AI agents lose context between sessions.{" "}
+              <span className="text-[var(--text-secondary)]">Structured docs are the shared state that fixes it.</span>
+            </h2>
+          </div>
+          <div className="lg:col-start-8 lg:col-span-5">
+            <p className="text-[15px] leading-[1.6] text-[var(--text-secondary)]">
+              Teams repeat requirements, re-explain decisions, and re-establish scope every time a new conversation starts — there&apos;s no shared memory between agents and humans.
+            </p>
+            <div className="mt-2 font-mono text-[13px] text-[var(--text-tertiary)]">
+              04.0 Motivation →
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-[16px] border border-[var(--border-subtle)] bg-[var(--bg-frame)] p-1">
+          <div className="rounded-[12px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 sm:p-8">
+            <p className="text-[15px] leading-[1.7] text-[var(--text-primary)]">
+              This devkit solves that by using structured documentation as the shared state. The repository becomes the single source of truth — agents read it to get up to speed, humans and agents write to it to preserve decisions, and both act on the same base of knowledge.
+            </p>
+            <div className="mt-6 border-l-2 border-[#82AAFF]/40 pl-4">
+              <p className="text-[14px] italic leading-[1.6] text-[var(--text-secondary)]">
+                This is a guideline, not a rulebook. The goal is better structure, not more files. Teams can draft in Notion, Google Docs, or conversation — but finalized, development-critical context should live in the repository.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Section 4.6: Marquee Divider (real copy, no placeholder phrases) ── */
+
+function MarqueeDivider() {
+  return (
+    <div className="h-[110px] w-full overflow-hidden border-b border-[var(--border-subtle)] bg-[#0A0B0D]">
+      <BendingMarquee
+        items={[
+          "documentation-first",
+          "vendor-neutral",
+          "worktree-isolated",
+          "free & open source",
+          "the SDLC is a flow of documents",
+        ]}
+        separator="·"
+        markSway={0}
+        panelHeight={110}
+        bend={30}
+        depth={-160}
+        perspective={700}
+        speed={24}
+        fontSize={16}
+        fontWeight={600}
+        letterSpacing={0.5}
+        itemGap={28}
+        bandPadding={12}
+        color="#82AAFF"
+        bandColor="#0A0B0D"
+        className="h-full w-full"
+      />
+    </div>
   );
 }
 
 /* ─── Section 5: Feature Grid (§2, §9) ──────────────────────────────── */
 
 function FeatureGrid() {
+  // Every card names a real skill (skills/<id>/SKILL.md) and a real invocation —
+  // "Skills trigger from natural language ... slash commands like /cmk:requirements
+  // work too" (README.md § Quick Start). No fabricated CLI, paths, or stats.
   const features = [
     {
       icon: GitBranch,
       title: "Worktree Isolation",
-      description: "Run parallel agent efforts in isolated git worktrees without state collision.",
-      code: "cmk local-stack --worktree-safe",
+      description: "Worktree-isolated local dev stacks — no port collisions or cross-worktree contamination, for humans, agents, and CI alike.",
+      code: "/cmk:local-stack",
     },
     {
       icon: ShieldCheck,
       title: "Adversarial Review",
-      description: "Automated multi-lens review pass checks for security, edge-cases, and performance.",
-      code: "cmk delivery-review --adversarial",
+      description: "Multi-lens review — correctness, security, edge-cases, spec compliance — with adversarial verification before anything ships.",
+      code: "/cmk:delivery-review",
     },
     {
       icon: Server,
       title: "Checked-In MCP Config",
-      description: "Repository-scoped Model Context Protocol configuration checked directly into git.",
-      code: ".mcp.json -> vendor configuration",
+      description: "One checked-in .mcp.json every clone and agent shares, wired per-vendor, secrets kept out of the repo.",
+      code: "/cmk:mcp-config",
     },
     {
       icon: Code2,
       title: "Hierarchical AI Docs",
-      description: "Progressive disclosure docs map code architecture into dense markdown for AI context.",
-      code: "docs/ai/MAP.md -> 70% token savings",
+      description: "Progressive-disclosure docs under docs/ai/ that point an agent to the right source file instead of duplicating it.",
+      code: "/cmk:codebase-docs",
     },
     {
       icon: Workflow,
       title: "Tracker Reconciliation",
-      description: "Automatic state updates across Linear, GitHub Issues, Jira, and local git branches.",
-      code: "cmk sync --tracker linear",
+      description: "One tracker-neutral reconciliation loop — Linear, GitHub Issues, or another — kept current at every phase boundary, not just at ship time.",
+      code: "/cmk:delivery-workflow",
     },
     {
       icon: Zap,
-      title: "gRPC Sui Transport",
-      description: "2026-compliant Sui full node integration replacing deprecated JSON-RPC.",
-      code: "cmk sui-sdk --transport grpc",
+      title: "Sui gRPC Guidance",
+      description: "gRPC-first guidance for talking to a Sui full node — JSON-RPC was disabled on Foundation mainnet in 2026.",
+      code: "/cmk:sui-sdk",
     },
   ];
 
@@ -737,7 +908,7 @@ function FeatureGrid() {
               No marketing buzzwords or hand-waving claims. High-density features designed specifically for software engineers.
             </p>
             <div className="mt-2 font-mono text-[13px] text-[var(--text-tertiary)]">
-              04.0 Capabilities →
+              05.0 Capabilities →
             </div>
           </div>
         </div>
@@ -781,10 +952,10 @@ function DiffDemo() {
           </div>
           <div className="lg:col-start-8 lg:col-span-5">
             <p className="text-[15px] leading-[1.6] text-[var(--text-secondary)]">
-              Phase 3b automatically runs a simplification pass to reduce diff churn, unify variable conventions, and eliminate redundant logic.
+              Phase 3b runs by default, before review — four angles only: Reuse, Simplification, Efficiency, Altitude. No new features, no behavior changes.
             </p>
             <div className="mt-2 font-mono text-[13px] text-[var(--text-tertiary)]">
-              05.0 Quality →
+              06.0 Quality →
             </div>
           </div>
         </div>
@@ -875,7 +1046,7 @@ function Benchmarks({ skills, categories }: { skills: Skill[]; categories: Categ
               — nothing else.
             </p>
             <div className="mt-2 font-mono text-[13px] text-[var(--text-tertiary)]">
-              06.0 Repository →
+              07.0 Repository →
             </div>
           </div>
         </div>
@@ -893,7 +1064,7 @@ function Benchmarks({ skills, categories }: { skills: Skill[]; categories: Categ
           ))}
         </div>
 
-        <div className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-[var(--border-subtle)] bg-[var(--border-subtle)] sm:grid-cols-3 lg:grid-cols-6">
+        <div className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-[var(--border-subtle)] bg-[var(--border-subtle)] sm:grid-cols-4 lg:grid-cols-7">
           {categoryCounts.map((cat) => (
             <a
               key={cat.id}
@@ -1079,8 +1250,8 @@ function SkillCatalog({
 
                         {/* 1-Click Copy Skill Command */}
                         <CopyButton
-                          text={`npx skills add CommandOSSLabs/ai-devkit --skill ${skill.id}`}
-                          title={`Copy skill command: npx skills add CommandOSSLabs/ai-devkit --skill ${skill.id}`}
+                          text={`npx skills add CommandOSSLabs/ai-devkit --skill ${skill.name}`}
+                          title={`Copy skill command: npx skills add CommandOSSLabs/ai-devkit --skill ${skill.name}`}
                           className="rounded p-1 text-[var(--text-tertiary)] hover:bg-[var(--border-subtle)] hover:text-[#82AAFF]"
                         />
 
@@ -1210,9 +1381,9 @@ function SkillCatalog({
                       <div className="flex items-center justify-between rounded border border-[var(--border-subtle)] bg-[var(--bg-base)] px-3 py-2 text-[var(--text-primary)]">
                         <span>
                           <span className="select-none text-[var(--text-tertiary)]">$ </span>
-                          <span>npx skills add CommandOSSLabs/ai-devkit --skill {activeDetailSkill.id}</span>
+                          <span>npx skills add CommandOSSLabs/ai-devkit --skill {activeDetailSkill.name}</span>
                         </span>
-                        <CopyButton text={`npx skills add CommandOSSLabs/ai-devkit --skill ${activeDetailSkill.id}`} />
+                        <CopyButton text={`npx skills add CommandOSSLabs/ai-devkit --skill ${activeDetailSkill.name}`} />
                       </div>
                     </li>
                   </ul>
@@ -1234,10 +1405,12 @@ function SkillCatalog({
                           : "+ Add to Selection"}
                       </button>
 
-                      {/* 1-Click Copy Only This Skill */}
+                      {/* "skills use" prints the skill's prompt to stdout for piping into
+                          any agent — no install, no repo changes. Distinct from the Install
+                          Command above (which was duplicated here before this fix). */}
                       <CopyButton
-                        text={`npx skills add CommandOSSLabs/ai-devkit --skill ${activeDetailSkill.id}`}
-                        label="Copy Skill Command"
+                        text={`npx skills use CommandOSSLabs/ai-devkit --skill ${activeDetailSkill.name} | claude`}
+                        label="Try Without Installing"
                         className="rounded-lg border border-[#82AAFF]/40 bg-[#82AAFF]/10 px-4 py-2 font-mono text-[13px] text-[#82AAFF] hover:bg-[#82AAFF]/20"
                       />
                     </div>
@@ -1359,7 +1532,7 @@ const FOOTER_COLUMNS: { title: string; links: { label: string; href: string }[] 
 function Footer() {
   const repoMeta = useRepoMeta();
   return (
-    <footer className="w-full bg-[var(--bg-base)] px-4 py-12 sm:px-6">
+    <footer className="w-full px-4 py-12 sm:px-6">
       <div className="mx-auto flex w-full max-w-7xl flex-col items-center">
         <div className="relative w-full overflow-hidden rounded-[16px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-8 sm:p-12">
           <div className="pointer-events-none absolute inset-0 flex flex-row items-end justify-center">
@@ -1516,6 +1689,8 @@ export default function TerminalDarkLandingPage({ skills }: { skills: RealSkill[
           <Hero theme={theme} />
           <Quickstart />
           <Architecture />
+          <Motivation />
+          <MarqueeDivider />
           <FeatureGrid />
           <DiffDemo />
           <Benchmarks skills={skills} categories={categories} />
@@ -1529,6 +1704,8 @@ export default function TerminalDarkLandingPage({ skills }: { skills: RealSkill[
         </main>
         <Footer />
       </div>
+
+      <FloatingNotifications />
     </div>
   );
 }
