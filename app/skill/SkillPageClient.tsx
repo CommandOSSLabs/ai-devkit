@@ -3,6 +3,7 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { Drawer } from "vaul";
 import { GlowingWave } from "@/components/GlowingWave";
+import { NotificationStack, type NotificationStackItem } from "@/components/motion/notification-stack";
 import { type RealSkill, CATEGORY_LABELS } from "@/lib/skill-types";
 import {
   Check,
@@ -21,6 +22,7 @@ import {
   ArrowRight,
   Search,
   Sparkles,
+  FileCode2,
   Server,
   Workflow,
   Info,
@@ -334,6 +336,27 @@ function CornerNotch({ className, size = 40 }: { className?: string; size?: numb
   );
 }
 
+const HERO_NOTIFICATIONS: NotificationStackItem[] = [
+  {
+    id: "deploy",
+    title: "Preview deploy succeeded",
+    description: "12s · feat/skills-landing-page",
+    trailing: <Zap size={13} className="text-[#C3E88D]" />,
+  },
+  {
+    id: "skill",
+    title: "New skill: cmk:test-resources",
+    description: "1m · synced from skills/",
+    trailing: <RefreshCw size={13} className="text-[#82AAFF]" />,
+  },
+  {
+    id: "logs",
+    title: "New logs available",
+    description: "4m · delivery-pipeline run",
+    trailing: <FileCode2 size={13} className="text-[#9BA1AC]" />,
+  },
+];
+
 function Hero({ theme }: { theme: "dark" | "light" }) {
   const isDark = theme === "dark";
 
@@ -345,39 +368,18 @@ function Hero({ theme }: { theme: "dark" | "light" }) {
     >
       <div className="mx-auto max-w-7xl">
         <div className="relative min-h-[600px] overflow-hidden rounded-[24px] border border-[#1E2127] bg-[#0D0E11]">
-          {/* The wave + real code stand in for Hero12's photo — vivid and mostly
-              undimmed, so the notch-cut tabs actually read against it, the way
-              the reference reads against a bright interior photo. */}
+          {/* Real banner photo as the hero visual, not decorative code — a strong
+              bottom-to-top gradient guarantees the floating UI stays legible
+              regardless of what's in the image. */}
           <div className="absolute inset-0 z-0">
-            <GlowingWave
-              className="h-full w-full"
-              swell={0.22}
-              glow={0.75}
-              richness={0.65}
-              colorFrequency={6}
-              color="#0d2666"
-              hotColor="#ff6633"
-              backgroundColor="#0a0a0a"
+            {/* eslint-disable-next-line @next/next/no-img-element -- external CDN image, no next/image optimization needed for a single hero background */}
+            <img
+              src="https://pbs.twimg.com/profile_banners/1968527134512791554/1758896982/1080x360"
+              alt=""
+              className="h-full w-full object-cover"
             />
-            <pre className="pointer-events-none absolute inset-0 overflow-hidden p-6 font-mono text-[12px] leading-[1.7] text-[#E6E8EB]/40 sm:p-8 sm:text-[13px]">
-              <code>
-                <span className="text-[#C792EA]">import</span> {"{ createPipeline }"} <span className="text-[#C792EA]">from</span> <span className="text-[#C3E88D]">{'"@ai-devkit/pipeline"'}</span>;{"\n"}
-                <span className="text-[#C792EA]">import</span> {"{ deliveryIntake, deliveryReview }"} <span className="text-[#C792EA]">from</span> <span className="text-[#C3E88D]">{'"@ai-devkit/skills"'}</span>;{"\n\n"}
-                <span className="text-[#5C6370]">{"// Initialize deterministic multi-agent pipeline"}</span>{"\n"}
-                <span className="text-[#C792EA]">export const</span> <span className="text-[#82AAFF]">pipeline</span> = <span className="text-[#82AAFF]">createPipeline</span>({"{"}{"\n"}
-                {"  "}<span className="text-[#FFCB6B]">tracker</span>: <span className="text-[#C3E88D]">{'"linear"'}</span>,{"\n"}
-                {"  "}<span className="text-[#FFCB6B]">worktreeIsolated</span>: <span className="text-[#F78C6C]">true</span>,{"\n"}
-                {"  "}<span className="text-[#FFCB6B]">skills</span>: [{"\n"}
-                {"    "}<span className="text-[#82AAFF]">deliveryIntake</span>({"{"} <span className="text-[#FFCB6B]">autoBranch</span>: <span className="text-[#F78C6C]">true</span> {"}"}),{"\n"}
-                {"    "}<span className="text-[#82AAFF]">deliveryReview</span>({"{"} <span className="text-[#FFCB6B]">adversarialPass</span>: <span className="text-[#F78C6C]">true</span> {"}"}),{"\n"}
-                {"  "}],{"\n"}
-                {"}"});{"\n\n"}
-                <span className="text-[#C792EA]">const</span> result = <span className="text-[#C792EA]">await</span> <span className="text-[#82AAFF]">pipeline</span>.<span className="text-[#82AAFF]">execute</span>(<span className="text-[#C3E88D]">{'"TICKET-402"'}</span>);{"\n"}
-                <span className="text-[#82AAFF]">console</span>.<span className="text-[#82AAFF]">log</span>(result.status); <span className="text-[#5C6370]">{'// "SHIPPED"'}</span>
-              </code>
-            </pre>
-            {/* Light vignette only — keeps corners readable without flattening the wave */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0B0D]/60 via-transparent to-[#0A0B0D]/20" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0B0D] via-[#0A0B0D]/55 to-[#0A0B0D]/10" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0A0B0D]/70 via-transparent to-[#0A0B0D]/40" />
           </div>
 
           {/* Stacked notch-cut headline tabs, top-left — Hero12-scale type */}
@@ -409,8 +411,13 @@ function Hero({ theme }: { theme: "dark" | "light" }) {
             </a>
           </div>
 
+          {/* Notification stack, bottom-left — redeploys / new skills / new logs */}
+          <div className="absolute bottom-4 left-4 z-20 sm:bottom-6 sm:left-6">
+            <NotificationStack items={HERO_NOTIFICATIONS} />
+          </div>
+
           {/* Floating install-command card, bottom-right */}
-          <div className="absolute bottom-4 left-4 right-4 z-20 sm:bottom-6 sm:left-auto sm:right-6 sm:w-96">
+          <div className="absolute bottom-4 right-4 z-20 w-[calc(100%-2rem)] sm:bottom-6 sm:right-6 sm:w-96">
             <div className="space-y-3 rounded-[14px] border border-[#1E2127] bg-[#101216]/95 p-4 shadow-xl backdrop-blur-sm">
               <div className="flex items-center gap-2 font-mono text-[12px] text-[#6B7280]">
                 <span className="h-2 w-2 rounded-full bg-[#C3E88D]" />
