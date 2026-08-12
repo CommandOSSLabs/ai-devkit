@@ -18,7 +18,9 @@ Thumbs.db
 node_modules/
 dist/
 build/
+.next/
 .pnpm-store/
+*.tsbuildinfo
 
 # Python
 __pycache__/
