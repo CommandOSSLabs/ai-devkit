@@ -69,7 +69,7 @@ export function NotificationStack({
       onFocus={() => setExpanded(true)}
       onBlur={() => setExpanded(false)}
       onClick={() => setExpanded(!isExpanded)}
-      className={cn("relative w-72 cursor-pointer select-none outline-none", className, classNames.root)}
+      className={cn("relative w-60 cursor-pointer select-none outline-none", className, classNames.root)}
     >
       <div
         className={cn(

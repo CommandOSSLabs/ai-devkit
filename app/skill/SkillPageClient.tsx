@@ -23,7 +23,6 @@ import {
   ArrowRight,
   Search,
   Sparkles,
-  FileCode2,
   Server,
   Workflow,
   Info,
@@ -120,12 +119,28 @@ function formatStarCount(count: number): string {
   return `${(count / 1000).toFixed(1)}k`;
 }
 
+type MergedPR = {
+  number: number;
+  title: string;
+  mergedAt: string;
+};
+
 type RepoMeta = {
   stars: number | null;
   license: string | null;
   pushedAt: string | null;
   commitSha: string | null;
   npmVersion: string | null;
+  recentMerges: MergedPR[];
+};
+
+const EMPTY_REPO_META: RepoMeta = {
+  stars: null,
+  license: null,
+  pushedAt: null,
+  commitSha: null,
+  npmVersion: null,
+  recentMerges: [],
 };
 
 let repoMetaCache: RepoMeta | null = null;
@@ -139,30 +154,39 @@ function fetchRepoMeta(): Promise<RepoMeta> {
     fetch("https://api.github.com/repos/CommandOSSLabs/ai-devkit").then((r) => (r.ok ? r.json() : null)),
     fetch("https://api.github.com/repos/CommandOSSLabs/ai-devkit/commits/main").then((r) => (r.ok ? r.json() : null)),
     fetch("https://registry.npmjs.org/ai-devkit").then((r) => (r.ok ? r.json() : null)),
+    fetch("https://api.github.com/repos/CommandOSSLabs/ai-devkit/pulls?state=closed&sort=updated&direction=desc&per_page=8").then((r) =>
+      r.ok ? r.json() : null
+    ),
   ])
-    .then(([repo, commit, npm]) => {
+    .then(([repo, commit, npm, pulls]) => {
+      const recentMerges: MergedPR[] = Array.isArray(pulls)
+        ? pulls
+            .filter((pr) => pr?.merged_at)
+            .slice(0, 3)
+            .map((pr) => ({ number: pr.number, title: pr.title, mergedAt: pr.merged_at }))
+        : [];
+
       const meta: RepoMeta = {
         stars: repo?.stargazers_count ?? null,
         license: repo?.license?.spdx_id ?? null,
         pushedAt: repo?.pushed_at ?? null,
         commitSha: commit?.sha ? String(commit.sha).slice(0, 7) : null,
         npmVersion: npm?.["dist-tags"]?.latest ?? null,
+        recentMerges,
       };
       repoMetaCache = meta;
       return meta;
     })
     .catch(() => {
-      const meta: RepoMeta = { stars: null, license: null, pushedAt: null, commitSha: null, npmVersion: null };
-      return meta;
+      repoMetaCache = EMPTY_REPO_META;
+      return EMPTY_REPO_META;
     });
 
   return repoMetaPromise;
 }
 
 function useRepoMeta(): RepoMeta {
-  const [meta, setMeta] = useState<RepoMeta>(
-    () => repoMetaCache ?? { stars: null, license: null, pushedAt: null, commitSha: null, npmVersion: null }
-  );
+  const [meta, setMeta] = useState<RepoMeta>(() => repoMetaCache ?? EMPTY_REPO_META);
 
   useEffect(() => {
     let cancelled = false;
@@ -206,12 +230,12 @@ function Nav({
             >
               <Terminal size={14} className="text-[#82AAFF]" />
             </div>
-            <span className="font-pixel text-[14px] font-semibold">
+            <span className="whitespace-nowrap font-pixel text-[14px] font-semibold">
               ai-devkit
             </span>
           </a>
           <span
-            className={`rounded border px-1.5 py-0.5 font-mono text-[11px] ${
+            className={`hidden rounded border px-1.5 py-0.5 font-mono text-[11px] sm:inline-block ${
               isDark
                 ? "border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-tertiary)]"
                 : "border-[#E2E8F0] bg-[#F1F5F9] text-[#64748B]"
@@ -221,8 +245,8 @@ function Nav({
           </span>
         </div>
 
-        {/* Links */}
-        <nav className="hidden items-center gap-6 md:flex">
+        {/* Links — lg: not md:, tablet doesn't have room for brand + version + 5 links + all actions in one row */}
+        <nav className="hidden items-center gap-6 lg:flex">
           <a
             href="#quickstart"
             className={`text-[13px] transition-colors ${
@@ -337,29 +361,19 @@ function CornerNotch({ className, size = 40 }: { className?: string; size?: numb
   );
 }
 
-const HERO_NOTIFICATIONS: NotificationStackItem[] = [
-  {
-    id: "deploy",
-    title: "Preview deploy succeeded",
-    description: "12s · feat/skills-landing-page",
-    trailing: <Zap size={13} className="text-[#C3E88D]" />,
-  },
-  {
-    id: "skill",
-    title: "New skill: cmk:test-resources",
-    description: "1m · synced from skills/",
-    trailing: <RefreshCw size={13} className="text-[#82AAFF]" />,
-  },
-  {
-    id: "logs",
-    title: "New logs available",
-    description: "4m · delivery-pipeline run",
-    trailing: <FileCode2 size={13} className="text-[#9BA1AC]" />,
-  },
-];
+function mergesToNotifications(merges: MergedPR[]): NotificationStackItem[] {
+  return merges.map((pr) => ({
+    id: String(pr.number),
+    title: pr.title,
+    description: `${timeAgo(pr.mergedAt)} · #${pr.number} merged`,
+    trailing: <GitBranch size={13} className="text-[#C3E88D]" />,
+  }));
+}
 
 function Hero({ theme }: { theme: "dark" | "light" }) {
   const isDark = theme === "dark";
+  const repoMeta = useRepoMeta();
+  const notifications = mergesToNotifications(repoMeta.recentMerges);
 
   return (
     <section
@@ -368,7 +382,7 @@ function Hero({ theme }: { theme: "dark" | "light" }) {
       }`}
     >
       <div className="mx-auto max-w-7xl">
-        <div className="relative min-h-[600px] overflow-hidden rounded-[24px] border border-[#1E2127] bg-[#0D0E11]">
+        <div className="relative min-h-[520px] overflow-hidden rounded-[24px] border border-[#1E2127] bg-[#0D0E11] sm:min-h-[600px]">
           {/* Real banner photo as the hero visual, not decorative code — a strong
               bottom-to-top gradient guarantees the floating UI stays legible
               regardless of what's in the image. */}
@@ -383,34 +397,46 @@ function Hero({ theme }: { theme: "dark" | "light" }) {
             <div className="absolute inset-0 bg-gradient-to-r from-[#0A0B0D]/70 via-transparent to-[#0A0B0D]/40" />
           </div>
 
-          {/* Stacked notch-cut headline tabs, top-left — Hero12-scale type */}
-          <div className="pointer-events-none absolute left-0 top-0 z-10 flex w-full max-w-3xl flex-col items-start">
-            <div className="pointer-events-auto relative w-fit rounded-br-[36px] bg-[#0A0B0D] p-4">
-              <h1 className="whitespace-nowrap text-[36px] font-semibold leading-[1.05] tracking-[-0.03em] text-[#E6E8EB] sm:text-[56px] lg:text-[68px]">
+          {/* Stacked notch-cut headline tabs, top-left — Hero12-scale type.
+              Semi-transparent + blurred so the photo still bleeds through,
+              not a solid card blocking it. Wraps and shrinks below lg: so it
+              can't overflow into the CTA/notification cluster on the right —
+              tablet (~768px) doesn't have room for the nowrap desktop size. */}
+          <div className="pointer-events-none absolute left-0 top-0 z-10 flex w-full max-w-3xl flex-col items-start pr-20 lg:pr-0">
+            <div className="pointer-events-auto relative w-fit max-w-full rounded-br-[24px] bg-[#0A0B0D]/60 p-3 backdrop-blur-md lg:rounded-br-[36px] lg:p-4">
+              <h1 className="text-[24px] font-semibold leading-[1.1] tracking-[-0.03em] text-[#E6E8EB] sm:text-[34px] lg:whitespace-nowrap lg:text-[56px] lg:leading-[1.05] xl:text-[68px]">
                 Evolvable agent skills.
               </h1>
-              <CornerNotch size={40} className="absolute right-[-40px] top-0 rotate-180 text-[#0A0B0D]" />
+              <CornerNotch size={40} className="absolute right-[-40px] top-0 hidden rotate-180 text-[#0A0B0D]/60 lg:block" />
             </div>
 
-            <div className="pointer-events-auto relative w-fit rounded-br-[36px] bg-[#0A0B0D] p-4">
-              <h1 className="whitespace-nowrap text-[30px] font-semibold leading-[1.05] tracking-[-0.03em] text-[#9BA1AC] sm:text-[44px] lg:text-[52px]">
+            <div className="pointer-events-auto relative w-fit max-w-full rounded-br-[24px] bg-[#0A0B0D]/60 p-3 backdrop-blur-md lg:rounded-br-[36px] lg:p-4">
+              <h1 className="text-[20px] font-semibold leading-[1.1] tracking-[-0.03em] text-[#9BA1AC] sm:text-[28px] lg:whitespace-nowrap lg:text-[44px] lg:leading-[1.05] xl:text-[52px]">
                 For the full SDLC.
               </h1>
-              <CornerNotch size={40} className="absolute right-[-40px] top-0 rotate-180 text-[#0A0B0D]" />
-              <CornerNotch size={40} className="absolute bottom-[-40px] left-0 rotate-180 text-[#0A0B0D]" />
+              <CornerNotch size={40} className="absolute right-[-40px] top-0 hidden rotate-180 text-[#0A0B0D]/60 lg:block" />
+              <CornerNotch size={40} className="absolute bottom-[-40px] left-0 hidden rotate-180 text-[#0A0B0D]/60 lg:block" />
             </div>
           </div>
 
-          {/* Corner CTA + notification stack, top-right */}
-          <div className="absolute right-4 top-4 z-20 flex flex-col items-end gap-3 sm:right-6 sm:top-6">
+          {/* Corner CTA + notification stack, top-right. Notifications hide
+              below sm: to avoid colliding with the wrapped headline text —
+              the CTA alone is the priority on small screens. */}
+          <div className="absolute right-3 top-3 z-20 flex flex-col items-end gap-3 sm:right-6 sm:top-6">
             <a
               href="#quickstart"
-              className="inline-flex items-center gap-2 rounded-lg bg-[#E6E8EB] px-4 py-2.5 text-[13px] font-medium text-[#0A0B0D] shadow-lg transition-colors hover:bg-white"
+              className="inline-flex items-center gap-2 rounded-lg bg-[#E6E8EB] px-3 py-2 text-[12px] font-medium text-[#0A0B0D] shadow-lg transition-colors hover:bg-white sm:px-4 sm:py-2.5 sm:text-[13px]"
             >
               <span>Get Started</span>
               <ArrowRight size={14} />
             </a>
-            <NotificationStack items={HERO_NOTIFICATIONS} />
+            <div className="hidden sm:block">
+              <NotificationStack
+                items={notifications}
+                collapsedLabel="Recent merges"
+                emptyLabel="No recent merges"
+              />
+            </div>
           </div>
 
           {/* Floating install-command card, bottom-right */}
