@@ -98,7 +98,7 @@ function CopyButton({
       }`}
     >
       {copied ? (
-        <span className="flex items-center gap-1 font-mono text-[11px] text-[#C3E88D]">
+        <span className="flex items-center gap-1 font-mono text-[11px] text-[var(--syntax-string)]">
           <Check size={13} />
           <span>{label ? "Copied!" : "Copied"}</span>
         </span>
@@ -423,10 +423,9 @@ function Hero({ theme }: { theme: "dark" | "light" }) {
             </div>
           </div>
 
-          {/* Corner CTA + notification stack, top-right. Notifications hide
-              below sm: to avoid colliding with the wrapped headline text —
-              the CTA alone is the priority on small screens. */}
-          <div className="absolute right-3 top-3 z-20 flex flex-col items-end gap-3 sm:right-6 sm:top-6">
+          {/* Corner CTA, top-right — alone, nothing stacked under it in the
+              main content flow. */}
+          <div className="absolute right-3 top-3 z-20 sm:right-6 sm:top-6">
             <a
               href="#quickstart"
               className="inline-flex items-center gap-2 rounded-lg bg-[#E6E8EB] px-3 py-2 text-[12px] font-medium text-[#0A0B0D] shadow-lg transition-colors hover:bg-white sm:px-4 sm:py-2.5 sm:text-[13px]"
@@ -434,6 +433,12 @@ function Hero({ theme }: { theme: "dark" | "light" }) {
               <span>Get Started</span>
               <ArrowRight size={14} />
             </a>
+          </div>
+
+          {/* Bottom-right corner stack: notifications sit like a toast,
+              pinned above the install card rather than floating into the
+              hero's main content area near the headline/photo. */}
+          <div className="absolute bottom-4 right-4 z-20 flex w-[calc(100%-2rem)] flex-col items-end gap-3 sm:bottom-6 sm:right-6 sm:w-96">
             <div className="hidden sm:block">
               <NotificationStack
                 items={notifications}
@@ -441,13 +446,10 @@ function Hero({ theme }: { theme: "dark" | "light" }) {
                 emptyLabel="No recent merges"
               />
             </div>
-          </div>
 
-          {/* Floating install-command card, bottom-right */}
-          <div className="absolute bottom-4 right-4 z-20 w-[calc(100%-2rem)] sm:bottom-6 sm:right-6 sm:w-96">
-            <div className="space-y-3 rounded-[14px] border border-[#1E2127] bg-[#101216]/95 p-4 shadow-xl backdrop-blur-sm">
+            <div className="w-full space-y-3 rounded-[14px] border border-[#1E2127] bg-[#101216]/95 p-4 shadow-xl backdrop-blur-sm">
               <div className="flex items-center gap-2 font-mono text-[12px] text-[#6B7280]">
-                <span className="h-2 w-2 rounded-full bg-[#C3E88D]" />
+                <span className="h-2 w-2 rounded-full bg-[var(--syntax-string)]" />
                 <span>Documentation-first agent skills</span>
               </div>
 
@@ -514,7 +516,7 @@ function Quickstart() {
                   Ask your agent to follow <code className="text-[#82AAFF]">cmk:agent-vendors</code>, then <code className="text-[#82AAFF]">cmk:sync</code> in baseline mode. Adapt freely — upgrades merge at the meaning level, not overwrite.
                 </p>
               </div>
-              <div className="rounded border border-[var(--border-subtle)] bg-[var(--bg-base)] p-3 font-mono text-[13px] text-[#C3E88D]">
+              <div className="rounded border border-[var(--border-subtle)] bg-[var(--bg-base)] p-3 font-mono text-[13px] text-[var(--syntax-string)]">
                 <span>{'"Vendor these skills into my repo"'}</span>
               </div>
             </div>
@@ -603,21 +605,18 @@ function Architecture() {
                 </div>
                 <div className="overflow-x-auto p-4">
                   <CircuitBoard
-                    width={560}
-                    height={300}
+                    width={1060}
+                    height={110}
+                    gridSize={24}
                     variant="auto"
                     nodes={[
-                      { id: "requirements", x: 60, y: 50, label: "Requirements", status: "active", size: "sm" },
-                      { id: "design", x: 220, y: 50, label: "Design", status: "active", size: "sm" },
-                      { id: "plan", x: 380, y: 50, label: "Plan", status: "processing", size: "sm" },
-                      { id: "implement", x: 60, y: 170, label: "Implement", status: "active", size: "sm" },
-                      { id: "simplify", x: 220, y: 170, label: "Simplify", status: "active", size: "sm" },
-                      { id: "review", x: 380, y: 170, label: "Review", status: "processing", size: "sm" },
-                      { id: "ship", x: 500, y: 170, label: "Ship", status: "active", size: "sm" },
-                      { id: "adr", x: 100, y: 260, label: "cmk:adr", status: "inactive", size: "sm" },
-                      { id: "glossary", x: 220, y: 260, label: "cmk:glossary", status: "inactive", size: "sm" },
-                      { id: "learn", x: 360, y: 260, label: "cmk:learn", status: "inactive", size: "sm" },
-                      { id: "rule", x: 480, y: 260, label: "cmk:rule", status: "inactive", size: "sm" },
+                      { id: "requirements", x: 60, y: 55, label: "Requirements", status: "active", size: "md", icon: <Search size={16} /> },
+                      { id: "design", x: 220, y: 55, label: "Design", status: "active", size: "md", icon: <Layers size={16} /> },
+                      { id: "plan", x: 380, y: 55, label: "Plan", status: "processing", size: "md", icon: <Workflow size={16} /> },
+                      { id: "implement", x: 540, y: 55, label: "Implement", status: "active", size: "md", icon: <Code2 size={16} /> },
+                      { id: "simplify", x: 700, y: 55, label: "Simplify", status: "active", size: "md", icon: <Sparkles size={16} /> },
+                      { id: "review", x: 860, y: 55, label: "Review", status: "processing", size: "md", icon: <ShieldCheck size={16} /> },
+                      { id: "ship", x: 1000, y: 55, label: "Ship", status: "active", size: "md", icon: <Zap size={16} /> },
                     ]}
                     connections={[
                       { from: "requirements", to: "design", animated: true },
@@ -628,6 +627,20 @@ function Architecture() {
                       { from: "review", to: "ship", animated: true },
                     ]}
                   />
+
+                  {/* Cross-cutting skills: a caption, not orphaned circuit nodes —
+                      they touch every stage rather than sitting at one of them. */}
+                  <div className="mt-8 flex items-center gap-3 whitespace-nowrap font-mono text-[12px] text-[var(--text-tertiary)]">
+                    <span className="uppercase tracking-wide">Cross-cutting</span>
+                    <span className="h-px flex-1 bg-[var(--border-subtle)]" />
+                    <span className="flex items-center gap-1.5 text-[#82AAFF]"><Info size={13} /> cmk:adr</span>
+                    <span className="text-[var(--border-strong)]">·</span>
+                    <span className="flex items-center gap-1.5 text-[#82AAFF]"><BookOpen size={13} /> cmk:glossary</span>
+                    <span className="text-[var(--border-strong)]">·</span>
+                    <span className="flex items-center gap-1.5 text-[#82AAFF]"><Star size={13} /> cmk:learn</span>
+                    <span className="text-[var(--border-strong)]">·</span>
+                    <span className="flex items-center gap-1.5 text-[#82AAFF]"><Settings2 size={13} /> cmk:rule</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -638,7 +651,7 @@ function Architecture() {
               <div className="overflow-hidden rounded-[12px] border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
                 <div className="flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-base)] px-4 py-2.5 font-mono text-[13px]">
                   <div className="flex items-center gap-2">
-                    <Terminal size={14} className="text-[#C3E88D]" />
+                    <Terminal size={14} className="text-[var(--syntax-string)]" />
                     <span className="text-[var(--text-secondary)]">agent session</span>
                   </div>
                   <span className="text-[var(--text-tertiary)]">skills trigger on intent, not flags</span>
@@ -654,7 +667,7 @@ function Architecture() {
                     <div className="text-[var(--text-secondary)]">[2/5] SPEC        Generating spec under docs/specs/TICKET-402.md... done</div>
                     <div className="text-[var(--text-secondary)]">[3/5] IMPLEMENT   Applying changes to src/pipeline/engine.ts... done</div>
                     <div className="text-[var(--text-secondary)]">[4/5] REVIEW      Adversarial verification pass... 0 flaws detected</div>
-                    <div className="text-[#C3E88D]">[5/5] SHIP        PR opened for review</div>
+                    <div className="text-[var(--syntax-string)]">[5/5] SHIP        PR opened for review</div>
                     <div className="mt-2 text-[var(--text-tertiary)]">Illustrative — actual step count and timing vary by task.</div>
                   </code>
                 </pre>
@@ -797,12 +810,12 @@ function DiffDemo() {
                   <span className="w-8 select-none pr-4 text-right text-[#F07178]/50">44</span>
                   <span>-  if (!result) return false;</span>
                 </div>
-                <div className="flex bg-[#C3E88D]/10 text-[#C3E88D] -mx-4 px-4">
-                  <span className="w-8 select-none pr-4 text-right text-[#C3E88D]/50">42</span>
+                <div className="flex bg-[var(--syntax-string)]/10 text-[var(--syntax-string)] -mx-4 px-4">
+                  <span className="w-8 select-none pr-4 text-right text-[var(--syntax-string)]/50">42</span>
                   <span>+  const result = await executeDeterministicFlow(task);</span>
                 </div>
-                <div className="flex bg-[#C3E88D]/10 text-[#C3E88D] -mx-4 px-4">
-                  <span className="w-8 select-none pr-4 text-right text-[#C3E88D]/50">43</span>
+                <div className="flex bg-[var(--syntax-string)]/10 text-[var(--syntax-string)] -mx-4 px-4">
+                  <span className="w-8 select-none pr-4 text-right text-[var(--syntax-string)]/50">43</span>
                   <span>{'+  return result.status === "SUCCESS";'}</span>
                 </div>
               </code>
@@ -850,7 +863,7 @@ function Benchmarks({ skills, categories }: { skills: Skill[]; categories: Categ
           <div className="lg:col-span-6">
             <h2 className="text-[clamp(24px,3vw,36px)] font-semibold leading-[1.15] tracking-[-0.03em] text-[var(--text-primary)]">
               Live from the repository.{" "}
-              <span className="text-[var(--text-secondary)]">Fetched from GitHub and npm at page load — no invented numbers.</span>
+              <span className="text-[var(--text-secondary)]">Fetched from GitHub at page load — no invented numbers.</span>
             </h2>
           </div>
           <div className="lg:col-start-8 lg:col-span-5">
@@ -1155,7 +1168,7 @@ function SkillCatalog({
                         <div className="mb-1.5 text-[11px] font-semibold text-[var(--text-tertiary)] uppercase">
                           Natural Language Triggers
                         </div>
-                        <div className="flex flex-wrap items-center gap-1.5 text-[12px] text-[#C3E88D]">
+                        <div className="flex flex-wrap items-center gap-1.5 text-[12px] text-[var(--syntax-string)]">
                           {activeDetailSkill.triggers.map((t) => (
                             <span key={t} className="rounded border border-[var(--border-subtle)] bg-[var(--bg-base)] px-2 py-1">
                               {`"${t}"`}
