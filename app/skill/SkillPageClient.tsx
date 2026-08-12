@@ -130,7 +130,11 @@ type RepoMeta = {
   license: string | null;
   pushedAt: string | null;
   commitSha: string | null;
-  npmVersion: string | null;
+  /** Latest git tag, e.g. "v1.5.0". This repo has no npm package of its own
+      — "ai-devkit" on the npm registry is an unrelated project with the
+      same name, so a tag (matching .claude-plugin/plugin.json) is the only
+      real version identifier available. */
+  latestTag: string | null;
   recentMerges: MergedPR[];
 };
 
@@ -139,7 +143,7 @@ const EMPTY_REPO_META: RepoMeta = {
   license: null,
   pushedAt: null,
   commitSha: null,
-  npmVersion: null,
+  latestTag: null,
   recentMerges: [],
 };
 
@@ -153,12 +157,12 @@ function fetchRepoMeta(): Promise<RepoMeta> {
   repoMetaPromise = Promise.all([
     fetch("https://api.github.com/repos/CommandOSSLabs/ai-devkit").then((r) => (r.ok ? r.json() : null)),
     fetch("https://api.github.com/repos/CommandOSSLabs/ai-devkit/commits/main").then((r) => (r.ok ? r.json() : null)),
-    fetch("https://registry.npmjs.org/ai-devkit").then((r) => (r.ok ? r.json() : null)),
+    fetch("https://api.github.com/repos/CommandOSSLabs/ai-devkit/tags?per_page=1").then((r) => (r.ok ? r.json() : null)),
     fetch("https://api.github.com/repos/CommandOSSLabs/ai-devkit/pulls?state=closed&sort=updated&direction=desc&per_page=8").then((r) =>
       r.ok ? r.json() : null
     ),
   ])
-    .then(([repo, commit, npm, pulls]) => {
+    .then(([repo, commit, tags, pulls]) => {
       const recentMerges: MergedPR[] = Array.isArray(pulls)
         ? pulls
             .filter((pr) => pr?.merged_at)
@@ -171,7 +175,7 @@ function fetchRepoMeta(): Promise<RepoMeta> {
         license: repo?.license?.spdx_id ?? null,
         pushedAt: repo?.pushed_at ?? null,
         commitSha: commit?.sha ? String(commit.sha).slice(0, 7) : null,
-        npmVersion: npm?.["dist-tags"]?.latest ?? null,
+        latestTag: Array.isArray(tags) && tags[0]?.name ? tags[0].name : null,
         recentMerges,
       };
       repoMetaCache = meta;
@@ -241,7 +245,7 @@ function Nav({
                 : "border-[#E2E8F0] bg-[#F1F5F9] text-[#64748B]"
             }`}
           >
-            {repoMeta.npmVersion ? `v${repoMeta.npmVersion}` : "—"}
+            {repoMeta.latestTag ?? "—"}
           </span>
         </div>
 
@@ -448,14 +452,14 @@ function Hero({ theme }: { theme: "dark" | "light" }) {
               </div>
 
               <p className="text-[13px] leading-[1.5] text-[#9BA1AC]">
-                Vendored into your repo, skills adapt to how your team works and still sync with upstream.
+                Quick install via skills.sh. For per-repo adaptation and upstream sync, use the vendored path instead.
               </p>
 
               <div className="flex items-center gap-3 rounded border border-[#1E2127] bg-[#0A0B0D] px-3 py-2 font-mono text-[12px]">
                 <span className="select-none text-[#6B7280]">$</span>
-                <code className="truncate text-[#E6E8EB]">npx ai-devkit@latest init</code>
+                <code className="truncate text-[#E6E8EB]">npx skills add CommandOSSLabs/ai-devkit</code>
                 <div className="ml-auto flex-shrink-0">
-                  <CopyButton text="npx ai-devkit@latest init" />
+                  <CopyButton text="npx skills add CommandOSSLabs/ai-devkit" />
                 </div>
               </div>
 
@@ -502,58 +506,58 @@ function Quickstart() {
             <div className="flex h-full flex-col justify-between rounded-[12px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5">
               <div>
                 <div className="mb-3 flex items-center justify-between">
-                  <span className="font-mono text-[12px] font-semibold text-[#82AAFF]">STEP 01</span>
-                  <span className="font-mono text-[12px] text-[var(--text-tertiary)]">0.4s</span>
+                  <span className="font-mono text-[12px] font-semibold text-[#82AAFF]">RECOMMENDED</span>
+                  <span className="font-mono text-[12px] text-[var(--text-tertiary)]">evolvable</span>
                 </div>
-                <h3 className="mb-2 text-[16px] font-semibold text-[var(--text-primary)]">Initialize Repository</h3>
+                <h3 className="mb-2 text-[16px] font-semibold text-[var(--text-primary)]">Vendored with Sync</h3>
                 <p className="mb-4 text-[14px] text-[var(--text-secondary)]">
-                  Scaffold `.agents/skills` root and default configuration.
-                </p>
-              </div>
-              <div className="rounded border border-[var(--border-subtle)] bg-[var(--bg-base)] p-3 font-mono text-[13px] text-[var(--text-primary)]">
-                <div className="flex items-center justify-between">
-                  <span><span className="text-[var(--text-tertiary)] select-none">$ </span>npx ai-devkit init</span>
-                  <CopyButton text="npx ai-devkit init" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-[16px] border border-[var(--border-subtle)] bg-[var(--bg-frame)] p-1">
-            <div className="flex h-full flex-col justify-between rounded-[12px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5">
-              <div>
-                <div className="mb-3 flex items-center justify-between">
-                  <span className="font-mono text-[12px] font-semibold text-[#82AAFF]">STEP 02</span>
-                  <span className="font-mono text-[12px] text-[var(--text-tertiary)]">0.8s</span>
-                </div>
-                <h3 className="mb-2 text-[16px] font-semibold text-[var(--text-primary)]">Select Canonical Skills</h3>
-                <p className="mb-4 text-[14px] text-[var(--text-secondary)]">
-                  Pull requested skills from the upstream registry.
-                </p>
-              </div>
-              <div className="rounded border border-[var(--border-subtle)] bg-[var(--bg-base)] p-3 font-mono text-[13px] text-[var(--text-primary)]">
-                <div className="flex items-center justify-between">
-                  <span><span className="text-[var(--text-tertiary)] select-none">$ </span>npx ai-devkit add delivery</span>
-                  <CopyButton text="npx ai-devkit add delivery" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-[16px] border border-[var(--border-subtle)] bg-[var(--bg-frame)] p-1">
-            <div className="flex h-full flex-col justify-between rounded-[12px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5">
-              <div>
-                <div className="mb-3 flex items-center justify-between">
-                  <span className="font-mono text-[12px] font-semibold text-[#82AAFF]">STEP 03</span>
-                  <span className="font-mono text-[12px] text-[var(--text-tertiary)]">Instant</span>
-                </div>
-                <h3 className="mb-2 text-[16px] font-semibold text-[var(--text-primary)]">Natural Language Trigger</h3>
-                <p className="mb-4 text-[14px] text-[var(--text-secondary)]">
-                  Agents trigger skills naturally based on intent matching.
+                  Ask your agent to follow <code className="text-[#82AAFF]">cmk:agent-vendors</code>, then <code className="text-[#82AAFF]">cmk:sync</code> in baseline mode. Adapt freely — upgrades merge at the meaning level, not overwrite.
                 </p>
               </div>
               <div className="rounded border border-[var(--border-subtle)] bg-[var(--bg-base)] p-3 font-mono text-[13px] text-[#C3E88D]">
-                <span>{'"Start work on TICKET-104"'}</span>
+                <span>{'"Vendor these skills into my repo"'}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-[16px] border border-[var(--border-subtle)] bg-[var(--bg-frame)] p-1">
+            <div className="flex h-full flex-col justify-between rounded-[12px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5">
+              <div>
+                <div className="mb-3 flex items-center justify-between">
+                  <span className="font-mono text-[12px] font-semibold text-[#82AAFF]">QUICK</span>
+                  <span className="font-mono text-[12px] text-[var(--text-tertiary)]">read-only</span>
+                </div>
+                <h3 className="mb-2 text-[16px] font-semibold text-[var(--text-primary)]">skills.sh</h3>
+                <p className="mb-4 text-[14px] text-[var(--text-secondary)]">
+                  Copies skills into each detected agent&apos;s own directory. Treat as read-only — updates overwrite local edits.
+                </p>
+              </div>
+              <div className="rounded border border-[var(--border-subtle)] bg-[var(--bg-base)] p-3 font-mono text-[13px] text-[var(--text-primary)]">
+                <div className="flex items-center justify-between">
+                  <span className="truncate"><span className="text-[var(--text-tertiary)] select-none">$ </span>npx skills add CommandOSSLabs/ai-devkit</span>
+                  <CopyButton text="npx skills add CommandOSSLabs/ai-devkit" className="ml-2 flex-shrink-0 p-1 text-[#6B7280] hover:text-[#9BA1AC]" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-[16px] border border-[var(--border-subtle)] bg-[var(--bg-frame)] p-1">
+            <div className="flex h-full flex-col justify-between rounded-[12px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5">
+              <div>
+                <div className="mb-3 flex items-center justify-between">
+                  <span className="font-mono text-[12px] font-semibold text-[#82AAFF]">ZERO SETUP</span>
+                  <span className="font-mono text-[12px] text-[var(--text-tertiary)]">Claude Code only</span>
+                </div>
+                <h3 className="mb-2 text-[16px] font-semibold text-[var(--text-primary)]">Plugin Trial</h3>
+                <p className="mb-4 text-[14px] text-[var(--text-secondary)]">
+                  Try the kit with nothing added to your repo. Immutable — can&apos;t adapt per-repo; updates replace the whole kit.
+                </p>
+              </div>
+              <div className="rounded border border-[var(--border-subtle)] bg-[var(--bg-base)] p-3 font-mono text-[13px] text-[var(--text-primary)]">
+                <div className="flex items-center justify-between">
+                  <span className="truncate"><span className="text-[var(--text-tertiary)] select-none">$ </span>claude plugin add CommandOSSLabs/ai-devkit</span>
+                  <CopyButton text="claude plugin add CommandOSSLabs/ai-devkit" className="ml-2 flex-shrink-0 p-1 text-[#6B7280] hover:text-[#9BA1AC]" />
+                </div>
               </div>
             </div>
           </div>
@@ -618,7 +622,7 @@ function Architecture() {
                     connections={[
                       { from: "requirements", to: "design", animated: true },
                       { from: "design", to: "plan", animated: true },
-                      { from: "requirements", to: "implement", animated: true },
+                      { from: "plan", to: "implement", animated: true },
                       { from: "implement", to: "simplify", animated: true },
                       { from: "simplify", to: "review", animated: true },
                       { from: "review", to: "ship", animated: true },
@@ -635,22 +639,23 @@ function Architecture() {
                 <div className="flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-base)] px-4 py-2.5 font-mono text-[13px]">
                   <div className="flex items-center gap-2">
                     <Terminal size={14} className="text-[#C3E88D]" />
-                    <span className="text-[var(--text-secondary)]">terminal session</span>
+                    <span className="text-[var(--text-secondary)]">agent session</span>
                   </div>
-                  <span className="text-[var(--text-tertiary)]">zsh — 80x24</span>
+                  <span className="text-[var(--text-tertiary)]">skills trigger on intent, not flags</span>
                 </div>
                 <pre className="overflow-x-auto p-4 font-mono text-[13px] leading-[1.6]">
                   <code>
                     <div className="flex items-center gap-2">
-                      <span className="select-none text-[var(--text-tertiary)]">$</span>
-                      <span className="text-[var(--text-primary)]">cmk delivery-pipeline --issue TICKET-402</span>
+                      <span className="select-none text-[var(--text-tertiary)]">{">"}</span>
+                      <span className="text-[var(--text-primary)]">{'"Deliver TICKET-402"'}</span>
                     </div>
-                    <div className="mt-2 text-[var(--text-secondary)]">[1/5] INTAKE      Resolving Linear context for TICKET-402... done (120ms)</div>
+                    <div className="mt-2 text-[var(--text-tertiary)]">cmk:delivery-pipeline triggers on that phrasing —</div>
+                    <div className="text-[var(--text-secondary)]">[1/5] INTAKE      Resolving tracker context for TICKET-402... done</div>
                     <div className="text-[var(--text-secondary)]">[2/5] SPEC        Generating spec under docs/specs/TICKET-402.md... done</div>
                     <div className="text-[var(--text-secondary)]">[3/5] IMPLEMENT   Applying changes to src/pipeline/engine.ts... done</div>
                     <div className="text-[var(--text-secondary)]">[4/5] REVIEW      Adversarial verification pass... 0 flaws detected</div>
-                    <div className="text-[#C3E88D]">[5/5] SHIP        Created PR #148 (https://github.com/org/repo/pull/148)</div>
-                    <div className="mt-2 text-[var(--text-tertiary)]">Pipeline executed successfully in 4.2s · 0 warnings</div>
+                    <div className="text-[#C3E88D]">[5/5] SHIP        PR opened for review</div>
+                    <div className="mt-2 text-[var(--text-tertiary)]">Illustrative — actual step count and timing vary by task.</div>
                   </code>
                 </pre>
               </div>
@@ -833,7 +838,7 @@ function Benchmarks({ skills, categories }: { skills: Skill[]; categories: Categ
     { label: "GitHub Stars", value: repoMeta.stars !== null ? formatStarCount(repoMeta.stars) : "—" },
     { label: "License", value: repoMeta.license ?? "—" },
     { label: "Canonical Skills", value: String(skills.length) },
-    { label: "Latest Release", value: repoMeta.npmVersion ? `v${repoMeta.npmVersion}` : "—" },
+    { label: "Latest Tag", value: repoMeta.latestTag ?? "—" },
     { label: "Last Push", value: timeAgo(repoMeta.pushedAt) },
     { label: "Latest Commit", value: repoMeta.commitSha ?? "—" },
   ];
@@ -937,7 +942,7 @@ function SkillCatalog({
 
   const copyPromptText = useMemo(() => {
     const list = skills.filter((s) => selectedSkills.has(s.id)).map((s) => s.name);
-    return list.length > 0 ? `npx ai-devkit add ${list.join(" ")}` : "npx ai-devkit init";
+    return list.length > 0 ? `npx skills add CommandOSSLabs/ai-devkit --skill ${list.join(" ")}` : "npx skills add CommandOSSLabs/ai-devkit";
   }, [skills, selectedSkills]);
 
   return (
@@ -1061,8 +1066,8 @@ function SkillCatalog({
 
                         {/* 1-Click Copy Skill Command */}
                         <CopyButton
-                          text={`npx ai-devkit add ${skill.id}`}
-                          title={`Copy skill command: npx ai-devkit add ${skill.id}`}
+                          text={`npx skills add CommandOSSLabs/ai-devkit --skill ${skill.id}`}
+                          title={`Copy skill command: npx skills add CommandOSSLabs/ai-devkit --skill ${skill.id}`}
                           className="rounded p-1 text-[var(--text-tertiary)] hover:bg-[var(--border-subtle)] hover:text-[#82AAFF]"
                         />
 
@@ -1192,9 +1197,9 @@ function SkillCatalog({
                       <div className="flex items-center justify-between rounded border border-[var(--border-subtle)] bg-[var(--bg-base)] px-3 py-2 text-[var(--text-primary)]">
                         <span>
                           <span className="select-none text-[var(--text-tertiary)]">$ </span>
-                          <span>npx ai-devkit add {activeDetailSkill.id}</span>
+                          <span>npx skills add CommandOSSLabs/ai-devkit --skill {activeDetailSkill.id}</span>
                         </span>
-                        <CopyButton text={`npx ai-devkit add ${activeDetailSkill.id}`} />
+                        <CopyButton text={`npx skills add CommandOSSLabs/ai-devkit --skill ${activeDetailSkill.id}`} />
                       </div>
                     </li>
                   </ul>
@@ -1218,7 +1223,7 @@ function SkillCatalog({
 
                       {/* 1-Click Copy Only This Skill */}
                       <CopyButton
-                        text={`npx ai-devkit add ${activeDetailSkill.id}`}
+                        text={`npx skills add CommandOSSLabs/ai-devkit --skill ${activeDetailSkill.id}`}
                         label="Copy Skill Command"
                         className="rounded-lg border border-[#82AAFF]/40 bg-[#82AAFF]/10 px-4 py-2 font-mono text-[13px] text-[#82AAFF] hover:bg-[#82AAFF]/20"
                       />
@@ -1268,9 +1273,9 @@ function CTA() {
             <div className="mb-8 w-full max-w-md">
               <div className="flex items-center gap-3 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-base)] px-4 py-3 font-mono text-[13px]">
                 <span className="select-none text-[var(--text-tertiary)]">$</span>
-                <code className="text-[var(--text-primary)]">npx ai-devkit@latest init</code>
-                <div className="ml-auto">
-                  <CopyButton text="npx ai-devkit@latest init" />
+                <code className="truncate text-[var(--text-primary)]">npx skills add CommandOSSLabs/ai-devkit</code>
+                <div className="ml-auto flex-shrink-0">
+                  <CopyButton text="npx skills add CommandOSSLabs/ai-devkit" />
                 </div>
               </div>
             </div>
@@ -1293,7 +1298,7 @@ function CTA() {
             </div>
 
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4 font-mono text-[11px] text-[var(--text-tertiary)]">
-              <span>npm {repoMeta.npmVersion ? `v${repoMeta.npmVersion}` : "—"}</span>
+              <span>{repoMeta.latestTag ?? "—"}</span>
               <span>·</span>
               <span>license {repoMeta.license ?? "MIT"}</span>
               <span>·</span>
@@ -1426,7 +1431,7 @@ function Footer() {
         <div className="mt-8 flex w-full flex-col items-center justify-between gap-2 border-t border-[var(--border-subtle)] pt-6 font-mono text-[12px] text-[var(--text-tertiary)] sm:flex-row">
           <span>ai-devkit · MIT License · 2026</span>
           <span>
-            {repoMeta.npmVersion ? `npm v${repoMeta.npmVersion}` : "npm —"} · commit {repoMeta.commitSha ?? "—"}
+            {repoMeta.latestTag ?? "—"} · commit {repoMeta.commitSha ?? "—"}
           </span>
         </div>
       </div>
