@@ -21,6 +21,7 @@ follow.
 | Patterns | [`common/patterns.md`](./common/patterns.md) |
 | Security | [`common/security.md`](./common/security.md) |
 | Testing | [`common/testing.md`](./common/testing.md) |
+| Component Sourcing | [`react/component-sourcing.md`](./react/component-sourcing.md) |
 
 ## When to read
 

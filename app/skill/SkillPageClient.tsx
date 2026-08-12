@@ -4,6 +4,7 @@ import { useState, useCallback, useMemo, useEffect } from "react";
 import { Drawer } from "vaul";
 import { GlowingWave } from "@/components/GlowingWave";
 import { NotificationStack, type NotificationStackItem } from "@/components/motion/notification-stack";
+import { CircuitBoard } from "@/components/motion/circuit-board";
 import { type RealSkill, CATEGORY_LABELS } from "@/lib/skill-types";
 import {
   Check,
@@ -400,8 +401,8 @@ function Hero({ theme }: { theme: "dark" | "light" }) {
             </div>
           </div>
 
-          {/* Corner CTA, top-right */}
-          <div className="absolute right-4 top-4 z-20 sm:right-6 sm:top-6">
+          {/* Corner CTA + notification stack, top-right */}
+          <div className="absolute right-4 top-4 z-20 flex flex-col items-end gap-3 sm:right-6 sm:top-6">
             <a
               href="#quickstart"
               className="inline-flex items-center gap-2 rounded-lg bg-[#E6E8EB] px-4 py-2.5 text-[13px] font-medium text-[#0A0B0D] shadow-lg transition-colors hover:bg-white"
@@ -409,10 +410,6 @@ function Hero({ theme }: { theme: "dark" | "light" }) {
               <span>Get Started</span>
               <ArrowRight size={14} />
             </a>
-          </div>
-
-          {/* Notification stack, bottom-left — redeploys / new skills / new logs */}
-          <div className="absolute bottom-4 left-4 z-20 sm:bottom-6 sm:left-6">
             <NotificationStack items={HERO_NOTIFICATIONS} />
           </div>
 
@@ -574,20 +571,34 @@ function Architecture() {
                   </div>
                   <span className="text-[var(--text-tertiary)]">Document tree</span>
                 </div>
-                <pre className="overflow-x-auto p-4 font-mono text-[13px] leading-[1.6]">
-                  <code>
-                    <div><span className="text-[#5C6370]"># The SDLC is a flow of documents</span></div>
-                    <div></div>
-                    <div><span className="text-[#C792EA]">Requirements</span> <span className="text-[var(--text-tertiary)]">───▶</span> <span className="text-[#C3E88D]">Design</span> <span className="text-[var(--text-tertiary)]">───▶</span> <span className="text-[#FFCB6B]">Plan</span></div>
-                    <div>  <span className="text-[var(--text-tertiary)]">what &amp; why</span>       <span className="text-[var(--text-tertiary)]">          how</span></div>
-                    <div></div>
-                    <div><span className="text-[var(--text-tertiary)]">└── Implement ──▶ Simplify ──▶ Review ──▶ Ship</span></div>
-                    <div>       <span className="text-[var(--text-tertiary)]">      delivery family</span></div>
-                    <div></div>
-                    <div><span className="text-[#5C6370]"># Cross-cutting at every stage:</span></div>
-                    <div><span className="text-[#82AAFF]">cmk:adr</span> <span className="text-[var(--text-tertiary)]">·</span> <span className="text-[#82AAFF]">cmk:glossary</span> <span className="text-[var(--text-tertiary)]">·</span> <span className="text-[#82AAFF]">cmk:learn</span> <span className="text-[var(--text-tertiary)]">·</span> <span className="text-[#82AAFF]">cmk:rule</span></div>
-                  </code>
-                </pre>
+                <div className="overflow-x-auto p-4">
+                  <CircuitBoard
+                    width={560}
+                    height={300}
+                    variant="auto"
+                    nodes={[
+                      { id: "requirements", x: 60, y: 50, label: "Requirements", status: "active", size: "sm" },
+                      { id: "design", x: 220, y: 50, label: "Design", status: "active", size: "sm" },
+                      { id: "plan", x: 380, y: 50, label: "Plan", status: "processing", size: "sm" },
+                      { id: "implement", x: 60, y: 170, label: "Implement", status: "active", size: "sm" },
+                      { id: "simplify", x: 220, y: 170, label: "Simplify", status: "active", size: "sm" },
+                      { id: "review", x: 380, y: 170, label: "Review", status: "processing", size: "sm" },
+                      { id: "ship", x: 500, y: 170, label: "Ship", status: "active", size: "sm" },
+                      { id: "adr", x: 100, y: 260, label: "cmk:adr", status: "inactive", size: "sm" },
+                      { id: "glossary", x: 220, y: 260, label: "cmk:glossary", status: "inactive", size: "sm" },
+                      { id: "learn", x: 360, y: 260, label: "cmk:learn", status: "inactive", size: "sm" },
+                      { id: "rule", x: 480, y: 260, label: "cmk:rule", status: "inactive", size: "sm" },
+                    ]}
+                    connections={[
+                      { from: "requirements", to: "design", animated: true },
+                      { from: "design", to: "plan", animated: true },
+                      { from: "requirements", to: "implement", animated: true },
+                      { from: "implement", to: "simplify", animated: true },
+                      { from: "simplify", to: "review", animated: true },
+                      { from: "review", to: "ship", animated: true },
+                    ]}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -1434,17 +1445,19 @@ export default function TerminalDarkLandingPage({ skills }: { skills: RealSkill[
         isDark ? "bg-[var(--bg-base)] text-[var(--text-primary)]" : "bg-[#F8FAFC] text-[#0F172A]"
       }`}
     >
-      {/* ─── Single Luminous Wave Background (React Bits Pro Glowing Wave canvas renderer) ─── */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
+      {/* ─── Single Luminous Wave Background (React Bits Pro Glowing Wave canvas renderer) ───
+          Toned down from the original: lower glow/richness and a lighter dark-mode
+          base so the animation reads as ambient light, not a heavy dark overlay. */}
+      <div className={`fixed inset-0 z-0 pointer-events-none ${isDark ? "opacity-80" : "opacity-100"}`}>
         <GlowingWave
           className="h-screen w-full"
-          swell={0.2}
-          glow={0.8}
-          richness={0.7}
+          swell={0.18}
+          glow={0.5}
+          richness={0.45}
           colorFrequency={6}
-          color={isDark ? "#0d2666" : "#94a3b8"}
-          hotColor={isDark ? "#ff6633" : "#3b82f6"}
-          backgroundColor={isDark ? "#0a0a0a" : "#f8fafc"}
+          color={isDark ? "#1a3a7a" : "#94a3b8"}
+          hotColor={isDark ? "#ff8a5c" : "#3b82f6"}
+          backgroundColor={isDark ? "#111318" : "#f8fafc"}
         />
       </div>
 
