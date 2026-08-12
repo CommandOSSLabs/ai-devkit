@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /*
+   * Convention: :root holds LIGHT-mode values (Tailwind darkMode:["class"]
+   * default state). Adding .dark to <html> overrides with the dark-first
+   * palette this design actually ships with. See §15 of the terminal-dark
+   * spec: light mode is a re-derivation, never a pure inversion.
+   */
+  :root {
+    --bg-base: #F7F8FA;
+    --bg-surface: #FFFFFF;
+    --bg-elevated: #F1F5F9;
+    --bg-frame: #F8FAFC;
+    --border-subtle: #E2E8F0;
+    --border-strong: #CBD5E1;
+    --text-primary: #1A1C20;
+    --text-secondary: #475569;
+    --text-tertiary: #64748B;
+    --text-disabled: #94A3B8;
+
+    --syntax-keyword: #8B5CF6;
+    --syntax-string: #16A34A;
+    --syntax-func: #4F46E5;
+    --syntax-number: #EA580C;
+    --syntax-comment: #94A3B8;
+    --syntax-const: #CA8A04;
+    --syntax-error: #DC2626;
+
+    /* Corner rounding. One knob; every rung derives from it. */
+    --rb-radius: 10px;
+    --rb-r-xs: max(0px, calc(var(--rb-radius) - 6px));
+    --rb-r-sm: max(0px, calc(var(--rb-radius) - 4px));
+    --rb-r-md: max(0px, calc(var(--rb-radius) - 2px));
+    --rb-r-lg: var(--rb-radius);
+    --rb-r-xl: calc(var(--rb-radius) + min(2px, var(--rb-radius)));
+    --rb-r-2xl: calc(var(--rb-radius) + min(4px, var(--rb-radius)));
+    --rb-r-3xl: calc(var(--rb-radius) + min(6px, var(--rb-radius)));
+    --rb-r-4xl: calc(var(--rb-radius) + min(8px, var(--rb-radius)));
+
+    /* Accent: the colour of action. */
+    --rb-accent: oklch(20.5% 0 0);
+    --rb-accent-fg: oklch(100% 0 0);
+
+    /* Base neutral ramp — mauve-warmed, everything else derives from this. */
+    --color-neutral-50: oklch(98.5% 0.004 318);
+    --color-neutral-100: oklch(97% 0.007 318);
+    --color-neutral-200: oklch(92.2% 0.012 318);
+    --color-neutral-300: oklch(87% 0.019 318);
+    --color-neutral-400: oklch(70.8% 0.03 318);
+    --color-neutral-500: oklch(55.6% 0.034 318);
+    --color-neutral-600: oklch(43.9% 0.032 318);
+    --color-neutral-700: oklch(37.1% 0.03 318);
+    --color-neutral-800: oklch(26.9% 0.026 318);
+    --color-neutral-900: oklch(20.5% 0.022 318);
+    --color-neutral-950: oklch(14.5% 0.016 318);
+  }
+
+  .dark {
+    --bg-base: #0A0B0D;
+    --bg-surface: #101216;
+    --bg-elevated: #16181D;
+    --bg-frame: #0D0E11;
+    --border-subtle: #1E2127;
+    --border-strong: #2A2E37;
+    --text-primary: #E6E8EB;
+    --text-secondary: #9BA1AC;
+    --text-tertiary: #6B7280;
+    --text-disabled: #454B54;
+
+    --syntax-keyword: #C792EA;
+    --syntax-string: #C3E88D;
+    --syntax-func: #82AAFF;
+    --syntax-number: #F78C6C;
+    --syntax-comment: #5C6370;
+    --syntax-const: #FFCB6B;
+    --syntax-error: #F07178;
+
+    --rb-accent: oklch(100% 0 0);
+    --rb-accent-fg: oklch(20.5% 0 0);
+  }
+
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: "Geist", var(--font-geist), ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  ::selection {
+    background-color: rgba(130, 170, 255, 0.25);
+    color: #E6E8EB;
+  }
+}
+
+/* Custom Utilities for Masking & Hardware Acceleration */
+.mask-fade-bottom {
+  mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+}
+
+.mask-fade-right {
+  mask-image: linear-gradient(to right, #000 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, #000 85%, transparent 100%);
+}
+
+/* Geist Pixel: blocky monospace treatment for headline/brand/section-header text */
+.font-pixel {
+  font-family: var(--font-geist-mono), var(--font-mono), monospace;
+  font-feature-settings: "ss01", "ss02";
+  letter-spacing: -0.01em;
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: antialiased;
+}
+

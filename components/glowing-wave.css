@@ -1,0 +1,16 @@
+.glowing-wave {
+  position: relative;
+  overflow: hidden;
+}
+
+.glowing-wave-canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.glowing-wave-content {
+  position: relative;
+  z-index: 10;
+  height: 100%;
+  width: 100%;
+}
