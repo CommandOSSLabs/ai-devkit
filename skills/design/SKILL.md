@@ -1,7 +1,7 @@
 ---
 name: cmk:design
 description: This skill should be used when the user asks "how should we build this", "design the backend", "update the architecture", "draft a system design", "create a feature spec", "spec out this feature", or discusses architecture, tech stack changes, component design, or infrastructure layout. Covers drafting, refining, or updating distilled design documents under docs/design/ — system-wide or per-feature — checking for conflicts with upstream requirements and recorded decisions.
-version: 0.5.0
+version: 0.5.1
 ---
 
 # Design

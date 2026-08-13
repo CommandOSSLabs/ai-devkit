@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-spec-plan
 description: This skill should be used when the user asks for a "spec", "design", "implementation plan", or "how should we build this" for a tracker issue, after context intake for any non-trivial change, and as phase 2 of the cmk:delivery-pipeline skill.
-version: 0.2.1
+version: 0.2.2
 ---
 
 # Delivery Spec & Plan
@@ -61,7 +61,8 @@ Iterate until solid; one spec per issue.
    (`docs/rules/common/naming.md`, seeded by `cmk:agent-instructions`),
    using glossary terms where the repo keeps a glossary (`cmk:glossary`);
    a spec that coins a new system/component/actor term adds it there as
-   part of the change.
+   part of the change. A new CI, deploy, or operator step names the
+   host-runnable script and the composer that calls it (`cmk:cicd`).
 4. **Invariant check.** Changes touching security, authorization, consensus,
    wire-format or cross-language parity vectors, settlement, or randomness
    invariants get the full-depth treatment (`docs/rules/common/testing.md`) —

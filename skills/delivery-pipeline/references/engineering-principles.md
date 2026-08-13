@@ -139,6 +139,28 @@ materialization surfaces. In this pipeline that means:
 Where the repository declares its own infra-profile standard, that
 standard refines this rule and takes precedence.
 
+## Host-runnable composition
+
+CI, deploy, operator, and debug workflows are the same kind of
+composition: one production-quality path, adapted per host and
+environment. The implementation is independently invocable scripts
+(prefer TypeScript + bun). GitHub Actions or any other remote CI is a
+composer, not the source of the steps. Local, JIT self-hosted, and
+hosted runners are hosts; scripts that humans or agents run on a
+development machine support at least Linux and macOS on amd64 and
+arm64. `cmk:cicd` owns the script contract.
+
+This is not a local-only mindset. If a step cannot run on the
+development machine, extend the script or the local materialization —
+do not grow a GitHub-only dialect beside the real path.
+
+When a remote job fails, reproduce it locally with the job's exact
+command, run the sibling gates that have been taking turns, and stay
+on the host until that set is green. Act on the first failed required
+job; do not wait for the rest of the matrix. One local fix and a
+hopeful push is how two independent failures become two CI cycles.
+`cmk:delivery-ship` step 1 applies the same loop.
+
 ## Production readiness
 
 Every change is designed, built, reviewed, and shipped as something that
@@ -218,7 +240,8 @@ Own the full span of a task, including the waiting inside it.
 - **Never idle-wait.** While something long-running executes (CI, deploy,
   build, test suite), use the time — deepen analysis, pre-read upcoming
   code, review findings, prepare follow-ups — then return to the awaited
-  thing.
+  thing. Spot the first failed required CI job and start the local
+  reproduce; do not wait for the rest of the matrix to finish.
 - **Own what you start.** Every background job, monitor, subagent, or CI
   run you kick off stays on your ledger until resolved — not started, not
   "last seen running." A forgotten monitor is a dropped task.

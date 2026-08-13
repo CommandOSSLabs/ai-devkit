@@ -25,6 +25,9 @@ materialization choices — which launcher assembles the parts, which plane
 delivers config and secrets, which infrastructure declares the boundary. A
 design that forks product, protocol, or core behavior per environment is a
 defect: push the difference down to a composition surface or redesign.
+CI, deploy, and operator workflows are specified as host-runnable script
+composition (`cmk:cicd`), not as a GitHub-only procedure beside the real
+path. Local is a profile and a debug/rollout host, not a second product.
 Where the repository declares its own infra-profile standard, that
 standard refines this rule and takes precedence.
 

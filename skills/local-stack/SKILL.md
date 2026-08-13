@@ -1,7 +1,7 @@
 ---
 name: cmk:local-stack
 description: This skill should be used when the user asks to "set up local dev", "make dev worktree-safe", "add a local stack", "port conflicts between worktrees", "headless dev mode", "run services locally for agents/CI", "clean up dangling services", or hits orphaned containers/processes, "port already in use" from leftover runs, stale state from a deleted worktree, or needs worktree-isolated local development stacks with deterministic identity, coherence validation, and interactive/headless runners.
-version: 0.4.1
+version: 0.4.2
 ---
 
 # Local Stack
@@ -129,10 +129,10 @@ being present.
 
 ## Where this stops
 
-Remote environments and IaC are `cmk:infra`'s facet, not this one. A local
-stack may mirror production topology (e.g. a local object store standing in
-for the cloud one) but must stay worktree-safe here regardless of what it
-mirrors.
+Remote environments and IaC are `cmk:infra`'s; CI composition is `cmk:cicd`'s.
+Local is a profile of the same production-quality path, not a second product —
+it may be the debug or rollout host when those scripts run here. Stay
+worktree-safe regardless of what the stack mirrors.
 
 ## Verify
 

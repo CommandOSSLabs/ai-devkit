@@ -1,7 +1,7 @@
 ---
 name: cmk:cicd
-description: This skill should be used when the user asks to "set up CI", "speed up CI", "add a deploy workflow", "structure GitHub Actions", "self-hosted runners", "protect the main branch", or needs to structure CI, deployment, and policy automation around GitHub Actions.
-version: 0.2.1
+description: This skill should be used when the user asks to "set up CI", "speed up CI", "add a deploy workflow", "structure GitHub Actions", "self-hosted runners", "run CI locally", "JIT runner", "protect the main branch", or needs to structure CI, deployment, and policy automation as composable host-runnable scripts that GitHub Actions only automates.
+version: 0.3.0
 ---
 
 # CI/CD
@@ -37,6 +37,16 @@ never mutates.
 Never fold validation and deployment into one workflow: a push that only
 changes docs must not queue behind a deploy, and a deploy must never
 accidentally run on every push that happens to touch the workflow file.
+
+## Scripts are the workflow
+
+GitHub Actions is a composer. The steps themselves are independently
+invocable scripts (prefer TypeScript + bun) that run on a development
+machine, a JIT self-hosted runner, or hosted compute with the same
+behavior. Read `references/host-runnable.md` when adding a job, a
+runner, or reproducing a CI failure. This is not a local-only mindset:
+local, AWS, GCP, and production are profiles over one production-ready
+path (`cmk:infra`, `cmk:local-stack`).
 
 ## GitHub ↔ IaC mapping is this skill's contract
 
@@ -102,3 +112,7 @@ Report-only — never mutate:
 - A claimed speedup names the specific job, step, or mechanism it traces to —
   not just a before/after total — so a sibling change that contributed
   nothing doesn't ride along uncredited and unverified.
+- Jobs that humans or agents can run on a development machine have a
+  script entry point the workflow only invokes.
+- Those scripts support Linux and macOS on amd64 and arm64, or fail
+  closed with a stated reason.
