@@ -57,43 +57,35 @@ wrapped_dek, bulk}` as ciphertext in object storage the parent can
 `GetObject`. Missing or malformed envelopes fail the fetch; no silent
 skip.
 
-Co-located principals that share PCR0–PCR2 bind the label in
-**both** KMS `EncryptionContext` and bulk AAD. Shared measurements
-mean a sibling that forges the label still unwraps — binding, not
-isolation. Distinct images (party vs authority) get distinct CMKs and
-PCR bags.
+Co-located seats bind the label per `references/secrets.md`. On Nitro
+that bind is **both** KMS `EncryptionContext` and bulk AAD. Distinct
+images (party vs authority) get distinct CMKs and PCR bags.
 
 ## Seal is part of image publish
+
+Generic seal-as-publish rules are `references/secrets.md`. Here:
 
 1. Build the EIF; read `nitro.pcrs`.
 2. Pin that bag on the role's config-sealing policy.
 3. Seal every label that image will unwrap.
 4. Then converge the parent / association.
 
-Re-uploading an envelope does not change an already-admitted
-execution. A new package is a new digest; admission refuses a
-mid-execution swap.
-
-The principal **pulls** the envelope at boot and at every provision
-activation on one code path. Host `ExecStartPost` push is not the
-product contract.
+Host `ExecStartPost` push is not the product contract — the principal
+pulls, per the roof.
 
 ## Local profile
 
-The same envelope shape materializes on the worktree-local stack
-without Nitro evidence (`cmk:local-stack`). Do not invent a raw-env
-path beside it. An attested profile that cannot present NSM evidence
-fails closed — never falls back to the local unwrap.
+Same package shape (`cmk:local-stack`). An attested profile that
+cannot present NSM evidence fails closed — never falls back to the
+local unwrap.
 
 ## Verify
 
 Report-only — never mutate:
 
-- EIF build context has no operator secret or env plaintext.
 - Parent IAM: `s3:GetObject` on envelopes; `kms:Decrypt` only as
   KMS gateway with `Recipient`; no Decrypt-to-self on custody keys.
 - Each role's config-sealing CMK policy names that role's PCR bag.
 - Seal wraps a DEK; bulk is AEAD-bound to the principal label.
 - Secrets Manager ARNs are seal inputs, not enclave runtime calls.
 - Publish order is pin-PCRs → seal → converge.
-- Local / unattested / Nitro consume the same package shape.

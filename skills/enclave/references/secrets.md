@@ -1,19 +1,9 @@
 # Enclave / secrets
 
 Pack operator secrets and runtime env so only the attested principal
-can unwrap them. Vendor-neutral: Nitro, other TEEs, and any adapter a
-repo vendors under that name. The three planes live in the roof
-(`cmk:enclave`). AWS Nitro / Nautilus mechanics are
-`references/nautilus.md`.
-
-## The package, not the env file
-
-An `.env` copied into the image, user-data, or a host unit is not a
-package. The package is ciphertext plus public metadata (key id,
-principal label, measurements) so the host can fetch it and the
-principal can bind it. The principal pulls the package at start and
-at every provision that commits a new digest; the host does not push
-plaintext as a unit-activation side effect.
+can unwrap them. Vendor-neutral. Planes, package shape, and
+pull-not-push live in the roof (`cmk:enclave`). AWS Nitro / Nautilus
+mechanics are `references/nautilus.md`.
 
 ## Attestation-gated unwrap
 

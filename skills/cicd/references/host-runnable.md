@@ -48,7 +48,8 @@ automation composer and the merge gate; it is a slow debugger.
 
 Build images stay a standing cost. Host execution does not excuse an
 unoptimized image. Keep container and enclave builds cacheable and
-incremental regardless of where they run.
+incremental regardless of where they run. Attested packing is
+`cmk:enclave`.
 
 ## When a remote job fails
 

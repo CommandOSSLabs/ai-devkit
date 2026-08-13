@@ -1,7 +1,7 @@
 ---
 name: cmk:infra
 description: This skill should be used when the user asks to "set up infra", "add IaC", "structure the infrastructure code", "add an environment", "isolate infra stacks", or needs to establish or audit infrastructure-as-code packages, environment boundaries, and their pipeline wiring.
-version: 0.3.2
+version: 0.3.3
 ---
 
 # Infra
@@ -54,12 +54,10 @@ themselves.
 
 ## Environments are profiles, not forks
 
-Product, protocol, and operator workflows are one production-ready path.
 Named environments (and the local stack) adapt composition and
-materialization. They do not fork the path. A cloud-only or GitHub-only
-implementation of a step that can run as a script is the same defect as
-an environment conditional in product code. `cmk:cicd` owns the
-host-runnable script contract; this skill owns the environment
+materialization; they do not fork the path. The no-shortcut rule is
+`cmk:delivery-pipeline`'s engineering principles; `cmk:cicd` owns
+the host-runnable script contract. This skill owns the environment
 vocabulary the composer adapts.
 
 ## GitHub ↔ IaC mapping is `cmk:cicd`'s contract
