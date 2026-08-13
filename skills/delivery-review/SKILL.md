@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-review
 description: This skill should be used when the user asks to "review my changes", "review this PR", "take a look at this diff", or "is this ready to ship" — before shipping tracked work (phase 4 of cmk:delivery-pipeline) or standalone against any pull request or local diff.
-version: 0.1.1
+version: 0.1.3
 ---
 
 # Delivery Review
@@ -94,9 +94,9 @@ a quiet default.
    settlement, randomness, or wire parity.
 7. **Production readiness** — audit against `cmk:delivery-pipeline`'s
    engineering-principles checklist and the spec's production-readiness
-   section: failure modes, config and secrets, migrations, observability,
-   rollout, and performance limits. Accepted gaps must be stated somewhere
-   durable; silent gaps are findings.
+   section: failure modes, config, secrets, migrations, observability,
+   rollout, limits, and host-runnable workflow scripts (`cmk:cicd`). A shortcut or workaround that forks the production-ready foundation (local-only, CI-only, one-cloud-only, "harden later") is a finding.
+   Accepted gaps must be stated somewhere durable; silent gaps are findings.
 
 ## Evidence, or it did not happen
 

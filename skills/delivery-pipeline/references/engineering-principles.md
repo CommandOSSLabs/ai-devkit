@@ -114,6 +114,19 @@ bookkeeping follows the human-decision-boundary rules above. In an
 unattended run, consultation applies only when it was requested up front —
 otherwise decide and record.
 
+## No shortcut: production-ready foundation
+
+Do not choose a workaround that works only locally, only in CI, only
+in one cloud, or "until we harden it." The decision is the
+production-ready path. Local, canary, staging, production, and every
+future environment are **profiles** over that foundation — they adapt
+composition and materialization; they do not fork the logic.
+
+A shortcut is a second path. Two paths diverge, then the workaround
+becomes the real system. This binds every surface: design, infra,
+CI/CD, operator rollout, and product code. The sections below are
+instances of this rule, not exceptions to it.
+
 ## One code path across infra profiles
 
 Product, protocol, and core/shared logic are profile-invariant: identical
@@ -138,6 +151,29 @@ materialization surfaces. In this pipeline that means:
 
 Where the repository declares its own infra-profile standard, that
 standard refines this rule and takes precedence.
+
+## Host-runnable composition
+
+CI, deploy, operator, and debug workflows are the same kind of
+composition: one production-quality path, adapted per host and
+environment. The implementation is independently invocable scripts
+(prefer TypeScript + bun). GitHub Actions or any other remote CI is a
+composer, not the source of the steps. Local, JIT self-hosted, and
+hosted runners are hosts; a JIT host names how many jobs it will run at
+once (`cmk:cicd` host-runnable). Scripts that humans or agents run on a
+development machine support at least Linux and macOS on amd64 and
+arm64. `cmk:cicd` owns the script contract.
+
+This is not a local-only mindset. If a step cannot run on the
+development machine, extend the script or the local materialization —
+do not grow a GitHub-only dialect beside the real path.
+
+When a remote job fails, reproduce it locally with the job's exact
+command, run the sibling gates that have been taking turns, and stay
+on the host until that set is green. Act on the first failed required
+job; do not wait for the rest of the matrix. One local fix and a
+hopeful push is how two independent failures become two CI cycles.
+`cmk:delivery-ship` step 1 applies the same loop.
 
 ## Production readiness
 
@@ -218,7 +254,8 @@ Own the full span of a task, including the waiting inside it.
 - **Never idle-wait.** While something long-running executes (CI, deploy,
   build, test suite), use the time — deepen analysis, pre-read upcoming
   code, review findings, prepare follow-ups — then return to the awaited
-  thing.
+  thing. Spot the first failed required CI job and start the local
+  reproduce; do not wait for the rest of the matrix to finish.
 - **Own what you start.** Every background job, monitor, subagent, or CI
   run you kick off stays on your ledger until resolved — not started, not
   "last seen running." A forgotten monitor is a dropped task.

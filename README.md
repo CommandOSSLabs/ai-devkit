@@ -80,6 +80,7 @@ This devkit solves that by using structured documentation as the shared state. T
 | `cmk:local-stack` | Create or iterate worktree-isolated local development stacks |
 | `cmk:infra` | Establish or audit infrastructure-as-code packages and environment boundaries |
 | `cmk:cicd` | Structure CI, deployment, and policy automation around GitHub Actions |
+| `cmk:enclave` | Attested enclave boundary, secret packing, and TEE applications (Nautilus / Nitro) |
 | `cmk:test-resources` | Share an expensive test resource (container, database, external service) safely across a parallel test runner |
 | `cmk:rust` | Idiomatic Rust practices — error handling, module boundaries, feature flags, lint/test wiring, dependency hygiene — inside a design-decided crate |
 | `cmk:testcontainers` | Start and share a throwaway service container from Rust test code via the `testcontainers` crate |
