@@ -69,7 +69,7 @@ export function NotificationStack({
       onFocus={() => setExpanded(true)}
       onBlur={() => setExpanded(false)}
       onClick={() => setExpanded(!isExpanded)}
-      className={cn("relative w-72 cursor-pointer select-none outline-none", className, classNames.root)}
+      className={cn("relative w-60 cursor-pointer select-none outline-none", className, classNames.root)}
     >
       <div
         className={cn(
@@ -134,7 +134,7 @@ export function NotificationStack({
               e.stopPropagation();
               onViewAll?.();
             }}
-            style={{ marginTop: expandedHeight + 4 }}
+            style={{ marginTop: 8 }}
             className={cn(
               "flex w-full items-center justify-between rounded-lg border border-[#1E2127] bg-[#0A0B0D] px-3 py-2 font-mono text-[11px] text-[#9BA1AC] transition-colors hover:text-[#E6E8EB]",
               classNames.footer
