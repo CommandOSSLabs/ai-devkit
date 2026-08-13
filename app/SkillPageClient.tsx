@@ -1,12 +1,16 @@
 "use client";
 
 import { useState, useCallback, useMemo, useEffect } from "react";
+import Link from "next/link";
 import { Drawer } from "vaul";
 import { GlowingWave } from "@/components/GlowingWave";
-import { NotificationStack, type NotificationStackItem } from "@/components/motion/notification-stack";
 import { CircuitBoard } from "@/components/motion/circuit-board";
+import { FlameWrap } from "@/components/motion/flame-wrap";
+import { MaskedHeading } from "@/components/motion/masked-heading";
 import { DecryptReveal } from "@/components/motion/decrypt-reveal";
 import BendingMarquee from "@/components/motion/bending-marquee";
+import { ParticleScroll } from "@/components/motion/particle-scroll";
+import { ScrambledInstallCommand, type PkgManager } from "@/components/motion/scrambled-install-command";
 import { type RealSkill, CATEGORY_LABELS } from "@/lib/skill-types";
 import {
   Check,
@@ -59,6 +63,38 @@ const CATEGORY_ICONS: Record<string, React.ElementType> = {
 };
 
 const GITHUB_REPO = "https://github.com/CommandOSSLabs/ai-devkit";
+
+// ParticleScroll (see components/motion/particle-scroll.tsx) owns the page's
+// scrolling internally — the actual scrollable element is this id, not
+// `window`. `scrollIntoView` already finds the right ancestor on its own, but
+// a bare "scroll to top" needs the element by id. Falls back to `window` so
+// this keeps working if ParticleScroll is ever removed.
+const PAGE_SCROLL_ID = "site-scroll";
+
+function scrollPageToTop(behavior: ScrollBehavior) {
+  const root = document.getElementById(PAGE_SCROLL_ID);
+  if (root) root.scrollTo({ top: 0, behavior });
+  else window.scrollTo({ top: 0, behavior });
+}
+
+/* ─── Section nav: real paths in the URL bar, single-page smooth scroll ───
+   /quickstart, /features, etc. are real routes (see app/[section]/page.tsx)
+   so a hard reload or shared link still lands on the right section — but a
+   same-page click never re-navigates, it just scrolls and swaps the URL via
+   pushState. Plain functions, not hooks, so any component can call them. */
+function navigateToSection(e: React.MouseEvent, id: string) {
+  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+  e.preventDefault();
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  window.history.pushState(null, "", `/${id}`);
+}
+
+function navigateHome(e: React.MouseEvent) {
+  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+  e.preventDefault();
+  scrollPageToTop("smooth");
+  window.history.pushState(null, "", "/");
+}
 
 function skillGithubUrl(id: string): string {
   return `${GITHUB_REPO}/blob/main/skills/${id}/SKILL.md`;
@@ -239,7 +275,7 @@ function Nav({
       <div className="mx-auto flex h-full max-w-7xl items-center justify-between px-4 sm:px-6">
         {/* Brand */}
         <div className="flex items-center gap-3">
-          <a href="#" className="flex items-center gap-2">
+          <Link href="/" onClick={navigateHome} className="flex items-center gap-2">
             <div
               className={`flex h-7 w-7 items-center justify-center rounded-md border ${
                 isDark ? "border-[var(--border-strong)] bg-[var(--bg-surface)]" : "border-[#E2E8F0] bg-[#F1F5F9]"
@@ -250,7 +286,7 @@ function Nav({
             <span className="whitespace-nowrap font-pixel text-[14px] font-semibold">
               ai-devkit
             </span>
-          </a>
+          </Link>
           <span
             className={`hidden rounded border px-1.5 py-0.5 font-mono text-[11px] sm:inline-block ${
               isDark
@@ -264,46 +300,51 @@ function Nav({
 
         {/* Links — lg: not md:, tablet doesn't have room for brand + version + 5 links + all actions in one row */}
         <nav className="hidden items-center gap-6 lg:flex">
-          <a
-            href="#quickstart"
+          <Link
+            href="/quickstart"
+            onClick={(e) => navigateToSection(e, "quickstart")}
             className={`text-[13px] transition-colors ${
               isDark ? "text-[var(--text-secondary)] hover:text-[var(--text-primary)]" : "text-[#475569] hover:text-[#0F172A]"
             }`}
           >
             Quickstart
-          </a>
-          <a
-            href="#how-it-works"
+          </Link>
+          <Link
+            href="/how-it-works"
+            onClick={(e) => navigateToSection(e, "how-it-works")}
             className={`text-[13px] transition-colors ${
               isDark ? "text-[var(--text-secondary)] hover:text-[var(--text-primary)]" : "text-[#475569] hover:text-[#0F172A]"
             }`}
           >
             Architecture
-          </a>
-          <a
-            href="#features"
+          </Link>
+          <Link
+            href="/features"
+            onClick={(e) => navigateToSection(e, "features")}
             className={`text-[13px] transition-colors ${
               isDark ? "text-[var(--text-secondary)] hover:text-[var(--text-primary)]" : "text-[#475569] hover:text-[#0F172A]"
             }`}
           >
             Capabilities
-          </a>
-          <a
-            href="#benchmarks"
+          </Link>
+          <Link
+            href="/benchmarks"
+            onClick={(e) => navigateToSection(e, "benchmarks")}
             className={`text-[13px] transition-colors ${
               isDark ? "text-[var(--text-secondary)] hover:text-[var(--text-primary)]" : "text-[#475569] hover:text-[#0F172A]"
             }`}
           >
             Benchmarks
-          </a>
-          <a
-            href="#catalog"
+          </Link>
+          <Link
+            href="/catalog"
+            onClick={(e) => navigateToSection(e, "catalog")}
             className={`text-[13px] transition-colors ${
               isDark ? "text-[var(--text-secondary)] hover:text-[var(--text-primary)]" : "text-[#475569] hover:text-[#0F172A]"
             }`}
           >
             Skills
-          </a>
+          </Link>
         </nav>
 
         {/* Action & Theme Toggle */}
@@ -341,8 +382,9 @@ function Nav({
             <span>{repoMeta.stars !== null ? formatStarCount(repoMeta.stars) : "—"}</span>
           </a>
 
-          <a
-            href="#quickstart"
+          <Link
+            href="/quickstart"
+            onClick={(e) => navigateToSection(e, "quickstart")}
             className={`rounded border border-transparent px-3 py-1.5 text-[13px] font-medium transition-colors ${
               isDark
                 ? "bg-[var(--text-primary)] text-[var(--bg-base)] hover:bg-white"
@@ -350,7 +392,7 @@ function Nav({
             }`}
           >
             Install CLI
-          </a>
+          </Link>
         </div>
       </div>
     </header>
@@ -378,63 +420,16 @@ function CornerNotch({ className, size = 40 }: { className?: string; size?: numb
   );
 }
 
-function mergesToNotifications(merges: MergedPR[]): NotificationStackItem[] {
-  return merges.map((pr) => ({
-    id: String(pr.number),
-    title: pr.title,
-    description: `${timeAgo(pr.mergedAt)} · #${pr.number} merged`,
-    trailing: <GitBranch size={13} className="text-[#C3E88D]" />,
-  }));
-}
-
-function FloatingNotifications() {
-  const repoMeta = useRepoMeta();
-  const notifications = mergesToNotifications(repoMeta.recentMerges);
-
-  // A real toast, not a permanent fixture: shows once (expanded) when merge
-  // data arrives, then fades away for good after a few unhovered seconds —
-  // hovering pauses the countdown so a reader mid-read never has it yanked away.
-  const [hovered, setHovered] = useState(false);
-  const [fading, setFading] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
-
-  useEffect(() => {
-    if (dismissed || hovered || notifications.length === 0) return;
-    const timer = setTimeout(() => setFading(true), 7000);
-    return () => clearTimeout(timer);
-  }, [notifications.length, hovered, dismissed]);
-
-  useEffect(() => {
-    if (!fading) return;
-    const timer = setTimeout(() => setDismissed(true), 300);
-    return () => clearTimeout(timer);
-  }, [fading]);
-
-  if (notifications.length === 0 || dismissed) return null;
-
-  return (
-    <div
-      className={`fixed bottom-4 right-4 z-50 hidden transition-opacity duration-300 sm:block ${
-        fading && !hovered ? "opacity-0" : "opacity-100"
-      }`}
-      onMouseEnter={() => {
-        setHovered(true);
-        setFading(false);
-      }}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <NotificationStack
-        items={notifications}
-        defaultExpanded
-        collapsedLabel="Recent merges"
-        emptyLabel="No recent merges"
-      />
-    </div>
-  );
-}
+const INSTALL_COMMANDS: Record<PkgManager, string> = {
+  npm: "npx skills add CommandOSSLabs/ai-devkit",
+  pnpm: "pnpm dlx skills add CommandOSSLabs/ai-devkit",
+  yarn: "yarn dlx skills add CommandOSSLabs/ai-devkit",
+  bun: "bunx skills add CommandOSSLabs/ai-devkit",
+};
 
 function Hero({ theme }: { theme: "dark" | "light" }) {
   const isDark = theme === "dark";
+  const [pkgManager, setPkgManager] = useState<PkgManager>("npm");
 
   return (
     <section
@@ -483,13 +478,14 @@ function Hero({ theme }: { theme: "dark" | "light" }) {
           {/* Corner CTA, top-right — alone, nothing stacked under it in the
               main content flow. */}
           <div className="absolute right-3 top-3 z-20 sm:right-6 sm:top-6">
-            <a
-              href="#quickstart"
+            <Link
+              href="/quickstart"
+              onClick={(e) => navigateToSection(e, "quickstart")}
               className="inline-flex items-center gap-2 rounded-lg bg-[#E6E8EB] px-3 py-2 text-[12px] font-medium text-[#0A0B0D] shadow-lg transition-colors hover:bg-white sm:px-4 sm:py-2.5 sm:text-[13px]"
             >
               <span>Get Started</span>
               <ArrowRight size={14} />
-            </a>
+            </Link>
           </div>
 
           {/* Floating install-command card, bottom-right */}
@@ -504,21 +500,29 @@ function Hero({ theme }: { theme: "dark" | "light" }) {
                 Quick install via skills.sh. For per-repo adaptation and upstream sync, use the vendored path instead.
               </p>
 
-              <div className="flex items-center gap-3 rounded border border-[#1E2127] bg-[#0A0B0D] px-3 py-2 font-mono text-[12px]">
-                <span className="select-none text-[#6B7280]">$</span>
-                <code className="truncate text-[#E6E8EB]">npx skills add CommandOSSLabs/ai-devkit</code>
-                <div className="ml-auto flex-shrink-0">
-                  <CopyButton text="npx skills add CommandOSSLabs/ai-devkit" />
-                </div>
+              {/* Hero stays dark regardless of site theme (photo backdrop needs
+                  the contrast), so the always-forces-dark wrapper matches it
+                  rather than following the light/dark toggle like the rest
+                  of the page. */}
+              <div className="dark">
+                <ScrambledInstallCommand
+                  installCommand={INSTALL_COMMANDS[pkgManager]}
+                  pkgManager={pkgManager}
+                  setPkgManager={setPkgManager}
+                  className="border-[#1E2127] bg-[#0A0B0D]"
+                  headerClassName="border-[#1E2127] bg-[#101216]/60"
+                  codeClassName="px-3 py-2.5 text-[12px] text-[#E6E8EB]"
+                />
               </div>
 
-              <a
-                href="#catalog"
+              <Link
+                href="/catalog"
+                onClick={(e) => navigateToSection(e, "catalog")}
                 className="group flex w-full items-center justify-between text-[13px] font-medium text-[#E6E8EB] transition-opacity hover:opacity-70"
               >
                 <span>Explore 32 skills</span>
                 <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -533,18 +537,21 @@ function Quickstart() {
   return (
     <section id="quickstart" className="border-b border-[var(--border-subtle)] px-4 py-16 sm:px-6 md:py-20">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-12 grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-end">
+        <div className="intro-panel-text mb-12 grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-end dark:[text-shadow:0_1px_2px_rgba(0,0,0,0.85),0_1px_6px_rgba(0,0,0,0.4)]">
           <div className="lg:col-span-6">
-            <h2 className="text-[clamp(24px,3vw,36px)] font-semibold leading-[1.15] tracking-[-0.03em] text-[var(--text-primary)]">
-              Three install paths.{" "}
-              <span className="text-[var(--text-secondary)]">Vendored with sync keeps your per-repo adaptations alive across upgrades.</span>
-            </h2>
+            <MaskedHeading
+              className="text-[clamp(24px,3vw,36px)] font-semibold leading-[1.15] tracking-[-0.03em] text-[var(--text-primary)]"
+              segments={[
+                { text: "Three install paths." },
+                { text: "Vendored with sync keeps your per-repo adaptations alive across upgrades.", variant: "secondary" },
+              ]}
+            />
           </div>
           <div className="lg:col-start-8 lg:col-span-5">
-            <p className="text-[15px] leading-[1.6] text-[var(--text-secondary)]">
+            <p className="glass-text-secondary text-[15px] leading-[1.6] text-[var(--text-secondary)]">
               Tell your agent to fetch the install guide and it walks itself through. Works with Claude Code, Cursor, Codex, OpenCode, and Grok.
             </p>
-            <div className="mt-2 font-mono text-[13px] text-[var(--text-tertiary)]">
+            <div className="glass-text-secondary mt-2 font-mono text-[13px] text-[var(--text-tertiary)]">
               02.0 Quickstart →
             </div>
           </div>
@@ -569,26 +576,41 @@ function Quickstart() {
             </div>
           </div>
 
-          <div className="rounded-[16px] border border-[var(--border-subtle)] bg-[var(--bg-frame)] p-1">
-            <div className="flex h-full flex-col justify-between rounded-[12px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5">
-              <div>
-                <div className="mb-3 flex items-center justify-between">
-                  <span className="font-mono text-[12px] font-semibold text-[#82AAFF]">QUICK</span>
-                  <span className="font-mono text-[12px] text-[var(--text-tertiary)]">read-only</span>
+          <FlameWrap
+            className="h-full"
+            radius={16}
+            height={60}
+            spread={6}
+            intensity={0.65}
+            sparks={1.2}
+            sparkSize={0.3}
+            rim={2}
+            melt={3}
+            distortion={6}
+            smoke={1}
+            ember={1.5}
+          >
+            <div className="h-full rounded-[16px] border border-[var(--border-subtle)] bg-[var(--bg-frame)] p-1">
+              <div className="flex h-full flex-col justify-between rounded-[12px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5">
+                <div>
+                  <div className="mb-3 flex items-center justify-between">
+                    <span className="font-mono text-[12px] font-semibold text-[#82AAFF]">QUICK</span>
+                    <span className="font-mono text-[12px] text-[var(--text-tertiary)]">read-only</span>
+                  </div>
+                  <h3 className="mb-2 text-[16px] font-semibold text-[var(--text-primary)]">skills.sh</h3>
+                  <p className="mb-4 text-[14px] text-[var(--text-secondary)]">
+                    Copies skills into each detected agent&apos;s own directory. Treat as read-only — updates overwrite local edits.
+                  </p>
                 </div>
-                <h3 className="mb-2 text-[16px] font-semibold text-[var(--text-primary)]">skills.sh</h3>
-                <p className="mb-4 text-[14px] text-[var(--text-secondary)]">
-                  Copies skills into each detected agent&apos;s own directory. Treat as read-only — updates overwrite local edits.
-                </p>
-              </div>
-              <div className="rounded border border-[var(--border-subtle)] bg-[var(--bg-base)] p-3 font-mono text-[13px] text-[var(--text-primary)]">
-                <div className="flex items-center justify-between">
-                  <span className="truncate"><span className="text-[var(--text-tertiary)] select-none">$ </span>npx skills add CommandOSSLabs/ai-devkit</span>
-                  <CopyButton text="npx skills add CommandOSSLabs/ai-devkit" className="ml-2 flex-shrink-0 p-1 text-[#6B7280] hover:text-[#9BA1AC]" />
+                <div className="rounded border border-[var(--border-subtle)] bg-[var(--bg-base)] p-3 font-mono text-[13px] text-[var(--text-primary)]">
+                  <div className="flex items-center justify-between">
+                    <span className="truncate"><span className="text-[var(--text-tertiary)] select-none">$ </span>npx skills add CommandOSSLabs/ai-devkit</span>
+                    <CopyButton text="npx skills add CommandOSSLabs/ai-devkit" className="ml-2 flex-shrink-0 p-1 text-[#6B7280] hover:text-[#9BA1AC]" />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </FlameWrap>
 
           <div className="rounded-[16px] border border-[var(--border-subtle)] bg-[var(--bg-frame)] p-1">
             <div className="flex h-full flex-col justify-between rounded-[12px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5">
@@ -640,18 +662,21 @@ function Architecture() {
   return (
     <section id="how-it-works" className="border-b border-[var(--border-subtle)] px-4 py-16 sm:px-6 md:py-20">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-12 grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-end">
+        <div className="intro-panel-text mb-12 grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-end dark:[text-shadow:0_1px_2px_rgba(0,0,0,0.85),0_1px_6px_rgba(0,0,0,0.4)]">
           <div className="lg:col-span-6">
-            <h2 className="text-[clamp(24px,3vw,36px)] font-semibold leading-[1.15] tracking-[-0.03em] text-[var(--text-primary)]">
-              The SDLC is a flow of documents that build on each other.{" "}
-              <span className="text-[var(--text-secondary)]">The repository&apos;s /docs tree is where that flow lives.</span>
-            </h2>
+            <MaskedHeading
+              className="text-[clamp(24px,3vw,36px)] font-semibold leading-[1.15] tracking-[-0.03em] text-[var(--text-primary)]"
+              segments={[
+                { text: "The SDLC is a flow of documents that build on each other." },
+                { text: "The repository's /docs tree is where that flow lives.", variant: "secondary" },
+              ]}
+            />
           </div>
           <div className="lg:col-start-8 lg:col-span-5">
-            <p className="text-[15px] leading-[1.6] text-[var(--text-secondary)]">
+            <p className="glass-text-secondary text-[15px] leading-[1.6] text-[var(--text-secondary)]">
               Three principles keep the flow coherent: guidance over forms, coherence cascades through every stage, and progressive disclosure so agents read only what the task at hand needs.
             </p>
-            <div className="mt-2 font-mono text-[13px] text-[var(--text-tertiary)]">
+            <div className="glass-text-secondary mt-2 font-mono text-[13px] text-[var(--text-tertiary)]">
               03.0 Architecture →
             </div>
           </div>
@@ -682,18 +707,25 @@ function Architecture() {
                       cross another node), bottom row continues right-to-left.
                       Fits one frame at this panel's width — no scroll needed. */}
                   <CircuitBoard
-                    width={560}
-                    height={210}
+                    width={800}
+                    height={330}
                     gridSize={20}
                     variant="auto"
                     nodes={[
-                      { id: "requirements", x: 60, y: 45, label: "Requirements", status: "active", size: "md", icon: <Search size={16} /> },
-                      { id: "design", x: 220, y: 45, label: "Design", status: "active", size: "md", icon: <Layers size={16} /> },
-                      { id: "plan", x: 380, y: 45, label: "Plan", status: "processing", size: "md", icon: <Workflow size={16} /> },
-                      { id: "implement", x: 500, y: 45, label: "Implement", status: "active", size: "md", icon: <Code2 size={16} /> },
-                      { id: "simplify", x: 500, y: 160, label: "Simplify", status: "active", size: "md", icon: <Sparkles size={16} /> },
-                      { id: "review", x: 340, y: 160, label: "Review", status: "processing", size: "md", icon: <ShieldCheck size={16} /> },
-                      { id: "ship", x: 180, y: 160, label: "Ship", status: "active", size: "md", icon: <Zap size={16} /> },
+                      { id: "requirements", x: 70, y: 60, label: "Requirements", status: "active", size: "md", icon: <Search size={16} /> },
+                      { id: "design", x: 250, y: 60, label: "Design", status: "active", size: "md", icon: <Layers size={16} /> },
+                      { id: "plan", x: 430, y: 60, label: "Plan", status: "active", size: "md", icon: <Workflow size={16} /> },
+                      { id: "implement", x: 570, y: 60, label: "Implement", status: "active", size: "md", icon: <Code2 size={16} /> },
+                      { id: "simplify", x: 570, y: 270, label: "Simplify", status: "active", size: "md", icon: <Sparkles size={16} /> },
+                      { id: "review", x: 390, y: 270, label: "Review", status: "active", size: "md", icon: <ShieldCheck size={16} /> },
+                      { id: "ship", x: 210, y: 270, label: "Ship", status: "active", size: "md", icon: <Zap size={16} /> },
+                      // Sits outside the two-row pipeline block entirely — same
+                      // size as every other stage, forking off Implement and
+                      // merging back at Simplify alongside the direct connector,
+                      // so it reads as a genuine parallel path (cross-cutting
+                      // skills really do apply alongside the main flow, not
+                      // wedged into the middle of it).
+                      { id: "cross-cutting", x: 730, y: 165, label: "Cross-cutting", status: "active", size: "md", icon: <Info size={16} /> },
                     ]}
                     connections={[
                       { from: "requirements", to: "design", animated: true },
@@ -702,11 +734,14 @@ function Architecture() {
                       { from: "implement", to: "simplify", animated: true },
                       { from: "simplify", to: "review", animated: true },
                       { from: "review", to: "ship", animated: true },
+                      { from: "implement", to: "cross-cutting", animated: true, style: "straight" },
+                      { from: "cross-cutting", to: "simplify", animated: true, style: "straight" },
                     ]}
                   />
 
-                  {/* Cross-cutting skills: a caption, not orphaned circuit nodes —
-                      they touch every stage rather than sitting at one of them. */}
+                  {/* cmk:adr / glossary / learn / rule — the four skills the "Cross-cutting"
+                      hub node above stands in for. Named here since the diagram has
+                      room for one hub node, not four. */}
                   <div className="mt-8 flex items-center gap-3 whitespace-nowrap font-mono text-[12px] text-[var(--text-tertiary)]">
                     <span className="uppercase tracking-wide">Cross-cutting</span>
                     <span className="h-px flex-1 bg-[var(--border-subtle)]" />
@@ -781,18 +816,21 @@ function Motivation() {
   return (
     <section className="border-b border-[var(--border-subtle)] px-4 py-16 sm:px-6 md:py-20">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-12 grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-end">
+        <div className="intro-panel-text mb-12 grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-end dark:[text-shadow:0_1px_2px_rgba(0,0,0,0.85),0_1px_6px_rgba(0,0,0,0.4)]">
           <div className="lg:col-span-6">
-            <h2 className="text-[clamp(24px,3vw,36px)] font-semibold leading-[1.15] tracking-[-0.03em] text-[var(--text-primary)]">
-              AI agents lose context between sessions.{" "}
-              <span className="text-[var(--text-secondary)]">Structured docs are the shared state that fixes it.</span>
-            </h2>
+            <MaskedHeading
+              className="text-[clamp(24px,3vw,36px)] font-semibold leading-[1.15] tracking-[-0.03em] text-[var(--text-primary)]"
+              segments={[
+                { text: "AI agents lose context between sessions." },
+                { text: "Structured docs are the shared state that fixes it.", variant: "secondary" },
+              ]}
+            />
           </div>
           <div className="lg:col-start-8 lg:col-span-5">
-            <p className="text-[15px] leading-[1.6] text-[var(--text-secondary)]">
+            <p className="glass-text-secondary text-[15px] leading-[1.6] text-[var(--text-secondary)]">
               Teams repeat requirements, re-explain decisions, and re-establish scope every time a new conversation starts — there&apos;s no shared memory between agents and humans.
             </p>
-            <div className="mt-2 font-mono text-[13px] text-[var(--text-tertiary)]">
+            <div className="glass-text-secondary mt-2 font-mono text-[13px] text-[var(--text-tertiary)]">
               04.0 Motivation →
             </div>
           </div>
@@ -817,9 +855,43 @@ function Motivation() {
 
 /* ─── Section 4.6: Marquee Divider (real copy, no placeholder phrases) ── */
 
-function MarqueeDivider() {
+function MarqueeDivider({ theme }: { theme: "dark" | "light" }) {
+  const isDark = theme === "dark";
+  // Dark mode: blue text on near-black, matching the rest of the terminal
+  // palette. Light mode inverts to dark text on a light band — same pairing
+  // React Bits Pro's own reference uses (#0a0a0a on #fafafa) — rather than
+  // dropping a near-black band into an otherwise white page.
+  const color = isDark ? "#82AAFF" : "#0F172A";
+  // Semi-transparent, not solid — the page's ambient wave shifts through a
+  // wide color range as it animates (deep blue, warm orange, near-black),
+  // and a flat opaque band read as a sticker with no relationship to
+  // whatever color the wave happened to be at that moment. Translucency +
+  // the component's backdrop-blur lets the actual surrounding color bleed
+  // through, so the band always harmonizes with what's behind it instead
+  // of clashing with it half the time.
+  const bandColor = isDark ? "rgba(10, 11, 13, 0.72)" : "rgba(241, 245, 249, 0.72)";
+
   return (
-    <div className="h-[110px] w-full overflow-hidden border-b border-[var(--border-subtle)] bg-[#0A0B0D]">
+    <div className="relative h-[220px] w-full overflow-hidden">
+      {/* No opaque background or border on this wrapper — the page's
+          ambient wave now runs the full page (not faded past the hero), so
+          a solid black box here read as an unrelated rectangle dropped on
+          top of it, "viền đen" cutting across the warm glow. Only the
+          marquee's own per-row band gets a solid fill; the empty vertical
+          margin above/below that row (this container is taller than one
+          text row) stays transparent, so the glow shows through around the
+          text instead of behind a hard-edged panel. */}
+      {/* Getting the fold to actually read as 3D turned out to be about
+          `perspective`, not `bend`/`depth` — those two just push a panel
+          further away, but a large `perspective` (800-900, what the first
+          two attempts used) puts the virtual camera far back, which is a
+          *flat*, subtle projection almost by definition. A small
+          perspective (camera close to the scene) is what makes CSS 3D
+          transforms read as dramatic — same reason a wide-angle lens
+          exaggerates depth. 380 here vs. 900 before is the actual fix.
+          80° (the reference preview's own value) read as too sharp/gimmicky
+          once actually visible — 60° keeps a clearly readable fold without
+          tipping into "look at this trick" territory. */}
       <BendingMarquee
         items={[
           "documentation-first",
@@ -830,18 +902,18 @@ function MarqueeDivider() {
         ]}
         separator="·"
         markSway={0}
-        panelHeight={110}
-        bend={30}
-        depth={-160}
-        perspective={700}
-        speed={24}
-        fontSize={16}
+        panelHeight={220}
+        bend={60}
+        depth={-200}
+        perspective={380}
+        speed={22}
+        fontSize={22}
         fontWeight={600}
         letterSpacing={0.5}
-        itemGap={28}
-        bandPadding={12}
-        color="#82AAFF"
-        bandColor="#0A0B0D"
+        itemGap={32}
+        bandPadding={20}
+        color={color}
+        bandColor={bandColor}
         className="h-full w-full"
       />
     </div>
@@ -896,18 +968,21 @@ function FeatureGrid() {
   return (
     <section id="features" className="border-b border-[var(--border-subtle)] px-4 py-16 sm:px-6 md:py-20">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-12 grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-end">
+        <div className="intro-panel-text mb-12 grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-end dark:[text-shadow:0_1px_2px_rgba(0,0,0,0.85),0_1px_6px_rgba(0,0,0,0.4)]">
           <div className="lg:col-span-6">
-            <h2 className="text-[clamp(24px,3vw,36px)] font-semibold leading-[1.15] tracking-[-0.03em] text-[var(--text-primary)]">
-              Built for engineering rigor.{" "}
-              <span className="text-[var(--text-secondary)]">Every capability carries concrete, executable proof.</span>
-            </h2>
+            <MaskedHeading
+              className="text-[clamp(24px,3vw,36px)] font-semibold leading-[1.15] tracking-[-0.03em] text-[var(--text-primary)]"
+              segments={[
+                { text: "Built for engineering rigor." },
+                { text: "Every capability carries concrete, executable proof.", variant: "secondary" },
+              ]}
+            />
           </div>
           <div className="lg:col-start-8 lg:col-span-5">
-            <p className="text-[15px] leading-[1.6] text-[var(--text-secondary)]">
+            <p className="glass-text-secondary text-[15px] leading-[1.6] text-[var(--text-secondary)]">
               No marketing buzzwords or hand-waving claims. High-density features designed specifically for software engineers.
             </p>
-            <div className="mt-2 font-mono text-[13px] text-[var(--text-tertiary)]">
+            <div className="glass-text-secondary mt-2 font-mono text-[13px] text-[var(--text-tertiary)]">
               05.0 Capabilities →
             </div>
           </div>
@@ -943,18 +1018,21 @@ function DiffDemo() {
   return (
     <section className="border-b border-[var(--border-subtle)] px-4 py-16 sm:px-6 md:py-20">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-12 grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-end">
+        <div className="intro-panel-text mb-12 grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-end dark:[text-shadow:0_1px_2px_rgba(0,0,0,0.85),0_1px_6px_rgba(0,0,0,0.4)]">
           <div className="lg:col-span-6">
-            <h2 className="text-[clamp(24px,3vw,36px)] font-semibold leading-[1.15] tracking-[-0.03em] text-[var(--text-primary)]">
-              Behavior-preserving diff simplification.{" "}
-              <span className="text-[var(--text-secondary)]">Cleans up noise before submitting code for human review.</span>
-            </h2>
+            <MaskedHeading
+              className="text-[clamp(24px,3vw,36px)] font-semibold leading-[1.15] tracking-[-0.03em] text-[var(--text-primary)]"
+              segments={[
+                { text: "Behavior-preserving diff simplification." },
+                { text: "Cleans up noise before submitting code for human review.", variant: "secondary" },
+              ]}
+            />
           </div>
           <div className="lg:col-start-8 lg:col-span-5">
-            <p className="text-[15px] leading-[1.6] text-[var(--text-secondary)]">
+            <p className="glass-text-secondary text-[15px] leading-[1.6] text-[var(--text-secondary)]">
               Phase 3b runs by default, before review — four angles only: Reuse, Simplification, Efficiency, Altitude. No new features, no behavior changes.
             </p>
-            <div className="mt-2 font-mono text-[13px] text-[var(--text-tertiary)]">
+            <div className="glass-text-secondary mt-2 font-mono text-[13px] text-[var(--text-tertiary)]">
               06.0 Quality →
             </div>
           </div>
@@ -1030,22 +1108,25 @@ function Benchmarks({ skills, categories }: { skills: Skill[]; categories: Categ
   return (
     <section id="benchmarks" className="border-b border-[var(--border-subtle)] px-4 py-16 sm:px-6 md:py-20">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-12 grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-end">
+        <div className="intro-panel-text mb-12 grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-end dark:[text-shadow:0_1px_2px_rgba(0,0,0,0.85),0_1px_6px_rgba(0,0,0,0.4)]">
           <div className="lg:col-span-6">
-            <h2 className="text-[clamp(24px,3vw,36px)] font-semibold leading-[1.15] tracking-[-0.03em] text-[var(--text-primary)]">
-              Live from the repository.{" "}
-              <span className="text-[var(--text-secondary)]">Fetched from GitHub at page load — no invented numbers.</span>
-            </h2>
+            <MaskedHeading
+              className="text-[clamp(24px,3vw,36px)] font-semibold leading-[1.15] tracking-[-0.03em] text-[var(--text-primary)]"
+              segments={[
+                { text: "Live from the repository." },
+                { text: "Fetched from GitHub at page load — no invented numbers.", variant: "secondary" },
+              ]}
+            />
           </div>
           <div className="lg:col-start-8 lg:col-span-5">
-            <p className="text-[15px] leading-[1.6] text-[var(--text-secondary)]">
+            <p className="glass-text-secondary text-[15px] leading-[1.6] text-[var(--text-secondary)]">
               This section shows exactly what&apos;s publicly verifiable about{" "}
               <a href={GITHUB_REPO} target="_blank" rel="noreferrer" className="text-[#82AAFF] hover:underline">
                 CommandOSSLabs/ai-devkit
               </a>{" "}
               — nothing else.
             </p>
-            <div className="mt-2 font-mono text-[13px] text-[var(--text-tertiary)]">
+            <div className="glass-text-secondary mt-2 font-mono text-[13px] text-[var(--text-tertiary)]">
               07.0 Repository →
             </div>
           </div>
@@ -1066,9 +1147,10 @@ function Benchmarks({ skills, categories }: { skills: Skill[]; categories: Categ
 
         <div className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-[var(--border-subtle)] bg-[var(--border-subtle)] sm:grid-cols-4 lg:grid-cols-7">
           {categoryCounts.map((cat) => (
-            <a
+            <Link
               key={cat.id}
-              href="#catalog"
+              href="/catalog"
+              onClick={(e) => navigateToSection(e, "catalog")}
               className="flex flex-col gap-1 bg-[var(--bg-surface)] p-4 transition-colors hover:bg-[var(--bg-elevated)]"
             >
               <span className="font-mono text-[11px] uppercase tracking-wide text-[var(--text-tertiary)]">
@@ -1077,7 +1159,7 @@ function Benchmarks({ skills, categories }: { skills: Skill[]; categories: Categ
               <span className="font-mono text-[16px] font-semibold text-[#82AAFF]">
                 {cat.count} skill{cat.count === 1 ? "" : "s"}
               </span>
-            </a>
+            </Link>
           ))}
         </div>
       </div>
@@ -1124,28 +1206,40 @@ function SkillCatalog({
     });
   };
 
+  // Not an install command — `npx skills add --skill a b c` isn't valid syntax
+  // for more than one skill. This copies a plain-language prompt instead: paste
+  // it into any agent's chat (Claude, Cursor, Codex, whatever) and it fetches
+  // and applies the selected skills against the current codebase — no install,
+  // no repo changes, works the same way regardless of which agent runs it.
   const copyPromptText = useMemo(() => {
     const list = skills.filter((s) => selectedSkills.has(s.id)).map((s) => s.name);
-    return list.length > 0 ? `npx skills add CommandOSSLabs/ai-devkit --skill ${list.join(" ")}` : "npx skills add CommandOSSLabs/ai-devkit";
+    if (list.length === 0) return "npx skills add CommandOSSLabs/ai-devkit";
+    return `Fetch and apply these skills from https://github.com/CommandOSSLabs/ai-devkit/tree/main/skills against this codebase: ${list.join(", ")}.`;
   }, [skills, selectedSkills]);
 
   return (
     <section id="catalog" className="border-b border-[var(--border-subtle)] px-4 py-16 sm:px-6 md:py-20">
       <div className="mx-auto max-w-7xl">
         {/* Asymmetric Section Header */}
-        <div className="mb-12 grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-end">
+        <div className="intro-panel-text mb-12 grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-end dark:[text-shadow:0_1px_2px_rgba(0,0,0,0.85),0_1px_6px_rgba(0,0,0,0.4)]">
           <div className="lg:col-span-6">
-            <h2 className="text-[clamp(24px,3vw,36px)] font-semibold leading-[1.15] tracking-[-0.03em] text-[var(--text-primary)]">
-              {skills.length} Canonical Agent Skills.{" "}
-              <span className="text-[var(--text-secondary)]">Click any skill card to open detailed specs in a Bottom Sheet.</span>
-            </h2>
+            <MaskedHeading
+              className="text-[clamp(24px,3vw,36px)] font-semibold leading-[1.15] tracking-[-0.03em] text-[var(--text-primary)]"
+              segments={[
+                { text: `${skills.length} Canonical Agent Skills.` },
+                { text: "Click any skill card to open detailed specs in a Bottom Sheet.", variant: "secondary" },
+              ]}
+            />
           </div>
           <div className="lg:col-start-8 lg:col-span-5">
-            <p className="text-[15px] leading-[1.6] text-[var(--text-secondary)]">
+            <p className="glass-text-secondary text-[15px] leading-[1.6] text-[var(--text-secondary)]">
               Every skill is read live from skills/&lt;id&gt;/SKILL.md — name, description, and version straight from the repo.
             </p>
-            <div className="mt-2 font-mono text-[13px] text-[var(--text-tertiary)]">
-              08.0 Skill Catalog →
+            <div className="mt-2 flex items-center gap-3 font-mono text-[13px]">
+              <span className="glass-text-secondary text-[var(--text-tertiary)]">08.0 Skill Catalog →</span>
+              <Link href="/skills" className="text-[#82AAFF] hover:underline">
+                Browse every file →
+              </Link>
             </div>
           </div>
         </div>
@@ -1195,14 +1289,18 @@ function SkillCatalog({
           </div>
         </div>
 
-        {/* Selected Skill Installer Bar */}
-        <div className="mb-8 flex items-center justify-between rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-4 py-3 font-mono text-[13px]">
-          <div className="flex items-center gap-3">
-            <span className="text-[#82AAFF] font-semibold">{selectedSkills.size} skills selected</span>
-            <span className="text-[var(--text-disabled)]">|</span>
-            <code className="text-[var(--text-secondary)] truncate max-w-md">{copyPromptText}</code>
+        {/* Selected Skill Prompt Bar — copies an agent prompt, not an install command.
+            Stacks on narrow screens: the truncated prompt preview only adds value once
+            there's room to actually show some of it, so it's hidden below sm: rather
+            than forcing the row to overflow past a fixed max-w that ignored viewport
+            width entirely (it used to clip the Copy button off-screen on mobile). */}
+        <div className="mb-8 flex flex-col gap-3 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-4 py-3 font-mono text-[13px] sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex min-w-0 items-center gap-3">
+            <span className="shrink-0 text-[#82AAFF] font-semibold">{selectedSkills.size} skills selected</span>
+            <span className="hidden shrink-0 text-[var(--text-disabled)] sm:inline">|</span>
+            <code className="hidden min-w-0 truncate text-[var(--text-secondary)] sm:inline">{copyPromptText}</code>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex shrink-0 items-center gap-3">
             <button
               type="button"
               onClick={() => setSelectedSkills(new Set())}
@@ -1210,7 +1308,7 @@ function SkillCatalog({
             >
               Clear
             </button>
-            <CopyButton text={copyPromptText} />
+            <CopyButton text={copyPromptText} title="Copy agent prompt" />
           </div>
         </div>
 
@@ -1405,11 +1503,14 @@ function SkillCatalog({
                           : "+ Add to Selection"}
                       </button>
 
-                      {/* "skills use" prints the skill's prompt to stdout for piping into
-                          any agent — no install, no repo changes. Distinct from the Install
-                          Command above (which was duplicated here before this fix). */}
+                      {/* A plain-language prompt, not a shell command piped into one
+                          specific CLI — paste into any agent's chat (Claude, Cursor,
+                          Codex, whatever) and it fetches and applies the skill against
+                          the current codebase. No install, no repo changes. Distinct
+                          from the Install Command above (which was duplicated here
+                          before this fix). */}
                       <CopyButton
-                        text={`npx skills use CommandOSSLabs/ai-devkit --skill ${activeDetailSkill.name} | claude`}
+                        text={`Fetch and apply the ${activeDetailSkill.name} skill from https://github.com/CommandOSSLabs/ai-devkit/tree/main/skills/${activeDetailSkill.id} against this codebase.`}
                         label="Try Without Installing"
                         className="rounded-lg border border-[#82AAFF]/40 bg-[#82AAFF]/10 px-4 py-2 font-mono text-[13px] text-[#82AAFF] hover:bg-[#82AAFF]/20"
                       />
@@ -1467,12 +1568,13 @@ function CTA() {
             </div>
 
             <div className="flex flex-wrap items-center justify-center gap-4">
-              <a
-                href="#quickstart"
+              <Link
+                href="/quickstart"
+                onClick={(e) => navigateToSection(e, "quickstart")}
                 className="rounded border border-transparent bg-[var(--text-primary)] px-5 py-2.5 text-[14px] font-medium text-[var(--bg-base)] transition-colors hover:bg-white"
               >
                 Install CLI
-              </a>
+              </Link>
               <a
                 href={GITHUB_REPO}
                 target="_blank"
@@ -1503,19 +1605,19 @@ const FOOTER_COLUMNS: { title: string; links: { label: string; href: string }[] 
   {
     title: "Product",
     links: [
-      { label: "Quickstart", href: "#quickstart" },
-      { label: "Architecture", href: "#how-it-works" },
-      { label: "Capabilities", href: "#features" },
-      { label: "Benchmarks", href: "#benchmarks" },
+      { label: "Quickstart", href: "/quickstart" },
+      { label: "Architecture", href: "/how-it-works" },
+      { label: "Capabilities", href: "/features" },
+      { label: "Benchmarks", href: "/benchmarks" },
     ],
   },
   {
     title: "Skill Domains",
     links: [
-      { label: "Delivery Workflows", href: "#catalog" },
-      { label: "Repository Setup", href: "#catalog" },
-      { label: "Agent Vendors", href: "#catalog" },
-      { label: "Sui Devstack", href: "#catalog" },
+      { label: "Delivery Workflows", href: "/catalog" },
+      { label: "Repository Setup", href: "/catalog" },
+      { label: "Agent Vendors", href: "/catalog" },
+      { label: "Sui Devstack", href: "/catalog" },
     ],
   },
   {
@@ -1571,20 +1673,32 @@ function Footer() {
                 {[
                   { Icon: GitBranch, href: GITHUB_REPO, label: "GitHub" },
                   { Icon: Box, href: `${GITHUB_REPO}/tree/main/skills`, label: "Skills" },
-                  { Icon: Layers, href: "#catalog", label: "Catalog" },
+                  { Icon: Layers, href: "/catalog", label: "Catalog" },
                   { Icon: Globe, href: `${GITHUB_REPO}#readme`, label: "Docs" },
-                ].map(({ Icon, href, label }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={label}
-                    className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-[var(--bg-base)] text-[var(--text-secondary)] transition-colors hover:border-[#82AAFF]/40 hover:text-[#82AAFF]"
-                  >
-                    <Icon size={15} />
-                  </a>
-                ))}
+                ].map(({ Icon, href, label }) =>
+                  href.startsWith("http") ? (
+                    <a
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={label}
+                      className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-[var(--bg-base)] text-[var(--text-secondary)] transition-colors hover:border-[#82AAFF]/40 hover:text-[#82AAFF]"
+                    >
+                      <Icon size={15} />
+                    </a>
+                  ) : (
+                    <Link
+                      key={label}
+                      href={href}
+                      onClick={(e) => navigateToSection(e, href.slice(1))}
+                      aria-label={label}
+                      className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-[var(--bg-base)] text-[var(--text-secondary)] transition-colors hover:border-[#82AAFF]/40 hover:text-[#82AAFF]"
+                    >
+                      <Icon size={15} />
+                    </Link>
+                  ),
+                )}
               </div>
             </div>
 
@@ -1595,18 +1709,30 @@ function Footer() {
                     {col.title}
                   </h3>
                   <ul className="space-y-2.5 text-[13px]">
-                    {col.links.map((link) => (
-                      <li key={link.label}>
-                        <a
-                          href={link.href}
-                          target={link.href.startsWith("http") ? "_blank" : undefined}
-                          rel={link.href.startsWith("http") ? "noreferrer" : undefined}
-                          className="text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
-                        >
-                          {link.label}
-                        </a>
-                      </li>
-                    ))}
+                    {col.links.map((link) =>
+                      link.href.startsWith("http") ? (
+                        <li key={link.label}>
+                          <a
+                            href={link.href}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
+                          >
+                            {link.label}
+                          </a>
+                        </li>
+                      ) : (
+                        <li key={link.label}>
+                          <Link
+                            href={link.href}
+                            onClick={(e) => navigateToSection(e, link.href.slice(1))}
+                            className="text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
+                          >
+                            {link.label}
+                          </Link>
+                        </li>
+                      ),
+                    )}
                   </ul>
                 </div>
               ))}
@@ -1614,11 +1740,17 @@ function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 flex w-full flex-col items-center justify-between gap-2 border-t border-[var(--border-subtle)] pt-6 font-mono text-[12px] text-[var(--text-tertiary)] sm:flex-row">
+        <div className="mt-8 flex w-full flex-col items-center justify-center gap-2 border-t border-[var(--border-subtle)] pt-6 font-mono text-[12px] text-[var(--text-tertiary)] sm:flex-row sm:justify-between">
           <span>ai-devkit · MIT License · 2026</span>
-          <span>
-            {repoMeta.latestTag ?? "—"} · commit {repoMeta.commitSha ?? "—"}
-          </span>
+          {/* Only show the release/commit fragment once both values actually
+              loaded — half of it dashed out (fetch still pending, or GitHub's
+              API rate-limited this client) reads as a broken footer, not a
+              loading state, so leave it out entirely rather than show it. */}
+          {repoMeta.latestTag && repoMeta.commitSha ? (
+            <span>
+              {repoMeta.latestTag} · commit {repoMeta.commitSha}
+            </span>
+          ) : null}
         </div>
       </div>
     </footer>
@@ -1627,7 +1759,15 @@ function Footer() {
 
 /* ─── Main Page Component ────────────────────────────────────────────── */
 
-export default function TerminalDarkLandingPage({ skills }: { skills: RealSkill[] }) {
+const SECTION_IDS = ["quickstart", "how-it-works", "features", "benchmarks", "catalog"] as const;
+
+export default function TerminalDarkLandingPage({
+  skills,
+  initialSection,
+}: {
+  skills: RealSkill[];
+  initialSection?: string;
+}) {
   const [theme, setThemeState] = useState<"dark" | "light">("dark");
   const [activeDetailSkill, setActiveDetailSkill] = useState<Skill | null>(null);
 
@@ -1656,15 +1796,49 @@ export default function TerminalDarkLandingPage({ skills }: { skills: RealSkill[
     setThemeState((prev) => (prev === applied ? prev : applied));
   }, []);
 
+  // A direct load of /features (hard reload, shared link) jumps straight to
+  // that section — no smooth scroll, the page should just already be there.
+  // Re-run once more after everything (hero image, fonts) has settled: the
+  // hero's async banner image can still grow the page height after the
+  // first scroll fires, drifting the target out from under the viewport.
+  useEffect(() => {
+    if (!initialSection) return;
+    const jump = () => document.getElementById(initialSection)?.scrollIntoView({ behavior: "auto", block: "start" });
+    jump();
+    window.addEventListener("load", jump);
+    return () => window.removeEventListener("load", jump);
+  }, [initialSection]);
+
+  // Browser back/forward: the URL changed under us via history, not a click —
+  // re-sync scroll position to whatever section (or top) it now points at.
+  useEffect(() => {
+    const onPopState = () => {
+      const slug = window.location.pathname.slice(1);
+      if ((SECTION_IDS as readonly string[]).includes(slug)) {
+        document.getElementById(slug)?.scrollIntoView({ behavior: "auto", block: "start" });
+      } else {
+        scrollPageToTop("auto");
+      }
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
+
   return (
     <div
-      className={`relative min-h-screen transition-colors duration-500 selection:bg-[#82AAFF]/20 ${
+      className={`relative h-screen overflow-hidden transition-colors duration-500 selection:bg-[#82AAFF]/20 ${
         isDark ? "bg-[var(--bg-base)] text-[var(--text-primary)]" : "bg-[#F8FAFC] text-[#0F172A]"
       }`}
     >
       {/* ─── Single Luminous Wave Background (React Bits Pro Glowing Wave canvas renderer) ───
           Toned down from the original: lower glow/richness and a lighter dark-mode
-          base so the animation reads as ambient light, not a heavy dark overlay. */}
+          base so the animation reads as ambient light, not a heavy dark overlay.
+          Fixed for the full page by design — every bare (non-card) text block
+          lower on the page carries its own semi-opaque backdrop (see the
+          `bareTextBackdrop` helper below) so contrast holds without having
+          to confine or fade the wave itself. Sits outside ParticleScroll so
+          it stays pinned to the viewport regardless of the page's own
+          internal scroll position. */}
       <div className={`fixed inset-0 z-0 pointer-events-none ${isDark ? "opacity-80" : "opacity-100"}`}>
         <GlowingWave
           className="h-screen w-full"
@@ -1680,32 +1854,51 @@ export default function TerminalDarkLandingPage({ skills }: { skills: RealSkill[
 
       {/* Background Page Content Wrapper with Gaussian Blur & Scaling on Sheet Open */}
       <div
-        className={`relative z-10 transition-all duration-500 ease-out ${
+        className={`relative z-10 h-full transition-all duration-500 ease-out ${
           activeDetailSkill ? "blur-md scale-[0.985] brightness-90 origin-top pointer-events-none select-none" : ""
         }`}
       >
-        <Nav theme={theme} setTheme={setTheme} />
-        <main>
-          <Hero theme={theme} />
-          <Quickstart />
-          <Architecture />
-          <Motivation />
-          <MarqueeDivider />
-          <FeatureGrid />
-          <DiffDemo />
-          <Benchmarks skills={skills} categories={categories} />
-          <SkillCatalog
-            skills={skills}
-            categories={categories}
-            activeDetailSkill={activeDetailSkill}
-            setActiveDetailSkill={setActiveDetailSkill}
-          />
-          <CTA />
-        </main>
-        <Footer />
+        {/* ParticleScroll owns the page's scroll container (see PAGE_SCROLL_ID
+            above) — every section dissolves into sand below its formation
+            line and reassembles as it scrolls back into view. Config is the
+            component doc's own "current configuration" defaults. */}
+        <ParticleScroll
+          className="h-full w-full"
+          contentId={PAGE_SCROLL_ID}
+          point={0.68}
+          band={420}
+          density={2}
+          size={1.25}
+          spread={220}
+          gravity={0.35}
+          drift={0.7}
+          swirl={60}
+          stagger={0.7}
+          fade={0.85}
+          settle={1.2}
+          smoothing={0.6}
+        >
+          <Nav theme={theme} setTheme={setTheme} />
+          <main>
+            <Hero theme={theme} />
+            <Quickstart />
+            <Architecture />
+            <Motivation />
+            <MarqueeDivider theme={theme} />
+            <FeatureGrid />
+            <DiffDemo />
+            <Benchmarks skills={skills} categories={categories} />
+            <SkillCatalog
+              skills={skills}
+              categories={categories}
+              activeDetailSkill={activeDetailSkill}
+              setActiveDetailSkill={setActiveDetailSkill}
+            />
+            <CTA />
+          </main>
+          <Footer />
+        </ParticleScroll>
       </div>
-
-      <FloatingNotifications />
     </div>
   );
 }

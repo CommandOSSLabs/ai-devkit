@@ -1,0 +1,81 @@
+.masked-heading {
+  position: relative;
+  display: block;
+}
+
+/* Real, normally-flowing text — this is what actually sizes/wraps the
+   heading and what screen readers read. In light mode it's invisible (the
+   SVG glyph layer below paints the visible text at the exact same
+   positions); in dark mode it's the whole show, plain text on the
+   already-working dark treatment. */
+.masked-heading__measure {
+  color: transparent;
+}
+
+.masked-heading__word {
+  /* NOT position:relative — that would make this span its own offsetParent,
+     so the baseline marker's offsetTop (read in sync()) would reset to a
+     small in-word value instead of accumulating the real vertical position
+     across wrapped lines. Positioning is anchored by .masked-heading
+     itself; this element and its baseline marker need to inherit that. */
+  display: inline-block;
+  white-space: pre;
+}
+
+.masked-heading__word:not(:last-child)::after {
+  content: " ";
+}
+
+.masked-heading__baseline {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  vertical-align: baseline;
+}
+
+.masked-heading__stroke {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* Solid ink fill + a white halo underneath, same construction as a video
+   caption: dark-on-light patches of the animation read off the fill,
+   dark/vivid patches read off the halo. Legibility never depends on
+   sampling the backdrop, so there's no background state left to lose to
+   — unlike a clipped/transparent fill, which is only ever as visible as
+   whatever happens to be behind it. */
+.masked-heading__glyph {
+  paint-order: stroke fill;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.masked-heading__glyph--primary {
+  fill: var(--text-primary);
+  stroke: rgba(255, 255, 255, 0.92);
+  stroke-width: 3px;
+}
+
+.masked-heading__glyph--secondary {
+  fill: var(--text-secondary);
+  stroke: rgba(255, 255, 255, 0.88);
+  stroke-width: 2.2px;
+}
+
+/* Dark mode's plain-text + shadow treatment already reads fine over the
+   ambient glow (confirmed repeatedly elsewhere on this page) — turn the
+   glyph layer off entirely and just show the real text. */
+.dark .masked-heading__measure {
+  color: inherit;
+}
+
+.dark .masked-heading__word--secondary {
+  color: var(--text-secondary);
+}
+
+.dark .masked-heading__stroke {
+  display: none;
+}
