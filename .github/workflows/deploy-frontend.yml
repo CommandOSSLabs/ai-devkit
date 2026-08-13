@@ -1,0 +1,75 @@
+name: Deploy Frontend (Railway)
+
+# Ships a specific, already-validated commit of the skills landing page to
+# Railway. Never triggered by a bare push — either Frontend CI finishing
+# green on main, or a manual dispatch naming the exact commit to ship.
+# See .github/workflows/README.md for the deploy-and-release contract.
+
+on:
+  workflow_run:
+    workflows: ["Frontend CI"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Railway environment to deploy to
+        type: choice
+        options: [production]
+        default: production
+      commit:
+        description: Full 40-character commit SHA to deploy
+        required: true
+        type: string
+
+concurrency:
+  group: deploy-frontend-${{ inputs.environment || 'production' }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Resolve commit to deploy
+        id: resolve
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "sha=${{ inputs.commit }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "sha=${{ github.event.workflow_run.head_sha }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.resolve.outputs.sha }}
+          persist-credentials: false
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli@4
+
+      - name: Deploy to Railway
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          railway up \
+            --service ai-devkit-fe \
+            --environment production \
+            --ci \
+            --detach \
+            --message "deploy ${{ steps.resolve.outputs.sha }}"
+
+      - name: Verify deployment is reachable
+        run: |
+          for i in $(seq 1 10); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' https://ai-devkit-fe-production.up.railway.app)
+            if [ "$code" = "200" ]; then
+              echo "Frontend responded 200"
+              exit 0
+            fi
+            echo "Attempt $i: got $code, retrying..."
+            sleep 10
+          done
+          echo "Frontend did not become healthy in time"
+          exit 1

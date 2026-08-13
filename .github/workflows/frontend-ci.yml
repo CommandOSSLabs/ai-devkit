@@ -2,7 +2,7 @@ name: Frontend CI
 
 # Validates the skills landing page whenever the data it reads (skills/**)
 # or the app itself changes. This is validation only — no deploy step.
-# Railway auto-deploy is intentionally deferred; see .github/workflows/README.md.
+# See deploy-frontend.yml and .github/workflows/README.md for the deploy leg.
 
 on:
   pull_request:
