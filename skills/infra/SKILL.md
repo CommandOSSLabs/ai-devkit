@@ -1,7 +1,7 @@
 ---
 name: cmk:infra
 description: This skill should be used when the user asks to "set up infra", "add IaC", "structure the infrastructure code", "add an environment", "isolate infra stacks", or needs to establish or audit infrastructure-as-code packages, environment boundaries, and their pipeline wiring.
-version: 0.3.0
+version: 0.3.1
 ---
 
 # Infra
@@ -69,6 +69,10 @@ Environment of the same name and exactly one deploy workflow that targets it.
 This skill names that pairing and requires it to exist; the workflow
 triggers, branch/tag rules, and approval gates that implement it are
 `cmk:cicd`'s facet. Read `cmk:cicd` when wiring the deploy path itself.
+
+Attested enclaves pack operator secrets as a sealed package, not as
+image env — `cmk:enclave-secrets`. The AWS Nitro / Nautilus application
+is `cmk:nautilus`.
 
 ## Cloud-provider choice stays out of the upstream kit
 

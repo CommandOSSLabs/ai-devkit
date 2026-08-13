@@ -80,6 +80,7 @@ This devkit solves that by using structured documentation as the shared state. T
 | `cmk:local-stack` | Create or iterate worktree-isolated local development stacks |
 | `cmk:infra` | Establish or audit infrastructure-as-code packages and environment boundaries |
 | `cmk:cicd` | Structure CI, deployment, and policy automation around GitHub Actions |
+| `cmk:enclave-secrets` | Pack operator secrets into a vendored enclave without baking them into the measured image |
 | `cmk:test-resources` | Share an expensive test resource (container, database, external service) safely across a parallel test runner |
 | `cmk:rust` | Idiomatic Rust practices — error handling, module boundaries, feature flags, lint/test wiring, dependency hygiene — inside a design-decided crate |
 | `cmk:testcontainers` | Start and share a throwaway service container from Rust test code via the `testcontainers` crate |
@@ -107,6 +108,7 @@ This devkit solves that by using structured documentation as the shared state. T
 |---|---|
 | `cmk:sui-sdk` | gRPC-first guidance for talking to a Sui full node — JSON-RPC is deprecated |
 | `cmk:sui-devstack` | Worktree-safe local Sui network setup for development and e2e tests |
+| `cmk:nautilus` | Apply attested secret packing on AWS Nitro / Mysten Nautilus (KMS, PCRs, parent gateway) |
 
 ## Usage
 
