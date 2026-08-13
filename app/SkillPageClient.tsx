@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useCallback, useMemo, useEffect } from "react";
+import Link from "next/link";
 import { Drawer } from "vaul";
 import { GlowingWave } from "@/components/GlowingWave";
-import { NotificationStack, type NotificationStackItem } from "@/components/motion/notification-stack";
 import { CircuitBoard } from "@/components/motion/circuit-board";
 import { DecryptReveal } from "@/components/motion/decrypt-reveal";
 import BendingMarquee from "@/components/motion/bending-marquee";
@@ -59,6 +59,25 @@ const CATEGORY_ICONS: Record<string, React.ElementType> = {
 };
 
 const GITHUB_REPO = "https://github.com/CommandOSSLabs/ai-devkit";
+
+/* ─── Section nav: real paths in the URL bar, single-page smooth scroll ───
+   /quickstart, /features, etc. are real routes (see app/[section]/page.tsx)
+   so a hard reload or shared link still lands on the right section — but a
+   same-page click never re-navigates, it just scrolls and swaps the URL via
+   pushState. Plain functions, not hooks, so any component can call them. */
+function navigateToSection(e: React.MouseEvent, id: string) {
+  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+  e.preventDefault();
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  window.history.pushState(null, "", `/${id}`);
+}
+
+function navigateHome(e: React.MouseEvent) {
+  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+  e.preventDefault();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  window.history.pushState(null, "", "/");
+}
 
 function skillGithubUrl(id: string): string {
   return `${GITHUB_REPO}/blob/main/skills/${id}/SKILL.md`;
@@ -239,7 +258,7 @@ function Nav({
       <div className="mx-auto flex h-full max-w-7xl items-center justify-between px-4 sm:px-6">
         {/* Brand */}
         <div className="flex items-center gap-3">
-          <a href="#" className="flex items-center gap-2">
+          <Link href="/" onClick={navigateHome} className="flex items-center gap-2">
             <div
               className={`flex h-7 w-7 items-center justify-center rounded-md border ${
                 isDark ? "border-[var(--border-strong)] bg-[var(--bg-surface)]" : "border-[#E2E8F0] bg-[#F1F5F9]"
@@ -250,7 +269,7 @@ function Nav({
             <span className="whitespace-nowrap font-pixel text-[14px] font-semibold">
               ai-devkit
             </span>
-          </a>
+          </Link>
           <span
             className={`hidden rounded border px-1.5 py-0.5 font-mono text-[11px] sm:inline-block ${
               isDark
@@ -264,46 +283,51 @@ function Nav({
 
         {/* Links — lg: not md:, tablet doesn't have room for brand + version + 5 links + all actions in one row */}
         <nav className="hidden items-center gap-6 lg:flex">
-          <a
-            href="#quickstart"
+          <Link
+            href="/quickstart"
+            onClick={(e) => navigateToSection(e, "quickstart")}
             className={`text-[13px] transition-colors ${
               isDark ? "text-[var(--text-secondary)] hover:text-[var(--text-primary)]" : "text-[#475569] hover:text-[#0F172A]"
             }`}
           >
             Quickstart
-          </a>
-          <a
-            href="#how-it-works"
+          </Link>
+          <Link
+            href="/how-it-works"
+            onClick={(e) => navigateToSection(e, "how-it-works")}
             className={`text-[13px] transition-colors ${
               isDark ? "text-[var(--text-secondary)] hover:text-[var(--text-primary)]" : "text-[#475569] hover:text-[#0F172A]"
             }`}
           >
             Architecture
-          </a>
-          <a
-            href="#features"
+          </Link>
+          <Link
+            href="/features"
+            onClick={(e) => navigateToSection(e, "features")}
             className={`text-[13px] transition-colors ${
               isDark ? "text-[var(--text-secondary)] hover:text-[var(--text-primary)]" : "text-[#475569] hover:text-[#0F172A]"
             }`}
           >
             Capabilities
-          </a>
-          <a
-            href="#benchmarks"
+          </Link>
+          <Link
+            href="/benchmarks"
+            onClick={(e) => navigateToSection(e, "benchmarks")}
             className={`text-[13px] transition-colors ${
               isDark ? "text-[var(--text-secondary)] hover:text-[var(--text-primary)]" : "text-[#475569] hover:text-[#0F172A]"
             }`}
           >
             Benchmarks
-          </a>
-          <a
-            href="#catalog"
+          </Link>
+          <Link
+            href="/catalog"
+            onClick={(e) => navigateToSection(e, "catalog")}
             className={`text-[13px] transition-colors ${
               isDark ? "text-[var(--text-secondary)] hover:text-[var(--text-primary)]" : "text-[#475569] hover:text-[#0F172A]"
             }`}
           >
             Skills
-          </a>
+          </Link>
         </nav>
 
         {/* Action & Theme Toggle */}
@@ -341,8 +365,9 @@ function Nav({
             <span>{repoMeta.stars !== null ? formatStarCount(repoMeta.stars) : "—"}</span>
           </a>
 
-          <a
-            href="#quickstart"
+          <Link
+            href="/quickstart"
+            onClick={(e) => navigateToSection(e, "quickstart")}
             className={`rounded border border-transparent px-3 py-1.5 text-[13px] font-medium transition-colors ${
               isDark
                 ? "bg-[var(--text-primary)] text-[var(--bg-base)] hover:bg-white"
@@ -350,7 +375,7 @@ function Nav({
             }`}
           >
             Install CLI
-          </a>
+          </Link>
         </div>
       </div>
     </header>
@@ -375,61 +400,6 @@ function CornerNotch({ className, size = 40 }: { className?: string; size?: numb
     >
       <path d="M0 200C155.996 199.961 200.029 156.308 200 0V200H0Z" fill="currentColor" />
     </svg>
-  );
-}
-
-function mergesToNotifications(merges: MergedPR[]): NotificationStackItem[] {
-  return merges.map((pr) => ({
-    id: String(pr.number),
-    title: pr.title,
-    description: `${timeAgo(pr.mergedAt)} · #${pr.number} merged`,
-    trailing: <GitBranch size={13} className="text-[#C3E88D]" />,
-  }));
-}
-
-function FloatingNotifications() {
-  const repoMeta = useRepoMeta();
-  const notifications = mergesToNotifications(repoMeta.recentMerges);
-
-  // A real toast, not a permanent fixture: shows once (expanded) when merge
-  // data arrives, then fades away for good after a few unhovered seconds —
-  // hovering pauses the countdown so a reader mid-read never has it yanked away.
-  const [hovered, setHovered] = useState(false);
-  const [fading, setFading] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
-
-  useEffect(() => {
-    if (dismissed || hovered || notifications.length === 0) return;
-    const timer = setTimeout(() => setFading(true), 7000);
-    return () => clearTimeout(timer);
-  }, [notifications.length, hovered, dismissed]);
-
-  useEffect(() => {
-    if (!fading) return;
-    const timer = setTimeout(() => setDismissed(true), 300);
-    return () => clearTimeout(timer);
-  }, [fading]);
-
-  if (notifications.length === 0 || dismissed) return null;
-
-  return (
-    <div
-      className={`fixed bottom-4 right-4 z-50 hidden transition-opacity duration-300 sm:block ${
-        fading && !hovered ? "opacity-0" : "opacity-100"
-      }`}
-      onMouseEnter={() => {
-        setHovered(true);
-        setFading(false);
-      }}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <NotificationStack
-        items={notifications}
-        defaultExpanded
-        collapsedLabel="Recent merges"
-        emptyLabel="No recent merges"
-      />
-    </div>
   );
 }
 
@@ -483,13 +453,14 @@ function Hero({ theme }: { theme: "dark" | "light" }) {
           {/* Corner CTA, top-right — alone, nothing stacked under it in the
               main content flow. */}
           <div className="absolute right-3 top-3 z-20 sm:right-6 sm:top-6">
-            <a
-              href="#quickstart"
+            <Link
+              href="/quickstart"
+              onClick={(e) => navigateToSection(e, "quickstart")}
               className="inline-flex items-center gap-2 rounded-lg bg-[#E6E8EB] px-3 py-2 text-[12px] font-medium text-[#0A0B0D] shadow-lg transition-colors hover:bg-white sm:px-4 sm:py-2.5 sm:text-[13px]"
             >
               <span>Get Started</span>
               <ArrowRight size={14} />
-            </a>
+            </Link>
           </div>
 
           {/* Floating install-command card, bottom-right */}
@@ -512,13 +483,14 @@ function Hero({ theme }: { theme: "dark" | "light" }) {
                 </div>
               </div>
 
-              <a
-                href="#catalog"
+              <Link
+                href="/catalog"
+                onClick={(e) => navigateToSection(e, "catalog")}
                 className="group flex w-full items-center justify-between text-[13px] font-medium text-[#E6E8EB] transition-opacity hover:opacity-70"
               >
                 <span>Explore 32 skills</span>
                 <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -817,9 +789,21 @@ function Motivation() {
 
 /* ─── Section 4.6: Marquee Divider (real copy, no placeholder phrases) ── */
 
-function MarqueeDivider() {
+function MarqueeDivider({ theme }: { theme: "dark" | "light" }) {
+  const isDark = theme === "dark";
+  // Dark mode: blue text on near-black, matching the rest of the terminal
+  // palette. Light mode inverts to dark text on a light band — same pairing
+  // React Bits Pro's own reference uses (#0a0a0a on #fafafa) — rather than
+  // dropping a near-black band into an otherwise white page.
+  const color = isDark ? "#82AAFF" : "#0F172A";
+  const bandColor = isDark ? "#0A0B0D" : "#F1F5F9";
+
   return (
-    <div className="h-[110px] w-full overflow-hidden border-b border-[var(--border-subtle)] bg-[#0A0B0D]">
+    <div
+      className={`h-[110px] w-full overflow-hidden border-b transition-colors duration-300 ${
+        isDark ? "border-[var(--border-subtle)] bg-[#0A0B0D]" : "border-[#E2E8F0] bg-[#F1F5F9]"
+      }`}
+    >
       <BendingMarquee
         items={[
           "documentation-first",
@@ -831,17 +815,17 @@ function MarqueeDivider() {
         separator="·"
         markSway={0}
         panelHeight={110}
-        bend={30}
-        depth={-160}
-        perspective={700}
-        speed={24}
+        bend={50}
+        depth={-260}
+        perspective={800}
+        speed={20}
         fontSize={16}
         fontWeight={600}
         letterSpacing={0.5}
         itemGap={28}
         bandPadding={12}
-        color="#82AAFF"
-        bandColor="#0A0B0D"
+        color={color}
+        bandColor={bandColor}
         className="h-full w-full"
       />
     </div>
@@ -1066,9 +1050,10 @@ function Benchmarks({ skills, categories }: { skills: Skill[]; categories: Categ
 
         <div className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-[var(--border-subtle)] bg-[var(--border-subtle)] sm:grid-cols-4 lg:grid-cols-7">
           {categoryCounts.map((cat) => (
-            <a
+            <Link
               key={cat.id}
-              href="#catalog"
+              href="/catalog"
+              onClick={(e) => navigateToSection(e, "catalog")}
               className="flex flex-col gap-1 bg-[var(--bg-surface)] p-4 transition-colors hover:bg-[var(--bg-elevated)]"
             >
               <span className="font-mono text-[11px] uppercase tracking-wide text-[var(--text-tertiary)]">
@@ -1077,7 +1062,7 @@ function Benchmarks({ skills, categories }: { skills: Skill[]; categories: Categ
               <span className="font-mono text-[16px] font-semibold text-[#82AAFF]">
                 {cat.count} skill{cat.count === 1 ? "" : "s"}
               </span>
-            </a>
+            </Link>
           ))}
         </div>
       </div>
@@ -1467,12 +1452,13 @@ function CTA() {
             </div>
 
             <div className="flex flex-wrap items-center justify-center gap-4">
-              <a
-                href="#quickstart"
+              <Link
+                href="/quickstart"
+                onClick={(e) => navigateToSection(e, "quickstart")}
                 className="rounded border border-transparent bg-[var(--text-primary)] px-5 py-2.5 text-[14px] font-medium text-[var(--bg-base)] transition-colors hover:bg-white"
               >
                 Install CLI
-              </a>
+              </Link>
               <a
                 href={GITHUB_REPO}
                 target="_blank"
@@ -1627,7 +1613,15 @@ function Footer() {
 
 /* ─── Main Page Component ────────────────────────────────────────────── */
 
-export default function TerminalDarkLandingPage({ skills }: { skills: RealSkill[] }) {
+const SECTION_IDS = ["quickstart", "how-it-works", "features", "benchmarks", "catalog"] as const;
+
+export default function TerminalDarkLandingPage({
+  skills,
+  initialSection,
+}: {
+  skills: RealSkill[];
+  initialSection?: string;
+}) {
   const [theme, setThemeState] = useState<"dark" | "light">("dark");
   const [activeDetailSkill, setActiveDetailSkill] = useState<Skill | null>(null);
 
@@ -1656,6 +1650,34 @@ export default function TerminalDarkLandingPage({ skills }: { skills: RealSkill[
     setThemeState((prev) => (prev === applied ? prev : applied));
   }, []);
 
+  // A direct load of /features (hard reload, shared link) jumps straight to
+  // that section — no smooth scroll, the page should just already be there.
+  // Re-run once more after everything (hero image, fonts) has settled: the
+  // hero's async banner image can still grow the page height after the
+  // first scroll fires, drifting the target out from under the viewport.
+  useEffect(() => {
+    if (!initialSection) return;
+    const jump = () => document.getElementById(initialSection)?.scrollIntoView({ behavior: "auto", block: "start" });
+    jump();
+    window.addEventListener("load", jump);
+    return () => window.removeEventListener("load", jump);
+  }, [initialSection]);
+
+  // Browser back/forward: the URL changed under us via history, not a click —
+  // re-sync scroll position to whatever section (or top) it now points at.
+  useEffect(() => {
+    const onPopState = () => {
+      const slug = window.location.pathname.slice(1);
+      if ((SECTION_IDS as readonly string[]).includes(slug)) {
+        document.getElementById(slug)?.scrollIntoView({ behavior: "auto", block: "start" });
+      } else {
+        window.scrollTo({ top: 0 });
+      }
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
+
   return (
     <div
       className={`relative min-h-screen transition-colors duration-500 selection:bg-[#82AAFF]/20 ${
@@ -1664,8 +1686,22 @@ export default function TerminalDarkLandingPage({ skills }: { skills: RealSkill[
     >
       {/* ─── Single Luminous Wave Background (React Bits Pro Glowing Wave canvas renderer) ───
           Toned down from the original: lower glow/richness and a lighter dark-mode
-          base so the animation reads as ambient light, not a heavy dark overlay. */}
-      <div className={`fixed inset-0 z-0 pointer-events-none ${isDark ? "opacity-80" : "opacity-100"}`}>
+          base so the animation reads as ambient light, not a heavy dark overlay.
+          Absolutely positioned and confined to roughly the hero + quickstart
+          height, faded out via mask-image toward its own bottom edge — not
+          `fixed` for the whole page. A fixed full-page canvas stays visible
+          behind every section as you scroll, including bare (non-card) text
+          lower on the page, and no static text color holds reliable contrast
+          against a moving multi-color gradient. Confining + fading it means
+          everything past the fold sits on a plain, readable solid background
+          in both themes. */}
+      <div
+        className={`absolute inset-x-0 top-0 z-0 h-[1400px] pointer-events-none ${isDark ? "opacity-80" : "opacity-100"}`}
+        style={{
+          maskImage: "linear-gradient(to bottom, black 0%, black 45%, transparent 85%)",
+          WebkitMaskImage: "linear-gradient(to bottom, black 0%, black 45%, transparent 85%)",
+        }}
+      >
         <GlowingWave
           className="h-screen w-full"
           swell={0.18}
@@ -1690,7 +1726,7 @@ export default function TerminalDarkLandingPage({ skills }: { skills: RealSkill[
           <Quickstart />
           <Architecture />
           <Motivation />
-          <MarqueeDivider />
+          <MarqueeDivider theme={theme} />
           <FeatureGrid />
           <DiffDemo />
           <Benchmarks skills={skills} categories={categories} />
@@ -1704,8 +1740,6 @@ export default function TerminalDarkLandingPage({ skills }: { skills: RealSkill[
         </main>
         <Footer />
       </div>
-
-      <FloatingNotifications />
     </div>
   );
 }

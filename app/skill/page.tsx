@@ -1,9 +1,5 @@
-import { getAllSkills } from "@/lib/skills";
-import SkillPageClient from "./SkillPageClient";
+import { redirect } from "next/navigation";
 
-export const dynamic = "force-static";
-
-export default function SkillPage() {
-  const skills = getAllSkills();
-  return <SkillPageClient skills={skills} />;
+export default function SkillRedirect() {
+  redirect("/");
 }
