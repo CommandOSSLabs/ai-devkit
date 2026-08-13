@@ -82,6 +82,42 @@
     --rb-accent-fg: oklch(20.5% 0 0);
   }
 
+  /* Dark mode's section-intro text sits over the ambient GlowingWave as
+     plain solid color + a text-shadow (below), which reads fine as-is —
+     confirmed repeatedly. Brighten just the two tiers the shadow doesn't
+     fully cover on its own, scoped locally so the rest of the site's
+     text hierarchy is untouched. */
+  .dark .intro-panel-text {
+    --text-secondary: #C7CCD3;
+    --text-tertiary: #B8BEC7;
+  }
+
+  /* Light mode: after several rounds trying to make text survive an
+     unpredictable backdrop by adapting to it (translucent panel, then a
+     backdrop-filter "glass" reveal) — every version had a background
+     state it lost to, because the fill's own visibility still depended on
+     what was behind it. Dropping that entirely: solid ink fill (same
+     --text-primary/--text-secondary the rest of the site already uses)
+     with a crisp white halo around every glyph. Same construction as a
+     video caption — dark-on-light backdrops read off the fill, dark or
+     vivid backdrops read off the halo, so legibility never depends on
+     sampling the animation at all. Scoped to light mode only: dark mode's
+     existing plain-text + shadow treatment is unrelated and untouched. */
+  html:not(.dark) .glass-text {
+    color: var(--text-primary);
+    -webkit-text-stroke: 2.5px rgba(255, 255, 255, 0.92);
+    paint-order: stroke fill;
+  }
+
+  html:not(.dark) .glass-text-secondary {
+    /* Matches .glass-text's own strength, not a toned-down version of it —
+       a lighter fill/thinner halo read fine on a plain surface but wasn't
+       enough insurance over a moving, sometimes-vivid backdrop. */
+    color: var(--text-primary);
+    -webkit-text-stroke: 2.5px rgba(255, 255, 255, 0.92);
+    paint-order: stroke fill;
+  }
+
   body {
     background-color: var(--bg-base);
     color: var(--text-primary);

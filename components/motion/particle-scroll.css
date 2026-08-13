@@ -1,0 +1,39 @@
+/* Universal fallback for ParticleScroll's dissolve-to-sand effect.
+   The real WebGL version only ever activates in browsers that implement
+   the experimental canvas `layoutsubtree` + `drawElementImage` API — no
+   evergreen browser ships that yet, so `native` is false everywhere in
+   practice and the page just sat there doing nothing on scroll. This is
+   the same "assemble as you scroll up past a line, dissolve back below
+   it" idea done with an IntersectionObserver + CSS transition instead of
+   a GPU particle field — it needs no experimental API, so it actually
+   runs for every visitor. */
+
+/* opacity + transform only — both are compositor-only properties the
+   browser can animate on their own thread. `filter: blur()` was here
+   originally for a closer visual match to the real dissolve effect, but
+   animating blur forces a full rasterize+blur pass of the section's whole
+   subtree (text, cards, gradients, icons) on every frame; across several
+   ~700-1000px sections that's exactly what turns a smooth scroll janky.
+   Cheap wins over closer-to-spec here. */
+.ps-reveal {
+  opacity: 0;
+  transform: translateY(var(--ps-rise, 22px));
+  transition:
+    opacity var(--ps-duration, 0.7s) cubic-bezier(0.16, 1, 0.3, 1),
+    transform var(--ps-duration, 0.7s) cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.ps-reveal.ps-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ps-reveal,
+  .ps-reveal.ps-revealed {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

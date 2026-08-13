@@ -21,6 +21,11 @@ interface CircuitConnection {
   bidirectional?: boolean;
   color?: string;
   pulseColor?: string;
+  /** "elbow" (default) routes in right angles like a circuit trace.
+   *  "straight" draws a direct diagonal — use for a side/parallel path
+   *  that needs to read as visually distinct from the main elbow flow,
+   *  rather than running a near-parallel elbow right next to it. */
+  style?: "elbow" | "straight";
 }
 
 interface CircuitBoardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -57,6 +62,28 @@ function CircuitBoard({
   className,
   ...props
 }: CircuitBoardProps) {
+  // Nodes are absolutely-positioned divs sharing the SVG's raw pixel
+  // coordinate space (not a scalable viewBox) — so on a container narrower
+  // than `width`, the diagram used to just overflow past its card instead
+  // of shrinking, which also forced the surrounding CSS grid column wide,
+  // clipping whatever sat next to it too. Scale the whole assembly down to
+  // fit the actual rendered width instead: `width`/`height` stay the
+  // "design" size nodes/paths are coded against, the outer wrapper is
+  // fluid, and a CSS transform shrinks the design box uniformly to match.
+  const outerRef = React.useRef<HTMLDivElement>(null);
+  const [scale, setScale] = React.useState(1);
+
+  React.useEffect(() => {
+    const el = outerRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver((entries) => {
+      const available = entries[0]?.contentRect.width;
+      if (available) setScale(Math.min(1, available / width));
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [width]);
+
   // Theme-aware color defaults
   const [isDark, setIsDark] = React.useState(true);
 
@@ -91,8 +118,8 @@ function CircuitBoard({
 
   // Compute theme-aware colors
   const computedGridColor = gridColor || (isDark ? "rgba(163, 163, 163, 0.08)" : "rgba(64, 64, 64, 0.12)");
-  const computedTraceColor = traceColor || (isDark ? "rgba(163, 163, 163, 0.25)" : "rgba(64, 64, 64, 0.35)");
-  const computedPulseColor = pulseColor || (isDark ? "rgba(130, 170, 255, 0.7)" : "rgba(79, 70, 229, 0.7)");
+  const computedTraceColor = traceColor || (isDark ? "rgba(163, 163, 163, 0.35)" : "rgba(64, 64, 64, 0.4)");
+  const computedPulseColor = pulseColor || (isDark ? "rgba(130, 170, 255, 0.95)" : "rgba(79, 70, 229, 0.9)");
   const computedNodeColor = nodeColor || (isDark ? "rgba(163, 163, 163, 0.5)" : "rgba(64, 64, 64, 0.6)");
   const nodeMap = React.useMemo(() => {
     return new Map(nodes.map((node) => [node.id, node]));
@@ -110,12 +137,23 @@ function CircuitBoard({
   }, []);
 
   const calculatePath = React.useCallback(
-    (from: CircuitNode, to: CircuitNode): string => {
+    (from: CircuitNode, to: CircuitNode, style?: CircuitConnection["style"]): string => {
       const fromSize = getNodeSize(from.size) / 2 + 4;
       const toSize = getNodeSize(to.size) / 2 + 4;
 
       const dx = to.x - from.x;
       const dy = to.y - from.y;
+
+      if (style === "straight") {
+        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+        const ux = dx / dist;
+        const uy = dy / dist;
+        const sx = from.x + ux * fromSize;
+        const sy = from.y + uy * fromSize;
+        const ex = to.x - ux * toSize;
+        const ey = to.y - uy * toSize;
+        return `M ${sx} ${sy} L ${ex} ${ey}`;
+      }
 
       // Calculate start and end points offset from node centers
       let startX = from.x;
@@ -168,7 +206,8 @@ function CircuitBoard({
   };
 
   return (
-    <div className={cn("relative overflow-hidden", className)} style={{ width, height }} {...props}>
+    <div ref={outerRef} className={cn("relative overflow-hidden", className)} style={{ width: "100%", height: height * scale }} {...props}>
+      <div style={{ width, height, transform: `scale(${scale})`, transformOrigin: "top left" }}>
       <svg width={width} height={height} className="absolute inset-0" style={{ overflow: "visible" }}>
         <defs>
           {/* Glow filter for the pulse effect */}
@@ -197,7 +236,7 @@ function CircuitBoard({
           const toNode = nodeMap.get(conn.to);
           if (!fromNode || !toNode) return null;
 
-          const path = calculatePath(fromNode, toNode);
+          const path = calculatePath(fromNode, toNode, conn.style);
           const pathLength = 500; // Approximate path length for animation
 
           return (
@@ -322,6 +361,7 @@ function CircuitBoard({
           </motion.div>
         );
       })}
+      </div>
     </div>
   );
 }

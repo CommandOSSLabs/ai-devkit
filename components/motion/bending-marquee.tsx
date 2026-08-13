@@ -183,6 +183,14 @@ const BendingMarquee = ({
 
   const [unit, setUnit] = useState(0);
   const [box, setBox] = useState({ width: 0, height: 0 });
+  // The facet widths below derive from a ResizeObserver measurement, which
+  // only exists client-side — rendering them during SSR (where the measured
+  // box is always 0) produces a style value that never matches what the
+  // client computes on first paint, which is a real hydration mismatch, not
+  // a rendering choice. Delaying the geometry-dependent render one tick
+  // (mounted flips true in an effect, never during SSR) sidesteps it — the
+  // divider's fixed-height container means nothing visibly shifts.
+  const [mounted, setMounted] = useState(false);
 
   const token = useId().replace(/[^a-zA-Z0-9]/g, "");
   const runName = `bmRun${token}`;
@@ -217,6 +225,10 @@ const BendingMarquee = ({
 
     observer.observe(node);
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    setMounted(true);
   }, []);
 
   const scale = useMemo(() => {
@@ -325,7 +337,7 @@ const BendingMarquee = ({
           transform: `scale(${scale})`,
         }}
       >
-        {facets.map((facet) => (
+        {mounted && facets.map((facet) => (
           <div
             key={facet.id}
             className="relative shrink-0 overflow-hidden"
@@ -364,6 +376,11 @@ const BendingMarquee = ({
                       paddingTop: bandPadding,
                       paddingBottom: bandPadding,
                       background: bandColor,
+                      // Harmless no-op when bandColor is opaque; lets a
+                      // semi-transparent bandColor blend with whatever sits
+                      // behind it instead of just showing raw alpha.
+                      backdropFilter: "blur(6px)",
+                      WebkitBackdropFilter: "blur(6px)",
                       color,
                       fontSize,
                       fontWeight,
