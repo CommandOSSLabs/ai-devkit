@@ -95,9 +95,7 @@ a quiet default.
 7. **Production readiness** — audit against `cmk:delivery-pipeline`'s
    engineering-principles checklist and the spec's production-readiness
    section: failure modes, config, secrets, migrations, observability,
-   rollout, limits, and host-runnable workflow scripts (`cmk:cicd`).
-   A shortcut or workaround that forks the production-ready foundation
-   (local-only, CI-only, one-cloud-only, "harden later") is a finding.
+   rollout, limits, and host-runnable workflow scripts (`cmk:cicd`). A shortcut or workaround that forks the production-ready foundation (local-only, CI-only, one-cloud-only, "harden later") is a finding.
    Accepted gaps must be stated somewhere durable; silent gaps are findings.
 
 ## Evidence, or it did not happen

@@ -129,10 +129,8 @@ being present.
 
 ## Where this stops
 
-Remote environments and IaC are `cmk:infra`'s; CI composition is `cmk:cicd`'s.
-An attested boundary and its sealed package are `cmk:enclave`'s — local
-materializes the same package without TEE evidence, never a raw-env fork.
-Local is a profile of the same production-quality path, not a second product —
+Remote environments and IaC are `cmk:infra`'s; CI composition is `cmk:cicd`'s; an attested boundary is `cmk:enclave`'s.
+Local materializes the same package without TEE evidence, never a raw-env fork. Local is a profile of the same production-quality path, not a second product —
 it may be the debug or rollout host when those scripts run here. Stay
 worktree-safe regardless of what the stack mirrors.
 
