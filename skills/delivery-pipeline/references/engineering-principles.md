@@ -114,6 +114,19 @@ bookkeeping follows the human-decision-boundary rules above. In an
 unattended run, consultation applies only when it was requested up front —
 otherwise decide and record.
 
+## No shortcut: production-ready foundation
+
+Do not choose a workaround that works only locally, only in CI, only
+in one cloud, or "until we harden it." The decision is the
+production-ready path. Local, canary, staging, production, and every
+future environment are **profiles** over that foundation — they adapt
+composition and materialization; they do not fork the logic.
+
+A shortcut is a second path. Two paths diverge, then the workaround
+becomes the real system. This binds every surface: design, infra,
+CI/CD, operator rollout, and product code. The sections below are
+instances of this rule, not exceptions to it.
+
 ## One code path across infra profiles
 
 Product, protocol, and core/shared logic are profile-invariant: identical
@@ -146,7 +159,8 @@ composition: one production-quality path, adapted per host and
 environment. The implementation is independently invocable scripts
 (prefer TypeScript + bun). GitHub Actions or any other remote CI is a
 composer, not the source of the steps. Local, JIT self-hosted, and
-hosted runners are hosts; scripts that humans or agents run on a
+hosted runners are hosts; a JIT host names how many jobs it will run at
+once (`cmk:cicd` host-runnable). Scripts that humans or agents run on a
 development machine support at least Linux and macOS on amd64 and
 arm64. `cmk:cicd` owns the script contract.
 

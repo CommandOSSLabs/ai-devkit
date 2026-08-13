@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-spec-plan
 description: This skill should be used when the user asks for a "spec", "design", "implementation plan", or "how should we build this" for a tracker issue, after context intake for any non-trivial change, and as phase 2 of the cmk:delivery-pipeline skill.
-version: 0.2.2
+version: 0.2.3
 ---
 
 # Delivery Spec & Plan
@@ -41,9 +41,12 @@ Iterate until solid; one spec per issue.
 1. **Approach selection.** Identify the 2–3 plausible approaches. Judge them
    against fit with existing patterns in the touched subsystems, the
    architecture in `docs/design/`, the recorded decisions in `docs/decisions/`,
-   blast radius, and long-term system shape. Pick one. Record why the others
-   lost — that rationale later goes in the PR description, and in an ADR
-   first if it is architecture-shaping.
+   blast radius, and long-term system shape. A shortcut that works only
+   locally, only in CI, or "until we harden it" loses to the
+   production-ready foundation (`cmk:delivery-pipeline` engineering
+   principles, No shortcut). Pick one. Record why the others lost — that
+   rationale later goes in the PR description, and in an ADR first if it
+   is architecture-shaping.
 2. **Surface inventory and compat decisions.** When the change alters a
    contract, shape, or behavior, enumerate every affected surface from actual
    reference searches — consumers, call sites, tests, docs, configs, CLI

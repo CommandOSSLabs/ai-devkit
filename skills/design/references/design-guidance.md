@@ -19,17 +19,22 @@ detailed enough that two independent implementations would agree on behavior
 ## Profile neutrality
 
 Mechanisms are specified once, neutral to the infrastructure environment
-that will run them. Environment differences (local stack vs cloud
-environments) appear only in composition and topology sections as
-materialization choices — which launcher assembles the parts, which plane
-delivers config and secrets, which infrastructure declares the boundary. A
-design that forks product, protocol, or core behavior per environment is a
-defect: push the difference down to a composition surface or redesign.
-CI, deploy, and operator workflows are specified as host-runnable script
-composition (`cmk:cicd`), not as a GitHub-only procedure beside the real
-path. Local is a profile and a debug/rollout host, not a second product.
-Where the repository declares its own infra-profile standard, that
-standard refines this rule and takes precedence.
+that will run them. The design is the production-ready foundation;
+environments only profile it. A local-only, CI-only, or "harden later"
+workaround is a second path — reject it (`cmk:delivery-pipeline`
+engineering principles, No shortcut). Environment differences (local
+stack vs cloud environments) appear only in composition and topology
+sections as materialization choices — which launcher assembles the
+parts, which plane delivers config and secrets, which infrastructure
+declares the boundary. A design that forks product, protocol, or core
+behavior per environment is a defect: push the difference down to a
+composition surface or redesign. CI, deploy, and operator workflows
+are specified as host-runnable script composition (`cmk:cicd`), not
+as a GitHub-only procedure beside the real path. Local is a profile
+and a debug/rollout host, not a second product. An attested boundary
+is specified once in `cmk:enclave`; this file does not restate the
+planes. Where the repository declares its own infra-profile
+standard, that standard refines this rule and takes precedence.
 
 ## What the document must accomplish
 

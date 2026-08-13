@@ -30,6 +30,16 @@ cannot satisfy them; they do not hide a second implementation.
 A laptop may register as a JIT runner. That is another composer
 calling the same scripts, not a reason to rewrite the steps.
 
+JIT registration includes **how many jobs the host will run at
+once**. A slot is one concurrent job. Single-job JIT configs
+deregister after one job, so the host keeps that many slots alive
+for the run. Size the count to the workflow's parallel legs and the
+machine; a one-slot laptop serializes a graph that would otherwise
+run concurrently. The count is a host knob (for example
+`--runners N` on a local JIT wrapper). It is not a second workflow
+and not an excuse to hard-code `max-parallel` as a workaround for a
+host that cannot say how many jobs it will take.
+
 ## Debug on the host that ran the step
 
 Prefer local or JIT execution when diagnosing a workflow so logs,

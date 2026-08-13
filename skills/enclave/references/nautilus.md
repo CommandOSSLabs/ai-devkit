@@ -1,14 +1,8 @@
----
-name: cmk:nautilus
-description: This skill should be used when the user asks to "set up Nautilus", "Nitro enclave secrets", "AWS KMS PCR policy", "attested Decrypt", "parent proxy KMS gateway", "seal seat config", or is applying enclave secret delivery on AWS Nitro or Mysten Nautilus.
-version: 0.1.0
----
+# Enclave / nautilus
 
-# Nautilus (AWS Nitro)
-
-Application of `cmk:enclave-secrets` on **AWS Nitro Enclaves** and the
-Mysten **Nautilus** adapter stack. Read that skill first. This one
-names the AWS surfaces; it does not fork the planes.
+Application of `cmk:enclave` on **AWS Nitro Enclaves** and the Mysten
+**Nautilus** adapter stack. Read the roof first. This facet names the
+AWS surfaces; it does not fork the planes.
 
 ## Modes
 

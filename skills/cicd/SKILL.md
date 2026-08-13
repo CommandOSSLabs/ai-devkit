@@ -1,7 +1,7 @@
 ---
 name: cmk:cicd
 description: This skill should be used when the user asks to "set up CI", "speed up CI", "add a deploy workflow", "structure GitHub Actions", "self-hosted runners", "run CI locally", "JIT runner", "protect the main branch", or needs to structure CI, deployment, and policy automation as composable host-runnable scripts that GitHub Actions only automates.
-version: 0.3.0
+version: 0.3.1
 ---
 
 # CI/CD
@@ -46,7 +46,9 @@ machine, a JIT self-hosted runner, or hosted compute with the same
 behavior. Read `references/host-runnable.md` when adding a job, a
 runner, or reproducing a CI failure. This is not a local-only mindset:
 local, AWS, GCP, and production are profiles over one production-ready
-path (`cmk:infra`, `cmk:local-stack`).
+path (`cmk:infra`, `cmk:local-stack`). A JIT host declares how many
+jobs it will run at once; that count is part of the host registration,
+not a reason to fork the workflow.
 
 ## GitHub ↔ IaC mapping is this skill's contract
 
@@ -116,3 +118,4 @@ Report-only — never mutate:
   script entry point the workflow only invokes.
 - Those scripts support Linux and macOS on amd64 and arm64, or fail
   closed with a stated reason.
+- A JIT host registration names how many concurrent jobs it will run.
