@@ -814,6 +814,14 @@ export function ParticleScroll({
   useFallbackReveal(contentRef, !native, resolvedOptions);
 
   useEffect(() => {
+    // Non-native path draws nothing (base pass at alpha 0, particle pass
+    // skipped — see the file header) and no evergreen browser supports the
+    // native path today, so this branch is what every real page load hits.
+    // The visible "assembles as it scrolls into view" effect is entirely
+    // useFallbackReveal's CSS transition; running the WebGL2 engine here
+    // would just keep a full-viewport shader rendering every frame forever
+    // for zero visual output — real GPU/battery cost on mobile for nothing.
+    if (!native) return;
     const source = sourceRef.current;
     const content = contentRef.current;
     const output = outputRef.current;
@@ -822,7 +830,7 @@ export function ParticleScroll({
       { source, content, output },
       initialOptions,
     );
-    if (native && !instanceRef.current) setFailed(true);
+    if (!instanceRef.current) setFailed(true);
     return () => {
       instanceRef.current?.destroy();
       instanceRef.current = null;
