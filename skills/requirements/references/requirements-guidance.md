@@ -1,10 +1,23 @@
 # Requirements Guidance (Directive, Not a Form)
 
-How to shape a requirements document. There is no fixed section list: the
-document takes the shape its product needs, and a doc that fills sections it
+How to shape a requirements document. The narrative sections have no fixed
+list: they take the shape the product needs, and a doc that fills sections it
 has nothing to say in has failed as surely as one that omits what matters.
-What follows is what any strong requirements doc accomplishes, and the
-recurring patterns that get it there.
+**Acceptance Criteria is the exception** — it is required, and so are the
+`Notation:` and `ID prefix:` header lines it depends on. What follows is what
+any strong requirements doc accomplishes, and the recurring patterns that get
+it there.
+
+- [What the document must accomplish](#what-the-document-must-accomplish)
+- [Acceptance criteria](#acceptance-criteria) — the required section
+  - [What one criterion is](#what-one-criterion-is)
+  - [Choosing the notation](#choosing-the-notation) — `ears` vs `rfc2119`
+  - [`ears`](#ears--one-trigger-one-behaviour-always-shall)
+  - [`rfc2119`](#rfc2119--conformance-strength-per-statement)
+- [Locked decisions](#locked-decisions)
+- [Technical products get technical requirements](#technical-products-get-technical-requirements)
+- [Progressive disclosure](#progressive-disclosure)
+- [Coherence](#coherence)
 
 ## What the document must accomplish
 
@@ -22,14 +35,79 @@ Optional when they earn their place: user scenarios grounding abstract needs,
 risk/assumption tables with "what breaks if wrong," and business or timeline
 constraints.
 
-## Normative vocabulary
+## Acceptance criteria
 
-Define the conformance vocabulary once at the entry point and use it
-consistently: **MUST** is required for conformance, **SHOULD** is the default
-unless a documented tradeoff justifies deviation, **MAY** is optional.
-Downstream design docs may choose mechanisms but must not weaken these
-requirements — say so explicitly. Normative language is what lets a
+The sections above say what the product must achieve. Acceptance criteria say
+it in statements a reader can check one at a time, in the document's own
+`## Acceptance Criteria` section. Normative language is what lets a
 requirements doc act as a contract instead of a mood.
+
+### What one criterion is
+
+One observable behaviour, one identifier, one grammar:
+
+```
+**<PREFIX>-<story>.<n>** <a single statement in this document's notation>
+```
+
+- **One behaviour.** A statement that needs "and" is usually two criteria.
+  Split where a reader could accept one half and reject the other.
+- **One identifier.** `<PREFIX>` is declared once in the header and is stable
+  for the life of the document. Once status leaves `draft` an ID never changes
+  meaning and is never renumbered — retire one by striking it through
+  (`~~**BILL-1.2**~~ superseded by BILL-1.4`).
+- **One grammar.** The whole section uses the notation named in the header. A
+  trigger clause welded to a conformance modal — `WHEN the renewal fails, the
+  system MUST retry` — is neither notation, and reads as neither.
+
+### Choosing the notation
+
+Declare it in the header (`**Notation:** ears` or `**Notation:** rfc2119`) and
+write every criterion in it. Choose from what discovery already established,
+not from taste:
+
+| What discovery established | Notation |
+|---|---|
+| Someone outside this team writes an implementation against this document — a protocol, a wire format, a published API — and obligations differ in strength | `rfc2119` |
+| The behaviour is observable by a user of the running system — a screen, a flow, a command, a state | `ears` |
+| Neither is settled | Say so in `Open Points` and choose once it is. A notation picked before the audience is known gets rewritten. |
+
+Local convention wins a tie, never a mismatch: a repo whose existing docs use
+one notation keeps it for the same kind of product, and departs — saying why in
+the header — when this document's audience differs from theirs.
+
+### `ears` — one trigger, one behaviour, always SHALL
+
+```
+**AUTH-2.1** WHEN a user reloads the page with a valid refresh token
+THE SYSTEM SHALL restore the session without showing the sign-in screen.
+
+**AUTH-2.3** IF token refresh fails three times consecutively THEN THE SYSTEM
+SHALL end the session and route to the sign-in screen with the reason shown.
+```
+
+Forms: `WHEN <event>` · `WHILE <state>` · `IF <unwanted condition> THEN` ·
+`WHERE <feature is included>` · bare `THE SYSTEM SHALL` for an always-true
+invariant. The subject is `THE SYSTEM`, the modal is `SHALL`, and no criterion
+carries a second one.
+
+### `rfc2119` — conformance strength per statement
+
+```
+**WIRE-3.1** A client MUST send `page_token` unchanged from the previous response.
+**WIRE-3.2** A client SHOULD retry an `UNAVAILABLE` status with exponential backoff.
+**WIRE-3.3** A client MAY omit the field mask.
+```
+
+**MUST** is required for conformance, **SHOULD** is the default unless a
+documented tradeoff justifies deviation, **MAY** is optional. Define the three
+once at the entry point. Downstream design docs may choose mechanisms but must
+not weaken them — say so explicitly.
+
+An `ears` document has no strength axis: every criterion is mandatory by
+construction. A behaviour that would be `SHOULD` or `MAY` is not an acceptance
+criterion — it is a design constraint (`docs/design/`) or an engineering rule
+(`docs/rules/`).
 
 ## Locked decisions
 

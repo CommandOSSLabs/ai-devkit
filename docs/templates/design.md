@@ -48,9 +48,20 @@ graph TD
 
 ## Acceptance Criteria (Feature-Level Docs Only)
 
-<!-- Functional and non-functional requirements for this feature. Each can be a one-liner or expanded with context, edge cases, and acceptance criteria — include acceptance criteria when the "done" definition isn't obvious from the requirement itself. -->
+<!--
+When the requirements doc carries IDed criteria: map each ID to the component
+or section that satisfies it. The criterion's text lives once, in the
+requirements doc; this section carries the mapping, and a later requirement
+change is traced through it.
 
-- [Requirement] — [acceptance criteria]
+When the requirements doc has no IDs: state the "done" definition here in
+prose, and only where it isn't obvious from the requirement itself.
+-->
+
+| Requirement | Satisfied by |
+|---|---|
+| [AUTH-1.1] | [Component or section name] |
+| [AUTH-1.2] | [Component or section name] |
 
 ## Cross-Cutting Concerns
 

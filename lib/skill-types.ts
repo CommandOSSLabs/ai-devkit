@@ -20,5 +20,6 @@ export const CATEGORY_LABELS: Record<string, string> = {
   docs: "Documentation",
   testing: "Testing & Code",
   sui: "Sui Network",
+  session: "Session",
   other: "Other",
 };

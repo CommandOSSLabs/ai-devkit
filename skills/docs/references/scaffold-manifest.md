@@ -95,9 +95,11 @@ Document templates for this repository's canonical docs.
 **Status:** draft | active | decomposed | shipped | deprecated
 **Owner:** @[handle]
 **Last updated:** YYYY-MM-DD
+**Notation:** ears | rfc2119
+**ID prefix:** [2-12 chars, A-Z0-9, starts with a letter — e.g. BILL, AUTH, WIRE]
 
 <!-- Captures the product/business "what and why" before technical design begins. -->
-<!-- The sections below are a menu, not a form: shape the doc to the product, drop what has nothing to say, and keep normative vocabulary (MUST/SHOULD/MAY) consistent once adopted. -->
+<!-- The narrative sections below are a menu, not a form: shape the doc to the product and drop what has nothing to say. Acceptance Criteria, Notation, and ID prefix are not part of that menu — they are required, and Notation is set once before the first criterion is written. See requirements-guidance.md § Acceptance criteria. -->
 
 ## Problem
 
@@ -122,7 +124,8 @@ Be specific about the user segment and the pain — vague problems produce vague
 
 <!--
 Core user needs with 1-2 concrete scenarios each.
-Scenarios ground abstract needs in real usage — skip formal user-story syntax.
+Scenarios ground abstract needs in real usage — they stay prose, not formal
+user-story syntax. The checkable statements live in Acceptance Criteria below.
 -->
 
 ### [Need]
@@ -130,6 +133,20 @@ Scenarios ground abstract needs in real usage — skip formal user-story syntax.
 <!-- What the user needs and why it matters. -->
 
 **Scenario:** [Concrete example of a user encountering this need and the expected outcome.]
+
+## Acceptance Criteria
+
+<!--
+REQUIRED. Criteria follow requirements-guidance.md § What one criterion is, in
+the notation named in the header. A criterion that needs "and" is usually two.
+
+Group criteria under the need they serve; the first number is that group.
+-->
+
+### [Need above, repeated as a group heading]
+
+- **[PREFIX]-1.1** [one statement in this document's notation]
+- **[PREFIX]-1.2** [one statement in this document's notation]
 
 ## Scope
 
@@ -243,9 +260,20 @@ graph TD
 
 ## Acceptance Criteria (Feature-Level Docs Only)
 
-<!-- Functional and non-functional requirements for this feature. Each can be a one-liner or expanded with context, edge cases, and acceptance criteria — include acceptance criteria when the "done" definition isn't obvious from the requirement itself. -->
+<!--
+When the requirements doc carries IDed criteria: map each ID to the component
+or section that satisfies it. The criterion's text lives once, in the
+requirements doc; this section carries the mapping, and a later requirement
+change is traced through it.
 
-- [Requirement] — [acceptance criteria]
+When the requirements doc has no IDs: state the "done" definition here in
+prose, and only where it isn't obvious from the requirement itself.
+-->
+
+| Requirement | Satisfied by |
+|---|---|
+| [AUTH-1.1] | [Component or section name] |
+| [AUTH-1.2] | [Component or section name] |
 
 ## Cross-Cutting Concerns
 

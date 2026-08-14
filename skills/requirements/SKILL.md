@@ -1,6 +1,6 @@
 ---
 name: cmk:requirements
-description: This skill should be used when the user asks to "save this as requirements", "let's define what we're building", "draft requirements", "draft a PRD", "update the requirements", or discusses product scope, success criteria, and user needs. Covers drafting, refining, or updating requirements documents under docs/requirements/ — product-wide or per-feature — from conversation notes, research, user feedback, external docs, or direct instructions.
+description: This skill should be used when the user asks to "save this as requirements", "draft requirements", "draft a PRD", "let's define what we're building", "update the requirements", "write the acceptance criteria", "what are the acceptance criteria for X", "should this be EARS or RFC 2119", or discusses product scope, success criteria, user needs, or what a system must do before anyone decides how to build it. Produces `docs/requirements/<topic>.md` — product-wide or per-feature — carrying the problem, success criteria, scope, and the IDed acceptance criteria (`AUTH-1.1`) that the feature's design doc cites back, each written in the document's declared notation (EARS `SHALL`, or RFC 2119 MUST/SHOULD/MAY). Acceptance criteria on a tracker issue instead of in a requirements doc → `cmk:delivery-intake`; how the system gets built rather than what it must do → `cmk:design`.
 version: 0.3.0
 ---
 
@@ -23,11 +23,12 @@ When the input is an initial idea rather than settled requirements, don't templa
 ## Workflow: Create
 
 1. Normalize input into product context: problem, timing, success criteria, user needs, scope. Run the elicitation step above when material is thin.
-2. Shape the document per `references/requirements-guidance.md`, aligning to local convention if one exists.
-3. Place at `docs/requirements/<topic>.md` — one file per product area or feature; `docs/requirements/README.md` indexes them. A large product splits per area with a concise entry-point doc so readers load only the context a task needs.
-4. Use glossary terms (see `cmk:glossary`) for every system, component, and actor name; define new terms there, not inline.
-5. Mark unknowns in `Open Points` — don't guess.
-6. Set status to `draft`.
+2. Shape the narrative sections per `references/requirements-guidance.md`. Where the repo already has requirements docs, follow their local convention for those sections.
+3. **Set the notation and ID prefix in the header before writing a criterion.** Choose per `references/requirements-guidance.md` § Choosing the notation — from what discovery established about who the document binds, not from what the neighbouring docs happen to use. Then write the `## Acceptance Criteria` section to the contract in that file's § What one criterion is.
+4. Place at `docs/requirements/<topic>.md` — one file per product area or feature; `docs/requirements/README.md` indexes them. A large product splits per area with a concise entry-point doc so readers load only the context a task needs.
+5. Use glossary terms (see `cmk:glossary`) for every system, component, and actor name; define new terms there, not inline.
+6. Mark unknowns in `Open Points` — don't guess.
+7. Set status to `draft`.
 
 ## Workflow: Iterate
 
@@ -45,7 +46,9 @@ When the input is an initial idea rather than settled requirements, don't templa
 - Unresolved decisions go in `Open Points`
 - Problem names a specific user segment with concrete pain
 - Success criteria are measurable with targets
-- Normative vocabulary (MUST/SHOULD/MAY) used consistently once adopted
+- Header carries a `Notation:` and an `ID prefix:`, set before the first criterion
+- Every acceptance criterion meets the contract in `references/requirements-guidance.md` § What one criterion is
+- IDs are stable once status leaves `draft`: retired by strikethrough, never renumbered
 - No architecture or mechanism detail — that's design's job
 
 ## Links

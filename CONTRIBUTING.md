@@ -17,8 +17,9 @@ a memory of how things used to work.
 
 ## House style
 
-- Frontmatter is exactly three fields, in order: `name: cmk:<skill>`,
-  `description`, `version` (semver).
+- Frontmatter is `name: cmk:<skill>`, `description`, `version` (semver),
+  in that order. A user-invoked skill may add `disable-model-invocation:
+  true` as a fourth field; nothing else belongs in the block.
 - `SKILL.md` stays within the 150-line budget (≤ 150); move detail into
   `references/*.md` and point to it from the skill. Pre-existing exceptions
   are allowlisted in `scripts/skill-lint.sh` and not granted to new skills.

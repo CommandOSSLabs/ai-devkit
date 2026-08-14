@@ -44,6 +44,7 @@ const CATEGORY_MAP: Record<string, string> = {
   rust: "testing",
   "sui-sdk": "sui",
   "sui-devstack": "sui",
+  interpret: "session",
 };
 
 function parseFrontmatter(raw: string): Record<string, string> {

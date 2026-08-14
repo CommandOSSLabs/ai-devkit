@@ -3,8 +3,13 @@
 **Status:** draft | active | decomposed | shipped | deprecated
 **Owner:** @[handle]
 **Last updated:** YYYY-MM-DD
+**Notation:** ears | rfc2119
+**ID prefix:** [2-12 chars, A-Z0-9, starts with a letter — e.g. BILL, AUTH, WIRE]
 
 <!-- Captures the product/business "what and why" before technical design begins. -->
+<!-- Notation and ID prefix are REQUIRED and are set once, before the first criterion.
+     See requirements-guidance.md § Acceptance criteria for the two notations and
+     how to choose between them. -->
 
 ## Problem
 
@@ -29,7 +34,8 @@ Be specific about the user segment and the pain — vague problems produce vague
 
 <!--
 Core user needs with 1-2 concrete scenarios each.
-Scenarios ground abstract needs in real usage — skip formal user-story syntax.
+Scenarios ground abstract needs in real usage — they stay prose, not formal
+user-story syntax. The checkable statements live in Acceptance Criteria below.
 -->
 
 ### [Need]
@@ -37,6 +43,20 @@ Scenarios ground abstract needs in real usage — skip formal user-story syntax.
 <!-- What the user needs and why it matters. -->
 
 **Scenario:** [Concrete example of a user encountering this need and the expected outcome.]
+
+## Acceptance Criteria
+
+<!--
+REQUIRED. Criteria follow requirements-guidance.md § What one criterion is, in
+the notation named in the header. A criterion that needs "and" is usually two.
+
+Group criteria under the need they serve; the first number is that group.
+-->
+
+### [Need above, repeated as a group heading]
+
+- **[PREFIX]-1.1** [one statement in this document's notation]
+- **[PREFIX]-1.2** [one statement in this document's notation]
 
 ## Scope
 

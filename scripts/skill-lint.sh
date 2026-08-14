@@ -43,12 +43,19 @@ check_frontmatter() {
     l3=$(sed -n '3p' "$skill_md")
     l4=$(sed -n '4p' "$skill_md")
     l5=$(sed -n '5p' "$skill_md")
+    l6=$(sed -n '6p' "$skill_md")
 
     [ "$l1" = "---" ] || fail "$skill_md: line 1 must be '---', found '$l1'"
-    [ "$l5" = "---" ] || fail "$skill_md: line 5 must be '---', found '$l5'"
     [[ "$l2" == name:* ]] || fail "$skill_md: line 2 must be a 'name:' key, found '$l2'"
     [[ "$l3" == description:* ]] || fail "$skill_md: line 3 must be a 'description:' key, found '$l3'"
     [[ "$l4" == version:* ]] || fail "$skill_md: line 4 must be a 'version:' key, found '$l4'"
+    # Optional fourth field, user-invoked skills only. Any other key, or
+    # a false value, is a shape error — the closer must stay `---`.
+    if [ "$l5" = "disable-model-invocation: true" ]; then
+      [ "$l6" = "---" ] || fail "$skill_md: line 6 must be '---' after disable-model-invocation, found '$l6'"
+    else
+      [ "$l5" = "---" ] || fail "$skill_md: line 5 must be '---' or 'disable-model-invocation: true', found '$l5'"
+    fi
 
     name="${l2#name: }"
     version="${l4#version: }"
