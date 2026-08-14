@@ -27,13 +27,13 @@ When the design subject is still an idea, interview before drafting: probe the c
 3. Place at `docs/design/<topic>.md` — system-wide design may use `docs/design/system.md`; a multi-doc design tree gets a "read this tree" entry README.
 4. Use glossary terms (see `cmk:glossary`) for every system, component, and actor name; define new terms there, not inline.
 5. Mark unknowns in `Open Points` — don't guess.
-6. Link the requirements doc it satisfies in `Links`.
+6. Link the requirements doc it satisfies in `Links`. Where that doc carries IDed criteria, carry the mapping in both directions: a `Satisfies:` line on each component or section naming the IDs it answers for, and the reverse ID → component table in `## Acceptance Criteria`. The criterion's text stays in the requirements doc; the two directions must agree, and the mapping is what a later requirement change is traced through.
 7. Set status to `draft`.
 
 ## Workflow: Iterate
 
 1. Read the existing design doc in full.
-2. **Upstream check:** read the linked doc in `docs/requirements/` and flag conflicts with scope or success criteria; check `docs/decisions/` for constraining decisions and flag conflicts rather than silently overriding.
+2. **Upstream check:** read the linked doc in `docs/requirements/` and flag conflicts with scope or success criteria; check `docs/decisions/` for constraining decisions and flag conflicts rather than silently overriding. Where that doc carries IDed criteria, trace each changed ID through this doc's `## Acceptance Criteria` mapping to the sections that own it — the mapping is the trace path, not prose similarity.
 3. **System conflict check (feature-scoped docs only):** if the `Scope:` header is narrower than system-wide, read the system-level design doc and flag any conflict with its architecture or components — surface it, never silently override system design from a feature doc.
 4. **Downstream cascade:** a design change can invalidate sibling and lower-level design docs that reference the changed component — check inbound references and cascade or flag them in the same change.
 5. Identify what changed and why.
@@ -50,7 +50,7 @@ When the design subject is still an idea, interview before drafting: probe the c
 - Mechanisms are specified independent of implementation language/framework; stack choices appear as constraints or rationale, not as the spec itself
 - Architecture diagram matches component descriptions
 - Security section is always present for system-wide design — includes assumptions, gaps, and controls
-- Feature-level docs include acceptance criteria when the "done" definition isn't obvious from the requirement itself
+- Feature-level docs map each IDed requirement to the component or section that satisfies it, without restating the criterion's text; where the requirements doc carries no IDs, they state the "done" definition in prose only where it isn't obvious from the requirement itself
 
 ## Links
 
