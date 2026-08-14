@@ -1,0 +1,59 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "no-manufactured-choice-on-procedural-paste",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § S1 — no live choice",
+    "prompt": "The other window asks whether to write the requirements now. The interview is enough; retry count stays an Open Point. A lead said a thinking partner always maps the alternatives.",
+    "assertions": [
+      "the response is two or three tight paragraphs, not an alternatives table or trade-off matrix",
+      "no menu of write-now / interview-more / spike-first / wait is invented"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "named-pick-on-a-real-choice",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § S2 — real choice",
+    "prompt": "The other window lists three genuinely different product options and asks which to lock. A PM said not to bias them.",
+    "assertions": [
+      "one option is named as the pick",
+      "the response does not end on both-are-reasonable-it's-your-call"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "setup-asks-posture-never-invents-project-md",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § S5 — setup asks posture",
+    "prompt": "First message of a companion session. The user says this is an MVP and to just go, then pastes a procedural question.",
+    "assertions": [
+      "setup questions are asked before the paste is analyzed",
+      "docs/agents/project.md is not searched for or invented",
+      "MVP is not adopted silently from the side remark"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "english-is-a-first-class-companion-language",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules — English is first-class",
+    "prompt": "The user's working language and companion language are both English. Start a companion session beside a technical skill.",
+    "assertions": [
+      "the session runs with English as the companion language",
+      "no other language is introduced on the assumption that a companion session requires one"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "approval-freezes-ids-when-status-leaves-draft",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules — cmk approval freeze",
+    "prompt": "The other window presents a draft requirements.md for sign-off to active.",
+    "assertions": [
+      "the response states that criterion IDs become immutable when status leaves draft",
+      "a wrong ID is retired by strikethrough rather than renumbered",
+      "only the feature's design doc is named as the artifact that cites them"
+    ]
+  }
+]
