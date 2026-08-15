@@ -14,7 +14,13 @@ remember to check by hand:
 - **Test-evidence floor**: a workflow checks the PR description for a clearly
   labeled testing section containing a reproducible command or evidence link
   and a stated passing result — it judges only this one objective floor, not
-  the rest of the description's structure.
+  the rest of the description's structure. Match a **verdict** (`passed`,
+  `N tests passing`, `did not pass`), not the substring `fail`. A count
+  written as `0 fail` and a policy name such as `fail-closed` are not
+  non-passing claims; a gate that treats them as such is
+  **evidence-floor negation**. Write `N tests passing`. Keep policy names
+  that contain `fail` out of the testing section, or teach the checker to
+  ignore `0 fail` / `fail-closed`.
 - **Dangerous automation ships disabled by default.** Anything that mutates
   repository or delivery state on its own (auto-merge, auto-retarget, a
   conflict-resolution bot) is gated behind an explicit repository variable
