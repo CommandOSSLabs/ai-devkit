@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Terminal, ArrowLeft, Github } from "lucide-react";
-import { ArcadeBackground } from "@/components/changelog/ArcadeBackground";
-import { RoadmapBoard } from "@/components/roadmap/RoadmapBoard";
+import { ArcadeBackground } from "@/components/marketing/arcade/ArcadeBackground";
+import { RoadmapBoard } from "@/components/marketing/roadmap/RoadmapBoard";
 
 export const dynamic = "force-static";
 

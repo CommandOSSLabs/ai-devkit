@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Fragment } from "react";
 import { Terminal, ArrowLeft, Github, ExternalLink } from "lucide-react";
-import { ArcadeSplash } from "@/components/changelog/ArcadeSplash";
-import { ArcadeBackground } from "@/components/changelog/ArcadeBackground";
-import { InstallBlock } from "@/components/changelog/InstallBlock";
+import { ArcadeSplash } from "@/components/marketing/arcade/ArcadeSplash";
+import { ArcadeBackground } from "@/components/marketing/arcade/ArcadeBackground";
+import { InstallBlock } from "@/components/marketing/changelog/InstallBlock";
 
 export const dynamic = "force-static";
 

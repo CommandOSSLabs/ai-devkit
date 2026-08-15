@@ -8,8 +8,8 @@
 
 import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
-import { Arcade } from "./arcade/engine";
-import { COLORWAYS } from "./arcade/params";
+import { Arcade } from "./engine";
+import { COLORWAYS } from "./params";
 
 const DARK_COLORWAY = COLORWAYS.findIndex((c) => c.name === "Cyanide Dark");
 
