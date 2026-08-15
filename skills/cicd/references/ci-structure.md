@@ -113,6 +113,14 @@ moving it to a different runner class without updating the ruleset (see
 `policy-and-auth.md`) becomes a CI failure instead of a silently
 broken required check.
 
+Pin the **implementation site**, not a copy of the step body. A
+policy-bearing job is asserted to invoke a named script; the script
+carries the policy assertions. A path-filter union (orchestrator
+`on.push.paths`, a derived list, a frozen snapshot) is generated or
+asserted from one source of truth. Extracting a fat `run:` without
+retargeting those pins is **composer-contract drift** —
+`host-runnable.md`.
+
 ## Label-gated diagnostic jobs
 
 Expensive, rarely-needed diagnostics (a heavyweight capacity benchmark, a

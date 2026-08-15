@@ -1,7 +1,7 @@
 ---
 name: cmk:cicd
 description: This skill should be used when the user asks to "set up CI", "speed up CI", "add a deploy workflow", "structure GitHub Actions", "self-hosted runners", "run CI locally", "JIT runner", "protect the main branch", or needs to structure CI, deployment, and policy automation as composable host-runnable scripts that GitHub Actions only automates.
-version: 0.3.2
+version: 0.3.3
 ---
 
 # CI/CD
@@ -41,13 +41,15 @@ accidentally run on every push that happens to touch the workflow file.
 ## Scripts are the workflow
 
 GitHub Actions is a composer. The steps themselves are independently
-invocable scripts (prefer TypeScript + bun) that run on a development
-machine, a JIT self-hosted runner, or hosted compute with the same
-behavior. Read `references/host-runnable.md` when adding a job, a
-runner, or reproducing a CI failure. This is not a local-only mindset:
+invocable scripts (TypeScript + bun, or the repo's existing runtime)
+that run on a development machine, a JIT self-hosted runner, or hosted
+compute with the same behavior. Read `references/host-runnable.md` when
+adding a job, a runner, choosing a script language, extracting a fat
+`run:`, or reproducing a CI failure. This is not a local-only mindset:
 local, AWS, GCP, and production are profiles over one production-ready
-path (`cmk:infra`, `cmk:local-stack`). JIT concurrent-job count is
-`references/host-runnable.md`; attested packing is `cmk:enclave`.
+path (`cmk:infra`, `cmk:local-stack`). JIT concurrent-job count,
+language, extract, and mutate-gate rules are `references/host-runnable.md`;
+attested packing is `cmk:enclave`.
 
 ## GitHub ↔ IaC mapping is this skill's contract
 
@@ -85,10 +87,14 @@ silently leaving a rewritten ref unverified); **speedup misattribution** (a
 multi-part change to CI's wall-clock cuts the total, and every part gets
 credited — but tracing the win to its actual cause can reveal that one part
 did all of it and a sibling part is silently inert, contributing nothing
-while looking identical to the part that worked). Isolate which specific
-change moved the number before crediting any of them; `cmk:test-resources`
-covers the same trap one layer down, inside a test suite's own resource
-model rather than CI's orchestration.
+while looking identical to the part that worked — isolate which change
+moved the number before crediting any of them; `cmk:test-resources`
+covers that trap one layer down); **evidence-floor negation** (a
+test-evidence gate that scans for `fail` treats `0 fail` and
+`fail-closed` as a non-passing claim); **composer-contract drift**
+(extracting a fat `run:` into a script leaves YAML-body pins and path
+filters on the old site — raising the line-count baseline is not the
+fix).
 
 Projects own: which area jobs exist and their path filters; runner labels and
 pool sizing; which policy gates are enabled; deploy-leg composition; label
@@ -118,3 +124,7 @@ Report-only — never mutate:
 - Those scripts support Linux and macOS on amd64 and arm64, or fail
   closed with a stated reason.
 - A JIT host registration names how many concurrent jobs it will run.
+- Programmable workflow steps are TypeScript (or the repo's chosen
+  runtime); remaining shell is host bootstrap only.
+- A mutating host-runnable script refuses without an explicit confirm
+  or a documented CI environment variable.

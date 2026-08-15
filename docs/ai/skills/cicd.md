@@ -22,9 +22,11 @@ where pushes must trigger CI, and OIDC over static cloud keys. Specifies the
 GitHub ↔ IaC 1:1:1 mapping (stack ↔ GitHub Environment ↔ deploy workflow)
 that `cmk:infra` names but leaves to this skill to wire. Names
 speedup misattribution as a named trap alongside cold-cache poisoning,
-skipped-job-reports-success, and workflow-token-doesn't-trigger-CI — a
-multi-part change to CI's wall-clock gets every part credited for the total
-unless the win is traced to the specific part that produced it. Ends with a
+skipped-job-reports-success, workflow-token-doesn't-trigger-CI,
+evidence-floor negation, and composer-contract drift. Host-runnable
+scripts prefer TypeScript (or the repo's existing runtime); shell is
+host bootstrap only; a shared mutating CLI refuses without `--confirm`
+or a documented CI env. Ends with a
 `## Verify` section for report-only checks a caller can run against a target
 repo.
 
@@ -33,19 +35,25 @@ repo.
   `GitHub ↔ IaC mapping is this skill's contract`, `` `workflows/README.md`
   is the operating doc ``, `What this teaches vs. what a project owns`,
   `Verify`.
+- `references/host-runnable.md` — scripts-are-the-workflow, language
+  (TypeScript default, shell bootstrap only, no third ops language),
+  composer-contract drift, mutate gate, host matrix, JIT slot count,
+  one-fix-per-push.
 - `references/ci-structure.md` — the `changes` job/path-filter shape,
   concurrency and caching, config-selected runner tiers, deliberate
-  cold-cache isolation, CI self-contract tests, label-gated diagnostics.
+  cold-cache isolation, CI self-contract tests (implementation site
+  and path-filter lockstep), label-gated diagnostics.
 - `references/deploy-and-release.md` — validation-vs-deployment split,
   dispatch-against-ref inputs and what they buy (canary test deploy,
   rollback, ancestry-verified promotion), the GitHub ↔ IaC contract in full,
   orchestrator-plus-legs with two-layer concurrency, release integrity
   (pinned artifact reuse, attestation, `always()` cleanup, read-back
   verification).
-- `references/policy-and-auth.md` — traceability and test-evidence gates,
-  branch-protection ruleset contract, automation auth (pinned actions,
-  non-persisted credentials, GitHub App vs. workflow token, OIDC), and
-  critical-invariant verification as its own required job class.
+- `references/policy-and-auth.md` — traceability and test-evidence gates
+  (evidence-floor negation), branch-protection ruleset contract,
+  automation auth (pinned actions, non-persisted credentials, GitHub App
+  vs. workflow token, OIDC), and critical-invariant verification as its
+  own required job class.
 
 ## Links
 - `cmk:infra` — names the environment vocabulary and requires a deploy path
