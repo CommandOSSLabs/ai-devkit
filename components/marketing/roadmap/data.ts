@@ -18,6 +18,8 @@ interface ActiveRoadmapItem extends RoadmapItemBase {
   status: "now" | "next" | "later";
   /** Open PR covering this work, if any. */
   pr?: string;
+  /** External reference/inspiration for this item — a post, a prior art link. */
+  link?: { label: string; url: string };
 }
 
 interface ShippedRoadmapItem extends RoadmapItemBase {
@@ -67,11 +69,19 @@ export const ROADMAP_ITEMS: RoadmapItem[] = [
     pr: `${REPO}/pull/13`,
   },
   {
+    id: "skill-detail-editor",
+    status: "now",
+    category: "Website",
+    title: "Skill detail view, styled like an editor",
+    description: "A code-editor-styled view for browsing a skill's own details, instead of the current layout. No PR yet — still in draft.",
+  },
+  {
     id: "cmk-visualize",
     status: "next",
     category: "Skills",
     title: "New skill: cmk:visualize",
-    description: "Turns content you already have — a design doc, a tracker query, a raw description — into a rendered diagram, slide deck, or animated teaser, instead of a wall of markdown.",
+    description: "Turns content you already have — a design doc, a tracker query, a raw description — into a rendered diagram, slide deck, or animated teaser, instead of a wall of markdown. One target shape: an isometric map of a repo's own infrastructure, dependencies and data paths traced from the real code, citing the files it read.",
+    link: { label: "reference: isometric repo-map prompt", url: "https://x.com/JayScambler/status/2088356230968287547" },
   },
   {
     id: "cmk-interpret",
