@@ -41,6 +41,16 @@ function ActiveCard({ item }: { item: Extract<RoadmapItem, { status: "now" | "ne
     <div className="border border-[var(--border-subtle)] p-4 transition-colors hover:border-[var(--border-strong)]">
       <h3 className="text-[14px] font-medium text-[var(--text-primary)]">{item.title}</h3>
       <p className="mt-1.5 text-[13px] leading-relaxed text-[var(--text-secondary)]">{item.description}</p>
+      {item.link && (
+        <Link
+          href={item.link.url}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-2 block w-fit text-[11px] text-[var(--text-tertiary)] underline decoration-current/30 underline-offset-4 transition-colors hover:text-[var(--text-secondary)] hover:decoration-current"
+        >
+          {item.link.label} &rarr;
+        </Link>
+      )}
       <div className="mt-2 flex items-center justify-between gap-2">
         <span className="font-mono text-[11px] uppercase tracking-wider text-[var(--text-tertiary)]">{item.category}</span>
         {item.pr && <RefChip label="gh pr" url={item.pr} />}
