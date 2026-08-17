@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Arcade } from "./arcade/engine";
+import { Arcade } from "./engine";
 
 const TOTAL_MS = 5000;
 const FADE_MS = 600;
