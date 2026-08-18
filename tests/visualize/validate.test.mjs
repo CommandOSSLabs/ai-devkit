@@ -77,6 +77,36 @@ test("errors accumulate rather than stopping at the first", () => {
   assert.ok(r.errors.length >= 2);
 });
 
+test("a valid folded entry is accepted", () => {
+  const r = validateSceneGraph(graph({ folded: [{ nodeId: "app", files: ["app/a.ts", "app/b.ts"] }] }));
+  assert.deepEqual(r, { valid: true, errors: [] });
+});
+
+test("a valid gap entry is accepted", () => {
+  const r = validateSceneGraph(
+    graph({ gaps: [{ description: "worker calls billing", reason: "no call site found" }] }),
+  );
+  assert.deepEqual(r, { valid: true, errors: [] });
+});
+
+test("a folded entry missing files is rejected", () => {
+  const r = validateSceneGraph(graph({ folded: [{ nodeId: "app" }] }));
+  assert.equal(r.valid, false);
+  assert.ok(r.errors.some((e) => e.includes("folded[0].files")));
+});
+
+test("a folded entry with an empty files array is rejected", () => {
+  const r = validateSceneGraph(graph({ folded: [{ nodeId: "app", files: [] }] }));
+  assert.equal(r.valid, false);
+  assert.ok(r.errors.some((e) => e.includes("folded[0].files")));
+});
+
+test("a gap missing reason is rejected", () => {
+  const r = validateSceneGraph(graph({ gaps: [{ description: "worker calls billing" }] }));
+  assert.equal(r.valid, false);
+  assert.ok(r.errors.some((e) => e.includes("gaps[0].reason")));
+});
+
 test("the schema's required fields match what the validator enforces", () => {
   const schema = JSON.parse(
     readFileSync(new URL("../../skills/visualize/assets/scene-graph.schema.json", import.meta.url)),
@@ -87,12 +117,28 @@ test("the schema's required fields match what the validator enforces", () => {
   );
   assert.deepEqual([...schema.properties.nodes.items.required].sort(), ["citations", "id", "kind", "label"]);
   assert.deepEqual([...schema.properties.edges.items.required].sort(), ["citations", "path", "source", "target"]);
+  assert.deepEqual([...schema.properties.folded.items.required].sort(), ["files", "nodeId"]);
+  assert.deepEqual([...schema.properties.gaps.items.required].sort(), ["description", "reason"]);
 
   for (const field of schema.required) {
     const g = graph();
     delete g[field];
     const r = validateSceneGraph(g);
     assert.equal(r.valid, false, `expected validateSceneGraph to reject a document missing "${field}"`);
+  }
+
+  for (const field of schema.properties.folded.items.required) {
+    const entry = { nodeId: "app", files: ["app/a.ts"] };
+    delete entry[field];
+    const r = validateSceneGraph(graph({ folded: [entry] }));
+    assert.equal(r.valid, false, `expected validateSceneGraph to reject a folded entry missing "${field}"`);
+  }
+
+  for (const field of schema.properties.gaps.items.required) {
+    const entry = { description: "worker calls billing", reason: "no call site found" };
+    delete entry[field];
+    const r = validateSceneGraph(graph({ gaps: [entry] }));
+    assert.equal(r.valid, false, `expected validateSceneGraph to reject a gap entry missing "${field}"`);
   }
 });
 

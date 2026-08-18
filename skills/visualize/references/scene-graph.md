@@ -29,9 +29,11 @@ Each edge needs `source` and `target` (both must name a real `id` in `nodes[]` �
 
 Both are arrays that exist to make hiding something an honest, visible act instead of a silent one.
 
-`folded[]` records every group the altitude budget collapsed — what got merged into one building, and the files behind it. A budget-mode map with a non-empty `folded[]` is not incomplete; it is a map that told you what it summarized. An empty `folded[]` in budget mode means nothing needed to collapse to fit the budget, which is itself informative.
+`folded[]` records every group the altitude budget collapsed — what got merged into one building, and the files behind it. A budget-mode map with a non-empty `folded[]` is not incomplete; it is a map that told you what it summarized. An empty `folded[]` in budget mode means nothing needed to collapse to fit the budget, which is itself informative. Each entry is `{ nodeId, files }`: `nodeId` (non-empty string) is the id of the node in `nodes[]` that the collapse produced, and `files` (array of non-empty strings, at least one) names the files folded into it — an entry with no files behind it is meaningless and is rejected, not accepted as an empty fold.
 
-`gaps[]` records every relationship the analysis suspected but could not cite to a `file:line` in this run. A suspected edge never becomes a real edge just because it seems likely — it goes here instead, described well enough to be useful (see `references/analysis.md` step 6). `gaps[]` is rendered in the explainer panel alongside `folded[]`, so a reader sees the shape of what the map does not know, not just what it drew.
+`gaps[]` records every relationship the analysis suspected but could not cite to a `file:line` in this run. A suspected edge never becomes a real edge just because it seems likely — it goes here instead, described well enough to be useful (see `references/analysis.md` step 6). `gaps[]` is rendered in the explainer panel alongside `folded[]`, so a reader sees the shape of what the map does not know, not just what it drew. Each entry is `{ description, reason }`, both required non-empty strings: `description` is the relationship suspected (what would have connected which nodes), `reason` is why it could not be cited (dynamic dispatch, an unparseable language, a call resolved only at runtime).
+
+Both item shapes are enforced by `assets/validate.mjs`, the same way node and edge citations are — a `folded` or `gaps` entry with the wrong keys is a validation failure, not a document that renders with a blank or literal "undefined" in the explainer panel.
 
 ## Depth cap of 3
 
