@@ -14,10 +14,15 @@ const CLIENT = `
 const doc = JSON.parse(document.getElementById("scene-graph").textContent);
 const svg = document.getElementById("stage");
 const panel = document.getElementById("inspector");
-const place = (i) => {
-  const col = i % 4, row = Math.floor(i / 4);
-  return { x: 320 + (col - row) * 110 * 0.866, y: 90 + (col + row) * 110 * 0.5 };
+const projections = {
+  isometric: (col, row) => ({ x: 320 + (col - row) * 110 * 0.866, y: 90 + (col + row) * 110 * 0.5 }),
+  flat: (col, row) => ({ x: 110 + col * 150, y: 80 + row * 120 }),
+  "three-d": (col, row) => {
+    const d = 1 - row * 0.12;
+    return { x: 320 + (col - 1.5) * 150 * d, y: 120 + row * 130 * d };
+  },
 };
+const place = (i) => projections[doc.style](i % 4, Math.floor(i / 4));
 const pos = new Map(doc.nodes.map((n, i) => [n.id, place(i)]));
 const ns = "http://www.w3.org/2000/svg";
 const el = (t, a) => { const e = document.createElementNS(ns, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
@@ -84,7 +89,7 @@ ul{padding-left:16px;margin:0}
 <h2>Folded</h2><ul>${folded || "<li>nothing folded</li>"}</ul>
 <h2>Unresolved</h2><ul>${gaps || "<li>nothing unresolved</li>"}</ul>
 </aside>
-<script type="application/json" id="scene-graph">${embedJson(doc)}</script>
+<script type="application/json" id="scene-graph">${embedJson({ ...doc, style })}</script>
 <script>${CLIENT}</script>
 </body></html>`;
 }
