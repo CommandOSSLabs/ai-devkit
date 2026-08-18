@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "cmk:visualize scene graph",
+  "type": "object",
+  "required": ["version", "repo", "diagramType", "altitude", "nodes", "edges", "folded", "gaps"],
+  "properties": {
+    "version": { "const": 1 },
+    "repo": {
+      "type": "object",
+      "required": ["name", "commit"],
+      "properties": { "name": { "type": "string" }, "commit": { "type": "string" } }
+    },
+    "diagramType": { "enum": ["system-architecture"] },
+    "altitude": {
+      "type": "object",
+      "required": ["mode"],
+      "properties": {
+        "mode": { "enum": ["budget", "subsystem"] },
+        "budget": { "type": "integer", "minimum": 1 },
+        "grouping": { "type": "string" }
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "kind", "citations"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "label": { "type": "string", "minLength": 1 },
+          "kind": { "type": "string", "minLength": 1 },
+          "citations": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/citation" } },
+          "children": { "type": ["object", "null"] }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source", "target", "path", "citations"],
+        "properties": {
+          "source": { "type": "string" },
+          "target": { "type": "string" },
+          "path": { "enum": ["control", "data"] },
+          "citations": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/citation" } },
+          "samples": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["text", "citation"],
+              "properties": {
+                "text": { "type": "string" },
+                "citation": { "$ref": "#/$defs/citation" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "folded": { "type": "array" },
+    "gaps": { "type": "array" }
+  },
+  "$defs": {
+    "citation": {
+      "type": "object",
+      "required": ["file", "line"],
+      "properties": {
+        "file": { "type": "string", "minLength": 1 },
+        "line": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}
