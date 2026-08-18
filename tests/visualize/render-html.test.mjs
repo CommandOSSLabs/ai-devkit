@@ -58,3 +58,52 @@ test("a node label containing </script> does not break out of the scene-graph pa
   const parsed = JSON.parse(payload);
   assert.equal(parsed.nodes[0].label, label);
 });
+
+test("the chosen style is embedded in the scene graph the client reads", () => {
+  for (const style of ["isometric", "flat", "three-d"]) {
+    const out = renderHtml(fixture(), { style });
+    const json = out.slice(out.indexOf('id="scene-graph"'), out.indexOf("</script>", out.indexOf('id="scene-graph"')));
+    assert.ok(json.includes(`"style":"${style}"`), `${style} not embedded in the scene graph payload`);
+  }
+});
+
+test("each style produces different output", () => {
+  const d = fixture();
+  const iso = renderHtml(d, { style: "isometric" });
+  const flat = renderHtml(d, { style: "flat" });
+  const td = renderHtml(d, { style: "three-d" });
+  assert.notEqual(iso, flat);
+  assert.notEqual(flat, td);
+  assert.notEqual(iso, td);
+});
+
+test("each style is individually deterministic", () => {
+  for (const style of ["isometric", "flat", "three-d"]) {
+    assert.equal(renderHtml(fixture(), { style }), renderHtml(fixture(), { style }));
+  }
+});
+
+test("every style still embeds the same repo identity", () => {
+  const marker = '"repo":{"name":"fixture","commit":"abc1234"}';
+  for (const style of ["isometric", "flat", "three-d"]) {
+    assert.ok(renderHtml(fixture(), { style }).includes(marker));
+  }
+});
+
+test("a node label containing </script> does not break out of the scene-graph payload at any style", () => {
+  for (const style of ["isometric", "flat", "three-d"]) {
+    const doc = fixture();
+    const label = "weird </script><script>alert(1)</script> label";
+    doc.nodes[0].label = label;
+    const out = renderHtml(doc, { style });
+
+    const openTag = '<script type="application/json" id="scene-graph">';
+    const start = out.indexOf(openTag) + openTag.length;
+    const end = out.indexOf("</script>", start);
+    const payload = out.slice(start, end);
+
+    assert.ok(!payload.includes("</script>"));
+    const parsed = JSON.parse(payload);
+    assert.equal(parsed.nodes[0].label, label);
+  }
+});
