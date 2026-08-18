@@ -10,11 +10,14 @@ export function embedJson(value) {
   return JSON.stringify(value).replaceAll("<", "\\u003c");
 }
 
-const CLIENT = `
-const doc = JSON.parse(document.getElementById("scene-graph").textContent);
-const svg = document.getElementById("stage");
-const panel = document.getElementById("inspector");
-const projections = {
+// The single source of truth for how each style places a node on the grid.
+// Exported so tests can pin the geometry directly, in addition to the tests
+// that exercise the server-rendered HTML/JSON payload. `CLIENT` below embeds
+// this same table into the browser-side script by serializing each function
+// with `Function.prototype.toString()`, so the browser and the test suite
+// are provably running the identical arithmetic rather than two copies that
+// could silently drift apart.
+export const PROJECTIONS = {
   isometric: (col, row) => ({ x: 320 + (col - row) * 110 * 0.866, y: 90 + (col + row) * 110 * 0.5 }),
   flat: (col, row) => ({ x: 110 + col * 150, y: 80 + row * 120 }),
   "three-d": (col, row) => {
@@ -22,6 +25,20 @@ const projections = {
     return { x: 320 + (col - 1.5) * 150 * d, y: 120 + row * 130 * d };
   },
 };
+
+// Fixed order (not Object.keys, which is not guaranteed stable across engines
+// for non-integer-like keys) so the generated script text is deterministic.
+const PROJECTION_NAMES = ["isometric", "flat", "three-d"];
+
+const PROJECTIONS_SRC = `{\n${PROJECTION_NAMES.map(
+  (name) => `  ${JSON.stringify(name)}: ${PROJECTIONS[name].toString()}`,
+).join(",\n")}\n}`;
+
+const CLIENT = `
+const doc = JSON.parse(document.getElementById("scene-graph").textContent);
+const svg = document.getElementById("stage");
+const panel = document.getElementById("inspector");
+const projections = ${PROJECTIONS_SRC};
 const place = (i) => projections[doc.style](i % 4, Math.floor(i / 4));
 const pos = new Map(doc.nodes.map((n, i) => [n.id, place(i)]));
 const ns = "http://www.w3.org/2000/svg";
