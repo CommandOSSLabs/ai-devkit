@@ -21,6 +21,38 @@ function checkCitations(list, where, errors, subject) {
   });
 }
 
+function checkFoldedItem(item, where, errors) {
+  if (!item || typeof item !== "object" || Array.isArray(item)) {
+    errors.push(`${where}: must be an object`);
+    return;
+  }
+  if (typeof item.nodeId !== "string" || item.nodeId.length === 0) {
+    errors.push(`${where}.nodeId: must be a non-empty string`);
+  }
+  if (!Array.isArray(item.files) || item.files.length === 0) {
+    errors.push(`${where}.files: must be a non-empty array of strings`);
+  } else {
+    item.files.forEach((f, i) => {
+      if (typeof f !== "string" || f.length === 0) {
+        errors.push(`${where}.files[${i}]: must be a non-empty string`);
+      }
+    });
+  }
+}
+
+function checkGapItem(item, where, errors) {
+  if (!item || typeof item !== "object" || Array.isArray(item)) {
+    errors.push(`${where}: must be an object`);
+    return;
+  }
+  if (typeof item.description !== "string" || item.description.length === 0) {
+    errors.push(`${where}.description: must be a non-empty string`);
+  }
+  if (typeof item.reason !== "string" || item.reason.length === 0) {
+    errors.push(`${where}.reason: must be a non-empty string`);
+  }
+}
+
 export function validateSceneGraph(doc, options = {}) {
   const depth = options.depth ?? 0;
   const prefix = options.prefix ?? "";
@@ -138,10 +170,16 @@ export function validateSceneGraph(doc, options = {}) {
     });
   }
 
-  for (const field of ["folded", "gaps"]) {
-    if (!Array.isArray(doc[field])) {
-      errors.push(`${prefix}${field} must be an array (use [] when empty)`);
-    }
+  if (!Array.isArray(doc.folded)) {
+    errors.push(`${prefix}folded must be an array (use [] when empty)`);
+  } else {
+    doc.folded.forEach((f, i) => checkFoldedItem(f, `${prefix}folded[${i}]`, errors));
+  }
+
+  if (!Array.isArray(doc.gaps)) {
+    errors.push(`${prefix}gaps must be an array (use [] when empty)`);
+  } else {
+    doc.gaps.forEach((g, i) => checkGapItem(g, `${prefix}gaps[${i}]`, errors));
   }
 
   return { valid: errors.length === 0, errors };
