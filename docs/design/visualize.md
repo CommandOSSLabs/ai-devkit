@@ -210,6 +210,9 @@ needs help deciding what to build — that request routes to `cmk:design`,
 
 ## Links
 
+- **Deeper design:** `docs/design/visualize-repo-map.md` specifies the repo-map
+  material type in detail, adds the repository's own code as a fourth source
+  kind, and pins the scene-graph contract the pipeline renders from.
 - **Requirements:** none yet — see Open Points.
 - **Decisions:** none yet.
 - **Related skills:** `cmk:design` (spec source for architecture/decision
