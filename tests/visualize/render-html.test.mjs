@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { renderHtml } from "../../skills/visualize/assets/render-html.mjs";
+import { renderHtml, PROJECTIONS } from "../../skills/visualize/assets/render-html.mjs";
 
 const fixture = () => JSON.parse(readFileSync(new URL("./fixtures/minimal.json", import.meta.url)));
 
@@ -106,4 +106,39 @@ test("a node label containing </script> does not break out of the scene-graph pa
     const parsed = JSON.parse(payload);
     assert.equal(parsed.nodes[0].label, label);
   }
+});
+
+test("PROJECTIONS: all three styles place the same (col, row) differently in row 1", () => {
+  const col = 1;
+  const row = 1;
+  const iso = PROJECTIONS.isometric(col, row);
+  const flat = PROJECTIONS.flat(col, row);
+  const td = PROJECTIONS["three-d"](col, row);
+  assert.notDeepEqual(iso, flat);
+  assert.notDeepEqual(flat, td);
+  assert.notDeepEqual(iso, td);
+});
+
+test("PROJECTIONS: isometric shears, increasing row changes x for a fixed col", () => {
+  const col = 2;
+  const a = PROJECTIONS.isometric(col, 0);
+  const b = PROJECTIONS.isometric(col, 1);
+  assert.notEqual(a.x, b.x);
+});
+
+test("PROJECTIONS: flat does not shear, increasing row leaves x unchanged for a fixed col", () => {
+  const col = 2;
+  const a = PROJECTIONS.flat(col, 0);
+  const b = PROJECTIONS.flat(col, 1);
+  assert.equal(a.x, b.x);
+});
+
+test("PROJECTIONS: three-d compresses column spacing with depth", () => {
+  const rowNear = PROJECTIONS["three-d"](0, 0);
+  const rowNearNextCol = PROJECTIONS["three-d"](1, 0);
+  const rowFar = PROJECTIONS["three-d"](0, 1);
+  const rowFarNextCol = PROJECTIONS["three-d"](1, 1);
+  const distNear = Math.abs(rowNearNextCol.x - rowNear.x);
+  const distFar = Math.abs(rowFarNextCol.x - rowFar.x);
+  assert.ok(distFar < distNear, `expected row-1 column spacing (${distFar}) to be smaller than row-0 spacing (${distNear})`);
 });
