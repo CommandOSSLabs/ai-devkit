@@ -2,6 +2,7 @@ export const SCENE_GRAPH_VERSION = 1;
 export const MAX_DEPTH = 3;
 
 const PATH_KINDS = new Set(["control", "data"]);
+const ALTITUDE_MODES = new Set(["budget", "subsystem"]);
 
 function isCitation(c) {
   return Boolean(c) && typeof c.file === "string" && c.file.length > 0
@@ -34,6 +35,36 @@ export function validateSceneGraph(doc, options = {}) {
   if (depth > MAX_DEPTH) {
     errors.push(`${prefix}nesting exceeds depth cap ${MAX_DEPTH}`);
     return { valid: false, errors };
+  }
+
+  if (!doc.repo || typeof doc.repo !== "object" || Array.isArray(doc.repo)) {
+    errors.push(`${prefix}repo must be an object`);
+  } else {
+    if (typeof doc.repo.name !== "string" || doc.repo.name.length === 0) {
+      errors.push(`${prefix}repo.name must be a non-empty string`);
+    }
+    if (typeof doc.repo.commit !== "string" || doc.repo.commit.length === 0) {
+      errors.push(`${prefix}repo.commit must be a non-empty string`);
+    }
+  }
+
+  if (doc.diagramType !== "system-architecture") {
+    errors.push(`${prefix}diagramType must be "system-architecture"`);
+  }
+
+  if (!doc.altitude || typeof doc.altitude !== "object" || Array.isArray(doc.altitude)) {
+    errors.push(`${prefix}altitude must be an object`);
+  } else {
+    if (!ALTITUDE_MODES.has(doc.altitude.mode)) {
+      errors.push(`${prefix}altitude.mode must be one of budget, subsystem`);
+    }
+    if (doc.altitude.budget !== undefined
+      && !(Number.isInteger(doc.altitude.budget) && doc.altitude.budget > 0)) {
+      errors.push(`${prefix}altitude.budget must be a positive integer`);
+    }
+    if (doc.altitude.grouping !== undefined && typeof doc.altitude.grouping !== "string") {
+      errors.push(`${prefix}altitude.grouping must be a string`);
+    }
   }
 
   const ids = new Set();

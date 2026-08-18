@@ -87,6 +87,13 @@ test("the schema's required fields match what the validator enforces", () => {
   );
   assert.deepEqual([...schema.properties.nodes.items.required].sort(), ["citations", "id", "kind", "label"]);
   assert.deepEqual([...schema.properties.edges.items.required].sort(), ["citations", "path", "source", "target"]);
+
+  for (const field of schema.required) {
+    const g = graph();
+    delete g[field];
+    const r = validateSceneGraph(g);
+    assert.equal(r.valid, false, `expected validateSceneGraph to reject a document missing "${field}"`);
+  }
 });
 
 test("the committed fixture validates", () => {
