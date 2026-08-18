@@ -6,6 +6,10 @@ function escapeHtml(s) {
   return String(s).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 }
 
+export function embedJson(value) {
+  return JSON.stringify(value).replaceAll("<", "\\u003c");
+}
+
 const CLIENT = `
 const doc = JSON.parse(document.getElementById("scene-graph").textContent);
 const svg = document.getElementById("stage");
@@ -80,7 +84,7 @@ ul{padding-left:16px;margin:0}
 <h2>Folded</h2><ul>${folded || "<li>nothing folded</li>"}</ul>
 <h2>Unresolved</h2><ul>${gaps || "<li>nothing unresolved</li>"}</ul>
 </aside>
-<script type="application/json" id="scene-graph">${JSON.stringify(doc)}</script>
+<script type="application/json" id="scene-graph">${embedJson(doc)}</script>
 <script>${CLIENT}</script>
 </body></html>`;
 }

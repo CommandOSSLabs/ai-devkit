@@ -42,3 +42,19 @@ test("an invalid document throws rather than rendering", () => {
 test("an unknown style is rejected", () => {
   assert.throws(() => renderHtml(fixture(), { style: "hologram" }), /unknown style/);
 });
+
+test("a node label containing </script> does not break out of the scene-graph payload", () => {
+  const doc = fixture();
+  const label = "weird </script><script>alert(1)</script> label";
+  doc.nodes[0].label = label;
+  const out = renderHtml(doc);
+
+  const openTag = '<script type="application/json" id="scene-graph">';
+  const start = out.indexOf(openTag) + openTag.length;
+  const end = out.indexOf("</script>", start);
+  const payload = out.slice(start, end);
+
+  assert.ok(!payload.includes("</script>"));
+  const parsed = JSON.parse(payload);
+  assert.equal(parsed.nodes[0].label, label);
+});
