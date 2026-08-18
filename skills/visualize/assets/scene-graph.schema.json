@@ -59,8 +59,28 @@
         }
       }
     },
-    "folded": { "type": "array" },
-    "gaps": { "type": "array" }
+    "folded": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["nodeId", "files"],
+        "properties": {
+          "nodeId": { "type": "string", "minLength": 1 },
+          "files": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+        }
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["description", "reason"],
+        "properties": {
+          "description": { "type": "string", "minLength": 1 },
+          "reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
   },
   "$defs": {
     "citation": {

@@ -18,7 +18,7 @@ A relationship you strongly suspect but cannot pin to a line — dynamic dispatc
 
 ## 4. Apply the altitude fold
 
-If altitude mode is `budget` (the default), pick the grouping level that lands the node count inside 12 to 20: per file on a small repo, per package or per service on a monorepo. As you group, record every collapse in `folded[]`, naming the files behind each fold. Folding must never be silent — a fold that isn't recorded is a truncation wearing a diagram's clothes.
+If altitude mode is `budget` (the default), pick the grouping level that lands the node count inside 12 to 20: per file on a small repo, per package or per service on a monorepo. As you group, record every collapse as a `folded[]` entry shaped `{ nodeId, files }`: `nodeId` is the id of the node the collapse produced, `files` is the non-empty list of files it absorbed. Folding must never be silent — a fold that isn't recorded, or a `folded[]` entry with the wrong keys, is a truncation wearing a diagram's clothes; `assets/validate.mjs` rejects an entry missing either key or with an empty `files` array.
 
 If altitude mode is `subsystem`, trace only the named slice and do not fold it at all; the caller already knows which part of the map they want.
 
@@ -33,7 +33,7 @@ Redaction happens here, before the scene graph exists, because the scene graph i
 
 ## 6. Record anything uncitable in `gaps[]`
 
-Every relationship suspected but not traced to a `file:line` in this run goes in `gaps[]` with enough description to be useful — what was suspected, and why it could not be confirmed. `gaps[]` is not a place to apologize; it is a first-class part of the output, surfaced in the explainer panel alongside `folded[]`, so the reader sees what the map does not know rather than a confident picture that is quietly incomplete in places.
+Every relationship suspected but not traced to a `file:line` in this run goes in `gaps[]` as an entry shaped `{ description, reason }`: `description` is what was suspected (which nodes, what kind of relationship), `reason` is why it could not be confirmed (dynamic dispatch, a language you cannot parse, a call resolved only at runtime). Both are required, non-empty strings. `gaps[]` is not a place to apologize; it is a first-class part of the output, surfaced in the explainer panel alongside `folded[]`, so the reader sees what the map does not know rather than a confident picture that is quietly incomplete in places. Get the keys right — `assets/validate.mjs` rejects an entry missing either one, and the explainer panel has nothing sensible to render from a differently-keyed entry.
 
 ## 7. Hand off to validation
 
