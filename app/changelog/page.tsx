@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Fragment } from "react";
-import { Terminal, ArrowLeft } from "lucide-react";
-import DotShift from "@/components/motion/dot-shift";
+import { Terminal, ArrowLeft, Github, ExternalLink } from "lucide-react";
+import { ArcadeSplash } from "@/components/marketing/arcade/ArcadeSplash";
+import { ArcadeBackground } from "@/components/marketing/arcade/ArcadeBackground";
+import { InstallBlock } from "@/components/marketing/changelog/InstallBlock";
 
 export const dynamic = "force-static";
 
@@ -15,90 +17,140 @@ export const metadata: Metadata = {
 // as part of the same site rather than a visually disconnected page.
 const ACCENT = "#82AAFF";
 
-type ChangeType = "feature" | "fix" | "change";
-
-const TYPE_STYLES: Record<ChangeType, { label: string; color: string; bg: string }> = {
-  feature: { label: "Feature", color: "#C3E88D", bg: "rgba(195, 232, 141, 0.12)" },
-  fix: { label: "Fix", color: "#F07178", bg: "rgba(240, 113, 120, 0.12)" },
-  change: { label: "Change", color: ACCENT, bg: "rgba(130, 170, 255, 0.12)" },
-};
-
-type ChangelogItem = { type: ChangeType; text: string };
-
 type ChangelogEntry = {
   date: string;
+  /** Compact form for the sticky gutter marker, e.g. "Aug 14". */
+  shortDate: string;
   title: string;
-  items: ChangelogItem[];
+  items: string[];
+  /** Extra rendered content after the bullet list — used once, on the launch entry. */
+  extra?: React.ReactNode;
 };
 
 // A standalone page, deliberately outside the landing page's section-scroll
 // system (no shared Nav, no #id sections) — its own route, its own header.
-// Timeline structure follows github.com/Saurabh-2607/GreatUI's changelog
-// page: a big date heading per entry on a connecting vertical line, an
-// icon marker on the newest entry, plain dots on the rest. Each entry sits
-// in a card (matching the site's own card pattern) with typed badges per
-// line instead of a flat bullet list — colors/icons are ai-devkit's own,
-// not copied from that project's branding.
+// Layout follows Superset's own changelog
+// (github.com/superset-sh/superset/tree/main/apps/marketing/src/app/changelog):
+// a sticky gutter date + accent tick per entry, plain flowing prose in the
+// body instead of a bordered card with typed badges — no separate visual
+// system on top of what the content already says.
+const REPO = "https://github.com/CommandOSSLabs/ai-devkit";
+
+const SITE = "https://skills.commandoss.com";
+
 const ENTRIES: ChangelogEntry[] = [
   {
-    date: "August 13, 2026",
-    title: "skills.commandoss.com launched",
+    date: "August 14, 2026",
+    shortDate: "Aug 14",
+    title: "New: cmk:interpret, plus acceptance-criteria notation",
     items: [
-      { type: "change", text: "Homepage is the skills page now — dropped the /skill in the URL." },
-      { type: "feature", text: "Nav links go to real URLs, not #hash junk. Share a link straight to any section." },
-      { type: "fix", text: "Text was hard to read over the background in some spots — fixed, light and dark." },
-      { type: "fix", text: "Marquee divider flips colors properly in light mode now." },
-      { type: "feature", text: "Install box got an npm/pnpm/yarn/bun switcher, with a little type-in animation." },
-      { type: "fix", text: "Picking multiple skills copies an actual usable prompt now, not a broken command." },
+      `New skill: **cmk:interpret**, for user-invoked interpret sessions. [$ git show 0d7b298](${REPO}/commit/0d7b298)`,
+      `Requirements now need one clear **acceptance criterion** per rule, each with its own ID. [$ git show b12a3fd](${REPO}/commit/b12a3fd)`,
+      `Design docs link back to those requirement IDs instead of repeating them. [$ git show b12a3fd](${REPO}/commit/b12a3fd)`,
+      `**34 skills** are live on [skills.commandoss.com](${SITE}).`,
     ],
+  },
+  {
+    date: "August 13, 2026",
+    shortDate: "Aug 13",
+    title: `[skills.commandoss.com](${SITE}) launched`,
+    items: [
+      "**Homepage** is the skills page now — dropped the /skill in the URL.",
+      "Nav links go to real URLs. Share a link straight to any section.",
+      "Text was hard to read over the background in some spots — fixed.",
+      "Marquee divider colors fixed in light mode.",
+      "**Install box** got an npm/pnpm/yarn/bun switcher.",
+      `Copying multiple skills now gives a usable prompt. [$ gh pr view 9](${REPO}/pull/9)`,
+    ],
+    extra: <InstallBlock />,
   },
 ];
 
-// Supports [label](url) inline, same as GreatUI's changelog — kept minimal
-// since only internal/GitHub links are expected here.
-function parseInlineLinks(text: string) {
-  const parts = text.split(/(\[.*?\]\(.*?\))/g);
+// Supports [label](url) and **bold** inline. A label starting with "$ " is a
+// CLI reference (a commit/PR to look up) and renders as a small terminal-style
+// chip, matching the install-command boxes elsewhere on this site — everything
+// else with a link renders as a plain inline link.
+function parseInline(text: string) {
+  const parts = text.split(/(\[.*?\]\(.*?\)|\*\*.*?\*\*)/g);
   return parts.map((part, i) => {
-    const match = part.match(/\[(.*?)\]\((.*?)\)/);
-    if (!match) return <Fragment key={i}>{part}</Fragment>;
-    const isExternal = match[2].startsWith("http");
-    return (
-      <Link
-        key={i}
-        href={match[2]}
-        target={isExternal ? "_blank" : undefined}
-        rel={isExternal ? "noreferrer" : undefined}
-        className="font-medium underline decoration-current/30 underline-offset-4 transition-colors hover:decoration-current"
-        style={{ color: ACCENT }}
-      >
-        {match[1]}
-      </Link>
-    );
+    const linkMatch = part.match(/^\[(.*?)\]\((.*?)\)$/);
+    if (linkMatch) {
+      const label = linkMatch[1];
+      const href = linkMatch[2];
+      const isExternal = href.startsWith("http");
+      const linkProps = {
+        href,
+        target: isExternal ? "_blank" : undefined,
+        rel: isExternal ? "noreferrer" : undefined,
+      } as const;
+
+      if (label.startsWith("$ ")) {
+        return (
+          <Link
+            key={i}
+            {...linkProps}
+            className="ml-1 inline-flex items-center gap-1.5 rounded border border-[var(--border-subtle)] bg-[var(--bg-base)] px-1.5 py-0.5 align-middle font-mono text-[12px] text-[var(--text-secondary)] transition-colors hover:border-[var(--border-strong)] hover:text-[var(--text-primary)]"
+          >
+            <span className="select-none text-[var(--text-tertiary)]">$</span>
+            {label.slice(2)}
+          </Link>
+        );
+      }
+
+      return (
+        <Link
+          key={i}
+          {...linkProps}
+          className="font-medium underline decoration-current/30 underline-offset-4 transition-colors hover:decoration-current"
+          style={{ color: ACCENT }}
+        >
+          {label}
+        </Link>
+      );
+    }
+    const boldMatch = part.match(/^\*\*(.*?)\*\*$/);
+    if (boldMatch) {
+      return (
+        <strong key={i} className="font-semibold text-[var(--text-primary)]">
+          {boldMatch[1]}
+        </strong>
+      );
+    }
+    return <Fragment key={i}>{part}</Fragment>;
   });
 }
 
-function TypeBadge({ type }: { type: ChangeType }) {
-  const style = TYPE_STYLES[type];
+// A small bracket + pulsing dot, mirrored into all four corners of a link —
+// dims to a resting state and brightens on hover, like a UI element being
+// targeted rather than just a plain text link.
+function CornerMark({ className }: { className?: string }) {
   return (
-    <span
-      className="mt-0.5 inline-flex flex-shrink-0 items-center rounded-full px-2 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-wide"
-      style={{ color: style.color, backgroundColor: style.bg }}
+    <svg
+      width="8"
+      height="8"
+      viewBox="0 0 8 8"
+      className={`pointer-events-none absolute text-[var(--border-strong)] opacity-40 transition-opacity duration-300 group-hover:opacity-100 ${className ?? ""}`}
     >
-      {style.label}
-    </span>
+      <path d="M1 8 V1 H8" stroke="currentColor" strokeWidth="1" fill="none" />
+      <circle cx="1" cy="1" r="1.2" fill="currentColor" className="animate-pulse" />
+    </svg>
   );
 }
 
 export default function ChangelogPage() {
   return (
     <div className="relative min-h-screen bg-[var(--bg-base)] text-[var(--text-primary)]">
-      {/* Ambient full-page background (React Bits Pro Dot Shift shader) —
-          fixed and behind everything, same role GlowingWave plays on the
-          main landing page, so this page isn't a flat dark rectangle.
-          Tinted to this page's own accent, not the landing page's blue. */}
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-40">
-        <DotShift color={ACCENT} speed={0.35} scale={0.55} size={0.55} blur={0.6} />
-      </div>
+      <ArcadeSplash />
+
+      {/* Ambient full-page background — fixed and behind everything, same
+          role GlowingWave plays on the main landing page. Same arcade-pixel
+          engine as the intro splash, kept running instead of fading out —
+          the reveal settles into the backdrop rather than handing off to
+          something unrelated. No word here even at the dim watermark
+          opacity it was hurting legibility where it crossed body text —
+          ArcadeSplash still shows "changelog" during the intro, this is
+          grain/moire texture only once that's done. */}
+      <ArcadeBackground className="fixed inset-0 z-0" word="" opacity={0.4} />
 
       <div className="relative z-10">
         <header className="border-b border-[var(--border-subtle)] px-4 py-4 sm:px-6">
@@ -113,65 +165,92 @@ export default function ChangelogPage() {
             </Link>
             <Link
               href="/"
-              className="flex items-center gap-1.5 text-[13px] text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
+              className="group relative inline-flex items-center gap-1.5 px-2 py-1 text-[13px] text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
             >
+              <CornerMark className="left-0 top-0" />
+              <CornerMark className="right-0 top-0 -scale-x-100" />
+              <CornerMark className="bottom-0 left-0 -scale-y-100" />
+              <CornerMark className="bottom-0 right-0 -scale-100" />
               <ArrowLeft size={14} />
               <span>Back to site</span>
             </Link>
           </div>
         </header>
 
-        <main className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20">
+        <main className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20" style={{ zoom: 1.25 }}>
+          {/* Header — Superset's own pattern: an eyebrow label, "What's New"
+              as the actual heading, a description that links out to GitHub
+              Releases inline, then a second explicit link below it. Plain
+              text on the page background, no card — matches how Superset's
+              own changelog header sits directly in the page. */}
           <div className="mb-14">
-            <h1 className="mb-3 text-[clamp(32px,5vw,48px)] font-black tracking-tight text-[var(--text-primary)]">
+            <span className="font-mono text-[13px] uppercase tracking-wider text-[var(--text-secondary)]">
               Changelog
+            </span>
+            <h1 className="mt-3 text-[clamp(28px,4vw,40px)] font-medium tracking-tight text-[var(--text-primary)]">
+              What&apos;s New
             </h1>
-            <p className="text-[18px] text-[var(--text-secondary)]">
-              New updates and improvements to AI DevKit Skills.
+            <p className="mt-2 max-w-md text-[15px] text-[var(--text-secondary)]">
+              The latest updates and improvements to AI DevKit Skills. For detailed release notes, see{" "}
+              <Link
+                href={`${REPO}/releases`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1 text-[var(--text-primary)] underline decoration-current/30 underline-offset-4 transition-colors hover:decoration-current"
+              >
+                GitHub Releases
+                <ExternalLink size={12} />
+              </Link>
+              .
             </p>
+            <Link
+              href={`${REPO}/releases`}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-3 inline-flex w-fit items-center gap-1.5 text-[13px] text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
+            >
+              <Github size={14} />
+              View releases on GitHub
+              <span aria-hidden="true">&rarr;</span>
+            </Link>
           </div>
 
-          <div className="relative ml-3">
-            {ENTRIES.map((entry, index) => (
-              <div key={entry.date} className="group relative pb-12 pl-8 last:pb-0">
-                {index !== ENTRIES.length - 1 && (
-                  <div className="absolute bottom-[-8px] left-0 top-2 w-px -translate-x-1/2 bg-[var(--border-subtle)]" aria-hidden />
-                )}
+          {/* Timeline — sticky gutter date + accent tick to the left of the
+              column on desktop (each date stays pinned while its entry
+              scrolls past), collapsing to an inline date above the title
+              on mobile where there's no gutter to put it in. */}
+          <div className="relative">
+            {ENTRIES.map((entry) => (
+              <div
+                key={entry.date}
+                className="relative border-b border-[var(--border-subtle)] pb-12 last:border-b-0 lg:pb-16"
+              >
+                <div className="absolute top-0 hidden items-start lg:flex" style={{ right: "calc(100% + 24px)" }}>
+                  <div className="sticky top-24 flex items-center gap-2.5 pt-1">
+                    <span className="whitespace-nowrap font-mono text-[13px] text-[var(--text-tertiary)]">
+                      {entry.shortDate}
+                    </span>
+                    <div className="h-[18px] w-0.5" style={{ backgroundColor: ACCENT }} />
+                  </div>
+                </div>
 
-                {index === 0 ? (
-                  <span
-                    className="absolute left-0 top-1.5 flex h-4 w-4 -translate-x-1/2 items-center justify-center overflow-hidden rounded-full bg-[var(--bg-base)] ring-4 ring-[var(--bg-base)]"
-                  >
-                    <Terminal size={10} style={{ color: ACCENT }} />
-                  </span>
-                ) : (
-                  <span className="absolute left-0 top-2 flex h-4 w-4 -translate-x-1/2 items-center justify-center rounded-full bg-[var(--bg-base)] ring-4 ring-[var(--bg-base)]">
-                    <span className="h-2 w-2 rounded-full bg-[var(--text-disabled)]" />
-                  </span>
-                )}
-
-                <div className="font-mono text-[13px] uppercase tracking-wide text-[var(--text-tertiary)]">
+                <div className="mb-1 font-mono text-[13px] uppercase tracking-wide text-[var(--text-tertiary)] lg:hidden">
                   {entry.date}
                 </div>
-                <h2 className="mt-1 text-[22px] font-bold tracking-tight text-[var(--text-primary)] sm:text-[26px]">
-                  {entry.title}
+
+                <h2 className="text-[22px] font-bold tracking-tight text-[var(--text-primary)] sm:text-[26px]">
+                  {parseInline(entry.title)}
                 </h2>
 
-                {/* Card matching the site's own frame pattern (rounded-[16px]
-                    border + bg-surface), so an entry reads as a discrete
-                    unit instead of text floating loose on the star field. */}
-                <div className="mt-4 rounded-[16px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5">
-                  <ul className="flex flex-col gap-3.5">
-                    {entry.items.map((item) => (
-                      <li key={item.text} className="flex items-start gap-3">
-                        <TypeBadge type={item.type} />
-                        <span className="text-[15px] leading-relaxed text-[var(--text-secondary)]">
-                          {parseInlineLinks(item.text)}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                {/* Plain flowing prose, no card or badges — the content sits
+                    directly in the page the way Superset's MDX body does. */}
+                <ul className="mt-4 flex list-disc flex-col gap-2.5 pl-5 text-[15px] leading-relaxed text-[var(--text-secondary)] marker:text-[var(--text-disabled)]">
+                  {entry.items.map((item) => (
+                    <li key={item}>{parseInline(item)}</li>
+                  ))}
+                </ul>
+
+                {entry.extra}
               </div>
             ))}
           </div>

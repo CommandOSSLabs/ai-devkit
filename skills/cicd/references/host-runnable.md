@@ -5,9 +5,8 @@ any host can run. The YAML (or other remote CI file) only composes them.
 
 ## Scripts are the workflow
 
-Prefer TypeScript run with bun (or the repo's existing automation
-runtime) under `scripts/`. Each step is independently invocable on a
-machine. A step that only works inside GitHub Actions is unfinished.
+Each step is independently invocable on a machine. A step that only
+works inside GitHub Actions is unfinished.
 
 Manual is the default: a human or agent can run the same entry point
 the remote composer calls. Automation is that composition with a
@@ -19,6 +18,47 @@ GitHub-hosted compute, and every cloud environment are **hosts** and
 cannot run the path, extend the script or the local materialization
 (`cmk:local-stack`, `cmk:infra`) — do not invent a host-specific
 dialect beside the real one.
+
+## Language
+
+Programmable workflow and operator steps are TypeScript run with bun
+(or the repo's existing automation runtime) under `scripts/`. That is
+the default, not a suggestion next to a second ops language.
+
+Shell stays for host bootstrap: installing the runtime, runner hooks,
+and thin wrappers that exec the script. A host that cannot run bun
+yet is a reason for a `.sh` bootstrap, not for rewriting the step.
+
+Do not add a third ops language (Python, Ruby, a one-off DSL) for the
+same class of step. Convert by replace, not shim: one implementation
+site, the old file gone, callers and contract tests pointed at the
+new path in the same change.
+
+## Composer-contract drift
+
+Extracting a fat inline `run:` into a script is unfinished until three
+things move together:
+
+1. The YAML step is a one-line invocation of the script.
+2. Every contract that grepped the old YAML body retargets to the
+   script. YAML is pinned only as "it calls that script"; policy
+   lives in the script.
+3. Every path-filter list that named the old body (the workflow's
+   `on.push.paths`, a derived union, a frozen snapshot test) adds
+   the new script. One source of truth; the others are asserted
+   from it.
+
+Do not raise a line-count or runner-class baseline to accept leftover
+YAML. The baseline exists to force the extract.
+
+## Mutate gate
+
+A mutating script the laptop and GitHub both invoke refuses unless
+the caller passes an explicit confirm (`--confirm` locally) or a
+documented environment variable on CI. Absence is refuse, not a
+soft skip. A protected GitHub Environment is not a substitute: the
+same entry point still has to refuse on a laptop or JIT host that
+has no Environment in the picture.
 
 ## Host matrix
 
