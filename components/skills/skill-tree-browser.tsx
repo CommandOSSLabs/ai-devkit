@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronRight, FileCode, FileText, Folder, FolderOpen, Image as ImageIcon } from "lucide-react";
 import type { SkillTreeNode, FileKind } from "@/lib/skills-tree";
+import { FileContentPane } from "./file-content-pane";
 
 // Adapted from React Bits Pro's "List12" file-tree browser — swapped the
 // mock TREE for real skills/ directory data (lib/skills-tree.ts), added the
@@ -82,7 +83,8 @@ export default function SkillTreeBrowser({ tree }: { tree: SkillTreeNode[] }) {
   const allFolders = useMemo(() => collectFolders(tree), [tree]);
 
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set(topFolders.slice(0, 1)));
-  const [selected, setSelected] = useState<string | null>(null);
+  const [openIds, setOpenIds] = useState<string[]>([]);
+  const [activeTabId, setActiveTabId] = useState<string | null>(null);
   const [activeId, setActiveId] = useState<string>(tree[0]?.id ?? "");
 
   const rowRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -113,10 +115,23 @@ export default function SkillTreeBrowser({ tree }: { tree: SkillTreeNode[] }) {
       return next;
     });
 
+  const openFile = (id: string) => {
+    setOpenIds((prev) => (prev.includes(id) ? prev : [...prev, id]));
+    setActiveTabId(id);
+  };
+
+  const closeTab = (id: string) => {
+    setOpenIds((prev) => {
+      const next = prev.filter((x) => x !== id);
+      setActiveTabId((current) => (current === id ? (next[next.length - 1] ?? null) : current));
+      return next;
+    });
+  };
+
   const onRowClick = (row: Row) => {
     setActiveId(row.node.id);
     if (row.node.type === "folder") toggle(row.node.id);
-    else setSelected(row.node.id);
+    else openFile(row.node.id);
   };
 
   const onKeyDown = (e: React.KeyboardEvent) => {
@@ -190,29 +205,42 @@ export default function SkillTreeBrowser({ tree }: { tree: SkillTreeNode[] }) {
     setActiveId(tree[0]?.id ?? "");
   };
 
-  const selectedFile = selected ? findFile(tree, selected) : null;
+  const openFiles = openIds
+    .map((id) => findFile(tree, id))
+    .filter((f): f is Extract<SkillTreeNode, { type: "file" }> => f !== null);
+  const activeFile = activeTabId ? findFile(tree, activeTabId) : null;
 
   return (
-    <div className="grid grid-cols-1 gap-4 lg:grid-cols-[380px_1fr] lg:gap-6">
-      <div className="flex min-h-0 flex-col">
-        <div className="mb-3 flex shrink-0 items-center justify-end gap-1.5">
-          <button
-            type="button"
-            onClick={expandAll}
-            className="inline-flex h-8 items-center rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-2.5 text-[12px] font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
-          >
-            Expand all
-          </button>
-          <button
-            type="button"
-            onClick={collapseAll}
-            className="inline-flex h-8 items-center rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-2.5 text-[12px] font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
-          >
-            Collapse all
-          </button>
+    <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-[16px] border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
+      <div className="flex min-h-0 flex-1 flex-col-reverse lg:flex-row">
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+          <FileContentPane
+            openFiles={openFiles}
+            activeId={activeTabId}
+            activeFile={activeFile}
+            onSelectTab={setActiveTabId}
+            onCloseTab={closeTab}
+          />
         </div>
 
-        <div className="relative flex h-[520px] flex-col overflow-hidden rounded-[16px] border border-[var(--border-subtle)] bg-[var(--bg-frame)]">
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden border-t border-[var(--border-subtle)] bg-[var(--bg-frame)] lg:w-[380px] lg:flex-none lg:border-l lg:border-t-0">
+          <div className="flex shrink-0 items-center justify-end gap-1.5 border-b border-[var(--border-subtle)] px-2 py-2">
+            <button
+              type="button"
+              onClick={expandAll}
+              className="inline-flex h-7 items-center rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-2 text-[12px] font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
+            >
+              Expand all
+            </button>
+            <button
+              type="button"
+              onClick={collapseAll}
+              className="inline-flex h-7 items-center rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-2 text-[12px] font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
+            >
+              Collapse all
+            </button>
+          </div>
+
           <div className="min-h-0 flex-1 overflow-y-auto py-1">
             <div role="tree" aria-label="skills/ directory" onKeyDown={onKeyDown}>
               {rows.map((row) => {
@@ -220,7 +248,7 @@ export default function SkillTreeBrowser({ tree }: { tree: SkillTreeNode[] }) {
                 const folder = node.type === "folder";
                 const open = folder && isExpanded(node.id);
                 const isActive = node.id === effectiveId;
-                const isSelected = node.id === selected;
+                const isSelected = node.id === activeTabId;
                 const Icon = folder ? (open ? FolderOpen : Folder) : FILE_ICON[node.kind];
 
                 return (
@@ -288,38 +316,6 @@ export default function SkillTreeBrowser({ tree }: { tree: SkillTreeNode[] }) {
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="flex h-[520px] flex-col overflow-hidden rounded-[16px] border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
-        {selectedFile ? (
-          <>
-            <div className="flex shrink-0 items-center gap-2 border-b border-[var(--border-subtle)] px-4 py-3 font-mono text-[13px] text-[var(--text-secondary)]">
-              {FILE_ICON[selectedFile.kind] &&
-                (() => {
-                  const Icon = FILE_ICON[selectedFile.kind];
-                  return <Icon size={14} className="text-[var(--text-tertiary)]" />;
-                })()}
-              <span className="truncate text-[var(--text-primary)]">{selectedFile.id}</span>
-              <span className="ml-auto shrink-0 text-[11px] text-[var(--text-tertiary)]">{selectedFile.size}</span>
-            </div>
-            <div className="min-h-0 flex-1 overflow-auto p-4">
-              {selectedFile.content !== null ? (
-                <pre className="whitespace-pre-wrap break-words font-mono text-[12.5px] leading-[1.6] text-[var(--text-secondary)]">
-                  {selectedFile.content}
-                </pre>
-              ) : (
-                <div className="flex h-full items-center justify-center text-[13px] text-[var(--text-tertiary)]">
-                  {selectedFile.kind === "image" ? "Image preview not shown here." : "File too large to preview."}
-                </div>
-              )}
-            </div>
-          </>
-        ) : (
-          <div className="flex h-full flex-col items-center justify-center gap-2 px-6 text-center">
-            <FileText size={20} className="text-[var(--text-disabled)]" />
-            <p className="text-[13px] text-[var(--text-tertiary)]">Select a file on the left to read it.</p>
-          </div>
-        )}
       </div>
     </div>
   );

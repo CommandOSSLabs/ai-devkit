@@ -10,6 +10,7 @@ import { MaskedHeading } from "@/components/motion/masked-heading";
 import { DecryptReveal } from "@/components/motion/decrypt-reveal";
 import BendingMarquee from "@/components/motion/bending-marquee";
 import { ParticleScroll } from "@/components/motion/particle-scroll";
+import { SkillsTransitionLink } from "@/components/motion/skills-transition-link";
 import { ScrambledInstallCommand, type PkgManager } from "@/components/motion/scrambled-install-command";
 import { type RealSkill, CATEGORY_LABELS } from "@/lib/skill-types";
 import {
@@ -381,6 +382,17 @@ function Nav({
             <Star size={13} className="text-[#FFCB6B]" fill="currentColor" />
             <span>{repoMeta.stars !== null ? formatStarCount(repoMeta.stars) : "—"}</span>
           </a>
+
+          <SkillsTransitionLink
+            href="/skills"
+            className={`hidden items-center gap-1.5 rounded border px-2.5 py-1.5 text-[13px] font-medium transition-colors sm:flex ${
+              isDark
+                ? "border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:border-[var(--border-strong)] hover:text-[var(--text-primary)]"
+                : "border-[#E2E8F0] bg-[#F1F5F9] text-[#475569] hover:border-[#CBD5E1] hover:text-[#0F172A]"
+            }`}
+          >
+            Browse Skills
+          </SkillsTransitionLink>
 
           <Link
             href="/quickstart"
@@ -1237,9 +1249,9 @@ function SkillCatalog({
             </p>
             <div className="mt-2 flex items-center gap-3 font-mono text-[13px]">
               <span className="glass-text-secondary text-[var(--text-tertiary)]">08.0 Skill Catalog →</span>
-              <Link href="/skills" className="text-[#82AAFF] hover:underline">
+              <SkillsTransitionLink href="/skills" className="text-[#82AAFF] hover:underline">
                 Browse every file →
-              </Link>
+              </SkillsTransitionLink>
             </div>
           </div>
         </div>
