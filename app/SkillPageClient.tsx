@@ -10,6 +10,7 @@ import { MaskedHeading } from "@/components/motion/masked-heading";
 import { DecryptReveal } from "@/components/motion/decrypt-reveal";
 import BendingMarquee from "@/components/motion/bending-marquee";
 import { ParticleScroll } from "@/components/motion/particle-scroll";
+import { SkillsTransitionLink } from "@/components/motion/skills-transition-link";
 import { ScrambledInstallCommand, type PkgManager } from "@/components/motion/scrambled-install-command";
 import { type RealSkill, CATEGORY_LABELS } from "@/lib/skill-types";
 import {
@@ -382,7 +383,7 @@ function Nav({
             <span>{repoMeta.stars !== null ? formatStarCount(repoMeta.stars) : "—"}</span>
           </a>
 
-          <Link
+          <SkillsTransitionLink
             href="/skills"
             className={`hidden items-center gap-1.5 rounded border px-2.5 py-1.5 text-[13px] font-medium transition-colors sm:flex ${
               isDark
@@ -391,7 +392,7 @@ function Nav({
             }`}
           >
             Browse Skills
-          </Link>
+          </SkillsTransitionLink>
 
           <Link
             href="/quickstart"
@@ -1248,9 +1249,9 @@ function SkillCatalog({
             </p>
             <div className="mt-2 flex items-center gap-3 font-mono text-[13px]">
               <span className="glass-text-secondary text-[var(--text-tertiary)]">08.0 Skill Catalog →</span>
-              <Link href="/skills" className="text-[#82AAFF] hover:underline">
+              <SkillsTransitionLink href="/skills" className="text-[#82AAFF] hover:underline">
                 Browse every file →
-              </Link>
+              </SkillsTransitionLink>
             </div>
           </div>
         </div>
