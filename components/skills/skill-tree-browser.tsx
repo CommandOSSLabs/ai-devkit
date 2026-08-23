@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ChevronRight, FileCode, FileText, Folder, FolderOpen, Image as ImageIcon } from "lucide-react";
-import type { SkillTreeNode, FileKind } from "@/lib/skills-tree";
+import { ChevronRight, Folder, FolderOpen } from "lucide-react";
+import type { SkillTreeNode } from "@/lib/skills-tree";
+import { fileVisual, FOLDER_COLOR, TREE_ACCENT } from "@/lib/file-icons";
 import { FileContentPane } from "./file-content-pane";
 
 // Adapted from React Bits Pro's "List12" file-tree browser — swapped the
@@ -17,8 +18,6 @@ import { FileContentPane } from "./file-content-pane";
 // look. Keyboard tree navigation (arrows/home/end/enter) is preserved as-is.
 
 const cx = (...c: (string | false | null | undefined)[]) => c.filter(Boolean).join(" ");
-
-const FILE_ICON: Record<FileKind, typeof FileCode> = { code: FileCode, text: FileText, image: ImageIcon };
 
 type Row = {
   node: SkillTreeNode;
@@ -242,14 +241,21 @@ export default function SkillTreeBrowser({ tree }: { tree: SkillTreeNode[] }) {
           </div>
 
           <div className="min-h-0 flex-1 overflow-y-auto py-1">
-            <div role="tree" aria-label="skills/ directory" onKeyDown={onKeyDown}>
+            <div
+              role="tree"
+              aria-label="skills/ directory"
+              onKeyDown={onKeyDown}
+            >
+
               {rows.map((row) => {
                 const { node, depth } = row;
                 const folder = node.type === "folder";
                 const open = folder && isExpanded(node.id);
                 const isActive = node.id === effectiveId;
                 const isSelected = node.id === activeTabId;
-                const Icon = folder ? (open ? FolderOpen : Folder) : FILE_ICON[node.kind];
+                const visual = folder ? null : fileVisual(node.name);
+                const Icon = folder ? (open ? FolderOpen : Folder) : visual!.Icon;
+                const iconColor = folder ? FOLDER_COLOR : visual!.color;
 
                 return (
                   <div
@@ -265,13 +271,16 @@ export default function SkillTreeBrowser({ tree }: { tree: SkillTreeNode[] }) {
                     aria-selected={!folder ? isSelected : undefined}
                     tabIndex={isActive ? 0 : -1}
                     onClick={() => onRowClick(row)}
-                    style={{ paddingLeft: BASE + depth * INDENT }}
+                    style={{
+                      paddingLeft: BASE + depth * INDENT,
+                      ...(isSelected
+                        ? { backgroundColor: `${TREE_ACCENT}1A`, boxShadow: `inset 0 0 0 1px ${TREE_ACCENT}66` }
+                        : undefined),
+                    }}
                     className={cx(
                       "relative flex h-9 cursor-pointer items-center gap-1.5 pr-3 text-[13px] transition-colors",
+                      !isSelected && "hover:bg-[var(--bg-elevated)]",
                       "focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#82AAFF]",
-                      isSelected
-                        ? "bg-[#82AAFF]/10 ring-1 ring-inset ring-[#82AAFF]/40"
-                        : "hover:bg-[var(--bg-elevated)]",
                     )}
                   >
                     {Array.from({ length: depth }, (_, k) => (
@@ -296,13 +305,19 @@ export default function SkillTreeBrowser({ tree }: { tree: SkillTreeNode[] }) {
                       <span aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
                     )}
 
-                    <Icon aria-hidden="true" strokeWidth={1.5} className="h-3.5 w-3.5 shrink-0 text-[var(--text-tertiary)]" />
+                    <Icon
+                      aria-hidden="true"
+                      strokeWidth={1.5}
+                      className="h-3.5 w-3.5 shrink-0 transition-opacity"
+                      style={{ color: iconColor, opacity: folder && !open ? 0.6 : 1 }}
+                    />
 
                     <span
                       className={cx(
                         "min-w-0 flex-1 truncate font-mono",
-                        isSelected ? "font-medium text-[var(--text-primary)]" : "text-[var(--text-primary)]",
+                        isSelected ? "font-medium" : "text-[var(--text-primary)]",
                       )}
+                      style={isSelected ? { color: TREE_ACCENT } : undefined}
                     >
                       {node.name}
                     </span>

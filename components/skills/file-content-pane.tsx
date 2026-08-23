@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { AlertTriangle, Code2, Eye, FileCode, FileText, Image as ImageIcon, Pencil, X } from "lucide-react";
+import { AlertTriangle, Code2, Eye, FileText, Pencil, X } from "lucide-react";
 import type { FileKind } from "@/lib/skills-tree";
+import { fileVisual } from "@/lib/file-icons";
 import { MarkdownPreview } from "./markdown-preview";
 import { MarkdownEditor, markdownEditorStats } from "./markdown-editor";
 
@@ -76,8 +77,6 @@ function basename(id: string) {
   return id.split("/").pop() ?? id;
 }
 
-const FILE_ICON: Record<FileKind, typeof FileCode> = { code: FileCode, text: FileText, image: ImageIcon };
-
 type Tok = { content: string; htmlStyle?: Record<string, string> };
 
 export type ContentFile = {
@@ -109,7 +108,11 @@ export function FileContentPane({
 
   const filename = activeFile ? basename(activeFile.id) : "";
   const lang = useMemo(() => (filename ? languageFor(filename) : "text"), [filename]);
-  const lines = useMemo(() => (activeFile?.content ? activeFile.content.split("\n") : []), [activeFile]);
+  // Every mode renders the draft when the tab has one, so Preview/Source/Edit
+  // agree with each other instead of two of them quietly showing the on-disk
+  // file while you're looking at your own unsaved changes.
+  const shown = activeFile ? (drafts[activeFile.id] ?? activeFile.content) : null;
+  const lines = useMemo(() => (shown ? shown.split("\n") : []), [shown]);
   const isMarkdown = lang === "markdown";
   const showGutterView = activeFile?.content != null && (!isMarkdown || mode === "source");
 
@@ -134,7 +137,7 @@ export function FileContentPane({
   }, [openFiles]);
 
   useEffect(() => {
-    if (!activeFile?.content || lang === "text") {
+    if (!shown || lang === "text") {
       setTokens(null);
       return;
     }
@@ -145,7 +148,7 @@ export function FileContentPane({
 
     import("shiki")
       .then(({ codeToTokens }) =>
-        codeToTokens(activeFile.content as string, {
+        codeToTokens(shown, {
           lang: lang as Parameters<typeof codeToTokens>[1]["lang"],
           themes: { light: buildShikiTheme(false), dark: buildShikiTheme(true) },
           defaultColor: false,
@@ -161,7 +164,7 @@ export function FileContentPane({
     return () => {
       cancelled = true;
     };
-  }, [activeFile, lang]);
+  }, [shown, lang]);
 
   if (openFiles.length === 0 || !activeFile) {
     return (
@@ -179,7 +182,7 @@ export function FileContentPane({
           {openFiles.map((f) => {
             const on = f.id === activeId;
             const name = basename(f.id);
-            const Icon = FILE_ICON[f.kind];
+            const { Icon, color } = fileVisual(name);
             const hasDraft = drafts[f.id] !== undefined && drafts[f.id] !== f.content;
             return (
               <motion.div
@@ -199,7 +202,7 @@ export function FileContentPane({
                     on ? "text-[var(--text-primary)]" : "text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
                   }`}
                 >
-                  <Icon size={14} className="shrink-0 text-[var(--text-tertiary)]" />
+                  <Icon size={14} className="shrink-0" style={{ color }} />
                   <span className="max-w-[220px] truncate font-mono">{name}</span>
                   {hasDraft && (
                     <span aria-label="Unsaved local edit" className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#82AAFF]" />
@@ -260,7 +263,10 @@ export function FileContentPane({
 
       <div className="flex min-h-0 flex-1">
         {activeFile.content !== null && isMarkdown && mode === "preview" ? (
-          <MarkdownPreview content={activeFile.content} />
+          // Reads the draft when one exists, so switching Edit → Preview
+          // shows what you just typed instead of silently reverting to the
+          // on-disk file (the tab's dot already says a local edit is live).
+          <MarkdownPreview content={drafts[activeFile.id] ?? activeFile.content} />
         ) : activeFile.content !== null && isMarkdown && mode === "edit" ? (
           <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
             <div className="flex min-h-0 flex-1 flex-col lg:border-r lg:border-[var(--border-subtle)]">

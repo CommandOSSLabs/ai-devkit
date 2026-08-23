@@ -12,14 +12,59 @@ import { extractFrontmatter, type FrontmatterField } from "@/lib/frontmatter";
 // doesn't persist would be a fake affordance. What's kept is the reading
 // half of both: outline navigation and rendered prose.
 
+// A list item keeps its own nested bullets: these docs wrap long items
+// across several source lines and nest sub-bullets under them, so a flat
+// string[] collapsed real structure into one run-on paragraph.
+type ListItem = { text: string; children: string[] };
+
 type BodyToken =
   | { kind: "p"; text: string }
   | { kind: "quote"; text: string }
-  | { kind: "ul"; items: string[] }
-  | { kind: "ol"; items: string[] }
+  | { kind: "ul"; items: ListItem[] }
+  | { kind: "ol"; items: ListItem[] }
   | { kind: "code"; text: string; lang: string };
 
-type Section = { id: string; level: 1 | 2; title: string; body: BodyToken[] };
+type Section = { id: string; level: 1 | 2 | 3; title: string; body: BodyToken[] };
+
+const UL_MARKER = /^\s*[-*+]\s+/;
+const OL_MARKER = /^\s*\d+[.)]\s+/;
+
+/** A block is a list only when its FIRST line carries an unindented marker. */
+function startsList(lines: string[], marker: RegExp) {
+  return marker.test(lines[0]) && !/^\s/.test(lines[0]);
+}
+
+// Markdown wraps a single list item across multiple source lines and nests
+// sub-bullets by indentation. Group by that instead of requiring every line
+// to start with a marker — the old `lines.every(...)` test failed on the
+// very first wrapped item and dumped the whole list into a paragraph.
+function parseListItems(lines: string[], marker: RegExp): ListItem[] {
+  const items: ListItem[] = [];
+
+  for (const raw of lines) {
+    const indented = /^\s/.test(raw);
+    const isMarker = marker.test(raw) || (indented && (UL_MARKER.test(raw) || OL_MARKER.test(raw)));
+
+    if (isMarker && !indented) {
+      items.push({ text: raw.replace(marker, "").trim(), children: [] });
+      continue;
+    }
+    if (items.length === 0) continue;
+
+    const current = items[items.length - 1];
+    if (isMarker && indented) {
+      current.children.push(raw.replace(UL_MARKER, "").replace(OL_MARKER, "").trim());
+      continue;
+    }
+
+    const text = raw.trim();
+    if (!text) continue;
+    if (current.children.length > 0) current.children[current.children.length - 1] += ` ${text}`;
+    else current.text += ` ${text}`;
+  }
+
+  return items;
+}
 
 function slugify(text: string) {
   return (
@@ -104,10 +149,14 @@ function parseSections(src: string): Section[] {
       const lang = lines[0].slice(3).trim();
       const closeIdx = lines.length > 1 && lines[lines.length - 1].trim() === "```" ? lines.length - 1 : lines.length;
       pushBody({ kind: "code", text: lines.slice(1, closeIdx).join("\n"), lang });
-    } else if (lines.every((l) => /^[-*]\s+/.test(l))) {
-      pushBody({ kind: "ul", items: lines.map((l) => l.replace(/^[-*]\s+/, "")) });
-    } else if (lines.every((l) => /^\d+\.\s+/.test(l))) {
-      pushBody({ kind: "ol", items: lines.map((l) => l.replace(/^\d+\.\s+/, "")) });
+    } else if (startsList(lines, UL_MARKER)) {
+      pushBody({ kind: "ul", items: parseListItems(lines, UL_MARKER) });
+    } else if (startsList(lines, OL_MARKER)) {
+      pushBody({ kind: "ol", items: parseListItems(lines, OL_MARKER) });
+    } else if (block.startsWith("### ")) {
+      const title = block.slice(4);
+      current = { id: makeId(title), level: 3, title, body: [] };
+      sections.push(current);
     } else if (block.startsWith("## ")) {
       const title = block.slice(3);
       current = { id: makeId(title), level: 2, title, body: [] };
@@ -175,11 +224,24 @@ function Inline({ text }: { text: string }) {
   );
 }
 
+function NestedItems({ items }: { items: string[] }) {
+  if (items.length === 0) return null;
+  return (
+    <ul className="mt-2.5 flex flex-col gap-2 border-l border-[var(--border-subtle)] pl-4">
+      {items.map((child, i) => (
+        <li key={i} className="text-[14px] leading-7 text-[var(--text-secondary)] [overflow-wrap:anywhere]">
+          <Inline text={child} />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 function BodyBlock({ token }: { token: BodyToken }) {
   switch (token.kind) {
     case "p":
       return (
-        <p className="text-[14.5px] leading-7 text-[var(--text-secondary)]">
+        <p className="text-[14.5px] leading-7 text-[var(--text-secondary)] [overflow-wrap:anywhere]">
           <Inline text={token.text} />
         </p>
       );
@@ -191,26 +253,28 @@ function BodyBlock({ token }: { token: BodyToken }) {
       );
     case "ul":
       return (
-        <ul className="flex flex-col gap-1.5">
+        <ul className="flex flex-col gap-3">
           {token.items.map((it, j) => (
-            <li key={j} className="flex gap-2.5 text-[14px] leading-6 text-[var(--text-secondary)]">
-              <span aria-hidden="true" className="mt-[9px] h-1 w-1 shrink-0 rounded-full bg-[var(--text-tertiary)]" />
-              <span>
-                <Inline text={it} />
-              </span>
+            <li key={j} className="flex gap-3 text-[14.5px] leading-7 text-[var(--text-secondary)]">
+              <span aria-hidden="true" className="mt-[11px] h-1 w-1 shrink-0 rounded-full bg-[var(--text-tertiary)]" />
+              <div className="min-w-0 flex-1">
+                <Inline text={it.text} />
+                <NestedItems items={it.children} />
+              </div>
             </li>
           ))}
         </ul>
       );
     case "ol":
       return (
-        <ol className="flex flex-col gap-1.5">
+        <ol className="flex flex-col gap-3">
           {token.items.map((it, j) => (
-            <li key={j} className="flex gap-2.5 text-[14px] leading-6 text-[var(--text-secondary)]">
-              <span className="w-4 shrink-0 text-right tabular-nums text-[var(--text-tertiary)]">{j + 1}.</span>
-              <span>
-                <Inline text={it} />
-              </span>
+            <li key={j} className="flex gap-3 text-[14.5px] leading-7 text-[var(--text-secondary)]">
+              <span className="w-5 shrink-0 text-right tabular-nums text-[var(--text-tertiary)]">{j + 1}.</span>
+              <div className="min-w-0 flex-1">
+                <Inline text={it.text} />
+                <NestedItems items={it.children} />
+              </div>
             </li>
           ))}
         </ol>
@@ -260,7 +324,7 @@ export function MarkdownPreview({ content }: { content: string }) {
                     onClick={() => scrollTo(s.id)}
                     aria-current={on ? "true" : undefined}
                     className={`flex h-7 w-full items-center truncate rounded-md text-left text-[12.5px] transition-colors ${
-                      s.level === 1 ? "pl-2" : "pl-5"
+                      s.level === 1 ? "pl-2" : s.level === 2 ? "pl-5" : "pl-8"
                     } pr-2 ${
                       on
                         ? "bg-[#82AAFF]/10 font-medium text-[#82AAFF]"
@@ -319,11 +383,15 @@ export function MarkdownPreview({ content }: { content: string }) {
                   className="scroll-mt-4 flex flex-col gap-2.5 transition-opacity duration-200"
                   style={{ opacity: dim ? 0.32 : 1 }}
                 >
-                  {s.level === 1 && s.title ? (
+                  {!s.title ? null : s.level === 1 ? (
                     <h2 className="text-[19px] font-semibold tracking-[-0.02em] text-[var(--text-primary)]">{s.title}</h2>
-                  ) : s.title ? (
+                  ) : s.level === 2 ? (
                     <h3 className="text-[15px] font-medium tracking-[-0.01em] text-[var(--text-primary)]">{s.title}</h3>
-                  ) : null}
+                  ) : (
+                    <h4 className="font-mono text-[12.5px] uppercase tracking-[0.06em] text-[var(--text-tertiary)]">
+                      {s.title}
+                    </h4>
+                  )}
                   {s.body.map((token, i) => (
                     <BodyBlock key={i} token={token} />
                   ))}
