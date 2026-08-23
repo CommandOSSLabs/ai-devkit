@@ -123,7 +123,7 @@ function buildTheme(accent: string, mode: "dark" | "light" = "dark") {
         accent: accentTone,
         accentSoft: hsl(h, s, 58, 0.12),
         accentRing: hsl(h, s, 58, 0.5),
-        bg: "var(--bg-elevated)",
+        bg: "var(--glass-elevated)",
         border: "var(--border-subtle)",
         headerBg: "rgb(255 255 255 / 0.03)",
         plain: "var(--text-primary)",
@@ -138,7 +138,7 @@ function buildTheme(accent: string, mode: "dark" | "light" = "dark") {
         accent: accentTone,
         accentSoft: hsl(h, s, 45, 0.12),
         accentRing: hsl(h, s, 45, 0.45),
-        bg: "var(--bg-elevated)",
+        bg: "var(--glass-elevated)",
         border: "var(--border-subtle)",
         headerBg: "rgb(0 0 0 / 0.03)",
         plain: "var(--text-primary)",
@@ -322,7 +322,7 @@ export function CodeBlock({
       data-slot="code-block"
       className={cn(
         "group relative flex flex-col overflow-hidden text-left",
-        showFrame && "rounded-2xl border border-[var(--cb-border)] bg-[var(--cb-bg)]",
+        showFrame && "rounded-2xl border border-[var(--cb-border)] bg-[var(--cb-bg)] backdrop-blur-sm",
         className,
       )}
       style={{ ...cssVars, ...style }}

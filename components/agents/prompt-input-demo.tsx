@@ -118,7 +118,7 @@ export function PromptInputDemo({ skillExamples }: { skillExamples: SkillExample
             animate={{ opacity: 1, y: 0 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, y: -6 }}
             transition={{ duration: reduce ? 0 : 0.15 }}
-            className="mt-3 max-h-72 overflow-y-auto rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] p-3"
+            className="mt-3 max-h-72 overflow-y-auto rounded-2xl border border-[var(--border-subtle)] bg-[var(--glass-elevated)] p-3 backdrop-blur-sm"
           >
             <div className="mb-2 flex items-center justify-between">
               <p className="font-mono text-[11px] uppercase tracking-[0.06em] text-[var(--text-tertiary)]">

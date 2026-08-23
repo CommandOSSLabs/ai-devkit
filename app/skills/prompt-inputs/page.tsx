@@ -26,7 +26,7 @@ export default function PromptInputsPage() {
         </span>
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col rounded-[16px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-4 py-6 sm:px-8">
+      <div className="flex min-h-0 flex-1 flex-col rounded-[16px] border border-[var(--border-subtle)] bg-[var(--glass-surface)] px-4 py-6 backdrop-blur-sm sm:px-8">
         <PromptInputDemo skillExamples={skillExamples} />
       </div>
     </div>

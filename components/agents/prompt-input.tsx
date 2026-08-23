@@ -291,7 +291,7 @@ export function PromptInput({
 
   return (
     <div
-      className={`flex flex-col gap-2 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-3 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-colors focus-within:border-[#82AAFF]/50 ${className}`}
+      className={`flex flex-col gap-2 rounded-2xl border border-[var(--border-subtle)] bg-[var(--glass-surface)] p-3 backdrop-blur-sm shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-colors focus-within:border-[#82AAFF]/50 ${className}`}
     >
       <textarea
         ref={textareaRef}

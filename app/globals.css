@@ -152,6 +152,19 @@
 }
 
 
+/* Glass surfaces: card backgrounds that let the animated background show
+   through. Defined once here so the whole dashboard is tuned from one place
+   — raise the percentage to calm the background down, lower it to let more
+   through. They resolve against whichever --bg-* the active theme sets, so a
+   single definition covers light and dark. Tailwind v3 cannot apply an
+   opacity modifier to a var colour, which is why these exist at all rather
+   than a `/72` suffix at each call site. */
+:root {
+  --glass-surface: color-mix(in srgb, var(--bg-surface) 72%, transparent);
+  --glass-frame: color-mix(in srgb, var(--bg-frame) 62%, transparent);
+  --glass-elevated: color-mix(in srgb, var(--bg-elevated) 70%, transparent);
+}
+
 /* Scrollbars: the browser default renders as a bright white bar against the
    dark surfaces, which reads as a UI element rather than chrome. Tint it to
    the existing border token so it recedes, in both themes. */

@@ -98,7 +98,7 @@ function SkillNameBadge({ value }: { value: string }) {
 
 function FrontmatterCard({ fields }: { fields: FrontmatterField[] }) {
   return (
-    <div className="flex flex-col gap-2.5 rounded-[10px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] px-4 py-3.5">
+    <div className="flex flex-col gap-2.5 rounded-[10px] border border-[var(--border-subtle)] bg-[var(--glass-elevated)] px-4 py-3.5 backdrop-blur-sm">
       {fields.map((f) => (
         <div key={f.key} className="flex items-baseline gap-3 text-[13px] leading-6">
           <span className="w-[88px] shrink-0 font-mono text-[10.5px] uppercase tracking-[0.07em] text-[var(--text-tertiary)]">
@@ -248,7 +248,7 @@ function BodyBlock({ token }: { token: BodyToken }) {
       );
     case "quote":
       return (
-        <p className="rounded-[10px] bg-[var(--bg-elevated)] px-4 py-3 text-[13.5px] leading-6 text-[var(--text-secondary)]">
+        <p className="rounded-[10px] bg-[var(--glass-elevated)] px-4 py-3 text-[13.5px] leading-6 text-[var(--text-secondary)]">
           <Inline text={token.text} />
         </p>
       );

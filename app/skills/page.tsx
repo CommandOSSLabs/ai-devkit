@@ -31,7 +31,7 @@ function countStats(nodes: SkillTreeNode[]) {
 }
 
 const metaChipClassName =
-  "flex h-9 items-center gap-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] px-3 text-[12.5px] text-[var(--text-secondary)]";
+  "flex h-9 items-center gap-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--glass-elevated)] px-3 text-[12.5px] backdrop-blur-sm text-[var(--text-secondary)]";
 
 export default function SkillsBrowsePage() {
   const tree = getSkillsTree();

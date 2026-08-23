@@ -154,7 +154,7 @@ export function FileContentPane({
 
         <div className="ml-auto flex shrink-0 items-center gap-1.5">
           {isMarkdown && activeFile.content !== null && (
-            <div className="flex items-center gap-0.5 rounded-md border border-[var(--border-subtle)] bg-[var(--bg-elevated)] p-0.5">
+            <div className="flex items-center gap-0.5 rounded-md border border-[var(--border-subtle)] bg-[var(--glass-elevated)] p-0.5 backdrop-blur-sm">
               <button type="button" onClick={() => setMode("preview")} aria-pressed={mode === "preview"} className={toggleClass(mode === "preview")}>
                 <Eye size={11} strokeWidth={1.75} />
                 Preview
