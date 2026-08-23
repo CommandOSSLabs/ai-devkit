@@ -160,9 +160,25 @@
    opacity modifier to a var colour, which is why these exist at all rather
    than a `/72` suffix at each call site. */
 :root {
+  /* Fallbacks for anything rendered outside a LiquefyProvider. */
   --glass-surface: color-mix(in srgb, var(--bg-surface) 38%, transparent);
   --glass-frame: color-mix(in srgb, var(--bg-frame) 30%, transparent);
   --glass-elevated: color-mix(in srgb, var(--bg-elevated) 40%, transparent);
+  --glass-line: var(--border-subtle);
+  --glass-blur: 12px;
+}
+
+/* Declared on the provider rather than :root on purpose: a custom property is
+   substituted at computed-value time on the element that declares it, and
+   --lq-* only exists from .lq-provider down. Declaring these at :root
+   resolved --lq-glass-soft to its fallback before any card could inherit it,
+   so Liquefy's theme and tint had no effect on the surfaces. */
+.lq-provider {
+  --glass-surface: color-mix(in srgb, var(--bg-surface) 38%, var(--lq-glass-soft));
+  --glass-frame: color-mix(in srgb, var(--bg-frame) 30%, var(--lq-glass-soft));
+  --glass-elevated: color-mix(in srgb, var(--bg-elevated) 40%, var(--lq-glass-soft));
+  --glass-line: var(--lq-line, var(--border-subtle));
+  --glass-blur: var(--lq-blur, 12px);
 }
 
 /* Scrollbars: the browser default renders as a bright white bar against the

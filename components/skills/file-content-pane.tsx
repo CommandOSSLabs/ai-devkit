@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { AlertTriangle, ExternalLink, Eye, FileText, Pencil, X } from "lucide-react";
+import { AlertTriangle, Code2, ExternalLink, Eye, FileText, Pencil, X } from "lucide-react";
 import type { FileKind } from "@/lib/skills-tree";
 import { fileVisual } from "@/lib/file-icons";
 import { CodeBlock } from "@/components/ui/code-block";
 import { MarkdownPreview } from "./markdown-preview";
 import { MarkdownEditor, markdownEditorStats } from "./markdown-editor";
+import { EvalView, parseEvals } from "./eval-view";
 
 // Reading a file's raw source is a job GitHub already does better than a
 // pane in here ever will — blame, history, permalinks, search. So "Source"
@@ -71,6 +72,12 @@ export function FileContentPane({
   // silently drops what you just typed.
   const shown = activeFile ? (drafts[activeFile.id] ?? activeFile.content) : null;
   const edited = activeFile ? drafts[activeFile.id] !== undefined && drafts[activeFile.id] !== activeFile.content : false;
+  // eval.json has a known shape worth rendering as a spec rather than raw JSON
+  const evalCases = useMemo(
+    () => (filename === "eval.json" && shown ? parseEvals(shown) : null),
+    [filename, shown],
+  );
+  const isEval = evalCases !== null;
 
   useEffect(() => {
     setMode("preview");
@@ -153,6 +160,18 @@ export function FileContentPane({
         </AnimatePresence>
 
         <div className="ml-auto flex shrink-0 items-center gap-1.5">
+          {isEval && (
+            <div className="flex items-center gap-0.5 rounded-md border border-[var(--border-subtle)] bg-[var(--glass-elevated)] p-0.5 backdrop-blur-sm">
+              <button type="button" onClick={() => setMode("preview")} aria-pressed={mode === "preview"} className={toggleClass(mode === "preview")}>
+                <Eye size={11} strokeWidth={1.75} />
+                Evals
+              </button>
+              <button type="button" onClick={() => setMode("edit")} aria-pressed={mode === "edit"} className={toggleClass(mode === "edit")}>
+                <Code2 size={11} strokeWidth={1.75} />
+                Raw
+              </button>
+            </div>
+          )}
           {isMarkdown && activeFile.content !== null && (
             <div className="flex items-center gap-0.5 rounded-md border border-[var(--border-subtle)] bg-[var(--glass-elevated)] p-0.5 backdrop-blur-sm">
               <button type="button" onClick={() => setMode("preview")} aria-pressed={mode === "preview"} className={toggleClass(mode === "preview")}>
@@ -183,6 +202,8 @@ export function FileContentPane({
           <div className="flex h-full w-full items-center justify-center text-[13px] text-[var(--text-tertiary)]">
             {activeFile.kind === "image" ? "Image preview not shown here." : "File too large to preview."}
           </div>
+        ) : isEval && mode === "preview" ? (
+          <EvalView cases={evalCases} />
         ) : isMarkdown && mode === "edit" ? (
           <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
             <div className="flex min-h-0 flex-1 flex-col lg:border-r lg:border-[var(--border-subtle)]">
