@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-pipeline
-description: This skill should be used when the user asks to "work on", "deliver", "tackle", "pick up", or "implement" a tracker issue (TICKET-123), a list of issues, or a body of tracked work expected to finish without supervision — even if they never say "pipeline". Also use when handed a cluster of related issues, or a single issue whose surrounding cluster should be derived from tracker dependencies, expecting dependency-aware sequencing across worktrees.
-version: 0.4.2
+description: This skill should be used when the user asks to "work on", "deliver", "tackle", "pick up", or "implement" a tracker issue (TICKET-123), a list of issues, or a body of tracked work expected to finish without supervision — even if they never say "pipeline". Also use when handed a cluster of related issues, or a single issue whose surrounding cluster should be derived from tracker dependencies. Produces reviewable PR(s), an up-to-date tracker graph, and a completion report — only after docs-ready for the stated scope band.
+version: 0.5.1
 ---
 
 # Delivery Pipeline
@@ -25,7 +25,8 @@ CMK owns the lifecycle. Superpowers executes inside it. The division:
 Before acting, read:
 
 1. `cmk:delivery-workflow` — the tracking contract. Every phase operates
-   inside it.
+   inside it — including **scope band**, **docs-ready**, and the implement
+   docs gate in that skill's `references/scope-band.md`.
 2. `references/engineering-principles.md` — autonomy, production readiness,
    and the delegation contract.
 3. Your runtime's binding for mechanics only (see `cmk:delivery-workflow`'s
@@ -92,6 +93,11 @@ that slice, through the runtime's own skill mechanism or by reading the
 file directly. Phases are checkpoints, not ceremonies: a one-line config
 fix does not need a design spec, but it still needs intake, task proof,
 review, and ship. Scale phase depth to the change; never skip one outright.
+
+**Before phase 3:** docs-ready for the stated scope band must hold — one home
+is `cmk:delivery-workflow`'s scope-band reference (intake states the band). If
+unmet, REQUIRED SUB-SKILL: use `cmk:requirements` during or right after intake /
+phase 2; do not enter phase 3 while docs-ready is false.
 
 Executing phase 3? Read `references/phase-3-execution.md`. Phase 3b?
 Read `references/phase-3b-simplify.md`.
