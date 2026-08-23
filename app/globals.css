@@ -160,9 +160,9 @@
    opacity modifier to a var colour, which is why these exist at all rather
    than a `/72` suffix at each call site. */
 :root {
-  --glass-surface: color-mix(in srgb, var(--bg-surface) 72%, transparent);
-  --glass-frame: color-mix(in srgb, var(--bg-frame) 62%, transparent);
-  --glass-elevated: color-mix(in srgb, var(--bg-elevated) 70%, transparent);
+  --glass-surface: color-mix(in srgb, var(--bg-surface) 38%, transparent);
+  --glass-frame: color-mix(in srgb, var(--bg-frame) 30%, transparent);
+  --glass-elevated: color-mix(in srgb, var(--bg-elevated) 40%, transparent);
 }
 
 /* Scrollbars: the browser default renders as a bright white bar against the

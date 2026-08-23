@@ -3,6 +3,7 @@ import { Terminal, ArrowLeft } from "lucide-react";
 import { SkillsSidebarNav, SkillsSectionTitle } from "@/components/skills/skills-sidebar-nav";
 import { SkillsIconRail } from "@/components/skills/skills-icon-rail";
 import { PixelLiquidBg } from "@/components/motion/pixel-liquid-bg";
+import { ThemeToggle } from "@/components/skills/theme-toggle";
 
 export default function SkillsLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -18,11 +19,11 @@ export default function SkillsLayout({ children }: { children: React.ReactNode }
         <PixelLiquidBg pixelSize={22} resolution={0.3} cursorSize={90} />
       </div>
 
-      <aside className="relative z-10 hidden shrink-0 flex-col items-center rounded-2xl border border-[var(--border-subtle)] bg-[color-mix(in_srgb,var(--bg-surface)_72%,transparent)] px-2 py-5 backdrop-blur-sm lg:flex lg:w-16">
+      <aside className="relative z-10 hidden shrink-0 flex-col items-center rounded-2xl border border-[var(--border-subtle)] bg-[var(--glass-surface)] px-2 py-5 backdrop-blur-md lg:flex lg:w-16">
         <SkillsIconRail />
       </aside>
 
-      <div className="relative z-10 flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[color-mix(in_srgb,var(--bg-base)_82%,transparent)] backdrop-blur-sm">
+      <div className="relative z-10 flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[color-mix(in_srgb,var(--bg-base)_45%,transparent)] backdrop-blur-md">
         <header className="shrink-0 border-b border-[var(--border-subtle)] px-4 py-4 sm:px-6">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2 lg:hidden">
@@ -38,13 +39,16 @@ export default function SkillsLayout({ children }: { children: React.ReactNode }
                 <SkillsSectionTitle />
               </span>
             </div>
-            <Link
-              href="/catalog"
-              className="flex items-center gap-1.5 text-[13px] text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
-            >
-              <ArrowLeft size={14} />
-              <span>Back to catalog</span>
-            </Link>
+            <div className="flex items-center gap-1">
+              <ThemeToggle />
+              <Link
+                href="/catalog"
+                className="flex items-center gap-1.5 text-[13px] text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
+              >
+                <ArrowLeft size={14} />
+                <span>Back to catalog</span>
+              </Link>
+            </div>
           </div>
           <SkillsSidebarNav className="mt-4 flex-row overflow-x-auto lg:hidden" />
         </header>
