@@ -151,3 +151,34 @@
   -webkit-font-smoothing: antialiased;
 }
 
+
+/* Scrollbars: the browser default renders as a bright white bar against the
+   dark surfaces, which reads as a UI element rather than chrome. Tint it to
+   the existing border token so it recedes, in both themes. */
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--border-strong);
+    border: 3px solid transparent;
+    background-clip: content-box;
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--text-disabled);
+  }
+}

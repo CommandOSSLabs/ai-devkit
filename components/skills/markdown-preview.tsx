@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Focus, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { extractFrontmatter, type FrontmatterField } from "@/lib/frontmatter";
+import { CodeBlock } from "@/components/ui/code-block";
 
 // Adapted from two reference "editor" patterns the site's design system was
 // pointed at: a long-document reader (collapsible outline rail + focus mode
@@ -281,9 +282,11 @@ function BodyBlock({ token }: { token: BodyToken }) {
       );
     case "code":
       return (
-        <pre className="overflow-x-auto rounded-[10px] bg-[var(--bg-elevated)] px-4 py-3 font-mono text-[12.5px] leading-6 text-[var(--text-secondary)]">
-          {token.text}
-        </pre>
+        <CodeBlock
+          code={token.text}
+          language={token.lang || "text"}
+          showLineNumbers={token.text.split("\n").length > 3}
+        />
       );
   }
 }

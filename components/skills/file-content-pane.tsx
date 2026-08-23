@@ -1,59 +1,22 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { AlertTriangle, Code2, Eye, FileText, Pencil, X } from "lucide-react";
+import { AlertTriangle, ExternalLink, Eye, FileText, Pencil, X } from "lucide-react";
 import type { FileKind } from "@/lib/skills-tree";
 import { fileVisual } from "@/lib/file-icons";
+import { CodeBlock } from "@/components/ui/code-block";
 import { MarkdownPreview } from "./markdown-preview";
 import { MarkdownEditor, markdownEditorStats } from "./markdown-editor";
 
-// The project already has a --syntax-* palette defined in globals.css
-// (used by nothing until now) — mirrored here as literal hex because
-// shiki resolves theme colors at token-generation time and can't read
-// CSS custom properties. Keeping these values in sync with globals.css
-// is a manual step if that palette ever changes.
-const SYNTAX_LIGHT = {
-  keyword: "#8B5CF6",
-  string: "#16A34A",
-  func: "#4F46E5",
-  number: "#EA580C",
-  comment: "#94A3B8",
-  const: "#CA8A04",
-  error: "#DC2626",
-};
-const SYNTAX_DARK = {
-  keyword: "#C792EA",
-  string: "#C3E88D",
-  func: "#82AAFF",
-  number: "#F78C6C",
-  comment: "#5C6370",
-  const: "#FFCB6B",
-  error: "#F07178",
-};
-
-const THEME_SCOPES: [string[], keyof typeof SYNTAX_LIGHT, string?][] = [
-  [["comment", "punctuation.definition.comment"], "comment", "italic"],
-  [["string", "string.quoted", "constant.character.escape"], "string"],
-  [["constant.numeric", "constant.language"], "number"],
-  [["keyword", "keyword.control", "storage.type", "storage.modifier"], "keyword"],
-  [["entity.name.function", "support.function", "meta.function-call"], "func"],
-  [["entity.name.type", "support.type", "entity.name.class", "support.class"], "const"],
-  [["invalid", "invalid.illegal"], "error"],
-];
-
-function buildShikiTheme(dark: boolean) {
-  const palette = dark ? SYNTAX_DARK : SYNTAX_LIGHT;
-  return {
-    name: dark ? "ai-devkit-dark" : "ai-devkit-light",
-    type: dark ? ("dark" as const) : ("light" as const),
-    colors: {},
-    tokenColors: THEME_SCOPES.map(([scope, key, fontStyle]) => ({
-      scope,
-      settings: { foreground: palette[key], ...(fontStyle ? { fontStyle } : {}) },
-    })),
-  };
-}
+// Reading a file's raw source is a job GitHub already does better than a
+// pane in here ever will — blame, history, permalinks, search. So "Source"
+// is a link out rather than a third local mode; what stays local is what
+// benefits from being here: the rendered read (Preview) and the scratch
+// edit. Non-markdown files still render inline, since there's no Preview
+// alternative for them, but through the same CodeBlock the markdown
+// fences use rather than a bespoke gutter/minimap of their own.
+const GITHUB_BLOB = "https://github.com/CommandOSSLabs/ai-devkit/blob/main/skills";
 
 const EXT_TO_LANG: Record<string, string> = {
   ts: "typescript",
@@ -77,8 +40,6 @@ function basename(id: string) {
   return id.split("/").pop() ?? id;
 }
 
-type Tok = { content: string; htmlStyle?: Record<string, string> };
-
 export type ContentFile = {
   id: string;
   kind: FileKind;
@@ -100,24 +61,18 @@ export function FileContentPane({
   onCloseTab: (id: string) => void;
 }) {
   const reduce = useReducedMotion();
-  const [tokens, setTokens] = useState<Tok[][] | null>(null);
-  const [caret, setCaret] = useState(1);
-  const [mode, setMode] = useState<"preview" | "source" | "edit">("preview");
+  const [mode, setMode] = useState<"preview" | "edit">("preview");
   const [drafts, setDrafts] = useState<Record<string, string>>({});
-  const runId = useRef(0);
 
   const filename = activeFile ? basename(activeFile.id) : "";
-  const lang = useMemo(() => (filename ? languageFor(filename) : "text"), [filename]);
-  // Every mode renders the draft when the tab has one, so Preview/Source/Edit
-  // agree with each other instead of two of them quietly showing the on-disk
-  // file while you're looking at your own unsaved changes.
-  const shown = activeFile ? (drafts[activeFile.id] ?? activeFile.content) : null;
-  const lines = useMemo(() => (shown ? shown.split("\n") : []), [shown]);
+  const lang = filename ? languageFor(filename) : "text";
   const isMarkdown = lang === "markdown";
-  const showGutterView = activeFile?.content != null && (!isMarkdown || mode === "source");
+  // Preview and Edit render the same value, so switching between them never
+  // silently drops what you just typed.
+  const shown = activeFile ? (drafts[activeFile.id] ?? activeFile.content) : null;
+  const edited = activeFile ? drafts[activeFile.id] !== undefined && drafts[activeFile.id] !== activeFile.content : false;
 
   useEffect(() => {
-    setCaret(1);
     setMode("preview");
   }, [activeFile]);
 
@@ -136,36 +91,6 @@ export function FileContentPane({
     });
   }, [openFiles]);
 
-  useEffect(() => {
-    if (!shown || lang === "text") {
-      setTokens(null);
-      return;
-    }
-
-    const run = ++runId.current;
-    let cancelled = false;
-    setTokens(null);
-
-    import("shiki")
-      .then(({ codeToTokens }) =>
-        codeToTokens(shown, {
-          lang: lang as Parameters<typeof codeToTokens>[1]["lang"],
-          themes: { light: buildShikiTheme(false), dark: buildShikiTheme(true) },
-          defaultColor: false,
-        }),
-      )
-      .then((res) => {
-        if (!cancelled && run === runId.current) setTokens(res.tokens as Tok[][]);
-      })
-      .catch(() => {
-        if (!cancelled && run === runId.current) setTokens(null);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [shown, lang]);
-
   if (openFiles.length === 0 || !activeFile) {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-2 px-6 text-center">
@@ -174,6 +99,11 @@ export function FileContentPane({
       </div>
     );
   }
+
+  const toggleClass = (on: boolean) =>
+    `inline-flex h-6 items-center gap-1 rounded-[4px] px-2 text-[11.5px] transition-colors ${
+      on ? "bg-[var(--bg-surface)] text-[var(--text-primary)]" : "text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+    }`;
 
   return (
     <>
@@ -222,57 +152,43 @@ export function FileContentPane({
           })}
         </AnimatePresence>
 
-        {isMarkdown && (
-          <div className="ml-auto flex shrink-0 items-center gap-0.5 rounded-md border border-[var(--border-subtle)] bg-[var(--bg-elevated)] p-0.5">
-            <button
-              type="button"
-              onClick={() => setMode("preview")}
-              aria-pressed={mode === "preview"}
-              className={`inline-flex h-6 items-center gap-1 rounded-[4px] px-2 text-[11.5px] transition-colors ${
-                mode === "preview" ? "bg-[var(--bg-surface)] text-[var(--text-primary)]" : "text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
-              }`}
-            >
-              <Eye size={11} strokeWidth={1.75} />
-              Preview
-            </button>
-            <button
-              type="button"
-              onClick={() => setMode("source")}
-              aria-pressed={mode === "source"}
-              className={`inline-flex h-6 items-center gap-1 rounded-[4px] px-2 text-[11.5px] transition-colors ${
-                mode === "source" ? "bg-[var(--bg-surface)] text-[var(--text-primary)]" : "text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
-              }`}
-            >
-              <Code2 size={11} strokeWidth={1.75} />
-              Source
-            </button>
-            <button
-              type="button"
-              onClick={() => setMode("edit")}
-              aria-pressed={mode === "edit"}
-              className={`inline-flex h-6 items-center gap-1 rounded-[4px] px-2 text-[11.5px] transition-colors ${
-                mode === "edit" ? "bg-[var(--bg-surface)] text-[var(--text-primary)]" : "text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
-              }`}
-            >
-              <Pencil size={11} strokeWidth={1.75} />
-              Edit
-            </button>
-          </div>
-        )}
+        <div className="ml-auto flex shrink-0 items-center gap-1.5">
+          {isMarkdown && activeFile.content !== null && (
+            <div className="flex items-center gap-0.5 rounded-md border border-[var(--border-subtle)] bg-[var(--bg-elevated)] p-0.5">
+              <button type="button" onClick={() => setMode("preview")} aria-pressed={mode === "preview"} className={toggleClass(mode === "preview")}>
+                <Eye size={11} strokeWidth={1.75} />
+                Preview
+              </button>
+              <button type="button" onClick={() => setMode("edit")} aria-pressed={mode === "edit"} className={toggleClass(mode === "edit")}>
+                <Pencil size={11} strokeWidth={1.75} />
+                Edit
+              </button>
+            </div>
+          )}
+          <a
+            href={`${GITHUB_BLOB}/${activeFile.id}`}
+            target="_blank"
+            rel="noreferrer"
+            title="View source on GitHub"
+            className="inline-flex h-7 items-center gap-1.5 rounded-md px-2 text-[11.5px] text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)]"
+          >
+            <ExternalLink size={11} strokeWidth={1.75} />
+            Source
+          </a>
+        </div>
       </div>
 
       <div className="flex min-h-0 flex-1">
-        {activeFile.content !== null && isMarkdown && mode === "preview" ? (
-          // Reads the draft when one exists, so switching Edit → Preview
-          // shows what you just typed instead of silently reverting to the
-          // on-disk file (the tab's dot already says a local edit is live).
-          <MarkdownPreview content={drafts[activeFile.id] ?? activeFile.content} />
-        ) : activeFile.content !== null && isMarkdown && mode === "edit" ? (
+        {shown === null ? (
+          <div className="flex h-full w-full items-center justify-center text-[13px] text-[var(--text-tertiary)]">
+            {activeFile.kind === "image" ? "Image preview not shown here." : "File too large to preview."}
+          </div>
+        ) : isMarkdown && mode === "edit" ? (
           <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
             <div className="flex min-h-0 flex-1 flex-col lg:border-r lg:border-[var(--border-subtle)]">
               <MarkdownEditor
-                value={drafts[activeFile.id] ?? activeFile.content}
-                edited={drafts[activeFile.id] !== undefined && drafts[activeFile.id] !== activeFile.content}
+                value={shown}
+                edited={edited}
                 onChange={(next) => setDrafts((d) => ({ ...d, [activeFile.id]: next }))}
                 onRevert={() =>
                   setDrafts((d) => {
@@ -283,111 +199,40 @@ export function FileContentPane({
                 }
               />
             </div>
-            {/* Live rendered preview of the draft — reuses the same renderer
-                as Preview mode so what you type shows formatted, not just
-                raw markdown syntax. Desktop-only: cramped below lg. */}
+            {/* Live rendered preview of the draft — same renderer as Preview
+                mode, so what you type shows formatted. Desktop-only: cramped
+                below lg. */}
             <div className="hidden min-h-0 flex-1 lg:flex">
-              <MarkdownPreview content={drafts[activeFile.id] ?? activeFile.content} />
+              <MarkdownPreview content={shown} />
             </div>
           </div>
-        ) : showGutterView ? (
-          <>
-            <div className="min-h-0 flex-1 overflow-auto">
-              <div className="flex min-w-max font-mono text-[12.5px] leading-5">
-                <div
-                  aria-hidden="true"
-                  className="sticky left-0 z-10 shrink-0 select-none border-r border-[var(--border-subtle)] bg-[var(--bg-surface)] py-3 pr-3 pl-4 text-right tabular-nums text-[var(--text-disabled)]"
-                >
-                  {lines.map((_, i) => (
-                    <div key={i} className={i + 1 === caret ? "text-[var(--text-primary)]" : undefined}>
-                      {i + 1}
-                    </div>
-                  ))}
-                </div>
-                <div className="min-w-0 flex-1 py-3 text-[var(--text-secondary)]">
-                  {lines.map((rawLine, i) => {
-                    const row = tokens?.[i];
-                    return (
-                      <div
-                        key={i}
-                        role="presentation"
-                        onMouseEnter={() => setCaret(i + 1)}
-                        className={`whitespace-pre pr-6 pl-4 ${i + 1 === caret ? "bg-[var(--bg-elevated)]" : ""}`}
-                      >
-                        {row && row.length > 0
-                          ? row.map((t, j) => (
-                              <span
-                                key={j}
-                                className="text-[var(--shiki-light)] dark:text-[var(--shiki-dark)]"
-                                style={t.htmlStyle as React.CSSProperties}
-                              >
-                                {t.content}
-                              </span>
-                            ))
-                          : rawLine === ""
-                            ? " "
-                            : rawLine}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-            {/* Minimap: a scroll-position rail, not a scrubber — this pane
-                doesn't wire up click-to-jump/drag since these files are
-                short reference docs, not something you'd navigate by
-                scrubbing a viewport thumb through. */}
-            <div
-              aria-hidden="true"
-              className="hidden w-[52px] shrink-0 overflow-hidden border-l border-[var(--border-subtle)] px-2 py-3 lg:block"
-            >
-              <div className="space-y-[3px]">
-                {lines.map((l, i) => (
-                  <div
-                    key={i}
-                    className={`h-[2px] rounded-full ${i + 1 === caret ? "bg-[#82AAFF]" : "bg-[var(--border-subtle)]"}`}
-                    style={{
-                      width: `${Math.min(100, Math.max(6, (l.trim().length / 44) * 100))}%`,
-                      marginLeft: `${Math.min(30, (l.length - l.trimStart().length) * 4)}%`,
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-          </>
+        ) : isMarkdown ? (
+          <MarkdownPreview content={shown} />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-[13px] text-[var(--text-tertiary)]">
-            {activeFile.kind === "image" ? "Image preview not shown here." : "File too large to preview."}
-          </div>
+          <CodeBlock
+            code={shown}
+            language={lang}
+            filename={activeFile.id}
+            className="min-h-0 flex-1 rounded-none border-0"
+          />
         )}
       </div>
 
       <footer className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-1 border-t border-[var(--border-subtle)] px-4 py-2 text-[11px] text-[var(--text-tertiary)]">
-        {showGutterView && (
-          <span className="tabular-nums">
-            Ln {caret}, {lines.length} lines
-          </span>
-        )}
-        {isMarkdown && mode === "edit" && activeFile.content !== null && (
+        {isMarkdown && mode === "edit" && shown !== null && (
           <>
-            {(() => {
-              const stats = markdownEditorStats(drafts[activeFile.id] ?? activeFile.content ?? "");
-              return (
-                <span className="tabular-nums">
-                  {stats.words} words, {stats.chars} characters
-                </span>
-              );
-            })()}
+            <span className="tabular-nums">
+              {markdownEditorStats(shown).words} words, {markdownEditorStats(shown).chars} characters
+            </span>
             <span className="italic">Local edit only — not saved to the repo</span>
           </>
         )}
-        <span className={activeFile.content !== null ? "shrink-0" : "truncate"}>{activeFile.id}</span>
+        <span className={shown !== null ? "shrink-0" : "truncate"}>{activeFile.id}</span>
         <span className="ml-auto shrink-0">{lang === "text" ? "Plain Text" : lang}</span>
         <span className="shrink-0">UTF-8</span>
         <span className="shrink-0">{activeFile.size}</span>
         {activeFile.content === null && (
-          <span className="shrink-0 inline-flex items-center gap-1.5 text-amber-500">
+          <span className="inline-flex shrink-0 items-center gap-1.5 text-amber-500">
             <AlertTriangle size={12} strokeWidth={1.75} />
             not previewed
           </span>
