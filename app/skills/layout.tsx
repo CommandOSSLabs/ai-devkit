@@ -31,7 +31,11 @@ export default function SkillsLayout({
           <PixelLiquidBg pixelSize={22} resolution={0.3} cursorSize={90} />
         </div>
 
-        <aside className="relative z-10 hidden shrink-0 flex-col items-center rounded-2xl border border-[var(--border-subtle)] bg-[var(--glass-surface)] px-2 py-5 backdrop-blur-md lg:flex lg:w-16">
+        {/* z-20, above the content column's z-10: backdrop-filter makes this
+          aside a stacking context, so the rail's hover tooltips cannot escape
+          it on z-index alone. At equal z the later sibling wins and the
+          content panel painted over them, leaving a sliver at the rail edge. */}
+      <aside className="relative z-20 hidden shrink-0 flex-col items-center rounded-2xl border border-[var(--border-subtle)] bg-[var(--glass-surface)] px-2 py-5 backdrop-blur-md lg:flex lg:w-16">
           <SkillsIconRail />
         </aside>
 
