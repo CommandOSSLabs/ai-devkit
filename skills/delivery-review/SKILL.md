@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-review
-description: This skill should be used when the user asks to "review my changes", "review this PR", "take a look at this diff", or "is this ready to ship" — before shipping tracked work (phase 4 of cmk:delivery-pipeline) or standalone against any pull request or local diff.
-version: 0.1.3
+description: This skill should be used when the user asks to "review my changes", "review this PR", "take a look at this diff", or "is this ready to ship" — before shipping tracked work (phase 4 of cmk:delivery-pipeline) or standalone against any pull request or local diff. Produces a depth-disclosed verdict with evidence-backed findings dispositioned against acceptance criteria (citing requirement IDs when present).
+version: 0.2.1
 ---
 
 # Delivery Review
@@ -74,8 +74,10 @@ a quiet default.
    if the behavior regressed?
 2. **Spec/design/requirements/AC compliance** — line by line against the
    issue's *current* acceptance criteria, spec, design docs, and
-   requirements. Under-delivery against the issue's *intent* is a finding
-   even when a criterion's letter is met; a criterion checked in the
+   requirements. When criteria carry requirement IDs (`PREFIX-N.M`), cite
+   those IDs on each compliance finding and on each checked-off criterion in
+   the evidence trail. Under-delivery against the issue's *intent* is a
+   finding even when a criterion's letter is met; a criterion checked in the
    tracker with no proof reachable from the issue is a finding, and so is
    one silently narrowed to match what got built rather than rescoped in
    the open.

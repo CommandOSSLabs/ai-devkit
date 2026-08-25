@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-ship
-description: This skill should be used when the user asks to "ship this", "open the PR", "push this to review", "update the tracker and open a PR", or "close out this ticket" — when implementation and review are done, and as phase 5 of the cmk:delivery-pipeline skill.
-version: 0.2.2
+description: This skill should be used when the user asks to "ship this", "open the PR", "push this to review", "update the tracker and open a PR", "close out this ticket", or "verify before claiming done" — when implementation and review are done, and as phase 5 of the cmk:delivery-pipeline skill. Produces a PR, tracker reconciliation, and fresh verification evidence for every completion claim.
+version: 0.3.1
 ---
 
 # Delivery Ship
@@ -25,15 +25,31 @@ the model.
 
 ## 1. Verify before claiming
 
+```
+NO COMPLETION CLAIM WITHOUT FRESH VERIFICATION EVIDENCE
+```
+
+**Fresh** = after the last edit. **Full** = the proving command the pipeline/CI
+actually runs — not a subset chosen for speed.
+
 Evidence before assertions. Use `superpowers:verification-before-completion`
-when present, or its manual equivalent: run every applicable gate fresh —
-not from memory of an earlier green — and capture the commands plus passing
-output. Walk the acceptance criteria one final time against actual
-behavior, checking each off in the tracker against the evidence that proves
-it. This is a reconciliation, not a discovery: a criterion that turns out
-unmet here should already have been rescoped or blocked when it was found.
+when present, or its manual equivalent: run every applicable gate fresh, and
+capture the commands plus passing output. Walk the acceptance criteria one
+final time against actual behavior, checking each off in the tracker against
+the evidence that proves it; when criteria carry requirement IDs
+(`PREFIX-N.M`), cite those IDs in the check-off. This is a reconciliation, not
+a discovery: a criterion that turns out unmet here should already have been
+rescoped or blocked when it was found.
 
 Run each gate exactly as the pipeline runs it, not an approximation of it: one CI step routinely chains sub-gates — a formatter, a build — that a local typecheck-and-test shortcut never executes, so read the job's own command and copy it verbatim rather than reconstructing what you assume it does. Most required jobs are host-runnable (`cmk:cicd`); when a remote job failed, reproduce it locally and stay there until the bouncing set is green. Fixing one failure and pushing to watch CI is not verification. Before owning a failure this change appears to have caused, reproduce it against a clean checkout of the base; a failure that already existed there and a stale dependency install after a lockfile change both impersonate a regression until they are attributed. When comparing the two runs, diff the failing test *names* rather than the counts — a suite with timeout-prone cases varies run to run, so equal counts prove nothing and unequal counts mean nothing on their own.
+
+### Rationalizations (verify)
+
+| Thought | Reality |
+|---|---|
+| "Suite was green 40 minutes ago" | Edits since then void that run. Fresh means after the last edit. |
+| "I'll run only the file I touched" | Regressions live in the files you did not pick. Run the full proving command. |
+| "Demo/deadline — claim done now" | A deadline changes *when* you report, never what counts as evidence. |
 
 Confirm the final cumulative review ran to completion for this issue or
 branch at its selected depth, and that its verdict discloses that depth —
