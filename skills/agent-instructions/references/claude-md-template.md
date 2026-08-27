@@ -51,6 +51,9 @@ any row above whose file was not seeded]
 Start at `docs/README.md` for how the rest of the documentation tree is
 organized and when to read each part of it.
 
+When the entry skill is unclear, read `docs/guides/on-ramps.md` — one table
+from situation → `cmk:*` skill. Do not invent a second router.
+
 ## Scratch
 
 Agent scratch and temporary files go under `.local/tmp/`, never a system

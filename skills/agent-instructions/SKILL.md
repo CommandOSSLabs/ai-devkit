@@ -1,7 +1,7 @@
 ---
 name: cmk:agent-instructions
 description: This skill should be used when the user asks to "set up CLAUDE.md", "set up AGENTS.md", "agent instructions", "add engineering rules", "make the instructions thinner", or needs to establish or maintain a thin, multi-vendor root instruction file backed by on-demand engineering rules under docs/rules/.
-version: 0.2.2
+version: 0.3.1
 ---
 
 # Agent Instructions
@@ -99,3 +99,6 @@ Report-only — never mutate:
   still referenced from `CLAUDE.md`.
 - Every conditional pointer in `CLAUDE.md` resolves to a file that exists.
 - The `.local/tmp/` scratch line is present in `CLAUDE.md`.
+- If `CLAUDE.md` points at `docs/guides/on-ramps.md`, that file exists (Init/
+  Update may seed it from the kit's `docs/guides/on-ramps.md`; Verify only
+  reports).
