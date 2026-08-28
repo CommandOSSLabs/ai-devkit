@@ -5,6 +5,7 @@ import { ArrowUpRight, Cpu, FileText, ImagePlus, Puzzle, Rocket, Sparkles, Wind,
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import type { SkillExample } from "@/lib/skill-examples";
+import { normalizeSkillId } from "@/lib/skill-id";
 import { PromptInput, type PromptAction, type PromptModel } from "./prompt-input";
 
 // Adapted from the component doc's usage example. That example fetches
@@ -65,7 +66,7 @@ export function PromptInputDemo({ skillExamples }: { skillExamples: SkillExample
   // in that skill's context with its own trigger phrase already typed, rather
   // than on a blank composer you have to re-find the skill in.
   useEffect(() => {
-    const requested = new URLSearchParams(window.location.search).get("skill");
+    const requested = normalizeSkillId(new URLSearchParams(window.location.search).get("skill"));
     if (!requested) return;
     const skill = skillExamples.find((s) => s.id === requested);
     if (!skill) return;
