@@ -1,7 +1,7 @@
 ---
 name: cmk:sui-devstack
-description: This skill should be used when the user asks to "author an e2e harness config for Sui", "set up local Sui dev with Devstack", "add a devstack.config.ts", "debug a Devstack harness", "wire Vitest to a local Sui stack", or "clean up a Devstack instance" — or needs a worktree-safe local Sui network (node, accounts, published Move packages, optional Walrus) for development or tests.
-version: 0.1.0
+description: Use when the user asks to "author an e2e harness config for Sui", "set up local Sui dev with Devstack", "add a devstack.config.ts", "debug a Devstack harness", "wire Vitest to a local Sui stack", or "clean up a Devstack instance" — or needs a worktree-safe local Sui network (node, accounts, published Move packages, optional Walrus) for development or tests.
+version: 0.1.1
 ---
 
 # Sui Devstack

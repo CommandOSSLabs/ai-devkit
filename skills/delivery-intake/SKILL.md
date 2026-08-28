@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-intake
-description: This skill should be used when the user asks to "start work on TICKET-123", "pick up this issue", "get the context for this ticket", "intake this issue", or begins any tracked work — and as phase 1 of the cmk:delivery-pipeline skill. Produces a context brief, branch/worktree, stated scope band, and docs-ready check (routing to `cmk:requirements` when the band requires it).
-version: 0.2.1
+description: Use when the user asks to "start work on TICKET-123", "pick up this issue", "get the context for this ticket", "intake this issue", or begins any tracked work — and as phase 1 of the cmk:delivery-pipeline skill. Produces a context brief, branch/worktree, stated scope band, and docs-ready check (routing to `cmk:requirements` when the band requires it).
+version: 0.2.2
 ---
 
 # Delivery Intake

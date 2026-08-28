@@ -1,7 +1,7 @@
 ---
 name: cmk:requirements
-description: This skill should be used when the user asks to "save this as requirements", "draft requirements", "draft a PRD", "let's define what we're building", "update the requirements", "write the acceptance criteria", "what are the acceptance criteria for X", "should this be EARS or RFC 2119", "close package", "SHALL CONTINUE TO", or discusses product scope, success criteria, user needs, guards for existing behavior, or what a system must do before anyone decides how to build it. Produces `docs/requirements/<topic>.md` — product-wide or per-feature — with problem, success criteria, scope, and IDed acceptance criteria (`AUTH-1.1`) in the document's declared notation (EARS `SHALL` or RFC 2119), including `SHALL CONTINUE TO` guards when existing behavior must keep working. Acceptance criteria on a tracker issue instead of in a requirements doc → `cmk:delivery-intake`; how the system gets built rather than what it must do → `cmk:design`.
-version: 0.4.1
+description: Use when the user asks to "save this as requirements", "draft requirements", "draft a PRD", "let's define what we're building", "update the requirements", "write the acceptance criteria", "what are the acceptance criteria for X", "close package", "SHALL CONTINUE TO", or discusses product scope, success criteria, user needs, guards for existing behavior, or what a system must do before anyone decides how to build it. Produces `docs/requirements/<topic>.md` with problem, success criteria, scope, and IDed acceptance criteria. Tracker-issue AC → `cmk:delivery-intake`; how to build → `cmk:design`.
+version: 0.4.2
 ---
 
 # Requirements

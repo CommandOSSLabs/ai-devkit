@@ -1,7 +1,7 @@
 ---
 name: cmk:agent-instructions
-description: This skill should be used when the user asks to "set up CLAUDE.md", "set up AGENTS.md", "agent instructions", "add engineering rules", "make the instructions thinner", or needs to establish or maintain a thin, multi-vendor root instruction file backed by on-demand engineering rules under docs/rules/.
-version: 0.3.1
+description: Use when the user asks to "set up CLAUDE.md", "set up AGENTS.md", "agent instructions", "add engineering rules", "make the instructions thinner", or needs to establish or maintain a thin, multi-vendor root instruction file backed by on-demand engineering rules under docs/rules/.
+version: 0.3.2
 ---
 
 # Agent Instructions

@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-handoff
-description: This skill should be used when the user asks for "a handoff prompt", "a prompt for codex/grok/claude", "something I can paste into another agent", or wants to continue tracked work in a different tool — and at any phase boundary of the cmk:delivery-pipeline skill when the operator prefers a different agent for the next phase.
-version: 0.2.1
+description: Use when the user asks for "a handoff prompt", "a prompt for codex/grok/claude", "something I can paste into another agent", or wants to continue tracked work in a different tool — and at any phase boundary of the cmk:delivery-pipeline skill when the operator prefers a different agent for the next phase.
+version: 0.2.2
 ---
 
 # Delivery Handoff
