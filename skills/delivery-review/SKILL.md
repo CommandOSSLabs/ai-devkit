@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-review
 description: This skill should be used when the user asks to "review my changes", "review this PR", "take a look at this diff", or "is this ready to ship" — before shipping tracked work (phase 4 of cmk:delivery-pipeline) or standalone against any pull request or local diff.
-version: 0.1.3
+version: 0.1.4
 ---
 
 # Delivery Review
@@ -53,11 +53,10 @@ Choosing or running a review engine at full depth? Read `references/engines.md`.
 
 ## The two occasions
 
-**Boundary review** — a concrete cross-work or risk boundary: a join of
-two or more issues or branches, a shared or public contract, a persisted
-format, a deployable-component handoff, an upstream pin replacement, or a
-changed consumer interface. State the trigger and inspect every relevant
-lens.
+**Boundary review** — a concrete cross-work or risk boundary: a join of two
+or more issues or branches, a shared or public contract, a persisted format,
+a deployable-component handoff, an upstream pin replacement, or a changed
+consumer interface. State the trigger and inspect every relevant lens.
 
 **Pre-ship review** — mandatory before every completed issue or branch
 ships, and before every combined integration output; `cmk:delivery-ship`
@@ -91,7 +90,8 @@ a quiet default.
 6. **Security** — think like a bad actor with the diff in hand: injection,
    authz gaps, trust-boundary confusion, resource exhaustion, secret
    handling, and anything touching signed payloads, domain separators,
-   settlement, randomness, or wire parity.
+   settlement, randomness, or wire parity. Name the scans that backed this
+   lens and the classes that did not run (`cmk:cicd`).
 7. **Production readiness** — audit against `cmk:delivery-pipeline`'s
    engineering-principles checklist and the spec's production-readiness
    section: failure modes, config, secrets, migrations, observability,
