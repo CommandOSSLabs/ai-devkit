@@ -109,11 +109,11 @@ export function PromptInputDemo({ skillExamples }: { skillExamples: SkillExample
     <div className="mx-auto flex w-full max-w-xl flex-1 flex-col justify-center">
       {context && (
         <div className="mb-3 flex flex-wrap items-center gap-2 rounded-xl border border-[#82AAFF]/30 bg-[#82AAFF]/[0.07] px-3 py-2 text-[12.5px]">
-          <Puzzle size={13} strokeWidth={1.75} className="text-[#82AAFF]" aria-hidden="true" />
+          <Puzzle size={13} strokeWidth={1.75} className="text-[color:var(--accent)]" aria-hidden="true" />
           <span className="text-[var(--text-secondary)]">Prompting in the context of</span>
           <Link
             href={`/skills/${context.id}`}
-            className="inline-flex items-center gap-1 font-mono text-[#82AAFF] hover:underline"
+            className="inline-flex items-center gap-1 font-mono text-[color:var(--accent)] hover:underline"
           >
             {context.label}
             <ArrowUpRight size={11} strokeWidth={1.75} />
@@ -183,7 +183,7 @@ export function PromptInputDemo({ skillExamples }: { skillExamples: SkillExample
             <div className="flex flex-col gap-3">
               {skillExamples.map((skill) => (
                 <div key={skill.id}>
-                  <p className="mb-1 font-mono text-[11.5px] text-[#82AAFF]">{skill.label}</p>
+                  <p className="mb-1 font-mono text-[11.5px] text-[color:var(--accent)]">{skill.label}</p>
                   <div className="flex flex-wrap gap-1.5">
                     {skill.examples.map((example) => (
                       <button

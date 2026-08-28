@@ -80,7 +80,7 @@ function SkillNameBadge({ value }: { value: string }) {
   const colonIdx = value.indexOf(":");
   if (colonIdx === -1) {
     return (
-      <span className="rounded-md bg-[#82AAFF]/10 px-2 py-0.5 font-mono text-[12.5px] font-medium text-[#82AAFF]">
+      <span className="rounded-md bg-[#82AAFF]/10 px-2 py-0.5 font-mono text-[12.5px] font-medium text-[color:var(--accent)]">
         {value}
       </span>
     );
@@ -89,9 +89,9 @@ function SkillNameBadge({ value }: { value: string }) {
   const name = value.slice(colonIdx + 1);
   return (
     <span className="inline-flex items-baseline gap-0.5 rounded-md bg-[#82AAFF]/10 px-2 py-0.5 font-mono text-[12.5px]">
-      <span className="text-[#82AAFF]/55">{namespace}</span>
-      <span className="text-[#82AAFF]/55">:</span>
-      <span className="font-semibold text-[#82AAFF]">{name}</span>
+      <span className="text-[color:var(--accent)]/55">{namespace}</span>
+      <span className="text-[color:var(--accent)]/55">:</span>
+      <span className="font-semibold text-[color:var(--accent)]">{name}</span>
     </span>
   );
 }
@@ -202,7 +202,7 @@ function Inline({ text }: { text: string }) {
         }
         if (p.startsWith("`") && p.endsWith("`")) {
           return (
-            <code key={i} className="rounded-[4px] bg-[var(--bg-elevated)] px-1 py-0.5 font-mono text-[0.9em] text-[#82AAFF]">
+            <code key={i} className="rounded-[4px] bg-[var(--bg-elevated)] px-1 py-0.5 font-mono text-[0.9em] text-[color:var(--accent)]">
               {p.slice(1, -1)}
             </code>
           );
@@ -215,7 +215,7 @@ function Inline({ text }: { text: string }) {
               href={link[2]}
               target="_blank"
               rel="noreferrer"
-              className="text-[#82AAFF] underline decoration-[#82AAFF]/30 underline-offset-2 hover:decoration-[#82AAFF]"
+              className="text-[color:var(--accent)] underline decoration-[#82AAFF]/30 underline-offset-2 hover:decoration-[#82AAFF]"
             >
               {link[1]}
             </a>
@@ -371,7 +371,7 @@ export function MarkdownPreview({
                       s.level === 1 ? "pl-2" : s.level === 2 ? "pl-5" : "pl-8"
                     } pr-2 ${
                       on
-                        ? "bg-[#82AAFF]/10 font-medium text-[#82AAFF]"
+                        ? "bg-[#82AAFF]/10 font-medium text-[color:var(--accent)]"
                         : "text-[var(--text-tertiary)] hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)]"
                     }`}
                   >
@@ -404,7 +404,7 @@ export function MarkdownPreview({
               aria-pressed={focusMode}
               className={`ml-auto inline-flex h-7 items-center gap-1.5 rounded-md border px-2 text-[12px] transition-colors ${
                 focusMode
-                  ? "border-[#82AAFF]/40 bg-[#82AAFF]/10 text-[#82AAFF]"
+                  ? "border-[#82AAFF]/40 bg-[#82AAFF]/10 text-[color:var(--accent)]"
                   : "border-[var(--border-subtle)] text-[var(--text-secondary)] hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)]"
               }`}
             >

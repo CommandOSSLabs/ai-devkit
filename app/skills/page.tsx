@@ -49,7 +49,7 @@ export default function SkillsBrowsePage() {
               href={REPO_SKILLS_TREE}
               target="_blank"
               rel="noreferrer"
-              className="text-[#82AAFF] underline decoration-[#82AAFF]/30 underline-offset-4 hover:decoration-[#82AAFF]"
+              className="text-[color:var(--accent)] underline decoration-[#82AAFF]/30 underline-offset-4 hover:decoration-[#82AAFF]"
             >
               CommandOSSLabs/ai-devkit
             </a>

@@ -117,7 +117,7 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
                         on ? "bg-[#82AAFF]/10" : "hover:bg-[var(--bg-elevated)]"
                       }`}
                     >
-                      <span className="min-w-0 flex-1 truncate font-mono text-[12.5px] text-[#82AAFF]">
+                      <span className="min-w-0 flex-1 truncate font-mono text-[12.5px] text-[color:var(--accent)]">
                         {node.label}
                       </span>
                       <span className="shrink-0 text-[11.5px] tabular-nums text-[var(--text-tertiary)]">
@@ -232,7 +232,7 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
             >
               <div className="flex shrink-0 items-start justify-between gap-2 border-b border-[var(--border-subtle)] px-4 py-3">
                 <div className="min-w-0">
-                  <p className="truncate font-mono text-[13px] font-semibold text-[#82AAFF]">{activeNode.label}</p>
+                  <p className="truncate font-mono text-[13px] font-semibold text-[color:var(--accent)]">{activeNode.label}</p>
                   <p className="mt-1 text-[11.5px] text-[var(--text-tertiary)]">
                     {activeNode.outDegree} out · {activeNode.inDegree} in
                   </p>
@@ -258,14 +258,14 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
                 <div className="flex flex-wrap gap-1.5">
                   <Link
                     href={`/skills/${activeNode.id}`}
-                    className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-[var(--border-subtle)] px-3 text-[12.5px] text-[var(--text-secondary)] transition-colors hover:border-[#82AAFF]/50 hover:text-[#82AAFF]"
+                    className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-[var(--border-subtle)] px-3 text-[12.5px] text-[var(--text-secondary)] transition-colors hover:border-[#82AAFF]/50 hover:text-[color:var(--accent)]"
                   >
                     <ExternalLink size={12} strokeWidth={1.75} />
                     Open detail
                   </Link>
                   <Link
                     href={`/skills/${activeNode.id}/workspace`}
-                    className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-[#82AAFF]/40 bg-[#82AAFF]/10 px-3 text-[12.5px] font-medium text-[#82AAFF] transition-colors hover:bg-[#82AAFF]/20"
+                    className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-[#82AAFF]/40 bg-[#82AAFF]/10 px-3 text-[12.5px] font-medium text-[color:var(--accent)] transition-colors hover:bg-[#82AAFF]/20"
                   >
                     Open workspace
                   </Link>
@@ -317,7 +317,7 @@ function RefList({
             <Link
               key={id}
               href={`/skills/${id}`}
-              className="rounded-full border border-[var(--border-subtle)] px-2 py-0.5 font-mono text-[11.5px] text-[var(--text-secondary)] transition-colors hover:border-[#82AAFF]/50 hover:text-[#82AAFF]"
+              className="rounded-full border border-[var(--border-subtle)] px-2 py-0.5 font-mono text-[11.5px] text-[var(--text-secondary)] transition-colors hover:border-[#82AAFF]/50 hover:text-[color:var(--accent)]"
             >
               {id}
             </Link>

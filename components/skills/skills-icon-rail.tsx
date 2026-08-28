@@ -29,7 +29,7 @@ function RailButton({
         aria-current={active ? "page" : undefined}
         className={`flex h-10 w-10 items-center justify-center rounded-lg transition-colors xl:w-full xl:justify-start xl:gap-2.5 xl:px-3 ${
           active
-            ? "bg-[#82AAFF]/10 text-[#82AAFF]"
+            ? "bg-[#82AAFF]/10 text-[color:var(--accent)]"
             : "text-[var(--text-tertiary)] hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)]"
         }`}
       >
@@ -54,7 +54,7 @@ export function SkillsIconRail() {
   return (
     <div className="flex w-full flex-col items-center gap-4 xl:items-stretch">
       <RailButton href="/" label="ai-devkit">
-        <Terminal size={15} className="shrink-0 text-[#82AAFF]" />
+        <Terminal size={15} className="shrink-0 text-[color:var(--accent)]" />
       </RailButton>
 
       <span aria-hidden="true" className="h-px w-6 bg-[var(--border-subtle)] xl:w-full" />

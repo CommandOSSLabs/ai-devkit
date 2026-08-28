@@ -473,7 +473,7 @@ export default function SkillTreeBrowser({
                     className={cx(
                       "relative flex h-9 cursor-pointer items-center gap-1.5 pr-3 text-[13px] transition-colors",
                       !isSelected && "hover:bg-[var(--bg-elevated)]",
-                      "focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#82AAFF]",
+                      "focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--accent)]",
                     )}
                   >
                     {Array.from({ length: depth }, (_, k) => (
@@ -516,7 +516,7 @@ export default function SkillTreeBrowser({
                     </span>
 
                     {!folder && hasDraft(node) && (
-                      <span className="shrink-0 text-[10px] font-medium uppercase tracking-[0.06em] text-[#82AAFF]">
+                      <span className="shrink-0 text-[10px] font-medium uppercase tracking-[0.06em] text-[color:var(--accent)]">
                         draft
                       </span>
                     )}

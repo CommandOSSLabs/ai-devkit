@@ -133,7 +133,7 @@ function SkillCard({
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 className="truncate font-mono text-[13.5px] font-semibold text-[#82AAFF]">
+          <h3 className="truncate font-mono text-[13.5px] font-semibold text-[color:var(--accent)]">
             {/* A real link so it can be opened in a new tab and read by
                 assistive tech, intercepted only where a preview panel exists
                 to update instead. */}
@@ -179,7 +179,7 @@ function SkillCard({
 
         <Link
           href={`/skills/${skill.id}/workspace`}
-          className="relative z-[1] inline-flex h-7 shrink-0 items-center gap-1 rounded-md border border-[#82AAFF]/40 bg-[#82AAFF]/10 px-2 text-[11.5px] font-medium text-[#82AAFF] transition-colors hover:bg-[#82AAFF]/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#82AAFF]"
+          className="relative z-[1] inline-flex h-7 shrink-0 items-center gap-1 rounded-md border border-[#82AAFF]/40 bg-[#82AAFF]/10 px-2 text-[11.5px] font-medium text-[color:var(--accent)] transition-colors hover:bg-[#82AAFF]/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
         >
           Open workspace
           <ArrowUpRight size={11} strokeWidth={2} />
@@ -491,9 +491,9 @@ function FilterChip({
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`inline-flex h-7 items-center gap-1.5 rounded-full border px-3 text-[12px] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#82AAFF] ${
+      className={`inline-flex h-7 items-center gap-1.5 rounded-full border px-3 text-[12px] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] ${
         active
-          ? "border-[#82AAFF]/50 bg-[#82AAFF]/10 font-medium text-[#82AAFF]"
+          ? "border-[#82AAFF]/50 bg-[#82AAFF]/10 font-medium text-[color:var(--accent)]"
           : "border-[var(--border-subtle)] text-[var(--text-secondary)] hover:border-[var(--border-strong)] hover:text-[var(--text-primary)]"
       }`}
     >

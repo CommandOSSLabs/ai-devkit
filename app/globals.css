@@ -202,6 +202,29 @@
   --glass-elevated: var(--bg-elevated);
 }
 
+/* Measured, not guessed: on this shell's card surfaces the shared dark
+   --text-tertiary comes out at 3.67:1, under the 4.5:1 WCAG AA asks for at
+   these sizes, and here it carries real information — trigger phrases,
+   categories, the repository snapshot. Brightened locally to 4.76:1, which
+   keeps the hierarchy intact (primary 14.5, secondary 6.8, tertiary 4.8) and
+   leaves the rest of the site's text alone, the way .intro-panel-text
+   already does for the marketing sections. */
+.skills-shell {
+  /* #82AAFF is the site's accent and reads well on dark, but as *text* on a
+     light surface it measures 1.96:1 — unreadable, and it was carrying the
+     card's primary action. Light mode gets a darker blue of the same family;
+     tints and filled buttons keep the original hue, since those are
+     backgrounds rather than text. */
+  --accent: #2F63C7;
+  --text-tertiary: #5C6675;
+}
+
+.dark .skills-shell {
+  --accent: #82AAFF;
+  --text-tertiary: #7C8593;
+  --text-disabled: #6E7684;
+}
+
 /* Scrollbars: the browser default renders as a bright white bar against the
    dark surfaces, which reads as a UI element rather than chrome. Tint it to
    the existing border token so it recedes, in both themes. */

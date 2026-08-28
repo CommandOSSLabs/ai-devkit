@@ -190,7 +190,7 @@ export function MarkdownEditor({
             onClick={copy}
             className={`inline-flex h-7 items-center gap-1 rounded-md border px-2 text-[11.5px] transition-colors ${
               copied
-                ? "border-[#82AAFF]/40 bg-[#82AAFF]/10 text-[#82AAFF]"
+                ? "border-[#82AAFF]/40 bg-[#82AAFF]/10 text-[color:var(--accent)]"
                 : "border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
             }`}
           >

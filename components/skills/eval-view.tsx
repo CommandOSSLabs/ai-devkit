@@ -51,7 +51,7 @@ export function EvalView({ cases }: { cases: EvalCase[] }) {
             className="flex flex-col gap-3 rounded-[14px] border border-[var(--glass-line)] bg-[var(--glass-elevated)] p-5"
           >
             <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1 rounded-md bg-[#82AAFF]/10 px-2 py-0.5 font-mono text-[11.5px] text-[#82AAFF]">
+              <span className="inline-flex items-center gap-1 rounded-md bg-[#82AAFF]/10 px-2 py-0.5 font-mono text-[11.5px] text-[color:var(--accent)]">
                 <Hash size={10} strokeWidth={2} />
                 {c.eval_id ?? i + 1}
               </span>
@@ -73,7 +73,7 @@ export function EvalView({ cases }: { cases: EvalCase[] }) {
 
             {c.prompt && (
               <div className="flex gap-2.5 rounded-[10px] border-l-2 border-[#82AAFF]/40 bg-[var(--bg-surface)]/40 px-3.5 py-3">
-                <Sparkles size={13} className="mt-0.5 shrink-0 text-[#82AAFF]/70" strokeWidth={1.75} />
+                <Sparkles size={13} className="mt-0.5 shrink-0 text-[color:var(--accent)]/70" strokeWidth={1.75} />
                 <p className="text-[13px] leading-6 text-[var(--text-secondary)]">{c.prompt}</p>
               </div>
             )}

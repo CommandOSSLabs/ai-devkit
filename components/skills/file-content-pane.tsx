@@ -137,7 +137,7 @@ export function FileContentPane({
     `inline-flex h-6 items-center gap-1 rounded-[4px] px-2 text-[11.5px] transition-colors ${
       on
         ? accent
-          ? "bg-[#82AAFF]/15 font-medium text-[#82AAFF]"
+          ? "bg-[#82AAFF]/15 font-medium text-[color:var(--accent)]"
           : "bg-[var(--bg-surface)] text-[var(--text-primary)]"
         : "text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
     }`;
@@ -249,7 +249,7 @@ export function FileContentPane({
                   <Icon size={14} className="shrink-0" style={{ color }} />
                   <span className="max-w-[220px] truncate font-mono">{name}</span>
                   {draft && (
-                    <span className="inline-flex shrink-0 items-center gap-1 text-[10.5px] font-medium uppercase tracking-[0.06em] text-[#82AAFF]">
+                    <span className="inline-flex shrink-0 items-center gap-1 text-[10.5px] font-medium uppercase tracking-[0.06em] text-[color:var(--accent)]">
                       <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#82AAFF]" />
                       draft
                     </span>
@@ -386,7 +386,7 @@ export function FileContentPane({
           </span>
         )}
         {edited && (
-          <span className="inline-flex shrink-0 items-center gap-1.5 text-[#82AAFF]">
+          <span className="inline-flex shrink-0 items-center gap-1.5 text-[color:var(--accent)]">
             <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#82AAFF]" />
             Local draft, never written to the repository
           </span>

@@ -38,7 +38,7 @@ export function WorkspaceEntry({ ids }: { ids: string[] }) {
         {missing === null ? (
           <>
             <p className="text-[14px] text-[var(--text-secondary)]">Opening the workspace…</p>
-            <Link href="/skills" className="text-[13px] text-[#82AAFF] hover:underline">
+            <Link href="/skills" className="text-[13px] text-[color:var(--accent)] hover:underline">
               Browse skills instead
             </Link>
           </>

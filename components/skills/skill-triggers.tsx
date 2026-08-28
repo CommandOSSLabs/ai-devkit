@@ -31,9 +31,9 @@ export function SkillTriggers({ triggers }: { triggers: string[] }) {
               type="button"
               onClick={() => copy(phrase)}
               title="Copy trigger phrase"
-              className={`group inline-flex max-w-full items-center gap-1.5 rounded-full border px-3 py-1 text-left text-[12.5px] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#82AAFF] ${
+              className={`group inline-flex max-w-full items-center gap-1.5 rounded-full border px-3 py-1 text-left text-[12.5px] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] ${
                 on
-                  ? "border-[#82AAFF]/50 bg-[#82AAFF]/10 text-[#82AAFF]"
+                  ? "border-[#82AAFF]/50 bg-[#82AAFF]/10 text-[color:var(--accent)]"
                   : "border-[var(--border-subtle)] text-[var(--text-secondary)] hover:border-[var(--border-strong)] hover:text-[var(--text-primary)]"
               }`}
             >

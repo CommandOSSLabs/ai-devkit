@@ -58,7 +58,7 @@ export function SkillsSidebarNav({ className = "" }: { className?: string }) {
             aria-current={active ? "page" : undefined}
             className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] tracking-tight transition-colors ${
               active
-                ? "bg-[#82AAFF]/10 font-medium text-[#82AAFF]"
+                ? "bg-[#82AAFF]/10 font-medium text-[color:var(--accent)]"
                 : "text-[var(--text-secondary)] opacity-80 hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)] hover:opacity-100"
             }`}
           >

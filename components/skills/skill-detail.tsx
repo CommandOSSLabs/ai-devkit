@@ -48,7 +48,7 @@ function RelatedSkills({
             <li key={id}>
               <Link
                 href={`/skills/${id}`}
-                className="inline-flex items-center rounded-full border border-[var(--border-subtle)] px-2.5 py-1 font-mono text-[12px] text-[var(--text-secondary)] transition-colors hover:border-[#82AAFF]/50 hover:text-[#82AAFF] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#82AAFF]"
+                className="inline-flex items-center rounded-full border border-[var(--border-subtle)] px-2.5 py-1 font-mono text-[12px] text-[var(--text-secondary)] transition-colors hover:border-[#82AAFF]/50 hover:text-[color:var(--accent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
               >
                 {handles[id] ?? `cmk:${id}`}
               </Link>
@@ -61,9 +61,9 @@ function RelatedSkills({
 }
 
 const primaryAction =
-  "inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#82AAFF] px-3.5 text-[13px] font-medium text-[#0A0B0D] transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#82AAFF]";
+  "inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#82AAFF] px-3.5 text-[13px] font-medium text-[#0A0B0D] transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]";
 const secondaryAction =
-  "inline-flex h-9 items-center gap-1.5 rounded-lg border border-[var(--border-subtle)] px-3 text-[13px] text-[var(--text-secondary)] transition-colors hover:border-[var(--border-strong)] hover:text-[var(--text-primary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#82AAFF]";
+  "inline-flex h-9 items-center gap-1.5 rounded-lg border border-[var(--border-subtle)] px-3 text-[13px] text-[var(--text-secondary)] transition-colors hover:border-[var(--border-strong)] hover:text-[var(--text-primary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]";
 
 function Foldable({
   title,
@@ -79,7 +79,7 @@ function Foldable({
   // beside a list someone is still scanning.
   return (
     <details open={open} className="group flex flex-col gap-3">
-      <summary className="flex cursor-pointer list-none items-center gap-2 font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--text-tertiary)] transition-colors marker:content-[''] hover:text-[var(--text-primary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#82AAFF]">
+      <summary className="flex cursor-pointer list-none items-center gap-2 font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--text-tertiary)] transition-colors marker:content-[''] hover:text-[var(--text-primary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]">
         <ChevronRight
           size={12}
           strokeWidth={2}
@@ -118,7 +118,7 @@ export function SkillDetail({
       <header className="flex flex-col gap-3">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0">
-            <p className="font-mono text-[13px] font-semibold text-[#82AAFF]">{skill.handle}</p>
+            <p className="font-mono text-[13px] font-semibold text-[color:var(--accent)]">{skill.handle}</p>
             {isPage ? (
               <h1 className="mt-1 text-[26px] font-semibold tracking-[-0.02em] text-[var(--text-primary)]">
                 {skill.title}
@@ -270,7 +270,7 @@ export function SkillDetail({
           </ul>
           <Link
             href={`/skills/${skill.id}/workspace`}
-            className="inline-flex items-center gap-1 self-start text-[12.5px] text-[var(--text-secondary)] transition-colors hover:text-[#82AAFF]"
+            className="inline-flex items-center gap-1 self-start text-[12.5px] text-[var(--text-secondary)] transition-colors hover:text-[color:var(--accent)]"
           >
             Open all in workspace
             <ArrowUpRight size={12} strokeWidth={1.75} />

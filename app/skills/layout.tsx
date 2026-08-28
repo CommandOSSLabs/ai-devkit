@@ -32,7 +32,7 @@ export default function SkillsLayout({
             <div className="flex items-center justify-between gap-3">
               <Link href="/" className="flex items-center gap-2 lg:hidden">
                 <div className="flex h-7 w-7 items-center justify-center rounded-md border border-[var(--border-strong)] bg-[var(--bg-surface)]">
-                  <Terminal size={14} className="text-[#82AAFF]" />
+                  <Terminal size={14} className="text-[color:var(--accent)]" />
                 </div>
                 <span className="whitespace-nowrap font-mono text-[14px] font-semibold">
                   ai-devkit
