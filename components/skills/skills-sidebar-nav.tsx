@@ -8,13 +8,26 @@ import { cn } from "@/lib/utils";
 export const NAV_ITEMS: { href: string; label: string; icon: LucideIcon }[] = [
   { href: "/skills", label: "Skills", icon: Layers },
   { href: "/skills/visualize-interactions", label: "Visualize interactions", icon: Share2 },
-  { href: "/skills/playground", label: "Playground", icon: FlaskConical },
   { href: "/skills/prompt-inputs", label: "Prompt Inputs", icon: SendHorizontal },
+  { href: "/skills/playground", label: "Playground", icon: FlaskConical },
 ];
 
 const TITLE_BY_PATH: Record<string, string> = Object.fromEntries(
   NAV_ITEMS.map(({ href, label }) => [href, label]),
 );
+
+// /skills owns two child routes now — /skills/<id> and its workspace — so
+// "Skills" stays the active section while you're inside one, rather than the
+// nav going blank the moment you open a skill. Sibling routes are matched
+// first so /skills/playground never counts as a skill id.
+export function isNavActive(pathname: string, href: string): boolean {
+  if (href !== "/skills") return pathname === href || pathname.startsWith(`${href}/`);
+  if (pathname === "/skills") return true;
+  const claimedBySibling = NAV_ITEMS.some(
+    (item) => item.href !== "/skills" && (pathname === item.href || pathname.startsWith(`${item.href}/`)),
+  );
+  return pathname.startsWith("/skills/") && !claimedBySibling;
+}
 
 // The top bar's title needs to react to the active route, but layout.tsx
 // stays a server component — so that one bit of client state lives here,
@@ -22,7 +35,13 @@ const TITLE_BY_PATH: Record<string, string> = Object.fromEntries(
 // whole shell to become a client component just for a label.
 export function SkillsSectionTitle() {
   const pathname = usePathname();
-  return <>{TITLE_BY_PATH[pathname] ?? "Skills"}</>;
+  const exact = TITLE_BY_PATH[pathname];
+  if (exact) return <>{exact}</>;
+
+  const match = pathname.match(/^\/skills\/([^/]+)(\/workspace)?\/?$/);
+  if (match) return <>{`Skills / ${match[1]}${match[2] ? " / Workspace" : ""}`}</>;
+
+  return <>Skills</>;
 }
 
 export function SkillsSidebarNav({ className = "" }: { className?: string }) {
@@ -31,7 +50,7 @@ export function SkillsSidebarNav({ className = "" }: { className?: string }) {
   return (
     <nav className={cn("flex flex-col gap-1.5", className)}>
       {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
-        const active = pathname === href;
+        const active = isNavActive(pathname, href);
         return (
           <Link
             key={href}

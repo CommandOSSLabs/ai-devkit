@@ -120,10 +120,13 @@ export const GooeyTextReveal = React.forwardRef<HTMLDivElement, GooeyTextRevealP
       let splits: SplitText[] = [];
       let tween: gsap.core.Tween | null = null;
       let animationFrame = 0;
+      let safetyTimer = 0;
       let measuredWidth = container.getBoundingClientRect().width;
       let disposed = false;
 
       const revert = () => {
+        window.clearTimeout(safetyTimer);
+        safetyTimer = 0;
         tween?.scrollTrigger?.kill();
         tween?.kill();
         tween = null;
@@ -137,6 +140,7 @@ export const GooeyTextReveal = React.forwardRef<HTMLDivElement, GooeyTextRevealP
         revert();
 
         const layers: HTMLElement[] = [];
+        const lineElements: HTMLElement[] = [];
 
         getRevealTargets(container).forEach((target) => {
           const split = SplitText.create(target, {
@@ -150,11 +154,26 @@ export const GooeyTextReveal = React.forwardRef<HTMLDivElement, GooeyTextRevealP
             lineElement.style.display = "block";
             lineElement.style.filter = `url(#${filterId}) blur(${LINE_EDGE_BLUR}px)`;
             lineElement.style.willChange = "filter";
+            lineElements.push(lineElement);
             layers.push(wrapLine(lineElement));
           });
 
           splits.push(split);
         });
+
+        // The gooey filter crushes every alpha below ~0.55 to nothing, which
+        // is the whole effect while the blur is tweening — and a liability
+        // once it stops, because it stays applied to finished, static text.
+        // Any compositing that leaves a glyph even slightly translucent then
+        // erases it, which is how a heading ends up invisible on some loads
+        // and fine on others. So the reveal takes its filters back off when
+        // it is done and hands the text to the browser unfiltered.
+        const releaseFilters = () => {
+          for (const element of [...layers, ...lineElements]) {
+            element.style.filter = "";
+            element.style.willChange = "";
+          }
+        };
 
         if (layers.length === 0) return;
 
@@ -165,7 +184,15 @@ export const GooeyTextReveal = React.forwardRef<HTMLDivElement, GooeyTextRevealP
           duration,
           ease,
           stagger,
-          onComplete,
+          // A scrubbed reveal is driven by scroll position and runs backwards
+          // as well as forwards, so it keeps its filters for the whole scroll.
+          onComplete:
+            mode === "scrub"
+              ? onComplete
+              : () => {
+                  releaseFilters();
+                  onComplete?.();
+                },
         };
 
         if (mode === "scrub") {
@@ -198,6 +225,25 @@ export const GooeyTextReveal = React.forwardRef<HTMLDivElement, GooeyTextRevealP
         }
 
         tween = gsap.to(layers, animation);
+
+        // GSAP advances on requestAnimationFrame, which a browser is free not
+        // to run — a background tab, an occluded window, an aggressive power
+        // mode. The reveal starting and never finishing would leave the text
+        // blurred under the alpha-crushing filter, i.e. invisible, so an
+        // immediate reveal keeps a wall-clock deadline: past it, snap to the
+        // finished state and drop the filters. Scroll-driven modes are
+        // deliberately excluded — their tween is *supposed* to sit unstarted
+        // until the reader gets there.
+        if (mode === "immediate") {
+          const runtime = delay + duration + stagger * Math.max(0, layers.length - 1);
+          safetyTimer = window.setTimeout(
+            () => {
+              if (tween && tween.progress() < 1) tween.progress(1);
+              releaseFilters();
+            },
+            (runtime + 2) * 1000,
+          );
+        }
       };
 
       build();

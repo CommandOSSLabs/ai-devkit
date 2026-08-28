@@ -1,9 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ArrowDownLeft, ArrowUpRight, X } from "lucide-react";
+import { ArrowDownLeft, ArrowUpRight, ExternalLink, List, Share2, X } from "lucide-react";
 import type { SkillGraph } from "@/lib/skill-graph";
+import { normalizeSkillId } from "@/lib/skill-id";
 
 // A circular (chord) layout rather than a force simulation: with 34 nodes and
 // 108 edges a physics layout settles differently on every load, which makes
@@ -28,7 +30,17 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
   const reduce = useReducedMotion();
   const [hovered, setHovered] = useState<string | null>(null);
   const [pinned, setPinned] = useState<string | null>(null);
+  const [view, setView] = useState<"graph" | "list">("graph");
   const active = hovered ?? pinned;
+
+  // A skill page links here as …?focus=delivery-review, so "see what this
+  // connects to" lands on that node already traced instead of on 34
+  // undifferentiated dots. Read after mount to keep the page static.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const requested = normalizeSkillId(params.get("skill") ?? params.get("focus"));
+    if (requested && graph.nodes.some((n) => n.id === requested)) setPinned(requested);
+  }, [graph.nodes]);
 
   const { points, byId } = useMemo(() => {
     const points = new Map<string, Pt>();
@@ -53,7 +65,71 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-4 lg:flex-row">
-      <div className="relative min-h-0 flex-1 overflow-hidden rounded-[16px] border border-[var(--border-subtle)] bg-[var(--glass-surface)] backdrop-blur-sm">
+      <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-[16px] border border-[var(--border-subtle)] bg-[var(--glass-surface)]">
+        <div className="absolute right-3 top-3 z-10 flex items-center gap-0.5 rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-0.5">
+          <button
+            type="button"
+            onClick={() => setView("graph")}
+            aria-pressed={view === "graph"}
+            className={`inline-flex h-6 items-center gap-1 rounded-[4px] px-2 text-[11.5px] transition-colors ${
+              view === "graph"
+                ? "bg-[var(--bg-elevated)] text-[var(--text-primary)]"
+                : "text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+            }`}
+          >
+            <Share2 size={11} strokeWidth={1.75} />
+            Graph
+          </button>
+          <button
+            type="button"
+            onClick={() => setView("list")}
+            aria-pressed={view === "list"}
+            className={`inline-flex h-6 items-center gap-1 rounded-[4px] px-2 text-[11.5px] transition-colors ${
+              view === "list"
+                ? "bg-[var(--bg-elevated)] text-[var(--text-primary)]"
+                : "text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+            }`}
+          >
+            <List size={11} strokeWidth={1.75} />
+            List
+          </button>
+        </div>
+
+        {view === "list" ? (
+          /* The same relationships without an SVG in the way: every skill is
+             a focusable row, and focusing one traces it in the inspector, so
+             this graph is navigable by keyboard and by screen reader too. */
+          <div className="min-h-0 flex-1 overflow-y-auto p-2 pt-12">
+            <ul className="flex flex-col gap-0.5">
+              {graph.nodes.map((node) => {
+                const on = node.id === active;
+                return (
+                  <li key={node.id}>
+                    <button
+                      type="button"
+                      onClick={() => setPinned((cur) => (cur === node.id ? null : node.id))}
+                      onFocus={() => setHovered(node.id)}
+                      onBlur={() => setHovered(null)}
+                      onMouseEnter={() => setHovered(node.id)}
+                      onMouseLeave={() => setHovered(null)}
+                      aria-pressed={node.id === pinned}
+                      className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors ${
+                        on ? "bg-[#82AAFF]/10" : "hover:bg-[var(--bg-elevated)]"
+                      }`}
+                    >
+                      <span className="min-w-0 flex-1 truncate font-mono text-[12.5px] text-[#82AAFF]">
+                        {node.label}
+                      </span>
+                      <span className="shrink-0 text-[11.5px] tabular-nums text-[var(--text-tertiary)]">
+                        {node.outDegree} out · {node.inDegree} in
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ) : (
         <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="h-full w-full" role="img" aria-label="Skill reference graph">
           <g>
             {graph.edges.map((e, i) => {
@@ -129,15 +205,18 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
             })}
           </g>
         </svg>
+        )}
 
-        <div className="pointer-events-none absolute bottom-3 left-4 flex items-center gap-4 text-[11px] text-[var(--text-tertiary)]">
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-px w-4" style={{ background: OUT_COLOR }} /> references
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-px w-4" style={{ background: IN_COLOR }} /> referenced by
-          </span>
-        </div>
+        {view === "graph" && (
+          <div className="pointer-events-none absolute bottom-3 left-4 flex items-center gap-4 text-[11px] text-[var(--text-tertiary)]">
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-px w-4" style={{ background: OUT_COLOR }} /> references
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-px w-4" style={{ background: IN_COLOR }} /> referenced by
+            </span>
+          </div>
+        )}
       </div>
 
       <aside className="flex shrink-0 flex-col overflow-hidden rounded-[16px] border border-[var(--border-subtle)] bg-[var(--glass-frame)] backdrop-blur-sm lg:w-[320px]">
@@ -176,6 +255,21 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
                 )}
                 <RefList title="References" icon={<ArrowUpRight size={12} />} color={OUT_COLOR} ids={related.out} />
                 <RefList title="Referenced by" icon={<ArrowDownLeft size={12} />} color={IN_COLOR} ids={related.inc} />
+                <div className="flex flex-wrap gap-1.5">
+                  <Link
+                    href={`/skills/${activeNode.id}`}
+                    className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-[var(--border-subtle)] px-3 text-[12.5px] text-[var(--text-secondary)] transition-colors hover:border-[#82AAFF]/50 hover:text-[#82AAFF]"
+                  >
+                    <ExternalLink size={12} strokeWidth={1.75} />
+                    Open detail
+                  </Link>
+                  <Link
+                    href={`/skills/${activeNode.id}/workspace`}
+                    className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-[#82AAFF]/40 bg-[#82AAFF]/10 px-3 text-[12.5px] font-medium text-[#82AAFF] transition-colors hover:bg-[#82AAFF]/20"
+                  >
+                    Open workspace
+                  </Link>
+                </div>
               </div>
             </motion.div>
           ) : (
@@ -186,8 +280,9 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
               exit={reduce ? undefined : { opacity: 0 }}
               className="flex flex-1 flex-col items-center justify-center gap-2 px-6 text-center"
             >
-              <p className="text-[13px] text-[var(--text-tertiary)]">
-                Hover a skill to trace its references. Click to keep it pinned.
+              <p className="text-[13px] leading-[1.6] text-[var(--text-tertiary)]">
+                Hover a skill to trace its references. Click to keep it pinned. Switch to List to reach every skill by
+                keyboard.
               </p>
             </motion.div>
           )}
@@ -219,12 +314,13 @@ function RefList({
       ) : (
         <div className="flex flex-wrap gap-1.5">
           {ids.map((id) => (
-            <span
+            <Link
               key={id}
-              className="rounded-full border border-[var(--border-subtle)] px-2 py-0.5 font-mono text-[11.5px] text-[var(--text-secondary)]"
+              href={`/skills/${id}`}
+              className="rounded-full border border-[var(--border-subtle)] px-2 py-0.5 font-mono text-[11.5px] text-[var(--text-secondary)] transition-colors hover:border-[#82AAFF]/50 hover:text-[#82AAFF]"
             >
               {id}
-            </span>
+            </Link>
           ))}
         </div>
       )}

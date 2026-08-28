@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 // Segment-local so it renders inside app/skills/layout.tsx's sidebar shell
 // (a not-found.tsx only bypasses layouts BELOW it in the tree) — the two
 // stub routes should read as "not built yet" inside the dashboard, not
@@ -11,6 +13,12 @@ export default function SkillsNotFound() {
         <p className="text-[14px] leading-[1.6] text-[var(--text-secondary)]">
           This section doesn&apos;t have anything here yet — check back once it&apos;s scoped out.
         </p>
+        <Link
+          href="/skills"
+          className="mt-2 inline-flex h-9 items-center rounded-lg border border-[var(--border-subtle)] px-3 text-[13px] text-[var(--text-secondary)] transition-colors hover:border-[var(--border-strong)] hover:text-[var(--text-primary)]"
+        >
+          Browse all skills
+        </Link>
       </div>
     </div>
   );

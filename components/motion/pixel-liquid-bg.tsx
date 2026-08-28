@@ -804,8 +804,24 @@ export function PixelLiquidBg({
     if (!container) return;
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
 
+    // A static gradient supplied by the parent is the intentional fallback
+    // for browsers/devices without WebGL. Probe before constructing Three's
+    // renderer because WebGLRenderer throws when no context is available.
+    const probe = document.createElement("canvas");
+    const context = probe.getContext("webgl2") ?? probe.getContext("webgl");
+    // Hand the context straight back: a browser allows only a handful at once,
+    // and this component mounts again on every return to a route that shows
+    // the backdrop, so a probe that kept its context would slowly spend them.
+    context?.getExtension("WEBGL_lose_context")?.loseContext();
+    if (!context) return;
+
     const gl = new CommonGL();
-    gl.init(container);
+    try {
+      gl.init(container);
+    } catch {
+      gl.renderer?.dispose();
+      return;
+    }
     container.prepend(gl.renderer!.domElement);
 
     const mouse = new MouseGL();

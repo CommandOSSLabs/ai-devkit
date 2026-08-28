@@ -1,6 +1,7 @@
 "use client";
 
-import { Cpu, FileText, ImagePlus, Puzzle, Rocket, Sparkles, Wind, X, Zap } from "lucide-react";
+import Link from "next/link";
+import { ArrowUpRight, Cpu, FileText, ImagePlus, Puzzle, Rocket, Sparkles, Wind, X, Zap } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import type { SkillExample } from "@/lib/skill-examples";
@@ -58,6 +59,19 @@ export function PromptInputDemo({ skillExamples }: { skillExamples: SkillExample
   const [sent, setSent] = useState<string>();
   const [notice, setNotice] = useState<string>();
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [context, setContext] = useState<SkillExample | null>(null);
+
+  // Arriving from a skill's page (…/prompt-inputs?skill=adr) should land you
+  // in that skill's context with its own trigger phrase already typed, rather
+  // than on a blank composer you have to re-find the skill in.
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get("skill");
+    if (!requested) return;
+    const skill = skillExamples.find((s) => s.id === requested);
+    if (!skill) return;
+    setContext(skill);
+    if (skill.examples[0]) setValue(skill.examples[0]);
+  }, [skillExamples]);
 
   useEffect(
     () => () => {
@@ -84,6 +98,7 @@ export function PromptInputDemo({ skillExamples }: { skillExamples: SkillExample
 
   const pickExample = (skill: SkillExample, example: string) => {
     setValue(example);
+    setContext(skill);
     setPickerOpen(false);
     setSent(undefined);
     setNotice(`Inserted ${skill.label}'s own trigger phrase — this is what tells a model to reach for it.`);
@@ -91,6 +106,37 @@ export function PromptInputDemo({ skillExamples }: { skillExamples: SkillExample
 
   return (
     <div className="mx-auto flex w-full max-w-xl flex-1 flex-col justify-center">
+      {context && (
+        <div className="mb-3 flex flex-wrap items-center gap-2 rounded-xl border border-[#82AAFF]/30 bg-[#82AAFF]/[0.07] px-3 py-2 text-[12.5px]">
+          <Puzzle size={13} strokeWidth={1.75} className="text-[#82AAFF]" aria-hidden="true" />
+          <span className="text-[var(--text-secondary)]">Prompting in the context of</span>
+          <Link
+            href={`/skills/${context.id}`}
+            className="inline-flex items-center gap-1 font-mono text-[#82AAFF] hover:underline"
+          >
+            {context.label}
+            <ArrowUpRight size={11} strokeWidth={1.75} />
+          </Link>
+          <span className="ml-auto flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => setPickerOpen(true)}
+              className="inline-flex h-6 items-center rounded-md border border-[var(--border-subtle)] px-2 text-[11.5px] text-[var(--text-secondary)] transition-colors hover:border-[var(--border-strong)] hover:text-[var(--text-primary)]"
+            >
+              Change skill
+            </button>
+            <button
+              type="button"
+              onClick={() => setContext(null)}
+              aria-label="Clear skill context"
+              className="inline-flex h-6 w-6 items-center justify-center rounded-md text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)]"
+            >
+              <X size={12} strokeWidth={2} />
+            </button>
+          </span>
+        </div>
+      )}
+
       <PromptInput
         value={value}
         onValueChange={setValue}
@@ -156,7 +202,11 @@ export function PromptInputDemo({ skillExamples }: { skillExamples: SkillExample
         )}
       </AnimatePresence>
 
-      <div className="h-8 px-2 pt-2 text-[12.5px] text-[var(--text-tertiary)]">
+      <p className="px-2 pt-2 text-[11.5px] text-[var(--text-disabled)]">
+        Demo composer — nothing is sent to a model.
+      </p>
+
+      <div className="h-8 px-2 pt-1 text-[12.5px] text-[var(--text-tertiary)]">
         <AnimatePresence mode="wait">
           {sent || notice ? (
             <motion.p
@@ -166,7 +216,7 @@ export function PromptInputDemo({ skillExamples }: { skillExamples: SkillExample
               exit={{ opacity: 0 }}
               transition={{ duration: reduce ? 0 : 0.18 }}
             >
-              {sent ? "Prompt sent to the selected model — this is a demo, no request is actually made." : notice}
+              {sent ? "Prompt captured. No request left the browser." : notice}
             </motion.p>
           ) : null}
         </AnimatePresence>

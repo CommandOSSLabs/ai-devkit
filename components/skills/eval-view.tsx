@@ -37,10 +37,10 @@ export function EvalView({ cases }: { cases: EvalCase[] }) {
     <div className="min-h-0 flex-1 overflow-y-auto px-6 py-6 sm:px-10">
       <div className="mx-auto flex max-w-[760px] flex-col gap-6">
         <div className="flex flex-wrap items-center gap-2 text-[11.5px] text-[var(--text-tertiary)]">
-          <span className="rounded-full bg-[var(--glass-elevated)] px-2.5 py-1 backdrop-blur-sm">
+          <span className="rounded-full bg-[var(--glass-elevated)] px-2.5 py-1">
             {cases.length} {cases.length === 1 ? "scenario" : "scenarios"}
           </span>
-          <span className="rounded-full bg-[var(--glass-elevated)] px-2.5 py-1 backdrop-blur-sm">
+          <span className="rounded-full bg-[var(--glass-elevated)] px-2.5 py-1">
             {totalAssertions} assertions
           </span>
         </div>
@@ -48,7 +48,7 @@ export function EvalView({ cases }: { cases: EvalCase[] }) {
         {cases.map((c, i) => (
           <section
             key={c.eval_id ?? i}
-            className="flex flex-col gap-3 rounded-[14px] border border-[var(--glass-line)] bg-[var(--glass-elevated)] p-5 backdrop-blur-sm"
+            className="flex flex-col gap-3 rounded-[14px] border border-[var(--glass-line)] bg-[var(--glass-elevated)] p-5"
           >
             <div className="flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-1 rounded-md bg-[#82AAFF]/10 px-2 py-0.5 font-mono text-[11.5px] text-[#82AAFF]">

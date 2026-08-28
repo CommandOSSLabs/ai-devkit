@@ -232,7 +232,7 @@ function CopyButton({ code, floating }: { code: string; floating?: boolean }) {
       className={cn(
         "relative grid size-7 place-items-center rounded-lg text-[var(--cb-gutter)] outline-none transition-[background-color,color] duration-150 ease-out hover:bg-[var(--cb-hover-wash)] hover:text-[var(--cb-plain)] focus-visible:ring-2 focus-visible:ring-[var(--cb-accent-ring)]",
         copied && "bg-[var(--cb-accent-soft)] text-[var(--cb-accent)] hover:bg-[var(--cb-accent-soft)] hover:text-[var(--cb-accent)]",
-        floating && "absolute right-2.5 top-2.5 z-10 border border-[var(--cb-border)] bg-[var(--cb-float-bg)] backdrop-blur-md",
+        floating && "absolute right-2.5 top-2.5 z-10 border border-[var(--cb-border)] bg-[var(--cb-float-bg)]",
       )}
     >
       <AnimatePresence initial={false}>
@@ -322,7 +322,7 @@ export function CodeBlock({
       data-slot="code-block"
       className={cn(
         "group relative flex flex-col overflow-hidden text-left",
-        showFrame && "rounded-2xl border border-[var(--cb-border)] bg-[var(--cb-bg)] backdrop-blur-sm",
+        showFrame && "rounded-2xl border border-[var(--cb-border)] bg-[var(--cb-bg)]",
         className,
       )}
       style={{ ...cssVars, ...style }}
@@ -331,7 +331,7 @@ export function CodeBlock({
       {showFrame && showHeader && (
         <div
           data-slot="code-block-header"
-          className="flex h-10 shrink-0 items-center gap-3 border-b border-[var(--cb-border)] bg-[var(--cb-header-bg)] px-3.5 backdrop-blur-md"
+          className="flex h-10 shrink-0 items-center gap-3 border-b border-[var(--cb-border)] bg-[var(--cb-header-bg)] px-3.5"
         >
           <span className="min-w-0 flex-1 truncate font-mono text-xs text-[var(--cb-muted)]">
             {filename ?? safeLanguage}
