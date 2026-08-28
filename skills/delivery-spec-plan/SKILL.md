@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-spec-plan
-description: This skill should be used when the user asks for a "spec", "design", "implementation plan", or "how should we build this" for a tracker issue, after context intake for any non-trivial change, and as phase 2 of the cmk:delivery-pipeline skill.
-version: 0.3.1
+description: Use when the user asks for a "spec", "implementation plan", or tracker-issue design scratch after intake — phase 2 of `cmk:delivery-pipeline`. Produces git-ignored scratch spec + plan with task dependency structure. Durable `docs/design/` docs → `cmk:design`.
+version: 0.3.3
 ---
 
 # Delivery Spec & Plan
@@ -127,14 +127,13 @@ Exclusive resources: none
 Close with the issue's acceptance criteria mapped to the tasks that satisfy
 them — cite `PREFIX-N.M` when the requirements doc defines IDs. An AC with
 no task is a hole in the plan, and so is a surface-inventory item with no
-covering task. Planning is the cheapest
-moment to find out a criterion will not land: if no task can honestly
-satisfy one, take its disposition now, on the issue, per `cmk:delivery-workflow`'s
-`references/acceptance-criteria.md`.
+covering task. Planning is the cheapest moment to find a criterion will not
+land: if no task can honestly satisfy one, disposition it on the issue now
+per `cmk:delivery-workflow`'s `references/acceptance-criteria.md`.
 
-A plan whose tasks all serialize on one file is worth re-partitioning before
-it executes; sequential-by-accident is different from sequential-by-necessity,
-and only the second is worth paying for.
+A plan whose tasks all serialize on one file is worth re-partitioning
+before it executes; sequential-by-accident differs from sequential-by-
+necessity, and only the second is worth paying for.
 
 ## Exit gate
 
