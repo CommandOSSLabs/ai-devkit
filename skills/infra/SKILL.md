@@ -1,7 +1,7 @@
 ---
 name: cmk:infra
-description: This skill should be used when the user asks to "set up infra", "add IaC", "structure the infrastructure code", "add an environment", "isolate infra stacks", or needs to establish or audit infrastructure-as-code packages, environment boundaries, and their pipeline wiring.
-version: 0.3.3
+description: Use when the user asks to "set up infra", "add IaC", "structure the infrastructure code", "add an environment", "isolate infra stacks", or needs to establish or audit infrastructure-as-code packages, environment boundaries, and their pipeline wiring.
+version: 0.3.4
 ---
 
 # Infra

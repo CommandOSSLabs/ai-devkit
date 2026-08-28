@@ -1,7 +1,7 @@
 ---
 name: cmk:glossary
-description: This skill should be used when the user asks to "create a glossary", "add a term to the glossary", "what do we call this", "define our vocabulary", "lock the terminology" — and proactively, in any conversation or SDLC phase, whenever a new system/component/actor/state gets named, one word is carrying two meanings, two words are carrying one, or a doc, ticket, or identifier drifts from the established vocabulary.
-version: 0.1.0
+description: Use when the user asks to "create a glossary", "add a term to the glossary", "what do we call this", "define our vocabulary", "lock the terminology" — and proactively, in any conversation or SDLC phase, whenever a new system/component/actor/state gets named, one word is carrying two meanings, two words are carrying one, or a doc, ticket, or identifier drifts from the established vocabulary.
+version: 0.1.1
 ---
 
 # Glossary

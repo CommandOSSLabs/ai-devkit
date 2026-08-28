@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-workflow
-description: This skill should be used when the user asks to "start tracked work", "reconcile the tracker", "check if this is ready to ship", "keep the issue useful", "check acceptance criteria", "scope band", "docs-ready", or "are we ready to implement" — or needs the tracking contract every other delivery skill operates inside. Owns scope-band docs bars and readiness vocabulary (`execution-ready`, `ship-ready`, `docs-ready`).
-version: 0.3.1
+description: Use when the user asks to "start tracked work", "reconcile the tracker", "check if this is ready to ship", "keep the issue useful", "check acceptance criteria", "scope band", "docs-ready", or "are we ready to implement" — or needs the tracking contract every other delivery skill operates inside. Owns scope-band docs bars and readiness vocabulary (`execution-ready`, `ship-ready`, `docs-ready`).
+version: 0.3.2
 ---
 
 # Delivery Workflow
