@@ -8,6 +8,8 @@ has nothing to say in has failed as surely as one that omits what matters.
 any strong requirements doc accomplishes, and the recurring patterns that get
 it there.
 
+## Contents
+
 - [What the document must accomplish](#what-the-document-must-accomplish)
 - [Acceptance criteria](#acceptance-criteria) — the required section
   - [What one criterion is](#what-one-criterion-is)
