@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-ship
-description: This skill should be used when the user asks to "ship this", "open the PR", "push this to review", "update the tracker and open a PR", "close out this ticket", or "verify before claiming done" — when implementation and review are done, and as phase 5 of the cmk:delivery-pipeline skill. Produces a PR, tracker reconciliation, and fresh verification evidence for every completion claim.
-version: 0.3.1
+description: Use when the user asks to "ship this", "open the PR", "push this to review", "update the tracker and open a PR", "close out this ticket", or "verify before claiming done" — when implementation and review are done, and as phase 5 of the cmk:delivery-pipeline skill. Produces a PR, tracker reconciliation, and fresh verification evidence for every completion claim.
+version: 0.3.3
 ---
 
 # Delivery Ship
@@ -11,17 +11,14 @@ facilitates review, a tracker issue that reflects reality, and zero
 knowledge left only in this session. Operates inside `cmk:delivery-workflow`;
 read it first if not already loaded this session.
 
-`superpowers:finishing-a-development-branch` is deliberately NOT used here:
-this phase opens a PR against the canonical branch, and the tracking
-contract above owns that integration path end to end — that other skill's
-integration menu, base-branch confirmation, discard path, and worktree
-cleanup are all inadmissible substitutes for it.
+`superpowers:finishing-a-development-branch` is not used here: this phase
+opens a PR against the canonical branch, and the tracking contract owns
+that path — that skill's integration menu, base confirmation, discard, and
+worktree cleanup are inadmissible substitutes.
 
-A runtime capability that automates part of this phase (PR creation, branch
-retarget) returns control at its own boundary — it does not advance the
-phase, and it does not delete a worktree or scratch workspace this phase
-still needs. See `cmk:delivery-workflow`'s vendor-bindings reference for
-the model.
+A runtime helper (PR create, retarget) returns at its boundary — it does
+not advance the phase or delete a workspace this phase still needs. See
+`cmk:delivery-workflow`'s vendor-bindings reference.
 
 ## 1. Verify before claiming
 
@@ -50,6 +47,8 @@ Run each gate exactly as the pipeline runs it, not an approximation of it: one C
 | "Suite was green 40 minutes ago" | Edits since then void that run. Fresh means after the last edit. |
 | "I'll run only the file I touched" | Regressions live in the files you did not pick. Run the full proving command. |
 | "Demo/deadline — claim done now" | A deadline changes *when* you report, never what counts as evidence. |
+| "Eng lead said skip verification" | Authority cannot waive fresh evidence. Record the pressure; still run the proving command. |
+| "Don't burn time on Linear AC checkboxes" | Done requires every criterion checked with reachable evidence (or moved to a successor). |
 
 Confirm the final cumulative review ran to completion for this issue or
 branch at its selected depth, and that its verdict discloses that depth —
@@ -143,3 +142,9 @@ runs), say so in the completion report rather than overclaiming.
 Finish with the `cmk:delivery-pipeline` completion report (or its
 single-issue slice): delivered, decisions, deferrals, blockers — each line
 already recorded on its durable surface.
+
+## Red Flags
+
+- Opening a PR or moving to Done without fresh full proving-command output
+- Honoring "skip verification" / "tests were green earlier" under deadline
+- Skipping tracker AC check-off because it feels like chore work
