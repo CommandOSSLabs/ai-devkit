@@ -1,7 +1,7 @@
 ---
 name: cmk:sui-sdk
-description: This skill should be used when the user asks to "use the Sui SDK", "call a Sui full node", "fetch Sui objects, coins, balances, or transactions", "subscribe to Sui events or checkpoints", "execute or simulate a Sui transaction", or "pick or upgrade @mysten/sui, dapp-kit, or a Rust Sui crate" — and whenever writing, reviewing, or debugging any code that talks to a Sui full node, even if nobody mentions gRPC, JSON-RPC, or a transport at all, because Sui JSON-RPC was switched off in 2026 and models trained on older data still generate it.
-version: 0.1.0
+description: Use when the user asks to "use the Sui SDK", "call a Sui full node", "fetch Sui objects, coins, balances, or transactions", "subscribe to Sui events or checkpoints", "execute or simulate a Sui transaction", or "pick or upgrade @mysten/sui, dapp-kit, or a Rust Sui crate" — and whenever writing, reviewing, or debugging any code that talks to a Sui full node, even if nobody mentions gRPC, JSON-RPC, or a transport at all, because Sui JSON-RPC was switched off in 2026 and models trained on older data still generate it.
+version: 0.1.2
 ---
 
 # Sui: gRPC, not JSON-RPC
@@ -19,8 +19,8 @@ that is stale training data, not a style choice. Use the right column:
 
 | Stale (JSON-RPC era) | Current (gRPC era) |
 | --- | --- |
-| TS: `SuiClient` from `@mysten/sui/client`, `getFullnodeUrl()` | `SuiGrpcClient` from `@mysten/sui/grpc` (`{ network, baseUrl }`) |
-| TS: `getCoins`, `queryEvents`, `queryTransactionBlocks`, `getTransactionBlock` | `listCoins`, `listEvents`, `listTransactions`, `getTransaction` |
+| TS: `JsonRpcProvider`, `SuiClient` from `@mysten/sui/client`, `getFullnodeUrl()` | `SuiGrpcClient` from `@mysten/sui/grpc` (`{ network, baseUrl }`) |
+| TS: `sui_getObject`, `getObject`, `getCoins`, `queryEvents`, `queryTransactionBlocks`, `getTransactionBlock` | `getObject` / `batchGetObjects` via gRPC + FieldMask; `listCoins`, `listEvents`, `listTransactions`, `getTransaction` |
 | Frontend: `@mysten/dapp-kit` + `SuiClientProvider` | `@mysten/dapp-kit-core` / `@mysten/dapp-kit-react` with a `SuiGrpcClient` factory |
 | Raw `sui_*` / `suix_*` HTTP calls, `wss://` subscriptions | `LedgerService`, `StateService`, `TransactionExecutionService`, `SubscriptionService`, `MovePackageService` |
 | Rust: monorepo `sui-sdk` git dependency | crates.io `sui-rpc`, `sui-sdk-types`, `sui-crypto`, `sui-transaction-builder` (MystenLabs/sui-rust-sdk) |
@@ -47,5 +47,18 @@ training data — verify against the current official references at runtime:
 - gRPC service/method reference: https://docs.sui.io/references/fullnode-protocol
 - TypeScript SDK: https://sdk.mystenlabs.com/sui/clients/grpc
 - Rust SDK: https://github.com/MystenLabs/sui-rust-sdk (docs.rs/sui-rpc)
+
+## Red Flags
+
+- Reaching for `JsonRpcProvider`, `sui_getObject`, or raw `sui_*` because a tutorial still shows them
+- Shipping JSON-RPC under deadline pressure ("we ship in an hour")
+- Trusting memorized method names without checking the current gRPC docs
+
+## Rationalizations
+
+| Thought | Reality |
+|---|---|
+| "Every tutorial uses JsonRpcProvider / sui_getObject" | Tutorials lag the July 2026 cutover. Use `SuiGrpcClient` and verify against docs.sui.io. |
+| "Ship in an hour — port later" | JSON-RPC is disabled on Foundation mainnet. Stale clients fail now, not later. |
 
 Standing up a local Sui network for development or tests? See `cmk:sui-devstack`.
