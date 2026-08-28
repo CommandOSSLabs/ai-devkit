@@ -1,88 +1,78 @@
 import type { Metadata } from "next";
-import { Layers, FileText } from "lucide-react";
-import { getSkillsTree, type SkillTreeNode } from "@/lib/skills-tree";
-import SkillTreeBrowser from "@/components/skills/skill-tree-browser";
+import { FileText, Layers } from "lucide-react";
+import { getCatalogCategories, getSkillCatalog } from "@/lib/skill-catalog";
+import { getRepoSnapshot } from "@/lib/repo-snapshot";
+import { REPO_SKILLS_TREE } from "@/lib/repo-links";
+import { SkillCatalog } from "@/components/skills/skill-catalog";
+import { RepoSnapshotChip } from "@/components/skills/repo-snapshot-chip";
 import { GooeyTextReveal } from "@/components/motion/gooey-text-reveal";
 
 export const dynamic = "force-static";
 
 export const metadata: Metadata = {
   title: "Browse Skills · AI DevKit Skills",
-  description: "Every file under skills/ in CommandOSSLabs/ai-devkit, read live from the repository — SKILL.md, references, and scripts.",
+  description:
+    "Every skill in CommandOSSLabs/ai-devkit — what it does, when to use it, and which skills it works with. Generated from the repository at build time.",
 };
 
-function countStats(nodes: SkillTreeNode[]) {
-  let skills = 0;
-  let files = 0;
-
-  function walk(list: SkillTreeNode[], depth: number) {
-    for (const node of list) {
-      if (node.type === "folder") {
-        if (depth === 0) skills++;
-        walk(node.children, depth + 1);
-      } else {
-        files++;
-      }
-    }
-  }
-
-  walk(nodes, 0);
-  return { skills, files };
-}
-
 const metaChipClassName =
-  "flex h-9 items-center gap-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--glass-elevated)] px-3 text-[12.5px] backdrop-blur-sm text-[var(--text-secondary)]";
+  "flex h-9 items-center gap-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--glass-elevated)] px-3 text-[12.5px] text-[var(--text-secondary)]";
 
 export default function SkillsBrowsePage() {
-  const tree = getSkillsTree();
-  const stats = countStats(tree);
+  const skills = getSkillCatalog();
+  const categories = getCatalogCategories(skills);
+  const snapshot = getRepoSnapshot();
+  const fileCount = skills.reduce((n, s) => n + s.files.length, 0);
+  const handles = Object.fromEntries(skills.map((s) => [s.id, s.handle]));
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-4">
-      <div className="flex shrink-0 flex-wrap items-center justify-between gap-3">
+    <div className="flex h-full min-h-0 flex-col gap-5">
+      <div className="flex shrink-0 flex-wrap items-start justify-between gap-4">
+        {/* basis + flex-1 rather than shrink-to-fit: GooeyTextReveal re-splits
+          its text whenever its own width changes, so a container sized BY that
+          text re-measures on every split and the reveal restarts forever,
+          leaving the heading permanently blurred out. Sizing the column from
+          the row instead makes the width independent of the split. */}
+        <div className="min-w-0 flex-1 basis-[340px]">
         <GooeyTextReveal
           mode="immediate"
           duration={0.9}
           stagger={0.08}
           blurAmount={0.3}
           delay={0.05}
-          className="flex flex-wrap items-baseline gap-x-3 gap-y-1"
+          className="flex w-full max-w-[62ch] flex-col gap-1"
         >
-          <h1 className="text-lg font-semibold tracking-tight text-[var(--text-primary)]">
-            Browse skills
-          </h1>
-          <p className="text-[13px] text-[var(--text-secondary)]">
-            Every file under <code className="text-[#82AAFF]">skills/</code> in{" "}
+          <h1 className="text-[19px] font-semibold tracking-[-0.02em] text-[var(--text-primary)]">Browse skills</h1>
+          <p className="text-[13px] leading-[1.6] text-[var(--text-secondary)]">
+            Find the right skill for the task you are working on. Every skill in{" "}
             <a
-              href="https://github.com/CommandOSSLabs/ai-devkit/tree/main/skills"
+              href={REPO_SKILLS_TREE}
               target="_blank"
               rel="noreferrer"
               className="text-[#82AAFF] underline decoration-[#82AAFF]/30 underline-offset-4 hover:decoration-[#82AAFF]"
             >
               CommandOSSLabs/ai-devkit
             </a>
-            , read live — click a file to read it.
+            : what it does, when to reach for it, and what it works with. Open one to read it, or jump straight into its
+            files.
           </p>
         </GooeyTextReveal>
+        </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex min-w-0 flex-wrap items-center gap-2">
           <div className={metaChipClassName}>
-            <Layers size={13} />
-            <span>{stats.skills} skills</span>
+            <Layers size={13} aria-hidden="true" />
+            <span>{skills.length} skills</span>
           </div>
           <div className={metaChipClassName}>
-            <FileText size={13} />
-            <span>{stats.files} files</span>
+            <FileText size={13} aria-hidden="true" />
+            <span>{fileCount} files</span>
           </div>
-          <span className="flex h-9 items-center rounded-lg bg-[#82AAFF]/10 px-3 text-[12.5px] font-medium text-[#82AAFF]">
-            Live from repository
-          </span>
+          <RepoSnapshotChip snapshot={snapshot} />
         </div>
       </div>
 
-      <div className="min-h-0 flex-1">
-        <SkillTreeBrowser tree={tree} />
-      </div>
+      <SkillCatalog skills={skills} categories={categories} handles={handles} />
     </div>
   );
 }
