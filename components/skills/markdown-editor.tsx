@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Bold,
   Check,
@@ -17,8 +17,8 @@ import {
   Strikethrough,
 } from "lucide-react";
 
-// A markdown "edit" mode for the file pane. These files are read live from
-// the repo at build time, not user drafts, so this deliberately does NOT
+// A markdown "edit" mode for the file pane. These files are the repository's,
+// read at build time rather than user drafts, so this deliberately does NOT
 // simulate a save: no "Saved"/"Saving…" status, nothing persisted to disk
 // or the repo. It's a scratch buffer scoped to the open tab — type, mark up
 // with the toolbar, copy the result out. Closing the tab (or reverting)
@@ -82,6 +82,16 @@ export function MarkdownEditor({
 }) {
   const ref = useRef<HTMLTextAreaElement>(null);
   const [copied, setCopied] = useState(false);
+  // Revert throws the draft away and there is nothing to undo it with, so the
+  // button asks first rather than acting on a single stray click. The pending
+  // state clears itself so it can't sit there armed.
+  const [confirmRevert, setConfirmRevert] = useState(false);
+
+  useEffect(() => {
+    if (!confirmRevert) return;
+    const timer = window.setTimeout(() => setConfirmRevert(false), 4000);
+    return () => window.clearTimeout(timer);
+  }, [confirmRevert]);
 
   const applyWrap = (before: string, after?: string) => {
     const el = ref.current;
@@ -156,11 +166,23 @@ export function MarkdownEditor({
           {edited && (
             <button
               type="button"
-              onClick={onRevert}
-              className="inline-flex h-7 items-center gap-1 rounded-md px-2 text-[11.5px] text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)]"
+              onClick={() => {
+                if (!confirmRevert) {
+                  setConfirmRevert(true);
+                  return;
+                }
+                setConfirmRevert(false);
+                onRevert();
+              }}
+              aria-label={confirmRevert ? "Confirm discarding this local draft" : "Revert this local draft"}
+              className={`inline-flex h-7 items-center gap-1 rounded-md px-2 text-[11.5px] transition-colors ${
+                confirmRevert
+                  ? "bg-amber-500/15 font-medium text-amber-500"
+                  : "text-[var(--text-tertiary)] hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)]"
+              }`}
             >
               <RotateCcw size={11} strokeWidth={1.75} />
-              Revert
+              {confirmRevert ? "Discard draft?" : "Revert"}
             </button>
           )}
           <button
@@ -187,8 +209,4 @@ export function MarkdownEditor({
       />
     </div>
   );
-}
-
-export function markdownEditorStats(value: string) {
-  return { words: value.trim() ? value.trim().split(/\s+/).length : 0, chars: value.length };
 }

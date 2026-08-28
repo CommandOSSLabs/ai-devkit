@@ -1,21 +1,22 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ChevronRight, Folder, FolderOpen } from "lucide-react";
+import { ChevronRight, Folder, FolderOpen, PanelLeft, Search, X } from "lucide-react";
 import type { SkillTreeNode } from "@/lib/skills-tree";
 import { fileVisual, FOLDER_COLOR, TREE_ACCENT } from "@/lib/file-icons";
-import { FileContentPane } from "./file-content-pane";
+import { readSkillDrafts, writeSkillDrafts } from "@/lib/skill-drafts";
+import { FileContentPane, type PaneMode } from "./file-content-pane";
 
-// Adapted from React Bits Pro's "List12" file-tree browser — swapped the
-// mock TREE for real skills/ directory data (lib/skills-tree.ts), added the
-// content detail pane on the right (the point of this page is reading a
-// skill's actual files, not just seeing names/sizes), and restyled onto
-// this site's own design tokens (var(--bg-surface) etc.) instead of the
-// neutral-*/rb-accent Tailwind classes the original used — those exist in
-// this repo's tailwind.config.ts too, but nothing else on the site uses
-// them, so matching the dominant pattern keeps this page visually
-// consistent with the rest of ai-devkit rather than introducing a second
-// look. Keyboard tree navigation (arrows/home/end/enter) is preserved as-is.
+// The file tree of one skill, next to the editor that reads and edits it.
+//
+// Two things changed when /skills became a catalog. The tree sits on the
+// LEFT of the editor, which is where every file browser people already use
+// puts it — it used to be on the right, so the eye had to cross the reading
+// column to navigate. And it is scoped to a single skill, opened from that
+// skill's page, so there is no "pick one of 34 folders" step before you can
+// read anything: SKILL.md is already open when you arrive.
+//
+// Keyboard tree navigation (arrows/home/end/enter) is preserved as-is.
 
 const cx = (...c: (string | false | null | undefined)[]) => c.filter(Boolean).join(" ");
 
@@ -73,26 +74,131 @@ function findFile(nodes: SkillTreeNode[], id: string): Extract<SkillTreeNode, { 
   return null;
 }
 
+function firstFileId(nodes: SkillTreeNode[]): string | null {
+  for (const n of nodes) {
+    if (n.type === "file") return n.id;
+    const nested = firstFileId(n.children);
+    if (nested) return nested;
+  }
+  return null;
+}
+
+/** Keeps folders whose name matches, and folders on the path to a matching file. */
+function pruneTree(nodes: SkillTreeNode[], needle: string): SkillTreeNode[] {
+  const out: SkillTreeNode[] = [];
+  for (const node of nodes) {
+    if (node.type === "folder") {
+      const children = pruneTree(node.children, needle);
+      if (children.length > 0) out.push({ ...node, children });
+      else if (node.name.toLowerCase().includes(needle)) out.push(node);
+    } else if (node.id.toLowerCase().includes(needle)) {
+      out.push(node);
+    }
+  }
+  return out;
+}
+
 const BASE = 12;
 const INDENT = 16;
 const CHEVRON_CENTER = 8;
 
-export default function SkillTreeBrowser({ tree }: { tree: SkillTreeNode[] }) {
-  const topFolders = useMemo(() => tree.filter((n) => n.type === "folder").map((n) => n.id), [tree]);
+export default function SkillTreeBrowser({
+  tree,
+  rootLabel,
+}: {
+  tree: SkillTreeNode[];
+  /** the skill directory these paths hang off, shown as the tree's root row */
+  rootLabel: string;
+}) {
   const allFolders = useMemo(() => collectFolders(tree), [tree]);
+  const defaultFileId = useMemo(
+    () => findFile(tree, `${rootLabel}/SKILL.md`)?.id ?? firstFileId(tree),
+    [rootLabel, tree],
+  );
 
-  const [expanded, setExpanded] = useState<Set<string>>(() => new Set(topFolders.slice(0, 1)));
-  const [openIds, setOpenIds] = useState<string[]>([]);
-  const [activeTabId, setActiveTabId] = useState<string | null>(null);
-  const [activeId, setActiveId] = useState<string>(tree[0]?.id ?? "");
+  const [filter, setFilter] = useState("");
+  // A skill holds a handful of files, so everything starts open: collapsing
+  // by default would hide the references behind a click for no gain.
+  const [expanded, setExpanded] = useState<Set<string>>(() => new Set(allFolders));
+  const [openIds, setOpenIds] = useState<string[]>(() => (defaultFileId ? [defaultFileId] : []));
+  const [activeTabId, setActiveTabId] = useState<string | null>(defaultFileId);
+  const [activeId, setActiveId] = useState<string>(defaultFileId ?? tree[0]?.id ?? "");
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [mode, setMode] = useState<PaneMode>("preview");
+  // Drafts live here rather than in the pane so they outlive a tab: closing a
+  // file you edited can then genuinely offer "keep the draft", and the tree
+  // can mark which files are carrying one.
+  const [drafts, setDrafts] = useState<Record<string, string>>({});
 
   const rowRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const pendingFocus = useRef(false);
+  const deepLinkRead = useRef(false);
+  const sheetRef = useRef<HTMLDivElement>(null);
+  const draftsLoaded = useRef(false);
+  const filesButtonRef = useRef<HTMLButtonElement>(null);
 
-  const rows = useMemo(() => flatten(tree, expanded), [tree, expanded]);
+  const needle = filter.trim().toLowerCase();
+  const visibleTree = useMemo(() => (needle ? pruneTree(tree, needle) : tree), [tree, needle]);
+  const effectiveExpanded = useMemo(
+    () => (needle ? new Set(collectFolders(visibleTree)) : expanded),
+    [needle, visibleTree, expanded],
+  );
+
+  const rows = useMemo(() => flatten(visibleTree, effectiveExpanded), [visibleTree, effectiveExpanded]);
   const activeIndex = rows.findIndex((r) => r.node.id === activeId);
   const effectiveIndex = activeIndex === -1 ? 0 : activeIndex;
-  const effectiveId = rows[effectiveIndex]?.node.id ?? tree[0]?.id ?? "";
+  const effectiveId = rows[effectiveIndex]?.node.id ?? "";
+
+  // Drafts are restored before anything can write over them, and every later
+  // change is mirrored back out, so a round trip to another route returns to
+  // the same buffer.
+  useEffect(() => {
+    setDrafts(readSkillDrafts(rootLabel));
+    draftsLoaded.current = true;
+  }, [rootLabel]);
+
+  useEffect(() => {
+    if (!draftsLoaded.current) return;
+    writeSkillDrafts(rootLabel, drafts);
+  }, [rootLabel, drafts]);
+
+  // A deep link names a path relative to the skill and optionally a mode,
+  // e.g. ?file=references/adr-template.md&mode=source. Read once after mount
+  // so the page itself stays statically generated.
+  useEffect(() => {
+    // Read once, ever. The sync effect below rewrites the query string on the
+    // first commit, so a second run of this effect (React's development
+    // double-invoke) would read back the URL it just wrote and undo the deep
+    // link it had already applied.
+    if (deepLinkRead.current) return;
+    deepLinkRead.current = true;
+
+    const params = new URLSearchParams(window.location.search);
+    const requestedMode = params.get("mode");
+    if (requestedMode === "source" || requestedMode === "edit" || requestedMode === "preview") {
+      setMode(requestedMode);
+    }
+
+    const requested = params.get("file");
+    if (!requested) return;
+    const id = `${rootLabel}/${requested}`;
+    if (!findFile(tree, id)) return;
+    setOpenIds((prev) => (prev.includes(id) ? prev : [...prev, id]));
+    setActiveTabId(id);
+    setActiveId(id);
+  }, [rootLabel, tree]);
+
+  // Keep the address bar describing the workspace, so a link to "this file, in
+  // Source" survives a refresh and can be handed to someone else.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (activeTabId) params.set("file", activeTabId.slice(rootLabel.length + 1));
+    else params.delete("file");
+    if (mode === "preview") params.delete("mode");
+    else params.set("mode", mode);
+    const search = params.toString();
+    window.history.replaceState(null, "", search ? `?${search}` : window.location.pathname);
+  }, [activeTabId, mode, rootLabel]);
 
   useEffect(() => {
     if (!pendingFocus.current) return;
@@ -100,11 +206,55 @@ export default function SkillTreeBrowser({ tree }: { tree: SkillTreeNode[] }) {
     rowRefs.current[effectiveId]?.focus({ preventScroll: true });
   });
 
+  // A drawer that leaves focus behind it strands keyboard and screen-reader
+  // users on content they can no longer see, so focus moves in with it, Tab
+  // stays inside while it is open, and Escape or a pick hands focus back to
+  // the control that opened it.
+  useEffect(() => {
+    if (!sheetOpen) {
+      return;
+    }
+
+    const panel = sheetRef.current;
+    // Captured now, not read during cleanup: by then React may have swapped
+    // the node this ref points at.
+    const opener = filesButtonRef.current;
+    panel?.querySelector<HTMLInputElement>("input")?.focus();
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setSheetOpen(false);
+        return;
+      }
+      if (e.key !== "Tab" || !panel) return;
+      const focusable = panel.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+      if (e.shiftKey && (active === first || !panel.contains(active))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      opener?.focus();
+    };
+  }, [sheetOpen]);
+
   const requestFocus = () => {
     pendingFocus.current = true;
   };
 
-  const isExpanded = useCallback((id: string) => expanded.has(id), [expanded]);
+  const isExpanded = useCallback((id: string) => effectiveExpanded.has(id), [effectiveExpanded]);
 
   const toggle = (id: string) =>
     setExpanded((prev) => {
@@ -117,7 +267,15 @@ export default function SkillTreeBrowser({ tree }: { tree: SkillTreeNode[] }) {
   const openFile = (id: string) => {
     setOpenIds((prev) => (prev.includes(id) ? prev : [...prev, id]));
     setActiveTabId(id);
+    setMode("preview");
+    setSheetOpen(false);
   };
+
+  const hasDraft = useCallback(
+    (node: SkillTreeNode) =>
+      node.type === "file" && drafts[node.id] !== undefined && drafts[node.id] !== node.content,
+    [drafts],
+  );
 
   const closeTab = (id: string) => {
     setOpenIds((prev) => {
@@ -179,13 +337,14 @@ export default function SkillTreeBrowser({ tree }: { tree: SkillTreeNode[] }) {
       }
       case "Home": {
         e.preventDefault();
-        setActiveId(rows[0].node.id);
+        if (rows[0]) setActiveId(rows[0].node.id);
         requestFocus();
         break;
       }
       case "End": {
         e.preventDefault();
-        setActiveId(rows[rows.length - 1].node.id);
+        const last = rows[rows.length - 1];
+        if (last) setActiveId(last.node.id);
         requestFocus();
         break;
       }
@@ -198,55 +357,89 @@ export default function SkillTreeBrowser({ tree }: { tree: SkillTreeNode[] }) {
     }
   };
 
-  const expandAll = () => setExpanded(new Set(allFolders));
-  const collapseAll = () => {
-    setExpanded(new Set());
-    setActiveId(tree[0]?.id ?? "");
-  };
-
   const openFiles = openIds
     .map((id) => findFile(tree, id))
     .filter((f): f is Extract<SkillTreeNode, { type: "file" }> => f !== null);
   const activeFile = activeTabId ? findFile(tree, activeTabId) : null;
+  const fileCount = useMemo(() => {
+    let n = 0;
+    const walk = (nodes: SkillTreeNode[]) => {
+      for (const node of nodes) {
+        if (node.type === "folder") walk(node.children);
+        else n++;
+      }
+    };
+    walk(tree);
+    return n;
+  }, [tree]);
 
   return (
-    <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-[16px] border border-[var(--border-subtle)] bg-[var(--glass-surface)] backdrop-blur-sm">
-      <div className="flex min-h-0 flex-1 flex-col-reverse lg:flex-row">
-        <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
-          <FileContentPane
-            openFiles={openFiles}
-            activeId={activeTabId}
-            activeFile={activeFile}
-            onSelectTab={setActiveTabId}
-            onCloseTab={closeTab}
-          />
+    <div className="skills-workspace relative flex h-full min-h-0 overflow-hidden rounded-[16px] border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
+      {sheetOpen && (
+        <button
+          type="button"
+          aria-label="Close file list"
+          onClick={() => setSheetOpen(false)}
+          className="absolute inset-0 z-20 bg-black/40 lg:hidden"
+        />
+      )}
+
+      <div
+        ref={sheetRef}
+        role={sheetOpen ? "dialog" : undefined}
+        aria-modal={sheetOpen ? true : undefined}
+        aria-label={sheetOpen ? `Files in ${rootLabel}` : undefined}
+        className={cx(
+          "absolute inset-y-0 left-0 z-30 flex w-[min(320px,86%)] min-h-0 flex-col overflow-hidden border-r border-[var(--border-subtle)] bg-[var(--bg-surface)] transition-transform duration-200 ease-out",
+          "lg:static lg:z-auto lg:w-[272px] lg:shrink-0 lg:translate-x-0 lg:bg-[var(--glass-frame)]",
+          sheetOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full",
+        )}
+      >
+        <div className="flex h-10 shrink-0 items-center gap-2 border-b border-[var(--border-subtle)] px-3">
+          <span className="min-w-0 flex-1 truncate font-mono text-[12px] text-[var(--text-tertiary)]">
+            skills/{rootLabel}
+          </span>
+          <span className="shrink-0 text-[11px] tabular-nums text-[var(--text-disabled)]">{fileCount}</span>
+          <button
+            type="button"
+            onClick={() => setSheetOpen(false)}
+            aria-label="Close file list"
+            className="-mr-1 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)] lg:hidden"
+          >
+            <X size={14} strokeWidth={2} />
+          </button>
         </div>
 
-        <div className="flex min-h-0 flex-1 flex-col overflow-hidden border-t border-[var(--border-subtle)] bg-[var(--glass-frame)] lg:w-[380px] lg:flex-none lg:border-l lg:border-t-0">
-          <div className="flex shrink-0 items-center justify-end gap-1.5 border-b border-[var(--border-subtle)] px-2 py-2">
-            <button
-              type="button"
-              onClick={expandAll}
-              className="inline-flex h-7 items-center rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-2 text-[12px] font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
-            >
-              Expand all
-            </button>
-            <button
-              type="button"
-              onClick={collapseAll}
-              className="inline-flex h-7 items-center rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-2 text-[12px] font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
-            >
-              Collapse all
-            </button>
+        <div className="shrink-0 border-b border-[var(--border-subtle)] p-2">
+          <div className="relative">
+            <Search
+              size={12}
+              strokeWidth={1.75}
+              aria-hidden="true"
+              className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]"
+            />
+            <input
+              type="search"
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Escape" && filter) {
+                  e.preventDefault();
+                  setFilter("");
+                }
+              }}
+              placeholder="Filter files"
+              aria-label="Filter files in this skill"
+              className="h-7 w-full rounded-md border border-[var(--border-subtle)] bg-[var(--bg-elevated)] pl-7 pr-2 text-[12px] text-[var(--text-primary)] outline-none placeholder:text-[var(--text-disabled)] focus:border-[#82AAFF]/60 [&::-webkit-search-cancel-button]:hidden"
+            />
           </div>
+        </div>
 
-          <div className="min-h-0 flex-1 overflow-y-auto py-1">
-            <div
-              role="tree"
-              aria-label="skills/ directory"
-              onKeyDown={onKeyDown}
-            >
-
+        <div className="min-h-0 flex-1 overflow-y-auto py-1">
+          {rows.length === 0 ? (
+            <p className="px-3 py-4 text-[12px] text-[var(--text-tertiary)]">No file matches that filter.</p>
+          ) : (
+            <div role="tree" aria-label={`skills/${rootLabel} files`} onKeyDown={onKeyDown}>
               {rows.map((row) => {
                 const { node, depth } = row;
                 const folder = node.type === "folder";
@@ -322,6 +515,12 @@ export default function SkillTreeBrowser({ tree }: { tree: SkillTreeNode[] }) {
                       {node.name}
                     </span>
 
+                    {!folder && hasDraft(node) && (
+                      <span className="shrink-0 text-[10px] font-medium uppercase tracking-[0.06em] text-[#82AAFF]">
+                        draft
+                      </span>
+                    )}
+
                     {!folder && (
                       <span className="shrink-0 text-[11px] tabular-nums text-[var(--text-tertiary)]">{node.size}</span>
                     )}
@@ -329,8 +528,46 @@ export default function SkillTreeBrowser({ tree }: { tree: SkillTreeNode[] }) {
                 );
               })}
             </div>
-          </div>
+          )}
         </div>
+      </div>
+
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+        <div className="flex h-10 shrink-0 items-center gap-2 border-b border-[var(--border-subtle)] px-2 lg:hidden">
+          <button
+            ref={filesButtonRef}
+            type="button"
+            onClick={() => setSheetOpen(true)}
+            aria-expanded={sheetOpen}
+            className="inline-flex h-7 items-center gap-1.5 rounded-md border border-[var(--border-subtle)] px-2 text-[12px] text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
+          >
+            <PanelLeft size={12} strokeWidth={1.75} />
+            Files
+            <span className="tabular-nums text-[var(--text-disabled)]">{fileCount}</span>
+          </button>
+          <span className="min-w-0 flex-1 truncate font-mono text-[12px] text-[var(--text-tertiary)]">
+            {activeFile ? activeFile.id : `skills/${rootLabel}`}
+          </span>
+        </div>
+
+        <FileContentPane
+          openFiles={openFiles}
+          activeId={activeTabId}
+          activeFile={activeFile}
+          mode={mode}
+          drafts={drafts}
+          onSelectTab={setActiveTabId}
+          onCloseTab={closeTab}
+          onModeChange={setMode}
+          onDraftChange={(id, text) => setDrafts((d) => ({ ...d, [id]: text }))}
+          onDraftRevert={(id) =>
+            setDrafts((d) => {
+              const next = { ...d };
+              delete next[id];
+              return next;
+            })
+          }
+        />
       </div>
     </div>
   );

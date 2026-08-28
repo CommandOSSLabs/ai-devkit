@@ -8,10 +8,10 @@ import { CodeBlock } from "@/components/ui/code-block";
 // Adapted from two reference "editor" patterns the site's design system was
 // pointed at: a long-document reader (collapsible outline rail + focus mode
 // dimming everything but the active section) and a markdown workspace
-// (write/split/preview). Since every file here is read live from the repo —
-// not a user's draft — there's no "Write" mode: an editable textarea that
-// doesn't persist would be a fake affordance. What's kept is the reading
-// half of both: outline navigation and rendered prose.
+// (write/split/preview). Every file here is the repository's, read at build
+// time and never a user's draft, so this half of the pair only reads: outline
+// navigation and rendered prose. Editing lives next door in MarkdownEditor,
+// which says plainly that its buffer is local and goes nowhere.
 
 // A list item keeps its own nested bullets: these docs wrap long items
 // across several source lines and nest sub-bullets under them, so a flat
@@ -98,10 +98,12 @@ function SkillNameBadge({ value }: { value: string }) {
 
 function FrontmatterCard({ fields }: { fields: FrontmatterField[] }) {
   return (
-    <div className="flex flex-col gap-2.5 rounded-[10px] border border-[var(--border-subtle)] bg-[var(--glass-elevated)] px-4 py-3.5 backdrop-blur-sm">
+    <div className="flex flex-col gap-2.5 rounded-[10px] border border-[var(--border-subtle)] bg-[var(--glass-elevated)] px-4 py-3.5">
       {fields.map((f) => (
-        <div key={f.key} className="flex items-baseline gap-3 text-[13px] leading-6">
-          <span className="w-[88px] shrink-0 font-mono text-[10.5px] uppercase tracking-[0.07em] text-[var(--text-tertiary)]">
+        // Stacked on a phone: an 88px label column next to a paragraph-long
+        // description left roughly two words per line.
+        <div key={f.key} className="flex flex-col gap-1 text-[13px] leading-6 sm:flex-row sm:items-baseline sm:gap-3">
+          <span className="font-mono text-[10.5px] uppercase tracking-[0.07em] text-[var(--text-tertiary)] sm:w-[88px] sm:shrink-0">
             {f.key}
           </span>
           {f.key === "name" ? (
@@ -291,7 +293,22 @@ function BodyBlock({ token }: { token: BodyToken }) {
   }
 }
 
-export function MarkdownPreview({ content }: { content: string }) {
+export function MarkdownPreview({
+  content,
+  variant = "pane",
+  showFrontmatter = true,
+}: {
+  content: string;
+  /**
+   * "pane" is the workspace reader: its own scroll container, outline rail
+   * and focus toggle. "document" drops all of that and renders into the
+   * surrounding page flow — the skill detail page already supplies the
+   * identity, the outline and the scroll, so a second set of each would be
+   * two chromes competing over one document.
+   */
+  variant?: "pane" | "document";
+  showFrontmatter?: boolean;
+}) {
   const { frontmatter, body } = useMemo(() => extractFrontmatter(content), [content]);
   const sections = useMemo(() => parseSections(body), [body]);
   const outlineItems = useMemo(() => sections.filter((s) => s.title.length > 0), [sections]);
@@ -304,6 +321,30 @@ export function MarkdownPreview({ content }: { content: string }) {
     setCurrent(id);
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+
+  if (variant === "document") {
+    return (
+      <article className="flex flex-col gap-7">
+        {showFrontmatter && frontmatter && <FrontmatterCard fields={frontmatter} />}
+        {sections.map((s) => (
+          <section key={s.id} id={s.id} className="flex scroll-mt-6 flex-col gap-2.5">
+            {!s.title ? null : s.level === 1 ? (
+              <h2 className="text-[18px] font-semibold tracking-[-0.02em] text-[var(--text-primary)]">{s.title}</h2>
+            ) : s.level === 2 ? (
+              <h3 className="text-[15px] font-medium tracking-[-0.01em] text-[var(--text-primary)]">{s.title}</h3>
+            ) : (
+              <h4 className="font-mono text-[12.5px] uppercase tracking-[0.06em] text-[var(--text-tertiary)]">
+                {s.title}
+              </h4>
+            )}
+            {s.body.map((token, i) => (
+              <BodyBlock key={i} token={token} />
+            ))}
+          </section>
+        ))}
+      </article>
+    );
+  }
 
   return (
     <div className="flex min-h-0 flex-1">
@@ -375,7 +416,7 @@ export function MarkdownPreview({ content }: { content: string }) {
 
         <div className="min-h-0 flex-1 overflow-y-auto px-6 py-6 sm:px-10">
           <article className="mx-auto flex max-w-[680px] flex-col gap-8">
-            {frontmatter && <FrontmatterCard fields={frontmatter} />}
+            {showFrontmatter && frontmatter && <FrontmatterCard fields={frontmatter} />}
             {sections.map((s) => {
               const dim = focusMode && current !== null && s.id !== current && s.title.length > 0;
               return (

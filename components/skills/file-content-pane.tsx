@@ -1,23 +1,38 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { AlertTriangle, Code2, ExternalLink, Eye, FileText, Pencil, X } from "lucide-react";
 import type { FileKind } from "@/lib/skills-tree";
 import { fileVisual } from "@/lib/file-icons";
+import { REPO_SKILLS_BLOB } from "@/lib/repo-links";
 import { CodeBlock } from "@/components/ui/code-block";
 import { MarkdownPreview } from "./markdown-preview";
-import { MarkdownEditor, markdownEditorStats } from "./markdown-editor";
+import { markdownEditorStats } from "@/lib/markdown-stats";
+
+// The editor and its toolbar only matter once someone switches to Edit, and
+// most visits never do — so it loads then rather than riding along in the
+// workspace bundle for every reader.
+const MarkdownEditor = dynamic(() => import("./markdown-editor").then((m) => m.MarkdownEditor), {
+  ssr: false,
+  loading: () => (
+    <div className="flex min-h-0 flex-1 items-center justify-center text-[12.5px] text-[var(--text-tertiary)]">
+      Loading the editor…
+    </div>
+  ),
+});
 import { EvalView, parseEvals } from "./eval-view";
 
-// Reading a file's raw source is a job GitHub already does better than a
-// pane in here ever will — blame, history, permalinks, search. So "Source"
-// is a link out rather than a third local mode; what stays local is what
-// benefits from being here: the rendered read (Preview) and the scratch
-// edit. Non-markdown files still render inline, since there's no Preview
-// alternative for them, but through the same CodeBlock the markdown
-// fences use rather than a bespoke gutter/minimap of their own.
-const GITHUB_BLOB = "https://github.com/CommandOSSLabs/ai-devkit/blob/main/skills";
+// Three local modes over one buffer: Preview renders it, Source shows the
+// bytes, Edit marks it up. They all read the same value, so switching never
+// drops what you typed. "View on GitHub" stays a link out — blame, history
+// and permalinks are jobs a pane in here will never do better.
+//
+// Edits are scratch buffers held by the workspace for as long as the page is
+// open. Nothing here writes to the repository, so nothing here claims to: no
+// Saved state, no autosave, and closing a tab that holds one asks what to do
+// with it rather than deciding silently.
 
 const EXT_TO_LANG: Record<string, string> = {
   ts: "typescript",
@@ -31,6 +46,8 @@ const EXT_TO_LANG: Record<string, string> = {
   yml: "yaml",
   md: "markdown",
 };
+
+export type PaneMode = "preview" | "source" | "edit";
 
 function languageFor(filename: string): string {
   const ext = filename.split(".").pop()?.toLowerCase() ?? "";
@@ -52,26 +69,37 @@ export function FileContentPane({
   openFiles,
   activeId,
   activeFile,
+  mode,
+  drafts,
   onSelectTab,
   onCloseTab,
+  onModeChange,
+  onDraftChange,
+  onDraftRevert,
 }: {
   openFiles: ContentFile[];
   activeId: string | null;
   activeFile: ContentFile | null;
+  mode: PaneMode;
+  /** file id to local draft text, owned by the workspace so it outlives a tab */
+  drafts: Record<string, string>;
   onSelectTab: (id: string) => void;
   onCloseTab: (id: string) => void;
+  onModeChange: (mode: PaneMode) => void;
+  onDraftChange: (id: string, text: string) => void;
+  onDraftRevert: (id: string) => void;
 }) {
   const reduce = useReducedMotion();
-  const [mode, setMode] = useState<"preview" | "edit">("preview");
-  const [drafts, setDrafts] = useState<Record<string, string>>({});
+  const [pendingClose, setPendingClose] = useState<string | null>(null);
+  const keepRef = useRef<HTMLButtonElement>(null);
 
   const filename = activeFile ? basename(activeFile.id) : "";
   const lang = filename ? languageFor(filename) : "text";
   const isMarkdown = lang === "markdown";
-  // Preview and Edit render the same value, so switching between them never
-  // silently drops what you just typed.
   const shown = activeFile ? (drafts[activeFile.id] ?? activeFile.content) : null;
-  const edited = activeFile ? drafts[activeFile.id] !== undefined && drafts[activeFile.id] !== activeFile.content : false;
+  const edited = activeFile
+    ? drafts[activeFile.id] !== undefined && drafts[activeFile.id] !== activeFile.content
+    : false;
   // eval.json has a known shape worth rendering as a spec rather than raw JSON
   const evalCases = useMemo(
     () => (filename === "eval.json" && shown ? parseEvals(shown) : null),
@@ -80,47 +108,122 @@ export function FileContentPane({
   const isEval = evalCases !== null;
 
   useEffect(() => {
-    setMode("preview");
-  }, [activeFile]);
+    if (!pendingClose) return;
+    keepRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPendingClose(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [pendingClose]);
 
-  // Drafts are scratch buffers scoped to open tabs, not persisted anywhere —
-  // drop a tab's draft once it's no longer open rather than leaking state.
-  useEffect(() => {
-    setDrafts((prev) => {
-      const openIds = new Set(openFiles.map((f) => f.id));
-      let changed = false;
-      const next: Record<string, string> = {};
-      for (const [id, text] of Object.entries(prev)) {
-        if (openIds.has(id)) next[id] = text;
-        else changed = true;
-      }
-      return changed ? next : prev;
-    });
-  }, [openFiles]);
+  const hasDraft = (file: ContentFile) => drafts[file.id] !== undefined && drafts[file.id] !== file.content;
+
+  const requestClose = (file: ContentFile) => {
+    if (hasDraft(file)) setPendingClose(file.id);
+    else onCloseTab(file.id);
+  };
 
   if (openFiles.length === 0 || !activeFile) {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-2 px-6 text-center">
         <FileText size={20} className="text-[var(--text-disabled)]" />
-        <p className="text-[13px] text-[var(--text-tertiary)]">Select a file on the left to read it.</p>
+        <p className="text-[13px] text-[var(--text-tertiary)]">Pick a file to read it.</p>
       </div>
     );
   }
 
-  const toggleClass = (on: boolean) =>
+  const toggleClass = (on: boolean, accent = false) =>
     `inline-flex h-6 items-center gap-1 rounded-[4px] px-2 text-[11.5px] transition-colors ${
-      on ? "bg-[var(--bg-surface)] text-[var(--text-primary)]" : "text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+      on
+        ? accent
+          ? "bg-[#82AAFF]/15 font-medium text-[#82AAFF]"
+          : "bg-[var(--bg-surface)] text-[var(--text-primary)]"
+        : "text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
     }`;
+
+  const pendingName = pendingClose ? basename(pendingClose) : "";
+
+  // One cluster, two homes: inline with the tabs where there is room, on its
+  // own row below lg. Sharing the toolbar with the tabs on a phone pushed the
+  // Preview/Source/Edit switch off the right edge of a scrollable strip, which
+  // is the same as not having it.
+  const actionCluster = (
+    <>
+      {(isEval || (isMarkdown && activeFile.content !== null)) && (
+        <div className="flex items-center gap-0.5 rounded-md border border-[var(--border-subtle)] bg-[var(--glass-elevated)] p-0.5">
+          <button
+            type="button"
+            onClick={() => onModeChange("preview")}
+            aria-pressed={mode === "preview"}
+            className={toggleClass(mode === "preview")}
+          >
+            <Eye size={11} strokeWidth={1.75} />
+            {isEval ? "Evals" : "Preview"}
+          </button>
+          <button
+            type="button"
+            onClick={() => onModeChange("source")}
+            aria-pressed={mode === "source"}
+            className={toggleClass(mode === "source")}
+          >
+            <Code2 size={11} strokeWidth={1.75} />
+            Source
+          </button>
+          {isMarkdown && (
+            <button
+              type="button"
+              onClick={() => onModeChange("edit")}
+              aria-pressed={mode === "edit"}
+              className={toggleClass(mode === "edit", true)}
+            >
+              <Pencil size={11} strokeWidth={1.75} />
+              Edit
+            </button>
+          )}
+        </div>
+      )}
+      <a
+        href={`${REPO_SKILLS_BLOB}/${activeFile.id}`}
+        target="_blank"
+        rel="noreferrer"
+        title="View this file on GitHub"
+        className="inline-flex h-7 items-center gap-1.5 rounded-md px-2 text-[11.5px] text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)]"
+      >
+        <ExternalLink size={11} strokeWidth={1.75} />
+        GitHub
+      </a>
+    </>
+  );
 
   return (
     <>
-      <div className="flex shrink-0 items-center gap-1 overflow-x-auto border-b border-[var(--border-subtle)] px-2">
+      {/* Real tab semantics rather than a row of buttons: assistive tech gets
+          the selected state and the arrow-key model people already expect from
+          an editor's tab strip. */}
+      <div
+        role="tablist"
+        aria-label="Open files"
+        onKeyDown={(e) => {
+          const index = openFiles.findIndex((f) => f.id === activeId);
+          if (index === -1) return;
+          const move = (next: number) => {
+            e.preventDefault();
+            onSelectTab(openFiles[(next + openFiles.length) % openFiles.length].id);
+          };
+          if (e.key === "ArrowRight") move(index + 1);
+          else if (e.key === "ArrowLeft") move(index - 1);
+          else if (e.key === "Home") move(0);
+          else if (e.key === "End") move(openFiles.length - 1);
+        }}
+        className="flex shrink-0 items-center gap-1 overflow-x-auto border-b border-[var(--border-subtle)] px-2"
+      >
         <AnimatePresence initial={false}>
           {openFiles.map((f) => {
             const on = f.id === activeId;
             const name = basename(f.id);
             const { Icon, color } = fileVisual(name);
-            const hasDraft = drafts[f.id] !== undefined && drafts[f.id] !== f.content;
+            const draft = hasDraft(f);
             return (
               <motion.div
                 key={f.id}
@@ -133,22 +236,29 @@ export function FileContentPane({
               >
                 <button
                   type="button"
+                  role="tab"
+                  id={`file-tab-${f.id}`}
+                  aria-selected={on}
+                  aria-controls="file-content-panel"
+                  tabIndex={on ? 0 : -1}
                   onClick={() => onSelectTab(f.id)}
-                  aria-current={on ? "true" : undefined}
                   className={`flex h-10 items-center gap-2 px-3 pr-8 text-[13px] transition-colors ${
                     on ? "text-[var(--text-primary)]" : "text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
                   }`}
                 >
                   <Icon size={14} className="shrink-0" style={{ color }} />
                   <span className="max-w-[220px] truncate font-mono">{name}</span>
-                  {hasDraft && (
-                    <span aria-label="Unsaved local edit" className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#82AAFF]" />
+                  {draft && (
+                    <span className="inline-flex shrink-0 items-center gap-1 text-[10.5px] font-medium uppercase tracking-[0.06em] text-[#82AAFF]">
+                      <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#82AAFF]" />
+                      draft
+                    </span>
                   )}
                 </button>
                 <button
                   type="button"
                   aria-label={`Close ${name}`}
-                  onClick={() => onCloseTab(f.id)}
+                  onClick={() => requestClose(f)}
                   className="absolute right-1.5 top-1/2 inline-flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-[4px] text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)]"
                 >
                   <X size={12} strokeWidth={2} />
@@ -159,45 +269,19 @@ export function FileContentPane({
           })}
         </AnimatePresence>
 
-        <div className="ml-auto flex shrink-0 items-center gap-1.5">
-          {isEval && (
-            <div className="flex items-center gap-0.5 rounded-md border border-[var(--border-subtle)] bg-[var(--glass-elevated)] p-0.5 backdrop-blur-sm">
-              <button type="button" onClick={() => setMode("preview")} aria-pressed={mode === "preview"} className={toggleClass(mode === "preview")}>
-                <Eye size={11} strokeWidth={1.75} />
-                Evals
-              </button>
-              <button type="button" onClick={() => setMode("edit")} aria-pressed={mode === "edit"} className={toggleClass(mode === "edit")}>
-                <Code2 size={11} strokeWidth={1.75} />
-                Raw
-              </button>
-            </div>
-          )}
-          {isMarkdown && activeFile.content !== null && (
-            <div className="flex items-center gap-0.5 rounded-md border border-[var(--border-subtle)] bg-[var(--glass-elevated)] p-0.5 backdrop-blur-sm">
-              <button type="button" onClick={() => setMode("preview")} aria-pressed={mode === "preview"} className={toggleClass(mode === "preview")}>
-                <Eye size={11} strokeWidth={1.75} />
-                Preview
-              </button>
-              <button type="button" onClick={() => setMode("edit")} aria-pressed={mode === "edit"} className={toggleClass(mode === "edit")}>
-                <Pencil size={11} strokeWidth={1.75} />
-                Edit
-              </button>
-            </div>
-          )}
-          <a
-            href={`${GITHUB_BLOB}/${activeFile.id}`}
-            target="_blank"
-            rel="noreferrer"
-            title="View source on GitHub"
-            className="inline-flex h-7 items-center gap-1.5 rounded-md px-2 text-[11.5px] text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)]"
-          >
-            <ExternalLink size={11} strokeWidth={1.75} />
-            Source
-          </a>
-        </div>
+        <div className="ml-auto hidden shrink-0 items-center gap-1.5 pl-2 lg:flex">{actionCluster}</div>
       </div>
 
-      <div className="flex min-h-0 flex-1">
+      <div className="flex shrink-0 items-center gap-1.5 border-b border-[var(--border-subtle)] px-2 py-1 lg:hidden">
+        {actionCluster}
+      </div>
+
+      <div
+        id="file-content-panel"
+        role="tabpanel"
+        aria-labelledby={activeId ? `file-tab-${activeId}` : undefined}
+        className="relative flex min-h-0 flex-1"
+      >
         {shown === null ? (
           <div className="flex h-full w-full items-center justify-center text-[13px] text-[var(--text-tertiary)]">
             {activeFile.kind === "image" ? "Image preview not shown here." : "File too large to preview."}
@@ -210,14 +294,8 @@ export function FileContentPane({
               <MarkdownEditor
                 value={shown}
                 edited={edited}
-                onChange={(next) => setDrafts((d) => ({ ...d, [activeFile.id]: next }))}
-                onRevert={() =>
-                  setDrafts((d) => {
-                    const next = { ...d };
-                    delete next[activeFile.id];
-                    return next;
-                  })
-                }
+                onChange={(next) => onDraftChange(activeFile.id, next)}
+                onRevert={() => onDraftRevert(activeFile.id)}
               />
             </div>
             {/* Live rendered preview of the draft — same renderer as Preview
@@ -227,7 +305,7 @@ export function FileContentPane({
               <MarkdownPreview content={shown} />
             </div>
           </div>
-        ) : isMarkdown ? (
+        ) : isMarkdown && mode === "preview" ? (
           <MarkdownPreview content={shown} />
         ) : (
           <CodeBlock
@@ -237,16 +315,81 @@ export function FileContentPane({
             className="min-h-0 flex-1 rounded-none border-0"
           />
         )}
+
+        <AnimatePresence>
+          {pendingClose && (
+            <motion.div
+              initial={reduce ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={reduce ? undefined : { opacity: 0 }}
+              transition={{ duration: 0.12 }}
+              /* A literal black scrim, not bg-[var(--bg-base)]/70: Tailwind 3
+                 drops the opacity modifier on an arbitrary custom-property
+                 colour, which left the scrim fully transparent. */
+              className="absolute inset-0 z-40 flex items-center justify-center bg-black/45 px-6 backdrop-blur-[2px]"
+            >
+              <div
+                role="alertdialog"
+                aria-modal="true"
+                aria-labelledby="close-draft-title"
+                aria-describedby="close-draft-body"
+                className="w-full max-w-[440px] rounded-[14px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 shadow-2xl"
+              >
+                <h2 id="close-draft-title" className="text-[14px] font-semibold text-[var(--text-primary)]">
+                  <span className="font-mono">{pendingName}</span> has a local edit
+                </h2>
+                <p id="close-draft-body" className="mt-2 text-[12.5px] leading-[1.6] text-[var(--text-secondary)]">
+                  It was never written to the repository. Closing the tab keeps the draft for this session, so reopening
+                  the file brings it back; reverting throws it away and restores the repository version.
+                </p>
+                <div className="mt-4 flex flex-wrap justify-end gap-2">
+                  <button
+                    ref={keepRef}
+                    type="button"
+                    onClick={() => setPendingClose(null)}
+                    className="inline-flex h-8 items-center rounded-lg border border-[var(--border-subtle)] px-3 text-[12.5px] text-[var(--text-secondary)] transition-colors hover:border-[var(--border-strong)] hover:text-[var(--text-primary)]"
+                  >
+                    Keep open
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onDraftRevert(pendingClose);
+                      onCloseTab(pendingClose);
+                      setPendingClose(null);
+                    }}
+                    className="inline-flex h-8 items-center rounded-lg border border-[var(--border-subtle)] px-3 text-[12.5px] text-[var(--text-secondary)] transition-colors hover:border-[var(--border-strong)] hover:text-[var(--text-primary)]"
+                  >
+                    Revert and close
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onCloseTab(pendingClose);
+                      setPendingClose(null);
+                    }}
+                    className="inline-flex h-8 items-center rounded-lg bg-[#82AAFF] px-3 text-[12.5px] font-medium text-[#0A0B0D] transition-opacity hover:opacity-90"
+                  >
+                    Close, keep draft
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <footer className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-1 border-t border-[var(--border-subtle)] px-4 py-2 text-[11px] text-[var(--text-tertiary)]">
         {isMarkdown && mode === "edit" && shown !== null && (
-          <>
-            <span className="tabular-nums">
-              {markdownEditorStats(shown).words} words, {markdownEditorStats(shown).chars} characters
-            </span>
-            <span className="italic">Local edit only — not saved to the repo</span>
-          </>
+          <span className="tabular-nums">
+            {markdownEditorStats(shown).words} words, {markdownEditorStats(shown).chars} characters
+          </span>
+        )}
+        {edited && (
+          <span className="inline-flex shrink-0 items-center gap-1.5 text-[#82AAFF]">
+            <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#82AAFF]" />
+            Local draft, never written to the repository
+          </span>
         )}
         <span className={shown !== null ? "shrink-0" : "truncate"}>{activeFile.id}</span>
         <span className="ml-auto shrink-0">{lang === "text" ? "Plain Text" : lang}</span>
