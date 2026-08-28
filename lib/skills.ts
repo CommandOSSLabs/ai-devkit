@@ -1,51 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
-import { type RealSkill, type SkillCategoryInfo, CATEGORY_LABELS } from "./skill-types";
+import { type RealSkill, type SkillCategoryInfo, CATEGORY_LABELS, CATEGORY_MAP } from "./skill-types";
 
 export type { RealSkill, SkillCategoryInfo };
 export { CATEGORY_LABELS };
-
-/*
- * Category is presentation-only grouping — it's not in the real SKILL.md
- * frontmatter (only name/description/version are). Known ids get a real
- * label; anything new that shows up in skills/ that we don't recognize yet
- * still renders (falls into "other") instead of silently disappearing.
- */
-const CATEGORY_MAP: Record<string, string> = {
-  "delivery-workflow": "delivery",
-  "discover-efforts": "delivery",
-  "delivery-intake": "delivery",
-  "delivery-spec-plan": "delivery",
-  "delivery-simplify": "delivery",
-  "delivery-review": "delivery",
-  "delivery-ship": "delivery",
-  "delivery-pipeline": "delivery",
-  "delivery-handoff": "delivery",
-  "repo-setup": "setup",
-  "project-layout": "setup",
-  toolchain: "setup",
-  "mcp-config": "setup",
-  "local-stack": "setup",
-  infra: "setup",
-  cicd: "setup",
-  "agent-instructions": "agent",
-  "agent-vendors": "agent",
-  sync: "sync",
-  docs: "docs",
-  "codebase-docs": "docs",
-  requirements: "docs",
-  design: "docs",
-  adr: "docs",
-  glossary: "docs",
-  rule: "docs",
-  learn: "docs",
-  "test-resources": "testing",
-  testcontainers: "testing",
-  rust: "testing",
-  "sui-sdk": "sui",
-  "sui-devstack": "sui",
-  interpret: "session",
-};
 
 function parseFrontmatter(raw: string): Record<string, string> {
   const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);

@@ -1245,7 +1245,7 @@ function SkillCatalog({
           </div>
           <div className="lg:col-start-8 lg:col-span-5">
             <p className="glass-text-secondary text-[15px] leading-[1.6] text-[var(--text-secondary)]">
-              Every skill is read live from skills/&lt;id&gt;/SKILL.md — name, description, and version straight from the repo.
+              Every skill is read straight from skills/&lt;id&gt;/SKILL.md when the site is built — name, description, and version out of the repo, not a hand-kept copy.
             </p>
             <div className="mt-2 flex items-center gap-3 font-mono text-[13px]">
               <span className="glass-text-secondary text-[var(--text-tertiary)]">08.0 Skill Catalog →</span>
