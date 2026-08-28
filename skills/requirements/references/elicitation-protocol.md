@@ -4,6 +4,8 @@ Load when Create input is thin, solution-shaped, or otherwise not a settled
 requirements package — and on Iterate when the change adds or shifts behavior.
 This file is the **one home** for the interview shape and the close package.
 
+## Contents
+
 - [When it applies](#when-it-applies)
 - [Scope band](#scope-band)
 - [Problem lock](#problem-lock)
