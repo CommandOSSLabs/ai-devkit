@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-pipeline
-description: This skill should be used when the user asks to "work on", "deliver", "tackle", "pick up", or "implement" a tracker issue (TICKET-123), a list of issues, or a body of tracked work expected to finish without supervision — even if they never say "pipeline". Also use when handed a cluster of related issues, or a single issue whose surrounding cluster should be derived from tracker dependencies. Produces reviewable PR(s), an up-to-date tracker graph, and a completion report — only after docs-ready for the stated scope band.
-version: 0.5.1
+description: Use when the user asks to "work on", "deliver", "tackle", "pick up", or "implement" a tracker issue (TICKET-123), a list of issues, or a body of tracked work expected to finish without supervision — even if they never say "pipeline". Also use when handed a cluster of related issues, or a single issue whose surrounding cluster should be derived from tracker dependencies. Produces reviewable PR(s), an up-to-date tracker graph, and a completion report — only after docs-ready for the stated scope band.
+version: 0.5.3
 ---
 
 # Delivery Pipeline
@@ -24,48 +24,37 @@ CMK owns the lifecycle. Superpowers executes inside it. The division:
 
 Before acting, read:
 
-1. `cmk:delivery-workflow` — the tracking contract. Every phase operates
-   inside it — including **scope band**, **docs-ready**, and the implement
-   docs gate in that skill's `references/scope-band.md`.
+1. `cmk:delivery-workflow`'s `references/scope-band.md` — tracking contract,
+   **scope band**, **docs-ready**, and the implement docs gate.
 2. `references/engineering-principles.md` — autonomy, production readiness,
    and the delegation contract.
-3. Your runtime's binding for mechanics only (see `cmk:delivery-workflow`'s
-   `references/vendor-bindings.md`). A binding supplies mechanics; it never
-   changes phase order, gates, evidence, or acceptance.
+3. Your runtime's binding for mechanics only (`cmk:delivery-workflow`'s
+   `references/vendor-bindings.md`). Bindings supply mechanics; they never
+   change phase order, gates, evidence, or acceptance.
 
 ## Working with superpowers
 
-Superpowers skills are written for a human-supervised session. Two rules
-adapt them everywhere in this pipeline, including skills added later:
+Superpowers skills assume a human-supervised session. Adapt them everywhere:
 
-1. **Human gates are suppressed.** Any point where a skill stops to ask the
-   operator — consent, approval, "which approach?", a typed confirmation —
-   does not apply: decide it and record the decision and rationale on the
-   durable surface the phase already requires (spec, review record, PR
-   description, or the owning tracker issue). A question that genuinely
-   cannot be decided safely is a recorded blocker
-   (`references/engineering-principles.md` § Autonomy). Four decisions keep
-   a named CMK owner instead: a plan conflict is a review finding
-   dispositioned under `cmk:delivery-review`; review feedback colliding
-   with a prior decision is that skill's call; branch integration is not a
-   menu, since phase 5 opens a PR against a canonical branch; and starting
-   on the default branch is not a consent question, since intake already
-   placed the run on its own branch.
-2. **A skill returns at its boundary** — it does not advance the phase and
-   does not delete a workspace. `superpowers:writing-plans` ends when the
-   plan is written without invoking an execution engine;
-   `superpowers:subagent-driven-development` ends at the last task's ledger
-   line without deleting its workspace (phases 4 and 5 read it as evidence)
+1. **Human gates are suppressed.** Consent, approval, "which approach?", or
+   typed confirmation do not apply — decide and record on the durable
+   surface the phase already requires (spec, review record, PR, or tracker
+   issue). A question that cannot be decided safely is a recorded blocker
+   (`references/engineering-principles.md` § Autonomy). Four calls keep a
+   named CMK owner: plan conflict → `cmk:delivery-review`; colliding review
+   feedback → that skill; branch integration → phase 5 opens a PR against a
+   canonical branch; starting on default → intake already placed the run.
+2. **A skill returns at its boundary** — it does not advance the phase or
+   delete a workspace. `superpowers:writing-plans` ends when the plan is
+   written; `superpowers:subagent-driven-development` ends at the last
+   task's ledger line without deleting its workspace (phases 4–5 read it)
    or chaining into `superpowers:finishing-a-development-branch`;
-   `superpowers:using-git-worktrees` reports the existing worktree rather
-   than creating a second one.
+   `superpowers:using-git-worktrees` reports the existing worktree.
 
-The issue's worktree and branch are intake's to create and nobody's to
-remove — the durable workspace for every relay agent; a skill may create
-its own scratch workspace and phase 5 retires it once its evidence is
-durable. Specs and plans go to git-ignored scratch and are never committed;
-durable conclusions reach `docs/design/`, `docs/decisions/`, the tracker,
-and the PR.
+Intake creates the issue worktree/branch; nobody removes it. A skill may
+create scratch workspace; phase 5 retires it once evidence is durable.
+Specs/plans stay git-ignored; durable conclusions reach `docs/design/`,
+`docs/decisions/`, the tracker, and the PR.
 
 ## Phase 0: run notes
 
