@@ -35,8 +35,11 @@ function walk(dir: string, relativeTo: string): SkillTreeNode[] {
   const entries = fs
     .readdirSync(dir, { withFileTypes: true })
     .filter((e) => !e.name.startsWith("."))
+    // Files before folders, unlike a general file explorer: these trees are a
+    // single skill, where SKILL.md is the thing you came to read. Sorting
+    // folders first buried it under references/ every time.
     .sort((a, b) => {
-      if (a.isDirectory() !== b.isDirectory()) return a.isDirectory() ? -1 : 1;
+      if (a.isDirectory() !== b.isDirectory()) return a.isDirectory() ? 1 : -1;
       return a.name.localeCompare(b.name);
     });
 
@@ -64,4 +67,16 @@ export function getSkillsTree(): SkillTreeNode[] {
   const skillsDir = path.join(process.cwd(), "skills");
   if (!fs.existsSync(skillsDir)) return [];
   return walk(skillsDir, skillsDir);
+}
+
+/**
+ * The tree for one skill directory, ids still relative to skills/ so they
+ * match SkillSummary.files and the GitHub blob paths. Returns null when the
+ * directory doesn't exist, which is what a bad :skillId param looks like.
+ */
+export function getSkillTreeNodes(skillId: string): SkillTreeNode[] | null {
+  const skillsDir = path.join(process.cwd(), "skills");
+  const dir = path.join(skillsDir, skillId);
+  if (!skillId.match(/^[a-z0-9-]+$/) || !fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) return null;
+  return walk(dir, skillsDir);
 }

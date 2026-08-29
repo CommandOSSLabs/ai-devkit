@@ -1,60 +1,78 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Terminal, ArrowLeft } from "lucide-react";
-import { getSkillsTree } from "@/lib/skills-tree";
-import SkillTreeBrowser from "@/components/skills/skill-tree-browser";
+import { FileText, Layers } from "lucide-react";
+import { getCatalogCategories, getSkillCatalog } from "@/lib/skill-catalog";
+import { getRepoSnapshot } from "@/lib/repo-snapshot";
+import { REPO_SKILLS_TREE } from "@/lib/repo-links";
+import { SkillCatalog } from "@/components/skills/skill-catalog";
+import { RepoSnapshotChip } from "@/components/skills/repo-snapshot-chip";
+import { GooeyTextReveal } from "@/components/motion/gooey-text-reveal";
 
 export const dynamic = "force-static";
 
 export const metadata: Metadata = {
   title: "Browse Skills · AI DevKit Skills",
-  description: "Every file under skills/ in CommandOSSLabs/ai-devkit, read live from the repository — SKILL.md, references, and scripts.",
+  description:
+    "Every skill in CommandOSSLabs/ai-devkit — what it does, when to use it, and which skills it works with. Generated from the repository at build time.",
 };
 
+const metaChipClassName =
+  "flex h-9 items-center gap-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--glass-elevated)] px-3 text-[12.5px] text-[var(--text-secondary)]";
+
 export default function SkillsBrowsePage() {
-  const tree = getSkillsTree();
+  const skills = getSkillCatalog();
+  const categories = getCatalogCategories(skills);
+  const snapshot = getRepoSnapshot();
+  const fileCount = skills.reduce((n, s) => n + s.files.length, 0);
+  const handles = Object.fromEntries(skills.map((s) => [s.id, s.handle]));
 
   return (
-    <div className="min-h-screen bg-[var(--bg-base)] text-[var(--text-primary)]">
-      <header className="border-b border-[var(--border-subtle)] px-4 py-4 sm:px-6">
-        <div className="mx-auto flex max-w-6xl items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-md border border-[var(--border-strong)] bg-[var(--bg-surface)]">
-              <Terminal size={14} className="text-[#82AAFF]" />
-            </div>
-            <span className="whitespace-nowrap font-mono text-[14px] font-semibold">ai-devkit</span>
-          </Link>
-          <Link
-            href="/catalog"
-            className="flex items-center gap-1.5 text-[13px] text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
-          >
-            <ArrowLeft size={14} />
-            <span>Back to catalog</span>
-          </Link>
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
-        <div className="mb-10">
-          <h1 className="mb-3 text-[clamp(28px,4vw,40px)] font-semibold leading-[1.1] tracking-[-0.03em] text-[var(--text-primary)]">
-            Browse skills
-          </h1>
-          <p className="max-w-2xl text-[16px] leading-[1.6] text-[var(--text-secondary)]">
-            Every file under <code className="text-[#82AAFF]">skills/</code> in{" "}
+    <div className="flex h-full min-h-0 flex-col gap-5">
+      <div className="flex shrink-0 flex-wrap items-start justify-between gap-4">
+        {/* basis + flex-1 rather than shrink-to-fit: GooeyTextReveal re-splits
+          its text whenever its own width changes, so a container sized BY that
+          text re-measures on every split and the reveal restarts forever,
+          leaving the heading permanently blurred out. Sizing the column from
+          the row instead makes the width independent of the split. */}
+        <div className="min-w-0 flex-1 basis-[340px]">
+        <GooeyTextReveal
+          mode="immediate"
+          duration={0.9}
+          stagger={0.08}
+          blurAmount={0.3}
+          delay={0.05}
+          className="flex w-full max-w-[62ch] flex-col gap-1"
+        >
+          <h1 className="text-[19px] font-semibold tracking-[-0.02em] text-[var(--text-primary)]">Browse skills</h1>
+          <p className="text-[13px] leading-[1.6] text-[var(--text-secondary)]">
+            Find the right skill for the task you are working on. Every skill in{" "}
             <a
-              href="https://github.com/CommandOSSLabs/ai-devkit/tree/main/skills"
+              href={REPO_SKILLS_TREE}
               target="_blank"
               rel="noreferrer"
-              className="text-[#82AAFF] underline decoration-[#82AAFF]/30 underline-offset-4 hover:decoration-[#82AAFF]"
+              className="text-[color:var(--accent)] underline decoration-[#82AAFF]/30 underline-offset-4 hover:decoration-[#82AAFF]"
             >
               CommandOSSLabs/ai-devkit
             </a>
-            , read live from the repository — click a file to read it, not just its name and size.
+            : what it does, when to reach for it, and what it works with. Open one to read it, or jump straight into its
+            files.
           </p>
+        </GooeyTextReveal>
         </div>
 
-        <SkillTreeBrowser tree={tree} />
-      </main>
+        <div className="flex min-w-0 flex-wrap items-center gap-2">
+          <div className={metaChipClassName}>
+            <Layers size={13} aria-hidden="true" />
+            <span>{skills.length} skills</span>
+          </div>
+          <div className={metaChipClassName}>
+            <FileText size={13} aria-hidden="true" />
+            <span>{fileCount} files</span>
+          </div>
+          <RepoSnapshotChip snapshot={snapshot} />
+        </div>
+      </div>
+
+      <SkillCatalog skills={skills} categories={categories} handles={handles} />
     </div>
   );
 }

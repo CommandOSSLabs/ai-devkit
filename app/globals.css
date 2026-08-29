@@ -151,3 +151,125 @@
   -webkit-font-smoothing: antialiased;
 }
 
+
+/* Glass surfaces: card backgrounds that let the animated background show
+   through. Defined once here so the whole dashboard is tuned from one place
+   — raise the percentage to calm the background down, lower it to let more
+   through. They resolve against whichever --bg-* the active theme sets, so a
+   single definition covers light and dark. Tailwind v3 cannot apply an
+   opacity modifier to a var colour, which is why these exist at all rather
+   than a `/72` suffix at each call site. */
+:root {
+  /* Fallbacks for anything rendered outside a LiquefyProvider. */
+  --glass-surface: color-mix(in srgb, var(--bg-surface) 38%, transparent);
+  --glass-frame: color-mix(in srgb, var(--bg-frame) 30%, transparent);
+  --glass-elevated: color-mix(in srgb, var(--bg-elevated) 40%, transparent);
+  --glass-line: var(--border-subtle);
+  --glass-blur: 12px;
+}
+
+/* Declared on the provider rather than :root on purpose: a custom property is
+   substituted at computed-value time on the element that declares it, and
+   --lq-* only exists from .lq-provider down. Declaring these at :root
+   resolved --lq-glass-soft to its fallback before any card could inherit it,
+   so Liquefy's theme and tint had no effect on the surfaces. */
+.lq-provider {
+  --glass-surface: color-mix(in srgb, var(--bg-surface) 38%, var(--lq-glass-soft));
+  --glass-frame: color-mix(in srgb, var(--bg-frame) 30%, var(--lq-glass-soft));
+  --glass-elevated: color-mix(in srgb, var(--bg-elevated) 40%, var(--lq-glass-soft));
+  --glass-line: var(--lq-line, var(--border-subtle));
+  --glass-blur: var(--lq-blur, 12px);
+}
+
+/* The /skills shell reads long prose and code, so its panels sit much closer
+   to opaque than the marketing pages' glass does. Declared after .lq-provider
+   so it wins on source order at equal specificity, and scoped to the shell so
+   the rest of the site keeps the translucent look. */
+.skills-shell {
+  --glass-surface: color-mix(in srgb, var(--bg-surface) 88%, transparent);
+  --glass-frame: color-mix(in srgb, var(--bg-frame) 90%, transparent);
+  --glass-elevated: color-mix(in srgb, var(--bg-elevated) 88%, transparent);
+}
+
+/* The workspace is the one surface people read and type into for minutes at a
+   time, so it opts out of translucency entirely: nested translucent panels
+   over a moving background is what makes long reading tiring. Declared as
+   token overrides so every nested surface inherits it without each component
+   having to know it is inside a workspace. */
+.skills-workspace {
+  --glass-surface: var(--bg-surface);
+  --glass-frame: var(--bg-frame);
+  --glass-elevated: var(--bg-elevated);
+}
+
+/* Measured, not guessed: on this shell's card surfaces the shared dark
+   --text-tertiary comes out at 3.67:1, under the 4.5:1 WCAG AA asks for at
+   these sizes, and here it carries real information — trigger phrases,
+   categories, the repository snapshot. Brightened locally to 4.76:1, which
+   keeps the hierarchy intact (primary 14.5, secondary 6.8, tertiary 4.8) and
+   leaves the rest of the site's text alone, the way .intro-panel-text
+   already does for the marketing sections. */
+.skills-shell {
+  /* #82AAFF is the site's accent and reads well on dark, but as *text* on a
+     light surface it measures 1.96:1 — unreadable, and it was carrying the
+     card's primary action. Light mode gets a darker blue of the same family;
+     tints and filled buttons keep the original hue, since those are
+     backgrounds rather than text. */
+  --accent: #2F63C7;
+  --text-tertiary: #5C6675;
+}
+
+.skills-shell {
+  /* The graph's colours are meaning, not decoration: a node's fill says
+     whether it is the skill you pinned, and an edge's stroke says which
+     direction the reference runs. WCAG asks meaningful non-text graphics for
+     ~3:1, and the dark palette's #82AAFF/#F472B6 sit near 1.9:1 on a light
+     card. Semantic tokens per theme, so the graph reads in both. */
+  --skill-node: #2F63C7;
+  --skill-node-active: #B4126B;
+  --skill-edge: #94A3B8;
+  --skill-edge-out: #2F63C7;
+  --skill-edge-in: #B4126B;
+}
+
+.dark .skills-shell {
+  --accent: #82AAFF;
+  --text-tertiary: #7C8593;
+  --text-disabled: #6E7684;
+  --skill-node: #82AAFF;
+  --skill-node-active: #F472B6;
+  --skill-edge: var(--border-strong);
+  --skill-edge-out: #82AAFF;
+  --skill-edge-in: #F472B6;
+}
+
+/* Scrollbars: the browser default renders as a bright white bar against the
+   dark surfaces, which reads as a UI element rather than chrome. Tint it to
+   the existing border token so it recedes, in both themes. */
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--border-strong);
+    border: 3px solid transparent;
+    background-clip: content-box;
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--text-disabled);
+  }
+}
