@@ -16,8 +16,13 @@ import { normalizeSkillId } from "@/lib/skill-id";
 const SIZE = 900;
 const C = SIZE / 2;
 const R = 310;
-const OUT_COLOR = "#82AAFF";
-const IN_COLOR = "#F472B6";
+// Read from the shell's tokens so the graph carries meaning in both themes;
+// see the --skill-* block in globals.css.
+const OUT_COLOR = "var(--skill-edge-out)";
+const IN_COLOR = "var(--skill-edge-in)";
+const NODE_COLOR = "var(--skill-node)";
+const NODE_ACTIVE = "var(--skill-node-active)";
+const EDGE_COLOR = "var(--skill-edge)";
 
 type Pt = { x: number; y: number; angle: number };
 
@@ -31,6 +36,10 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
   const [hovered, setHovered] = useState<string | null>(null);
   const [pinned, setPinned] = useState<string | null>(null);
   const [view, setView] = useState<"graph" | "list">("graph");
+  const [focused, setFocused] = useState<string | null>(null);
+  // Hover traces a different skill without taking the pin away: `active`
+  // drives the trace, `pinned` keeps its own marker regardless. Losing the
+  // selection the moment the cursor moved made the pin useless.
   const active = hovered ?? pinned;
 
   // A skill page links here as …?focus=delivery-review, so "see what this
@@ -148,10 +157,10 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
                   key={i}
                   d={`M ${a.x} ${a.y} Q ${cx} ${cy} ${b.x} ${b.y}`}
                   fill="none"
-                  stroke={isOut ? OUT_COLOR : isIn ? IN_COLOR : "var(--border-strong)"}
+                  stroke={isOut ? OUT_COLOR : isIn ? IN_COLOR : EDGE_COLOR}
                   strokeWidth={on ? 1.6 : 0.7}
-                  opacity={active ? (on ? 0.85 : 0.06) : 0.25}
-                  className="transition-[opacity,stroke-width] duration-200"
+                  opacity={active ? (on ? 0.85 : 0.06) : 0.3}
+                  className={reduce ? undefined : "transition-[opacity,stroke-width] duration-200"}
                 />
               );
             })}
@@ -163,26 +172,58 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
               const deg = node.inDegree + node.outDegree;
               const r = r2(3 + (deg / maxDeg) * 7);
               const dim = active ? !related?.touching.has(node.id) : false;
-              const isActive = node.id === active;
               const rightSide = Math.cos(p.angle) > -0.01;
               const lx = r2(C + Math.cos(p.angle) * (R + 14));
               const ly = r2(C + Math.sin(p.angle) * (R + 14));
 
+              const isPinned = node.id === pinned;
+              const isHovered = node.id === hovered;
+              const isFocused = node.id === focused;
+              const toggle = () => setPinned((cur) => (cur === node.id ? null : node.id));
+
               return (
                 <g
                   key={node.id}
-                  className="cursor-pointer transition-opacity duration-200"
+                  role="button"
+                  tabIndex={0}
+                  aria-pressed={isPinned}
+                  aria-label={`${node.label}: ${node.outDegree} references out, ${node.inDegree} in`}
+                  className={`cursor-pointer focus:outline-none ${reduce ? "" : "transition-opacity duration-200"}`}
                   opacity={dim ? 0.2 : 1}
                   onMouseEnter={() => setHovered(node.id)}
                   onMouseLeave={() => setHovered(null)}
-                  onClick={() => setPinned((cur) => (cur === node.id ? null : node.id))}
+                  onFocus={() => {
+                    setFocused(node.id);
+                    setHovered(node.id);
+                  }}
+                  onBlur={() => {
+                    setFocused(null);
+                    setHovered(null);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggle();
+                    }
+                  }}
+                  onClick={toggle}
                 >
+                  {/* The pin is a halo plus a ring plus a fill, so it survives
+                      hovering another node and does not rely on colour alone. */}
+                  {isPinned && (
+                    <circle cx={p.x} cy={p.y} r={r + 7} fill={NODE_ACTIVE} opacity={0.18} />
+                  )}
+                  {isFocused && (
+                    <circle cx={p.x} cy={p.y} r={r + 5} fill="none" stroke={NODE_ACTIVE} strokeWidth={2} />
+                  )}
                   <circle
                     cx={p.x}
                     cy={p.y}
-                    r={r}
-                    fill={isActive ? IN_COLOR : OUT_COLOR}
-                    opacity={isActive ? 1 : 0.75}
+                    r={isPinned ? r + 1.5 : r}
+                    fill={isPinned ? NODE_ACTIVE : NODE_COLOR}
+                    stroke={isPinned || isHovered ? NODE_ACTIVE : "none"}
+                    strokeWidth={isPinned ? 2 : isHovered ? 1.2 : 0}
+                    opacity={isPinned || isHovered ? 1 : 0.8}
                   />
                   {/* generous invisible hit area — the dots are small */}
                   <circle cx={p.x} cy={p.y} r={16} fill="transparent" />
@@ -191,8 +232,8 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
                     y={ly}
                     fontSize={11}
                     fontFamily="var(--font-mono, monospace)"
-                    fill={isActive ? IN_COLOR : "var(--text-secondary)"}
-                    fontWeight={isActive ? 600 : 400}
+                    fill={isPinned ? NODE_ACTIVE : "var(--text-secondary)"}
+                    fontWeight={isPinned || isHovered ? 600 : 400}
                     textAnchor={rightSide ? "start" : "end"}
                     dominantBaseline="middle"
                     transform={rightSide ? undefined : `rotate(180 ${lx} ${ly})`}

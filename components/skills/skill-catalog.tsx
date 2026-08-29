@@ -157,7 +157,7 @@ function SkillCard({
         </span>
       </div>
 
-      <p className="line-clamp-2 text-[12.5px] leading-[1.55] text-[var(--text-secondary)]">
+      <p className="line-clamp-2 min-h-[2.6em] text-[12.5px] leading-[1.55] text-[var(--text-secondary)]">
         {skill.summary || skill.description}
       </p>
 

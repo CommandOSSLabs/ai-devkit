@@ -2,15 +2,19 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Layers, Share2, FlaskConical, SendHorizontal, type LucideIcon } from "lucide-react";
+import { Layers, Share2, SendHorizontal, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const NAV_ITEMS: { href: string; label: string; icon: LucideIcon }[] = [
   { href: "/skills", label: "Skills", icon: Layers },
   { href: "/skills/visualize-interactions", label: "Visualize interactions", icon: Share2 },
   { href: "/skills/prompt-inputs", label: "Prompt Inputs", icon: SendHorizontal },
-  { href: "/skills/playground", label: "Playground", icon: FlaskConical },
 ];
+
+// Playground has no surface yet. Rather than route people to a 404 or to a
+// placeholder that adds a page with nothing in it, it is absent from the nav
+// until it exists; /skills/playground redirects to the catalog so any link
+// already in the wild lands somewhere real.
 
 const TITLE_BY_PATH: Record<string, string> = Object.fromEntries(
   NAV_ITEMS.map(({ href, label }) => [href, label]),

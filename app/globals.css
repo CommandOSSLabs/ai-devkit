@@ -219,10 +219,28 @@
   --text-tertiary: #5C6675;
 }
 
+.skills-shell {
+  /* The graph's colours are meaning, not decoration: a node's fill says
+     whether it is the skill you pinned, and an edge's stroke says which
+     direction the reference runs. WCAG asks meaningful non-text graphics for
+     ~3:1, and the dark palette's #82AAFF/#F472B6 sit near 1.9:1 on a light
+     card. Semantic tokens per theme, so the graph reads in both. */
+  --skill-node: #2F63C7;
+  --skill-node-active: #B4126B;
+  --skill-edge: #94A3B8;
+  --skill-edge-out: #2F63C7;
+  --skill-edge-in: #B4126B;
+}
+
 .dark .skills-shell {
   --accent: #82AAFF;
   --text-tertiary: #7C8593;
   --text-disabled: #6E7684;
+  --skill-node: #82AAFF;
+  --skill-node-active: #F472B6;
+  --skill-edge: var(--border-strong);
+  --skill-edge-out: #82AAFF;
+  --skill-edge-in: #F472B6;
 }
 
 /* Scrollbars: the browser default renders as a bright white bar against the
