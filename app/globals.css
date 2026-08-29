@@ -232,7 +232,20 @@
   --skill-edge-in: #B4126B;
 }
 
+/* The map is the one surface that has to sit BELOW the page rather than above
+   it. Everything else here is a panel lifted off the background; a canvas is a
+   space you look into, and the dot grid that says so only reads against
+   something close to black. Opaque on purpose: the animated wash behind the
+   shell was showing through the translucent panel, lifting the surface past
+   the dots and flattening the whole map. */
+.skills-shell {
+  --skill-canvas: #FFFFFF;
+  --skill-dot: #CBD5E1;
+}
+
 .dark .skills-shell {
+  --skill-canvas: #050608;
+  --skill-dot: #2F3742;
   --accent: #82AAFF;
   --text-tertiary: #7C8593;
   --text-disabled: #6E7684;
@@ -339,11 +352,12 @@ html[data-skills-focus] .skills-column {
   border: 0;
   border-radius: 0;
   backdrop-filter: none;
-  background: var(--bg-base);
+  background: var(--skill-canvas);
 }
 
 html[data-skills-focus] .skills-topbar,
-html[data-skills-focus] .skills-page-head {
+html[data-skills-focus] .skills-page-head,
+html[data-skills-focus] .skills-backdrop {
   display: none;
 }
 

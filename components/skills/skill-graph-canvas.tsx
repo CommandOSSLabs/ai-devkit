@@ -493,15 +493,18 @@ export function SkillGraphCanvas({
         minZoom={MIN_ZOOM}
         maxZoom={MAX_ZOOM}
       >
-        <Background variant={BackgroundVariant.Dots} gap={28} size={1} color="var(--border-subtle)" />
+        <Background variant={BackgroundVariant.Dots} gap={26} size={1.4} color="var(--skill-dot)" />
         {showMiniMap && (
           <MiniMap
             pannable
             zoomable
             position={miniMapSide === "left" ? "bottom-left" : "bottom-right"}
             ariaLabel="Skill map overview"
-            maskColor="color-mix(in srgb, var(--bg-base) 72%, transparent)"
-            className="!bg-[var(--bg-surface)]"
+            /* The canvas colour, not a panel colour: on a near-black map an
+               elevated surface here makes the minimap the brightest thing on
+               screen, which is the opposite of what an overview should be. */
+            maskColor="color-mix(in srgb, var(--skill-canvas) 76%, transparent)"
+            className="!bg-[var(--skill-canvas)]"
             style={{ width: 132, height: 88 }}
           />
         )}

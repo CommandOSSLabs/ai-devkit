@@ -774,7 +774,7 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
 
       <div className="flex min-h-0 flex-1 flex-col gap-4 lg:flex-row">
         <div
-          className={`relative min-h-[420px] flex-1 overflow-hidden bg-[var(--glass-surface)] ${
+          className={`relative min-h-[420px] flex-1 overflow-hidden bg-[var(--skill-canvas)] ${
             focus ? "" : "rounded-[16px] border border-[var(--border-subtle)]"
           }`}
         >

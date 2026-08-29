@@ -17,7 +17,7 @@ export function SkillsBackdrop() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[380px] opacity-50 [mask-image:linear-gradient(to_bottom,black_0%,transparent_100%)]"
+      className="skills-backdrop pointer-events-none absolute inset-x-0 top-0 z-0 h-[380px] opacity-50 [mask-image:linear-gradient(to_bottom,black_0%,transparent_100%)]"
     >
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_20%_0%,rgba(130,170,255,0.35),transparent_60%),radial-gradient(ellipse_at_80%_10%,rgba(244,114,182,0.22),transparent_55%)]" />
       {animated && <PixelLiquidBg pixelSize={22} resolution={0.3} cursorSize={90} />}
