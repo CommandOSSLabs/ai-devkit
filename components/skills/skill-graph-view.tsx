@@ -91,10 +91,12 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
   const showMiniMap = useMediaQuery("(min-width: 1280px)") === true;
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [requestedView, setRequestedView] = useState<SkillGraphViewMode | null>(null);
   const [positions, setPositions] = useState<Record<string, SkillGraphPosition>>({});
   const [initialised, setInitialised] = useState(false);
   const deepLinkRead = useRef(false);
+  const drawerRef = useRef<HTMLDivElement>(null);
 
   const layout = useMemo(() => layoutSkillGraph(graph.nodes), [graph.nodes]);
   const byId = useMemo(() => new Map(graph.nodes.map((n) => [n.id, n])), [graph.nodes]);
@@ -133,6 +135,40 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
     const search = params.toString();
     window.history.replaceState(null, "", search ? `?${search}` : window.location.pathname);
   }, [initialised, selectedId, requestedView, wideEnoughForCanvas]);
+
+  // Below lg the inspector is a sheet over the map, so it gets the same
+  // treatment as the workspace's file drawer: focus moves in, Escape closes,
+  // and Tab stays inside while it is open.
+  const drawerOpen = selectedId !== null && wideEnoughForCanvas !== null;
+  useEffect(() => {
+    if (!drawerOpen) return;
+    const panel = drawerRef.current;
+    if (!panel || window.matchMedia("(min-width: 1024px)").matches) return;
+
+    panel.querySelector<HTMLElement>("button, a")?.focus();
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setSelectedId(null);
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const focusable = panel.querySelectorAll<HTMLElement>('a[href], button:not([disabled])');
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+      if (e.shiftKey && (active === first || !panel.contains(active))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [drawerOpen, selectedId]);
 
   const select = useCallback((id: string) => {
     setSelectedId((current) => (id === "" || current === id ? null : id));
@@ -288,10 +324,12 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
               lanes={layout.lanes}
               laneWidth={layout.width}
               selectedId={selectedId}
+              hoveredId={hoveredId}
               positions={positions}
               showMiniMap={showMiniMap}
               reduceMotion={reduce}
               onSelect={select}
+              onHover={setHoveredId}
               onPositionsChange={handlePositions}
             />
           ) : (
@@ -335,7 +373,13 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
       {/* Below lg the inspector is a bottom sheet: a 320px rail would leave
           neither the map nor the panel usable. */}
       {selected && (
-        <div className="fixed inset-x-0 bottom-0 z-40 max-h-[58vh] overflow-hidden rounded-t-[16px] border-t border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[0_-8px_32px_-12px_rgba(0,0,0,0.45)] lg:hidden">
+        <div
+          ref={drawerRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${selected.label} relationships`}
+          className="fixed inset-x-0 bottom-0 z-40 max-h-[58vh] overflow-hidden rounded-t-[16px] border-t border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[0_-8px_32px_-12px_rgba(0,0,0,0.45)] lg:hidden"
+        >
           <div className="flex max-h-[58vh] flex-col">{inspector}</div>
         </div>
       )}

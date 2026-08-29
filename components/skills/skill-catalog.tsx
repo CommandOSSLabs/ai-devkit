@@ -477,7 +477,10 @@ export function SkillCatalog({
       </div>
     ) : (
       (() => {
-        const gridClass = splitView ? "flex flex-col gap-2.5" : "grid gap-2.5 sm:grid-cols-2 xl:grid-cols-3";
+        // Two columns wherever the inspector is absent. A third column has nowhere
+        // to live: the inspector takes over at 1440, so the only band wide enough
+        // for three is the one the split already owns.
+        const gridClass = splitView ? "flex flex-col gap-2.5" : "grid gap-2.5 sm:grid-cols-2";
         const card = (skill: SkillSummary) => (
           <SkillCard
             key={skill.id}

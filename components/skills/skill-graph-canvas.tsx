@@ -34,6 +34,8 @@ type SkillNodeData = {
   outDegree: number;
   inDegree: number;
   selected: boolean;
+  /** hovered but not pinned — a lighter marker than the pin's */
+  traced: boolean;
   related: "out" | "in" | null;
   dimmed: boolean;
   onSelect: (id: string) => void;
@@ -57,7 +59,7 @@ function LaneHeading({ data }: NodeProps<Node<LaneNodeData, "lane">>) {
 }
 
 function SkillFlowNodeCard({ id, data }: NodeProps<SkillCardNode>) {
-  const { label, categoryLabel, outDegree, inDegree, selected, related, dimmed } = data;
+  const { label, categoryLabel, outDegree, inDegree, selected, traced, related, dimmed } = data;
 
   return (
     <div
@@ -72,15 +74,27 @@ function SkillFlowNodeCard({ id, data }: NodeProps<SkillCardNode>) {
           data.onSelect(id);
         }
       }}
-      style={{ width: SKILL_NODE_SIZE.width, height: SKILL_NODE_SIZE.height }}
+      style={{
+        width: SKILL_NODE_SIZE.width,
+        height: SKILL_NODE_SIZE.height,
+        // Inline, not a Tailwind arbitrary value: a color-mix() with commas
+        // inside shadow-[...] does not survive the class parser, and it failed
+        // silently — the pin lost its halo and became indistinguishable from a
+        // hover, which is the one distinction this component has to keep.
+        boxShadow: selected
+          ? "0 0 0 4px color-mix(in srgb, var(--skill-node-active) 24%, transparent)"
+          : undefined,
+      }}
       className={`flex cursor-pointer flex-col justify-center gap-0.5 rounded-[10px] border px-3 text-left outline-none transition-opacity focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--skill-node-active)] ${
         selected
-          ? "border-[var(--skill-node-active)] bg-[var(--bg-surface)] shadow-[0_0_0_4px_color-mix(in_srgb,var(--skill-node-active)_22%,transparent)]"
-          : related === "out"
-            ? "border-[var(--skill-edge-out)] bg-[var(--bg-surface)]"
-            : related === "in"
-              ? "border-[var(--skill-edge-in)] bg-[var(--bg-surface)]"
-              : "border-[var(--border-subtle)] bg-[var(--bg-surface)]"
+          ? "border-[var(--skill-node-active)] bg-[var(--bg-surface)]"
+          : traced
+            ? "border-[var(--skill-node-active)] bg-[var(--bg-surface)]"
+            : related === "out"
+              ? "border-[var(--skill-edge-out)] bg-[var(--bg-surface)]"
+              : related === "in"
+                ? "border-[var(--skill-edge-in)] bg-[var(--bg-surface)]"
+                : "border-[var(--border-subtle)] bg-[var(--bg-surface)]"
       } ${dimmed ? "opacity-25" : "opacity-100"}`}
     >
       {/* Edges need anchors to attach to. They carry no affordance of their
@@ -106,10 +120,12 @@ export function SkillGraphCanvas({
   lanes,
   laneWidth,
   selectedId,
+  hoveredId,
   positions,
   showMiniMap,
   reduceMotion,
   onSelect,
+  onHover,
   onPositionsChange,
 }: {
   nodes: PositionedSkillNode[];
@@ -117,21 +133,27 @@ export function SkillGraphCanvas({
   lanes: SkillGraphLane[];
   laneWidth: number;
   selectedId: string | null;
+  hoveredId: string | null;
   /** dragged overrides on top of the canonical layout */
   positions: Record<string, SkillGraphPosition>;
   showMiniMap: boolean;
   reduceMotion: boolean;
   onSelect: (id: string) => void;
+  onHover: (id: string | null) => void;
   onPositionsChange: (next: Record<string, SkillGraphPosition>) => void;
 }) {
   const instance = useRef<ReactFlowInstance<SkillFlowNode, Edge> | null>(null);
 
+  // Hover traces a different skill without taking the pin away: the trace
+  // follows the pointer, the pinned marker does not move.
+  const tracedId = hoveredId ?? selectedId;
+
   const relation = useMemo(() => {
-    if (!selectedId) return null;
-    const out = new Set(edges.filter((e) => e.source === selectedId).map((e) => e.target));
-    const inc = new Set(edges.filter((e) => e.target === selectedId).map((e) => e.source));
+    if (!tracedId) return null;
+    const out = new Set(edges.filter((e) => e.source === tracedId).map((e) => e.target));
+    const inc = new Set(edges.filter((e) => e.target === tracedId).map((e) => e.source));
     return { out, inc };
-  }, [edges, selectedId]);
+  }, [edges, tracedId]);
 
   const flowNodes = useMemo<SkillFlowNode[]>(() => {
     // Lane headings are nodes rather than an overlay, so the category
@@ -140,6 +162,13 @@ export function SkillGraphCanvas({
       id: `lane:${lane.category}`,
       type: "lane" as const,
       position: { x: 0, y: lane.y },
+      // Dimensions are declared rather than measured. React Flow keeps a node
+      // `visibility: hidden` until it has measured it, and measurement rides on
+      // ResizeObserver delivery — under a throttled rendering loop that never
+      // arrives and the whole map stays invisible. The layout already knows
+      // every size, so it says so.
+      width: laneWidth,
+      height: 24,
       data: { label: lane.label, count: lane.count, width: laneWidth },
       draggable: false,
       selectable: false,
@@ -149,6 +178,7 @@ export function SkillGraphCanvas({
 
     const skillNodes: SkillFlowNode[] = nodes.map((node) => {
         const isSelected = node.id === selectedId;
+        const isTraced = node.id === tracedId;
         const related: "out" | "in" | null = relation?.out.has(node.id)
           ? "out"
           : relation?.inc.has(node.id)
@@ -158,27 +188,30 @@ export function SkillGraphCanvas({
           id: node.id,
           type: "skill" as const,
           position: positions[node.id] ?? node.position,
+          width: SKILL_NODE_SIZE.width,
+          height: SKILL_NODE_SIZE.height,
           data: {
             label: node.label,
             categoryLabel: node.categoryLabel,
             outDegree: node.outDegree,
             inDegree: node.inDegree,
             selected: isSelected,
+            traced: isTraced && !isSelected,
             related,
-            dimmed: Boolean(selectedId) && !isSelected && related === null,
+            dimmed: Boolean(tracedId) && !isTraced && !isSelected && related === null,
             onSelect,
           },
         };
       });
 
     return [...laneNodes, ...skillNodes];
-  }, [nodes, lanes, laneWidth, positions, relation, selectedId, onSelect]);
+  }, [nodes, lanes, laneWidth, positions, relation, selectedId, tracedId, onSelect]);
 
   const flowEdges = useMemo<Edge[]>(
     () =>
       edges.map((edge) => {
-        const isOut = selectedId !== null && edge.source === selectedId;
-        const isIn = selectedId !== null && edge.target === selectedId;
+        const isOut = tracedId !== null && edge.source === tracedId;
+        const isIn = tracedId !== null && edge.target === tracedId;
         const touched = isOut || isIn;
         return {
           id: `${edge.source}->${edge.target}`,
@@ -197,11 +230,11 @@ export function SkillGraphCanvas({
                 ? "var(--skill-edge-in)"
                 : "var(--skill-edge)",
             strokeWidth: touched ? 1.8 : 0.8,
-            opacity: selectedId ? (touched ? 0.9 : 0.05) : 0.28,
+            opacity: tracedId ? (touched ? 0.9 : 0.05) : 0.28,
           },
         };
       }),
-    [edges, selectedId, reduceMotion],
+    [edges, tracedId, reduceMotion],
   );
 
   // Re-fit when the graph itself changes, not on every selection.
@@ -226,6 +259,10 @@ export function SkillGraphCanvas({
         instance.current = i;
       }}
       onNodeDragStop={handleDragStop}
+      onNodeMouseEnter={(_, node) => {
+        if (node.type === "skill") onHover(node.id);
+      }}
+      onNodeMouseLeave={() => onHover(null)}
       onPaneClick={() => onSelect("")}
       /* One focus stop per node, ours, so the accessible name and the
          Enter/Space handling are the card's rather than the wrapper's. */

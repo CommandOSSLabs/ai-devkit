@@ -85,6 +85,13 @@ laid-out nodes and edges into React Flow's shapes, renders a custom node, and
 reports drags back up. It owns nothing the app needs to know about except the
 positions it emits.
 
+Node dimensions are declared, not measured. React Flow keeps a node
+`visibility: hidden` until it has measured it, and measurement rides on
+ResizeObserver delivery; under a throttled rendering loop that delivery never
+arrives, the whole map stays invisible, and `visibility: hidden` also makes
+every node unfocusable. The layout already knows every size, so the node
+objects carry `width` and `height` and the renderer never has to ask.
+
 ### `SkillGraphList`
 
 A table of every skill with its outgoing and incoming references as links. Rows
@@ -163,8 +170,16 @@ information the canvas draws.
 
 - The list view is the complete non-canvas equivalent, and the default under
   768px.
-- Canvas nodes are focusable, expose an accessible name including both degree
-  counts, and toggle selection on Enter or Space.
+- Below `lg` the inspector is a sheet over the map, with `role="dialog"`,
+  `aria-modal`, a label, focus moved in on open, Tab trapped inside and Escape
+  to close — the same contract as the workspace's file drawer.
+- Canvas nodes are focusable, expose an accessible name including category and
+  both degree counts, and toggle selection on Enter or Space. React Flow's own
+  node focus is disabled so there is exactly one focus stop per node and the
+  accessible name is the card's.
+- Hover traces a skill without moving the pin: the trace follows the pointer
+  while the pinned marker — fill, ring and a halo the hover state does not
+  have — stays where it was.
 - Selection is conveyed by fill, ring and halo together, never colour alone.
 - `--skill-node`, `--skill-node-active`, `--skill-edge`, `--skill-edge-out` and
   `--skill-edge-in` resolve per theme so markers clear about 3:1 in both.
