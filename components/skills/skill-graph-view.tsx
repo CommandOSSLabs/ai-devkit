@@ -75,23 +75,30 @@ function RelationGroup({
   title,
   icon,
   color,
+  note,
   ids,
   byId,
+  onPick,
 }: {
   title: string;
-  icon: React.ReactNode;
-  color: string;
+  icon?: React.ReactNode;
+  color?: string;
+  note: string;
   ids: string[];
   byId: Map<string, SkillNode>;
+  onPick: (id: string) => void;
 }) {
   // <details> rather than a hand-rolled disclosure: the open/closed state, the
   // keyboard handling and the announced role all come for free, and this panel
   // has to stay light enough that the map keeps the attention.
   return (
     <details open className="group shrink-0">
-      <summary className="flex cursor-pointer list-none items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.07em] text-[var(--text-tertiary)] outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--skill-node-active)]">
-        <span style={{ color }}>{icon}</span>
-        {title} ({ids.length})
+      <summary className="flex cursor-pointer list-none items-baseline gap-2 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--skill-node-active)]">
+        <span className="inline-flex shrink-0 items-center gap-1.5 text-[12.5px] font-medium text-[var(--text-primary)]">
+          {icon && <span style={{ color }}>{icon}</span>}
+          {title}
+        </span>
+        <span className="min-w-0 truncate text-[11.5px] text-[var(--text-tertiary)]">{note}</span>
       </summary>
       <div className="mt-1.5">
         {ids.length === 0 ? (
@@ -99,18 +106,95 @@ function RelationGroup({
         ) : (
           <div className="flex flex-wrap gap-1.5">
             {ids.map((id) => (
-              <Link
+              <button
                 key={id}
-                href={`/skills/${id}`}
+                type="button"
+                onClick={() => onPick(id)}
                 className="rounded-full border border-[var(--border-subtle)] px-2 py-0.5 font-mono text-[11.5px] text-[var(--text-secondary)] transition-colors hover:border-[var(--skill-node)] hover:text-[color:var(--skill-node)]"
               >
                 {byId.get(id)?.label ?? `cmk:${id}`}
-              </Link>
+              </button>
             ))}
           </div>
         )}
       </div>
     </details>
+  );
+}
+
+/**
+ * What the panel says before anything is selected. The old copy described the
+ * gestures — hover to trace, click to pin — which tells a reader how to
+ * operate a thing they have not been given a reason to operate. This one
+ * hands them two ways in: a group, or a skill nothing else depends on.
+ */
+function StartPanel({
+  groups,
+  startingPoints,
+  onJumpToGroup,
+  onPickSkill,
+}: {
+  groups: { category: string; label: string; count: number }[];
+  startingPoints: SkillNode[];
+  onJumpToGroup: (category: string) => void;
+  onPickSkill: (id: string) => void;
+}) {
+  return (
+    <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+      <div className="shrink-0 px-4 py-4">
+        <p className="text-[14px] font-semibold text-[var(--text-primary)]">Start with a skill</p>
+        <p className="mt-1.5 text-[12.5px] leading-6 text-[var(--text-secondary)]">
+          Select any skill to see what it uses and what uses it.
+        </p>
+      </div>
+
+      <div className="shrink-0 border-t border-[var(--border-subtle)] px-4 py-3.5">
+        <p className="text-[12.5px] text-[var(--text-secondary)]">
+          Not sure where to begin? Jump to a group.
+        </p>
+        <div className="mt-2.5 flex flex-wrap gap-1.5">
+          {groups.map((group) => (
+            <button
+              key={group.category}
+              type="button"
+              onClick={() => onJumpToGroup(group.category)}
+              className="inline-flex h-7 items-center gap-1.5 rounded-full border border-[var(--border-subtle)] bg-[var(--glass-elevated)] px-2.5 text-[12px] text-[var(--text-secondary)] transition-colors hover:border-[var(--border-strong)] hover:text-[var(--text-primary)]"
+            >
+              {group.label}
+              <span className="tabular-nums text-[var(--text-tertiary)]">{group.count}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {startingPoints.length > 0 && (
+        <div className="shrink-0 border-t border-[var(--border-subtle)] px-4 py-3.5">
+          <p className="font-mono text-[10.5px] uppercase tracking-[0.07em] text-[var(--text-tertiary)]">
+            Starting points
+          </p>
+          <p className="mt-1.5 text-[12px] leading-5 text-[var(--text-tertiary)]">
+            Nothing else pulls these in, so they are where a chain begins.
+          </p>
+          <div className="mt-2.5 flex flex-col gap-2">
+            {startingPoints.map((node) => (
+              <button
+                key={node.id}
+                type="button"
+                onClick={() => onPickSkill(node.id)}
+                className="flex items-baseline justify-between gap-3 rounded-md text-left transition-colors hover:text-[var(--text-primary)]"
+              >
+                <span className="min-w-0 truncate font-mono text-[12px] text-[color:var(--skill-node)]">
+                  {node.label}
+                </span>
+                <span className="shrink-0 text-[11.5px] tabular-nums text-[var(--text-tertiary)]">
+                  uses {node.outDegree}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -127,6 +211,7 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
   const [focus, setFocus] = useState(false);
   const [api, setApi] = useState<SkillCanvasApi | null>(null);
   const [hintOpen, setHintOpen] = useState(false);
+  const [pendingLane, setPendingLane] = useState<string | null>(null);
   const deepLinkRead = useRef(false);
   const drawerRef = useRef<HTMLDivElement>(null);
 
@@ -260,12 +345,18 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
   // panel reading "pick a skill" was taking a third of the canvas at 1280 to
   // say what the page's own subtitle already says, which is the opposite of
   // canvas-first.
-  const dockInspector = canDockInspector && !focus && selectedId !== null;
+  // The rail is always there at 1280 and up outside focus mode. It used to
+  // appear only on selection, which meant the one moment a reader most needs
+  // a way in — before they have clicked anything — was the moment the page
+  // offered them nothing but dots.
+  const dockInspector = canDockInspector && !focus;
 
   // Wherever the inspector floats over the map rather than sitting beside it,
   // it gets the workspace drawer's treatment: focus moves in and Tab stays
   // inside while it is open. Escape is handled by the global handler above.
   const overlayInspector = selectedId !== null && !dockInspector;
+  /** Where the rail cannot fit, the way in is a strip of chips over the map. */
+  const showStartStrip = selectedId === null && !dockInspector;
   useEffect(() => {
     if (!overlayInspector) return;
     const panel = drawerRef.current;
@@ -300,6 +391,48 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
     };
   }, [overlayInspector, selectedId]);
 
+  // Skills nothing else pulls in, and that lead somewhere: the honest answer
+  // to "where do I start". A skill with no inbound AND no outbound edges is
+  // not a starting point, it is an orphan, and sending a reader there is the
+  // opposite of help.
+  const startingPoints = useMemo(
+    () =>
+      graph.nodes
+        .filter((n) => n.inDegree === 0 && n.outDegree > 0)
+        .sort((a, b) => b.outDegree - a.outDegree)
+        .slice(0, 4),
+    [graph.nodes],
+  );
+
+  const groups = useMemo(() => {
+    const counts = new Map<string, { category: string; label: string; count: number }>();
+    for (const node of graph.nodes) {
+      const row = counts.get(node.category) ?? {
+        category: node.category,
+        label: node.categoryLabel,
+        count: 0,
+      };
+      row.count += 1;
+      counts.set(node.category, row);
+    }
+    return Array.from(counts.values()).sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+  }, [graph.nodes]);
+
+  // Asking for a group from the browse list means there is no canvas to move
+  // yet. The request is handed to the renderer as its opening frame instead;
+  // calling the live one would land on an instance that has no viewport, and
+  // the reader would arrive at the top of the map wondering what their click
+  // did.
+  const jumpToGroup = useCallback(
+    (category: string) => {
+      setSelectedId(null);
+      setPendingLane(category);
+      setRequestedView("canvas");
+      api?.revealLane(category);
+    },
+    [api],
+  );
+
   const selected = selectedId ? (byId.get(selectedId) ?? null) : null;
   const relations = useMemo(() => {
     if (!selectedId) return { out: [] as string[], inc: [] as string[] };
@@ -316,8 +449,15 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
           <p className="truncate font-mono text-[13px] font-semibold text-[color:var(--skill-node)]">
             {selected.label}
           </p>
-          <p className="mt-0.5 text-[11.5px] text-[var(--text-tertiary)]">
-            {selected.categoryLabel} · {selected.outDegree} out · {selected.inDegree} in
+          <p className="mt-0.5 truncate text-[13.5px] font-semibold text-[var(--text-primary)]">
+            {selected.title}
+          </p>
+          {/* Category and the one count a reader can act on. The pair of
+              degree numbers moved into the group headings below, where each
+              one sits next to the list it describes. */}
+          <p className="mt-1 text-[11.5px] text-[var(--text-tertiary)]">
+            {selected.categoryLabel} · used by {selected.inDegree}{" "}
+            {selected.inDegree === 1 ? "skill" : "skills"}
           </p>
         </div>
         <button
@@ -331,24 +471,44 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
       </div>
 
       <div className="flex min-h-0 flex-1 flex-col gap-3.5 overflow-y-auto px-4 py-3">
-        {selected.summary && (
-          <p className="line-clamp-2 shrink-0 text-[12.5px] leading-6 text-[var(--text-secondary)]">
-            {selected.summary}
+        {selected.purpose && (
+          <p className="shrink-0 text-[12.5px] leading-6 text-[var(--text-secondary)]">
+            {selected.purpose}.
           </p>
         )}
+        {selected.trigger && (
+          <p className="shrink-0 text-[11.5px] leading-5 text-[var(--text-tertiary)]">
+            Ask for it with{" "}
+            <span className="font-mono text-[var(--text-secondary)]">&ldquo;{selected.trigger}&rdquo;</span>
+          </p>
+        )}
+
+        {selected.oftenUsedWith.length > 0 && (
+          <RelationGroup
+            title="Often used with"
+            note="in the same skill"
+            ids={selected.oftenUsedWith}
+            byId={byId}
+            onPick={select}
+          />
+        )}
         <RelationGroup
-          title="References"
+          title="Uses"
           icon={<ArrowUpRight size={12} />}
           color="var(--skill-edge-out)"
+          note={`${relations.out.length} ${relations.out.length === 1 ? "skill" : "skills"} it pulls in`}
           ids={relations.out}
           byId={byId}
+          onPick={select}
         />
         <RelationGroup
-          title="Referenced by"
+          title="Used by"
           icon={<ArrowDownLeft size={12} />}
           color="var(--skill-edge-in)"
+          note={`${relations.inc.length} ${relations.inc.length === 1 ? "skill" : "skills"} that pull it in`}
           ids={relations.inc}
           byId={byId}
+          onPick={select}
         />
       </div>
 
@@ -368,11 +528,12 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
       </div>
     </div>
   ) : (
-    <div className="flex flex-1 items-center justify-center px-6 text-center">
-      <p className="text-[13px] leading-[1.6] text-[var(--text-tertiary)]">
-        Pick a skill to trace what it references and what references it.
-      </p>
-    </div>
+    <StartPanel
+      groups={groups}
+      startingPoints={startingPoints}
+      onJumpToGroup={jumpToGroup}
+      onPickSkill={select}
+    />
   );
 
   if (graph.nodes.length === 0) {
@@ -386,7 +547,7 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
   const viewToggle = (
     <div
       role="group"
-      aria-label="Visualization view"
+      aria-label="How to read the connections"
       className="flex items-center gap-0.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--glass-elevated)] p-0.5"
     >
       <button
@@ -396,7 +557,7 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
         className={toggleClass(view === "canvas")}
       >
         <Share2 size={12} strokeWidth={1.75} />
-        Canvas
+        Map
       </button>
       <button
         type="button"
@@ -405,7 +566,7 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
         className={toggleClass(view === "list")}
       >
         <List size={12} strokeWidth={1.75} />
-        List
+        Browse list
       </button>
     </div>
   );
@@ -420,11 +581,11 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
       </button>
       <button type="button" onClick={() => api?.fitAll()} className={actionClass}>
         <Scan size={12} strokeWidth={1.75} />
-        Fit all
+        Show whole map
       </button>
       <button type="button" onClick={resetLayout} className={actionClass}>
         <RotateCcw size={12} strokeWidth={1.75} />
-        Reset
+        Reset map
       </button>
     </>
   );
@@ -455,7 +616,8 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
       </button>
       {hintOpen && (
         <div className="absolute right-0 top-9 z-30 w-[248px] rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-3 text-[11.5px] leading-5 text-[var(--text-secondary)] shadow-[0_8px_28px_-12px_rgba(0,0,0,0.5)]">
-          <p>Drag to rearrange · Scroll to zoom · Select to trace</p>
+          <p>Select a skill to see what it uses and what uses it.</p>
+          <p className="mt-1.5">Drag to rearrange · Scroll to zoom</p>
           <p className="mt-1.5 text-[var(--text-tertiary)]">
             <span className="font-mono">F</span> focus · <span className="font-mono">R</span> reset ·{" "}
             <span className="font-mono">Esc</span> back
@@ -482,8 +644,13 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
         graphHeight={layout.height}
         selectedId={selectedId}
         hoveredId={hoveredId}
+        initialLane={pendingLane}
         positions={positions}
         showMiniMap={focus ? wideEnoughForCanvas === true : canDockInspector}
+        miniMapSide={focus ? "left" : "right"}
+        /* In focus mode the panel floats over the map, so "centred" has to
+           mean centred in what is left of it. */
+        rightInset={focus && selectedId ? 344 : 0}
         reduceMotion={reduce}
         onSelect={select}
         onHover={setHoveredId}
@@ -491,34 +658,94 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
         onReady={handleReady}
       />
     ) : (
-      <div className="h-full overflow-y-auto p-2">
-        <ul className="flex flex-col gap-0.5">
-          {graph.nodes.map((node) => {
-            const on = node.id === selectedId;
-            return (
-              <li key={node.id}>
+      /* Not a fallback with the same rows in a column: the list opens the same
+         two ways in the map does, and every row carries what a skill is for
+         alongside the two numbers, in the same words the panel uses. */
+      <div className="h-full overflow-y-auto px-3 py-3">
+        {startingPoints.length > 0 && (
+          <section aria-labelledby="list-starting-points" className="mb-5">
+            <h2
+              id="list-starting-points"
+              className="font-mono text-[10.5px] uppercase tracking-[0.07em] text-[var(--text-tertiary)]"
+            >
+              Starting points
+            </h2>
+            <p className="mt-1.5 text-[12px] leading-5 text-[var(--text-tertiary)]">
+              Nothing else pulls these in, so they are where a chain begins.
+            </p>
+            <div className="mt-2.5 flex flex-wrap gap-1.5">
+              {startingPoints.map((node) => (
                 <button
+                  key={node.id}
                   type="button"
                   onClick={() => select(node.id)}
-                  aria-pressed={on}
-                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors ${
-                    on ? "bg-[var(--skill-node)]/10" : "hover:bg-[var(--bg-elevated)]"
-                  }`}
+                  className="inline-flex h-7 items-center gap-2 rounded-full border border-[var(--border-subtle)] bg-[var(--glass-elevated)] px-2.5 font-mono text-[11.5px] text-[color:var(--skill-node)] transition-colors hover:border-[var(--skill-node)]"
                 >
-                  <span className="min-w-0 flex-1 truncate font-mono text-[12.5px] text-[color:var(--skill-node)]">
-                    {node.label}
-                  </span>
-                  <span className="hidden shrink-0 text-[11.5px] text-[var(--text-tertiary)] sm:inline">
-                    {node.categoryLabel}
-                  </span>
-                  <span className="shrink-0 text-[11.5px] tabular-nums text-[var(--text-tertiary)]">
-                    {node.outDegree} out · {node.inDegree} in
-                  </span>
+                  {node.label}
+                  <span className="tabular-nums text-[var(--text-tertiary)]">uses {node.outDegree}</span>
                 </button>
-              </li>
-            );
-          })}
-        </ul>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <section aria-labelledby="list-groups" className="mb-5">
+          <h2
+            id="list-groups"
+            className="font-mono text-[10.5px] uppercase tracking-[0.07em] text-[var(--text-tertiary)]"
+          >
+            Browse by group
+          </h2>
+          <div className="mt-2.5 flex flex-wrap gap-1.5">
+            {groups.map((group) => (
+              <button
+                key={group.category}
+                type="button"
+                onClick={() => jumpToGroup(group.category)}
+                className="inline-flex h-7 items-center gap-1.5 rounded-full border border-[var(--border-subtle)] bg-[var(--glass-elevated)] px-2.5 text-[12px] text-[var(--text-secondary)] transition-colors hover:border-[var(--border-strong)] hover:text-[var(--text-primary)]"
+              >
+                {group.label}
+                <span className="tabular-nums text-[var(--text-tertiary)]">{group.count}</span>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section aria-labelledby="list-all">
+          <h2
+            id="list-all"
+            className="font-mono text-[10.5px] uppercase tracking-[0.07em] text-[var(--text-tertiary)]"
+          >
+            All skills
+          </h2>
+          <ul className="mt-1.5 flex flex-col gap-0.5">
+            {graph.nodes.map((node) => {
+              const on = node.id === selectedId;
+              return (
+                <li key={node.id}>
+                  <button
+                    type="button"
+                    onClick={() => select(node.id)}
+                    aria-pressed={on}
+                    className={`flex w-full min-w-0 flex-col gap-0.5 rounded-lg px-3 py-2.5 text-left transition-colors ${
+                      on ? "bg-[var(--skill-node)]/10" : "hover:bg-[var(--bg-elevated)]"
+                    }`}
+                  >
+                    <span className="truncate font-mono text-[12.5px] font-medium text-[color:var(--skill-node)]">
+                      {node.label}
+                    </span>
+                    <span className="truncate text-[12px] text-[var(--text-secondary)]">
+                      {node.purpose}
+                    </span>
+                    <span className="text-[11.5px] tabular-nums text-[var(--text-tertiary)]">
+                      Uses {node.outDegree} · Used by {node.inDegree}
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
       </div>
     );
 
@@ -533,10 +760,10 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
             {view === "canvas" && (
               <p className="hidden items-center gap-3 text-[11px] text-[var(--text-tertiary)] sm:flex">
                 <span className="inline-flex items-center gap-1.5">
-                  <span className="h-px w-4" style={{ background: "var(--skill-edge-out)" }} /> references
+                  <span className="h-px w-4" style={{ background: "var(--skill-edge-out)" }} /> uses
                 </span>
                 <span className="inline-flex items-center gap-1.5">
-                  <span className="h-px w-4" style={{ background: "var(--skill-edge-in)" }} /> referenced by
+                  <span className="h-px w-4" style={{ background: "var(--skill-edge-in)" }} /> used by
                 </span>
               </p>
             )}
@@ -565,10 +792,40 @@ export function SkillGraphView({ graph }: { graph: SkillGraph }) {
               <div className="pointer-events-auto ml-auto">{help}</div>
             </div>
           )}
+
+          {/* Wherever the rail cannot fit — focus mode, or a viewport under
+              1280 — the way in becomes a strip over the map. It costs one row
+              and it disappears the moment a skill is selected, because from
+              then on the panel is the way in. */}
+          {showStartStrip && view === "canvas" && (
+            <div
+              className={`pointer-events-none absolute inset-x-0 z-10 flex flex-wrap items-center gap-1.5 px-3 ${
+                focus ? "top-14" : "top-3"
+              }`}
+            >
+              <span className="pointer-events-auto text-[11.5px] text-[var(--text-tertiary)]">
+                Start with a group
+              </span>
+              {groups.map((group) => (
+                <button
+                  key={group.category}
+                  type="button"
+                  onClick={() => jumpToGroup(group.category)}
+                  className="pointer-events-auto inline-flex h-7 items-center gap-1.5 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-2.5 text-[12px] text-[var(--text-secondary)] transition-colors hover:border-[var(--border-strong)] hover:text-[var(--text-primary)]"
+                >
+                  {group.label}
+                  <span className="tabular-nums text-[var(--text-tertiary)]">{group.count}</span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {dockInspector && (
-          <aside className="flex w-[300px] shrink-0 flex-col overflow-hidden rounded-[16px] border border-[var(--border-subtle)] bg-[var(--glass-frame)]">
+          <aside
+            aria-label={selected ? `${selected.label} connections` : "Start with a skill"}
+            className="flex w-[300px] shrink-0 flex-col overflow-hidden rounded-[16px] border border-[var(--border-subtle)] bg-[var(--glass-frame)]"
+          >
             {inspector}
           </aside>
         )}

@@ -78,6 +78,16 @@ comparing two clusters needs to move things.
 whether the two clusters share any references, then returns to the canonical
 layout with one control.
 
+### Know what to do next without knowing graph vocabulary
+
+A reader arriving at the map should not have to work out whether an arrow
+means "uses" or "used by", what an entry point is, or whether the picture is
+for choosing a skill or for looking at.
+
+**Scenario:** Someone who has never seen the page reads the heading, picks a
+group or a starting point, selects a skill, and can say out loud which skills
+come before it and which depend on it, without using the word graph.
+
 ### Give the map the whole screen when reading it
 
 The map is the subject of the page, not an illustration inside a dashboard. A
@@ -149,6 +159,29 @@ still there.
   positions and restores the canonical layout.
 - **SKEX-3.6** If stored positions are unreadable or carry a different layout
   version, the visualization shall discard them and use the canonical layout.
+
+### Know what to do next without knowing graph vocabulary
+
+- **SKEX-8.1** The explorer shall name an outgoing relationship "uses" and an
+  incoming one "used by", on every surface that shows either.
+- **SKEX-8.2** The explorer shall not present a skill's degree counts as its
+  primary description.
+- **SKEX-8.3** A skill shall be identified by its handle, its title and one
+  line saying what it is for, in that order, on the map and in the catalog.
+- **SKEX-8.4** Before anything is selected, the explorer shall offer at least
+  one way in: a group to jump to, or a skill to start from.
+- **SKEX-8.5** Selecting a group shall frame that group on the map, from the
+  map and from the browse list alike.
+- **SKEX-8.6** A starting point shall be a skill nothing else pulls in that
+  pulls in something itself; a skill with no connections in either direction
+  shall not be offered as one.
+- **SKEX-8.7** When a skill is selected, the explorer shall show the skills it
+  is named alongside, the skills it uses and the skills that use it, each
+  labelled in words rather than by direction symbols.
+- **SKEX-8.8** The browse list shall carry the same starting points, groups,
+  purpose lines and relationship words the map does.
+- **SKEX-8.9** The page shall state its counts as one muted line and shall not
+  give them more weight than its controls.
 
 ### Give the map the whole screen when reading it
 

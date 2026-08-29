@@ -42,9 +42,11 @@ const ENTRIES: ChangelogEntry[] = [
   {
     date: "August 29, 2026",
     shortDate: "Aug 29",
-    title: "A quieter skills catalog and an interactive relationship map",
+    title: "A skills map that tells you what to do next",
     items: [
-      "The **Skills catalog** is category-first and much more compact — a card carries the handle, the title and the phrase that triggers it, so choosing a workflow no longer means reading 34 descriptions.",
+      "The **Skills catalog** is category-first and much more compact — a card carries the handle, the title and what the skill is for, so choosing a workflow no longer means reading 34 descriptions.",
+      "Everything now says **uses** and **used by** instead of references and referenced by, on the map, in the list, on the detail page and in the catalog. A skill that uses another is the one pulling it in.",
+      "Before you pick anything the map offers a way in: **jump to a group**, or start from one of the skills nothing else depends on.",
       "**Visualize interactions** is a pan-and-zoom canvas now. Move skills around, trace what each one references and what references it, and reset to the canonical layout whenever you want.",
       "The map opens at a size you can actually read, and **`F` gives it the whole screen** — navigation, header and stats out of the way, inspector as an overlay. `Esc` comes back, `R` resets the layout.",
       "Every relationship is still available as an accessible **List view**, which is also what smaller screens get by default.",

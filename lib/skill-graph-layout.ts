@@ -16,16 +16,17 @@ export type PersistedSkillGraphLayout = {
  * no longer exists, and restoring them would scatter nodes across lanes that
  * have moved.
  */
-export const LAYOUT_VERSION = 2;
+export const LAYOUT_VERSION = 3;
 
 const STORAGE_KEY = "ai-devkit-skill-graph-layout";
 
-// Sized so a card is readable at zoom 1 without hovering it: the handle, the
-// category and the degree counts all have to survive at their own font size,
-// because the map opens at a readable zoom rather than fitted to the viewport.
-const NODE_WIDTH = 204;
-const NODE_HEIGHT = 64;
-const COLUMN_GAP = 72;
+// Sized for three lines at zoom 1 without hovering: the handle, the human
+// title, and the line saying what the skill is for. The last one is the
+// reason the card grew — a reader who cannot tell what a node does has no
+// use for knowing how many arrows touch it.
+const NODE_WIDTH = 216;
+const NODE_HEIGHT = 92;
+const COLUMN_GAP = 64;
 const ROW_GAP = 28;
 const LANE_GAP = 56;
 const LANE_HEADER = 44;

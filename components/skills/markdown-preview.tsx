@@ -414,7 +414,15 @@ export function MarkdownPreview({
           )}
         </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto px-6 py-6 sm:px-10">
+        {/* Focusable on purpose: a skill whose rendered body carries no links
+            gives this scroller no focusable child, and a keyboard user then
+            has no way to scroll it at all. */}
+        <div
+          tabIndex={0}
+          role="region"
+          aria-label="Rendered document"
+          className="min-h-0 flex-1 overflow-y-auto px-6 py-6 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[var(--accent)] sm:px-10"
+        >
           <article className="mx-auto flex max-w-[680px] flex-col gap-8">
             {showFrontmatter && frontmatter && <FrontmatterCard fields={frontmatter} />}
             {sections.map((s) => {

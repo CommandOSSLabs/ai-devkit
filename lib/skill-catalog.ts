@@ -2,7 +2,13 @@ import fs from "node:fs";
 import path from "node:path";
 import { extractFrontmatter } from "./frontmatter";
 import { getSkillGraph } from "./skill-graph";
-import { CATEGORY_LABELS, CATEGORY_MAP, type SkillCategoryInfo } from "./skill-types";
+import {
+  CATEGORY_LABELS,
+  CATEGORY_MAP,
+  extractTriggers,
+  skillPurpose,
+  type SkillCategoryInfo,
+} from "./skill-types";
 
 export type SkillFileRef = {
   /** path relative to skills/, matching SkillTreeNode ids — e.g. "adr/references/adr-template.md" */
@@ -28,6 +34,8 @@ export type SkillSummary = {
   title: string;
   /** frontmatter description: the full "use when" sentence */
   description: string;
+  /** one line saying what the skill is for — the same line the map shows */
+  purpose: string;
   /** first paragraph of the body: what the skill actually does */
   summary: string;
   version: string;
@@ -180,10 +188,6 @@ function collectFiles(dir: string, skillId: string, out: SkillFileRef[] = []): S
 }
 
 /** Trigger phrases are already written down: the description quotes them verbatim. */
-function extractTriggers(description: string): string[] {
-  return Array.from(description.matchAll(/"([^"]+)"/g)).map((m) => m[1]);
-}
-
 let cached: SkillSummary[] | null = null;
 
 /**
@@ -237,6 +241,7 @@ export function getSkillCatalog(): SkillSummary[] {
       handle: field("name") || `cmk:${id}`,
       title: parsed.title || id,
       description,
+      purpose: skillPurpose(id, description),
       summary: parsed.summary,
       version: field("version") || "0.0.0",
       category,

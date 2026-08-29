@@ -34,7 +34,12 @@ export function EvalView({ cases }: { cases: EvalCase[] }) {
   const totalAssertions = cases.reduce((n, c) => n + (c.assertions?.length ?? 0), 0);
 
   return (
-    <div className="min-h-0 flex-1 overflow-y-auto px-6 py-6 sm:px-10">
+    <div
+      tabIndex={0}
+      role="region"
+      aria-label="Evaluation scenarios"
+      className="min-h-0 flex-1 overflow-y-auto px-6 py-6 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[var(--accent)] sm:px-10"
+    >
       <div className="mx-auto flex max-w-[760px] flex-col gap-6">
         <div className="flex flex-wrap items-center gap-2 text-[11.5px] text-[var(--text-tertiary)]">
           <span className="rounded-full bg-[var(--glass-elevated)] px-2.5 py-1">

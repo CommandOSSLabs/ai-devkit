@@ -35,6 +35,8 @@ export type SkillCanvasApi = {
   zoomOut: () => void;
   /** bring a node into view, raising the zoom to a readable level if needed */
   reveal: (id: string, force?: boolean) => void;
+  /** frame one category's lane, for readers who would rather start with a group */
+  revealLane: (category: string) => void;
 };
 
 /** Below this the metadata row is dropped: it would render sub-8px. */
@@ -47,6 +49,8 @@ const MAX_ZOOM = 1.8;
 
 type SkillNodeData = {
   label: string;
+  title: string;
+  purpose: string;
   categoryLabel: string;
   outDegree: number;
   inDegree: number;
@@ -78,7 +82,8 @@ function LaneHeading({ data }: NodeProps<Node<LaneNodeData, "lane">>) {
 }
 
 function SkillFlowNodeCard({ id, data }: NodeProps<SkillCardNode>) {
-  const { label, categoryLabel, outDegree, inDegree, selected, traced, related, dimmed } = data;
+  const { label, title, purpose, categoryLabel, outDegree, inDegree, selected, traced, related, dimmed } =
+    data;
   // A boolean selector, so the store only re-renders these cards on the two
   // zoom steps where the answer actually flips.
   const showMeta = useStore((s) => s.transform[2] >= META_ZOOM);
@@ -88,7 +93,7 @@ function SkillFlowNodeCard({ id, data }: NodeProps<SkillCardNode>) {
       role="button"
       tabIndex={0}
       aria-pressed={selected}
-      aria-label={`${label}, ${categoryLabel}. ${outDegree} references out, ${inDegree} in.`}
+      aria-label={`${label}. ${title}. ${purpose}. ${categoryLabel}. Uses ${outDegree} skills, used by ${inDegree}.`}
       onClick={() => data.onSelect(id)}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
@@ -107,7 +112,7 @@ function SkillFlowNodeCard({ id, data }: NodeProps<SkillCardNode>) {
           ? "0 0 0 4px color-mix(in srgb, var(--skill-node-active) 24%, transparent)"
           : undefined,
       }}
-      className={`flex cursor-pointer flex-col justify-center gap-1 rounded-[10px] border px-3.5 text-left outline-none transition-opacity focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--skill-node-active)] ${
+      className={`flex cursor-pointer flex-col justify-center gap-0.5 rounded-[10px] border px-3.5 text-left outline-none transition-opacity focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--skill-node-active)] ${
         selected
           ? "border-[var(--skill-node-active)] bg-[var(--bg-surface)]"
           : traced
@@ -123,16 +128,21 @@ function SkillFlowNodeCard({ id, data }: NodeProps<SkillCardNode>) {
           own: connecting is disabled, so these exist purely as geometry. */}
       <Handle type="target" position={Position.Left} isConnectable={false} className="!opacity-0" />
       <Handle type="source" position={Position.Right} isConnectable={false} className="!opacity-0" />
-      <span className="truncate font-mono text-[13.5px] font-semibold leading-tight text-[color:var(--skill-node)]">
+      {/* Handle, human name, and what it is for. The degree counts left the
+          card: they answer "how connected is this" to a reader who has not
+          yet been told what it does, and the panel says them in words. */}
+      <span className="truncate font-mono text-[13px] font-semibold leading-tight text-[color:var(--skill-node)]">
         {label}
       </span>
       {showMeta && (
-        <span className="flex items-center gap-2 text-[11.5px] leading-tight text-[var(--text-tertiary)]">
-          <span className="truncate">{categoryLabel}</span>
-          <span className="ml-auto shrink-0 tabular-nums">
-            {outDegree} out &middot; {inDegree} in
+        <>
+          <span className="truncate text-[12.5px] font-medium leading-tight text-[var(--text-primary)]">
+            {title}
           </span>
-        </span>
+          <span className="line-clamp-2 text-[11.5px] leading-[1.35] text-[var(--text-tertiary)]">
+            {purpose}
+          </span>
+        </>
       )}
     </div>
   );
@@ -148,8 +158,11 @@ export function SkillGraphCanvas({
   graphHeight,
   selectedId,
   hoveredId,
+  initialLane,
   positions,
   showMiniMap,
+  miniMapSide = "left",
+  rightInset = 0,
   reduceMotion,
   onSelect,
   onHover,
@@ -163,9 +176,16 @@ export function SkillGraphCanvas({
   graphHeight: number;
   selectedId: string | null;
   hoveredId: string | null;
+  /** a group the reader asked for before this canvas existed */
+  initialLane?: string | null;
   /** dragged overrides on top of the canonical layout */
   positions: Record<string, SkillGraphPosition>;
   showMiniMap: boolean;
+  /** the corner nothing else is using: the rail sits right, the focus drawer does not */
+  miniMapSide?: "left" | "right";
+  /** width of anything floating over the canvas's right edge, so centring
+   *  means centred in what the reader can actually see */
+  rightInset?: number;
   reduceMotion: boolean;
   onSelect: (id: string) => void;
   onHover: (id: string | null) => void;
@@ -177,6 +197,9 @@ export function SkillGraphCanvas({
   // Read at mount only. Re-centring on every selection change would fight the
   // user's own panning; the reveal rule below decides when to move instead.
   const initialSelection = useRef(selectedId);
+  const initialLaneRef = useRef(initialLane);
+  const rightInsetRef = useRef(rightInset);
+  rightInsetRef.current = rightInset;
   const framed = useRef(false);
 
   // Hover traces a different skill without taking the pin away: the trace
@@ -198,18 +221,27 @@ export function SkillGraphCanvas({
     return { out, inc };
   }, [edges, tracedId]);
 
-  /** Absolute placement, computed from the container box rather than from
-   *  React Flow's measured size: measurement rides on ResizeObserver, and the
-   *  first frame must land exactly whether or not that has been delivered. */
-  const centerOn = useCallback((cx: number, cy: number, zoom: number, duration: number) => {
-    const inst = instance.current;
-    const box = wrapper.current?.getBoundingClientRect();
-    if (!inst || !box || box.width === 0) return;
-    inst.setViewport(
-      { x: box.width / 2 - cx * zoom, y: box.height / 2 - cy * zoom, zoom },
-      { duration },
-    );
-  }, []);
+  /**
+   * The one placement helper. Everything is computed from the container's own
+   * box rather than from React Flow's measured size, because measurement
+   * rides on ResizeObserver and a frame has to land exactly whether or not
+   * that has been delivered — and then clamped to the map, since centring on
+   * a node in the first row would otherwise open with a third of the canvas
+   * showing nothing above the graph.
+   */
+  const clamped = useCallback(
+    (x: number, y: number, zoom: number, box: DOMRect) => {
+      const spanX = laneWidth * zoom;
+      const spanY = graphHeight * zoom;
+      const minX = Math.min(32, box.width - rightInset - spanX - 32);
+      const minY = Math.min(32, box.height - spanY - 32);
+      return {
+        x: spanX <= box.width - rightInset ? x : Math.min(32, Math.max(minX, x)),
+        y: spanY <= box.height ? y : Math.min(32, Math.max(minY, y)),
+      };
+    },
+    [graphHeight, laneWidth, rightInset],
+  );
 
   /** The opening frame, anchored to the map's top-left corner rather than
    *  centred on it: centring a grid wider than the panel clips the first
@@ -227,9 +259,20 @@ export function SkillGraphCanvas({
         if (!box || box.width === 0) return;
         const zoom = Math.max(
           MIN_ZOOM,
-          Math.min(1, (box.width - 72) / laneWidth, (box.height - 72) / Math.max(1, graphHeight)),
+          Math.min(
+            1,
+            (box.width - rightInset - 72) / laneWidth,
+            (box.height - 72) / Math.max(1, graphHeight),
+          ),
         );
-        centerOn(laneWidth / 2, graphHeight / 2, zoom, reduceMotion ? 0 : 280);
+        instance.current?.setViewport(
+          {
+            x: (box.width - rightInset) / 2 - (laneWidth / 2) * zoom,
+            y: box.height / 2 - (graphHeight / 2) * zoom,
+            zoom,
+          },
+          { duration: reduceMotion ? 0 : 280 },
+        );
       },
       zoomIn: () => instance.current?.zoomIn({ duration: reduceMotion ? 0 : 160 }),
       zoomOut: () => instance.current?.zoomOut({ duration: reduceMotion ? 0 : 160 }),
@@ -255,11 +298,43 @@ export function SkillGraphCanvas({
           sx > insetX && sx < box.width - insetX && sy > insetY && sy < box.height - insetY;
         if (!force && inFrame && nextZoom === vp.zoom) return;
 
-        centerOn(cx, cy, nextZoom, reduceMotion ? 0 : 280);
+        const frame = clamped(
+          (box.width - rightInset) / 2 - cx * nextZoom,
+          box.height / 2 - cy * nextZoom,
+          nextZoom,
+          box,
+        );
+        inst.setViewport({ ...frame, zoom: nextZoom }, { duration: reduceMotion ? 0 : 280 });
+      },
+      revealLane: (category) => {
+        const lane = lanes.find((l) => l.category === category);
+        const box = wrapper.current?.getBoundingClientRect();
+        if (!lane || !box || box.width === 0) return;
+        // Frame the lane's own height rather than the whole map, and never
+        // below a legible zoom: the point of jumping to a group is to arrive
+        // somewhere you can read.
+        const zoom = Math.max(
+          0.7,
+          Math.min(
+            1,
+            (box.width - rightInset - 72) / laneWidth,
+            (box.height - 72) / Math.max(1, lane.height),
+          ),
+        );
+        const at = clamped(
+          (box.width - rightInset) / 2 - (laneWidth / 2) * zoom,
+          box.height / 2 - (lane.y + lane.height / 2) * zoom,
+          zoom,
+          box,
+        );
+        instance.current?.setViewport({ ...at, zoom }, { duration: reduceMotion ? 0 : 280 });
       },
     }),
-    [centerOn, graphHeight, laneWidth, reduceMotion],
+    [clamped, graphHeight, lanes, laneWidth, reduceMotion, rightInset],
   );
+
+  const apiRef = useRef(api);
+  apiRef.current = api;
 
   useEffect(() => {
     onReady?.(api);
@@ -303,6 +378,8 @@ export function SkillGraphCanvas({
         height: SKILL_NODE_SIZE.height,
         data: {
           label: node.label,
+          title: node.title,
+          purpose: node.purpose,
           categoryLabel: node.categoryLabel,
           outDegree: node.outDegree,
           inDegree: node.inDegree,
@@ -371,16 +448,31 @@ export function SkillGraphCanvas({
           // colour; the frame now starts where the reader is going to look —
           // the deep-linked skill, or the first lane — and "Fit all" is a
           // deliberate action rather than the default.
+          // A group asked for from the browse list arrives before this
+          // renderer exists, so it is honoured here rather than through the
+          // imperative call, which would land on an instance that is not yet
+          // holding a viewport.
+          if (initialLaneRef.current) {
+            apiRef.current?.revealLane(initialLaneRef.current);
+            return;
+          }
           const start = initialSelection.current
             ? placedRef.current.get(initialSelection.current)
             : undefined;
           if (start) {
-            centerOn(
-              start.x + SKILL_NODE_SIZE.width / 2,
-              start.y + SKILL_NODE_SIZE.height / 2,
-              1.1,
-              0,
-            );
+            // Clamped like every other framing move: a deep link to a skill in
+            // the first row would otherwise open with a third of the canvas
+            // showing nothing above the map.
+            const box = wrapper.current?.getBoundingClientRect();
+            if (box && box.width > 0) {
+              const frame = clamped(
+                (box.width - rightInsetRef.current) / 2 - (start.x + SKILL_NODE_SIZE.width / 2) * 1.1,
+                box.height / 2 - (start.y + SKILL_NODE_SIZE.height / 2) * 1.1,
+                1.1,
+                box,
+              );
+              i.setViewport({ ...frame, zoom: 1.1 }, { duration: 0 });
+            }
             return;
           }
           anchorHome();
@@ -406,11 +498,11 @@ export function SkillGraphCanvas({
           <MiniMap
             pannable
             zoomable
-            position="bottom-left"
+            position={miniMapSide === "left" ? "bottom-left" : "bottom-right"}
             ariaLabel="Skill map overview"
             maskColor="color-mix(in srgb, var(--bg-base) 72%, transparent)"
             className="!bg-[var(--bg-surface)]"
-            style={{ width: 152, height: 100 }}
+            style={{ width: 132, height: 88 }}
           />
         )}
       </ReactFlow>

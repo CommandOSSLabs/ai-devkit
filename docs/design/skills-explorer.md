@@ -92,6 +92,49 @@ arrives, the whole map stays invisible, and `visibility: hidden` also makes
 every node unfocusable. The layout already knows every size, so the node
 objects carry `width` and `height` and the renderer never has to ask.
 
+### Vocabulary
+
+One set of words, defined once and used on every surface. `references` became
+`uses`, `referenced by` became `used by`, `out · in` became `Uses n · Used by
+n`, `graph` became `map`, `entry points` became `starting points`, and the
+page is called "How skills connect". The rename is not cosmetic: a reader who
+has to work out which end of an arrow they are looking at cannot use the
+picture, and half the old labels named a data structure rather than a
+direction.
+
+Two things had to exist before the words could work:
+
+- **`SKILL_PURPOSE` in `lib/skill-types.ts`.** A skill's frontmatter carries a
+  name, a version and a long trigger-shaped description; none of them answer
+  "what is this?" in a card-width line. Extracting a clause from the
+  description reads unevenly across 34 skills, so the line is curated in the
+  site layer, next to `CATEGORY_MAP`, which is presentation-only for the same
+  reason. `skillPurpose()` falls back to the first trigger phrase, so a new
+  skill directory still renders. Changing a line is a copy edit in one file,
+  not a change to the skills themselves.
+- **`oftenUsedWith` in `lib/skill-graph.ts`.** "Often used with" is not an
+  edge. Two skills keep company when some third skill pulls in both, and
+  counting those shared parents ranks them. It answers the question a reader
+  actually has — what else will I want open — which neither direction of the
+  real edge does.
+
+### Starting points
+
+A starting point is a skill nothing else pulls in *that pulls in something
+itself*. The naive definition, in-degree zero, includes `cmk:codebase-docs`,
+which has no connections in either direction: sending a reader there as a
+place to begin is worse than saying nothing. The stat line lost its
+"5 entry points" for the same reason it gained the start panel — it was an
+action wearing a statistic's clothes.
+
+Before anything is selected the rail holds a start panel rather than
+disappearing: group chips that frame a lane, and the starting points with what
+each one leads to. Where the rail cannot fit — under 1280, and in focus mode —
+the same groups appear as a strip over the map, and the browse list carries
+them as its first two sections. A group jump requested from the list is handed
+to the canvas as its opening frame rather than called on it, because at that
+moment the canvas does not exist yet.
+
 ### Focus mode
 
 Focus mode is application-level rather than the browser Fullscreen API, and it
@@ -249,6 +292,11 @@ information the canvas draws.
   relationship they hint at is available at full contrast in the traced state,
   the inspector and the list.
 - `prefers-reduced-motion` removes edge animation and view transitions.
+- Document scrollers are focusable. A skill whose rendered body happens to
+  carry no links leaves its scroll container with no focusable child, and a
+  keyboard user then cannot scroll it at all — which is why the preview and
+  the eval view take `tabindex` and a label rather than relying on their
+  content to provide one.
 - axe-core 4.13 reports no WCAG 2.0/2.1 A or AA violations on the catalog, the
   canvas in both layouts, the list view, the mobile inspector, the skill detail
   or the workspace. Its `color-contrast` check returns *incomplete* over the

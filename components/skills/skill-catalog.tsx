@@ -133,14 +133,19 @@ function SkillCard({
         </span>
       </div>
 
-      {/* The phrase you would actually type is the strongest recognition
-          signal a card can carry. Summaries and counts live in detail, where
-          someone is comparing rather than scanning. */}
+      {/* Handle, title, then what the skill is for — the same three facts in
+          the same order a node on the map gives, so the two surfaces read as
+          one product. The trigger phrase becomes the secondary line it always
+          was. */}
+      {skill.purpose && (
+        <p className="truncate text-[12px] text-[var(--text-secondary)]">{skill.purpose}</p>
+      )}
+
       <div className="flex items-center gap-2">
         <span className="min-w-0 flex-1 truncate text-[11.5px] text-[var(--text-tertiary)]">
           {firstTrigger ? (
             <>
-              <span className="text-[var(--text-tertiary)]">Use when </span>
+              <span className="text-[var(--text-tertiary)]">Ask with </span>
               <span className="text-[var(--text-secondary)]">&ldquo;{firstTrigger}&rdquo;</span>
               {restTriggers.length > 0 && (
                 <span className="text-[var(--text-tertiary)]"> +{restTriggers.length}</span>

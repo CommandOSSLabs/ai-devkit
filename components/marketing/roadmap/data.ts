@@ -56,8 +56,8 @@ export const ROADMAP_ITEMS: RoadmapItem[] = [
     id: "skills-explorer-canvas",
     status: "now",
     category: "Website",
-    title: "Minimal skills explorer + relationship canvas",
-    description: "A quieter category-first catalog and a pan-and-zoom map for tracing how skills reference each other, with a full-viewport focus mode for reading it.",
+    title: "Minimal skills explorer + skill relationship map",
+    description: "A quieter category-first catalog and a map of which skills to use before, after or alongside each other, with a full-viewport focus mode for reading it.",
     pr: `${REPO}/pull/24`,
   },
   {
