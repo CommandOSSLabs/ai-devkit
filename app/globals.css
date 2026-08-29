@@ -232,7 +232,20 @@
   --skill-edge-in: #B4126B;
 }
 
+/* The map is the one surface that has to sit BELOW the page rather than above
+   it. Everything else here is a panel lifted off the background; a canvas is a
+   space you look into, and the dot grid that says so only reads against
+   something close to black. Opaque on purpose: the animated wash behind the
+   shell was showing through the translucent panel, lifting the surface past
+   the dots and flattening the whole map. */
+.skills-shell {
+  --skill-canvas: #FFFFFF;
+  --skill-dot: #CBD5E1;
+}
+
 .dark .skills-shell {
+  --skill-canvas: #050608;
+  --skill-dot: #2F3742;
   --accent: #82AAFF;
   --text-tertiary: #7C8593;
   --text-disabled: #6E7684;
@@ -272,4 +285,82 @@
   ::-webkit-scrollbar-thumb:hover {
     background-color: var(--text-disabled);
   }
+}
+
+/* React Flow ships a light-mode chrome. These map its controls and minimap
+   onto the shell's own tokens so the canvas does not become the one panel on
+   the page with a different set of colours. */
+.skills-shell .react-flow__controls {
+  box-shadow: none;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.skills-shell .react-flow__controls-button {
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  width: 26px;
+  height: 26px;
+}
+
+.skills-shell .react-flow__controls-button:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.skills-shell .react-flow__controls-button svg {
+  fill: currentColor;
+}
+
+.skills-shell .react-flow__minimap {
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+}
+
+/* Styled here rather than through the nodeColor prop: that prop is read once
+   into an SVG fill and does not follow a theme change, while a class does. */
+.skills-shell .react-flow__minimap-node {
+  fill: var(--skill-node);
+  stroke: none;
+}
+
+.skills-shell .react-flow__attribution {
+  display: none;
+}
+
+/* Canvas focus mode. The graph does not move in the tree and is never
+   unmounted: the shell's own chrome collapses out of its way from a single
+   attribute on <html>, so the canvas grows into the padding, the rail and the
+   header instead of being re-created inside a fixed overlay. Unlayered, so it
+   beats the Tailwind utilities it is overriding regardless of specificity. */
+html[data-skills-focus] .skills-shell {
+  padding: 0;
+  gap: 0;
+}
+
+html[data-skills-focus] .skills-shell > aside {
+  display: none;
+}
+
+/* backdrop-filter on this column makes it the containing block for every
+   fixed descendant. Dropping it in focus mode is what lets the inspector
+   drawer position against the viewport, and the column covers the whole
+   screen by then anyway, so there is nothing left to blur. */
+html[data-skills-focus] .skills-column {
+  border: 0;
+  border-radius: 0;
+  backdrop-filter: none;
+  background: var(--skill-canvas);
+}
+
+html[data-skills-focus] .skills-topbar,
+html[data-skills-focus] .skills-page-head,
+html[data-skills-focus] .skills-backdrop {
+  display: none;
+}
+
+html[data-skills-focus] .skills-content-pad {
+  padding: 0;
 }

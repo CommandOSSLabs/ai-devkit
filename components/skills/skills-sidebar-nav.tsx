@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 export const NAV_ITEMS: { href: string; label: string; icon: LucideIcon }[] = [
   { href: "/skills", label: "Skills", icon: Layers },
-  { href: "/skills/visualize-interactions", label: "Visualize interactions", icon: Share2 },
+  { href: "/skills/visualize-interactions", label: "How skills connect", icon: Share2 },
   { href: "/skills/prompt-inputs", label: "Prompt Inputs", icon: SendHorizontal },
 ];
 

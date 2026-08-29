@@ -200,17 +200,19 @@ export function SkillDetail({
         className="grid gap-5 rounded-[14px] border border-[var(--border-subtle)] bg-[var(--glass-surface)] p-4 sm:grid-cols-2"
         aria-label="Related skills"
       >
+        {/* Same two words the map and the browse list use, so a reader who
+            learned the direction on one surface does not relearn it here. */}
         <RelatedSkills
-          title={`References (${skill.references.length})`}
+          title={`Uses (${skill.references.length})`}
           ids={skill.references}
           handles={handles}
           empty="This skill stands alone."
         />
         <RelatedSkills
-          title={`Referenced by (${skill.referencedBy.length})`}
+          title={`Used by (${skill.referencedBy.length})`}
           ids={skill.referencedBy}
           handles={handles}
-          empty="Nothing points here yet."
+          empty="Nothing pulls this in yet."
         />
       </section>
 

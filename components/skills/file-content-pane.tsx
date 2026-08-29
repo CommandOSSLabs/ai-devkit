@@ -201,73 +201,97 @@ export function FileContentPane({
       {/* Real tab semantics rather than a row of buttons: assistive tech gets
           the selected state and the arrow-key model people already expect from
           an editor's tab strip. */}
-      <div
-        role="tablist"
-        aria-label="Open files"
-        onKeyDown={(e) => {
-          const index = openFiles.findIndex((f) => f.id === activeId);
-          if (index === -1) return;
-          const move = (next: number) => {
-            e.preventDefault();
-            onSelectTab(openFiles[(next + openFiles.length) % openFiles.length].id);
-          };
-          if (e.key === "ArrowRight") move(index + 1);
-          else if (e.key === "ArrowLeft") move(index - 1);
-          else if (e.key === "Home") move(0);
-          else if (e.key === "End") move(openFiles.length - 1);
-        }}
-        className="flex shrink-0 items-center gap-1 overflow-x-auto border-b border-[var(--border-subtle)] px-2"
-      >
-        <AnimatePresence initial={false}>
-          {openFiles.map((f) => {
-            const on = f.id === activeId;
-            const name = basename(f.id);
-            const { Icon, color } = fileVisual(name);
-            const draft = hasDraft(f);
-            return (
-              <motion.div
-                key={f.id}
-                layout={!reduce}
-                initial={reduce ? false : { opacity: 0, width: 0 }}
-                animate={{ opacity: 1, width: "auto" }}
-                exit={reduce ? undefined : { opacity: 0, width: 0 }}
-                transition={{ duration: 0.16, ease: "easeOut" }}
-                className="relative shrink-0"
-              >
-                <button
-                  type="button"
-                  role="tab"
-                  id={`file-tab-${f.id}`}
-                  aria-selected={on}
-                  aria-controls="file-content-panel"
-                  tabIndex={on ? 0 : -1}
-                  onClick={() => onSelectTab(f.id)}
-                  className={`flex h-10 items-center gap-2 px-3 pr-8 text-[13px] transition-colors ${
-                    on ? "text-[var(--text-primary)]" : "text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
-                  }`}
+      <div className="flex shrink-0 items-center border-b border-[var(--border-subtle)] px-2">
+        {/* The tablist owns tabs and nothing else. A tablist may only own
+            elements with role="tab", so the close control lives inside its own
+            tab — which is why a tab is a div here rather than a button, since
+            a button cannot legally contain one — and the file actions sit
+            outside the tablist entirely rather than as its last child.
+            The close control is a pointer affordance only: a focusable button
+            inside a tab is nested interactive content, so it is kept out of
+            the accessibility tree and keyboard users close the focused tab
+            with Delete or Backspace instead. */}
+        <div
+          role="tablist"
+          aria-label="Open files"
+          onKeyDown={(e) => {
+            const index = openFiles.findIndex((f) => f.id === activeId);
+            if (index === -1) return;
+            const move = (next: number) => {
+              e.preventDefault();
+              onSelectTab(openFiles[(next + openFiles.length) % openFiles.length].id);
+            };
+            if (e.key === "ArrowRight") move(index + 1);
+            else if (e.key === "ArrowLeft") move(index - 1);
+            else if (e.key === "Home") move(0);
+            else if (e.key === "End") move(openFiles.length - 1);
+            else if (e.key === "Delete" || e.key === "Backspace") {
+              e.preventDefault();
+              requestClose(openFiles[index]);
+            }
+          }}
+          className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto"
+        >
+          <AnimatePresence initial={false}>
+            {openFiles.map((f) => {
+              const on = f.id === activeId;
+              const name = basename(f.id);
+              const { Icon, color } = fileVisual(name);
+              const draft = hasDraft(f);
+              return (
+                <motion.div
+                  key={f.id}
+                  layout={!reduce}
+                  initial={reduce ? false : { opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: "auto" }}
+                  exit={reduce ? undefined : { opacity: 0, width: 0 }}
+                  transition={{ duration: 0.16, ease: "easeOut" }}
+                  className="relative shrink-0"
                 >
-                  <Icon size={14} className="shrink-0" style={{ color }} />
-                  <span className="max-w-[220px] truncate font-mono">{name}</span>
-                  {draft && (
-                    <span className="inline-flex shrink-0 items-center gap-1 text-[10.5px] font-medium uppercase tracking-[0.06em] text-[color:var(--accent)]">
-                      <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#82AAFF]" />
-                      draft
+                  <div
+                    role="tab"
+                    id={`file-tab-${f.id}`}
+                    aria-selected={on}
+                    aria-controls="file-content-panel"
+                    aria-keyshortcuts="Delete"
+                    tabIndex={on ? 0 : -1}
+                    onClick={() => onSelectTab(f.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        onSelectTab(f.id);
+                      }
+                    }}
+                    className={`flex h-10 cursor-pointer items-center gap-2 px-3 pr-8 text-[13px] outline-none transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[var(--accent)] ${
+                      on ? "text-[var(--text-primary)]" : "text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+                    }`}
+                  >
+                    <Icon size={14} className="shrink-0" style={{ color }} />
+                    <span className="max-w-[220px] truncate font-mono">{name}</span>
+                    {draft && (
+                      <span className="inline-flex shrink-0 items-center gap-1 text-[10.5px] font-medium uppercase tracking-[0.06em] text-[color:var(--accent)]">
+                        <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#82AAFF]" />
+                        draft
+                      </span>
+                    )}
+                    <span
+                      aria-hidden="true"
+                      title={`Close ${name}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        requestClose(f);
+                      }}
+                      className="absolute right-1.5 top-1/2 inline-flex h-5 w-5 -translate-y-1/2 cursor-pointer items-center justify-center rounded-[4px] text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)]"
+                    >
+                      <X size={12} strokeWidth={2} />
                     </span>
-                  )}
-                </button>
-                <button
-                  type="button"
-                  aria-label={`Close ${name}`}
-                  onClick={() => requestClose(f)}
-                  className="absolute right-1.5 top-1/2 inline-flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-[4px] text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)]"
-                >
-                  <X size={12} strokeWidth={2} />
-                </button>
-                {on && <span className="absolute inset-x-0 bottom-0 h-px bg-[#82AAFF]" />}
-              </motion.div>
-            );
-          })}
-        </AnimatePresence>
+                  </div>
+                  {on && <span className="absolute inset-x-0 bottom-0 h-px bg-[#82AAFF]" />}
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </div>
 
         <div className="ml-auto hidden shrink-0 items-center gap-1.5 pl-2 lg:flex">{actionCluster}</div>
       </div>

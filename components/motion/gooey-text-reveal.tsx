@@ -146,7 +146,13 @@ export const GooeyTextReveal = React.forwardRef<HTMLDivElement, GooeyTextRevealP
           const split = SplitText.create(target, {
             type: "lines",
             linesClass: "gooey-text-reveal-line",
-            aria: "auto",
+            // "auto" puts aria-label on the target and aria-hidden on every
+            // line it generates. On a heading that is fine; on a <p> the label
+            // is prohibited on the paragraph role, so assistive technology can
+            // drop it and then find nothing but hidden children — a paragraph
+            // that reads as empty. Splitting by line keeps whole words in the
+            // DOM, so the text is announced correctly with no aria at all.
+            aria: "none",
           });
 
           split.lines.forEach((line) => {
