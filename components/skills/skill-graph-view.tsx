@@ -1,352 +1,68 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ArrowDownLeft, ArrowUpRight, ExternalLink, List, Share2, X } from "lucide-react";
-import type { SkillGraph } from "@/lib/skill-graph";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useReducedMotion } from "motion/react";
+import { ArrowDownLeft, ArrowUpRight, List, RotateCcw, Share2, X } from "lucide-react";
+import type { SkillGraph, SkillNode } from "@/lib/skill-graph";
+import {
+  clearStoredLayout,
+  layoutSkillGraph,
+  readStoredLayout,
+  writeStoredLayout,
+  type SkillGraphPosition,
+} from "@/lib/skill-graph-layout";
 import { normalizeSkillId } from "@/lib/skill-id";
+import { useMediaQuery } from "@/lib/use-media-query";
 
-// A circular (chord) layout rather than a force simulation: with 34 nodes and
-// 108 edges a physics layout settles differently on every load, which makes
-// the picture impossible to refer back to. Fixed positions mean "the hub at
-// the top right" stays the hub at the top right, and it needs no animation
-// frame budget next to the fluid background already running on this page.
+// Three things live here and nowhere else: which view is showing, which skill
+// is selected, and what the URL says about both. The canvas is a renderer it
+// mounts; the inspector is rendered by this component directly, so its content
+// never waits on the canvas or on an animation finishing — the previous
+// version could leave the panel blank behind an exit transition that never
+// completed.
 
-const SIZE = 900;
-const C = SIZE / 2;
-const R = 310;
-// Read from the shell's tokens so the graph carries meaning in both themes;
-// see the --skill-* block in globals.css.
-const OUT_COLOR = "var(--skill-edge-out)";
-const IN_COLOR = "var(--skill-edge-in)";
-const NODE_COLOR = "var(--skill-node)";
-const NODE_ACTIVE = "var(--skill-node-active)";
-const EDGE_COLOR = "var(--skill-edge)";
-
-type Pt = { x: number; y: number; angle: number };
-
-// Coordinates are rounded before they reach the DOM. Full-precision floats
-// serialize differently on the server and the client (…4313 vs …43124), which
-// React reports as a hydration mismatch on every label in the ring.
-const r2 = (n: number) => Math.round(n * 100) / 100;
-
-export function SkillGraphView({ graph }: { graph: SkillGraph }) {
-  const reduce = useReducedMotion();
-  const [hovered, setHovered] = useState<string | null>(null);
-  const [pinned, setPinned] = useState<string | null>(null);
-  const [view, setView] = useState<"graph" | "list">("graph");
-  const [focused, setFocused] = useState<string | null>(null);
-  // Hover traces a different skill without taking the pin away: `active`
-  // drives the trace, `pinned` keeps its own marker regardless. Losing the
-  // selection the moment the cursor moved made the pin useless.
-  const active = hovered ?? pinned;
-
-  // A skill page links here as …?focus=delivery-review, so "see what this
-  // connects to" lands on that node already traced instead of on 34
-  // undifferentiated dots. Read after mount to keep the page static.
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const requested = normalizeSkillId(params.get("skill") ?? params.get("focus"));
-    if (requested && graph.nodes.some((n) => n.id === requested)) setPinned(requested);
-  }, [graph.nodes]);
-
-  const { points, byId } = useMemo(() => {
-    const points = new Map<string, Pt>();
-    const n = graph.nodes.length || 1;
-    graph.nodes.forEach((node, i) => {
-      // start at 12 o'clock so the ordering reads clockwise from the top
-      const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
-      points.set(node.id, { x: r2(C + Math.cos(angle) * R), y: r2(C + Math.sin(angle) * R), angle });
-    });
-    return { points, byId: new Map(graph.nodes.map((nd) => [nd.id, nd])) };
-  }, [graph]);
-
-  const related = useMemo(() => {
-    if (!active) return null;
-    const out = graph.edges.filter((e) => e.source === active).map((e) => e.target);
-    const inc = graph.edges.filter((e) => e.target === active).map((e) => e.source);
-    return { out, inc, touching: new Set([...out, ...inc, active]) };
-  }, [active, graph.edges]);
-
-  const activeNode = active ? byId.get(active) : null;
-  const maxDeg = Math.max(...graph.nodes.map((n) => n.inDegree + n.outDegree), 1);
-
-  return (
-    <div className="flex min-h-0 flex-1 flex-col gap-4 lg:flex-row">
-      <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-[16px] border border-[var(--border-subtle)] bg-[var(--glass-surface)]">
-        <div className="absolute right-3 top-3 z-10 flex items-center gap-0.5 rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-0.5">
-          <button
-            type="button"
-            onClick={() => setView("graph")}
-            aria-pressed={view === "graph"}
-            className={`inline-flex h-6 items-center gap-1 rounded-[4px] px-2 text-[11.5px] transition-colors ${
-              view === "graph"
-                ? "bg-[var(--bg-elevated)] text-[var(--text-primary)]"
-                : "text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
-            }`}
-          >
-            <Share2 size={11} strokeWidth={1.75} />
-            Graph
-          </button>
-          <button
-            type="button"
-            onClick={() => setView("list")}
-            aria-pressed={view === "list"}
-            className={`inline-flex h-6 items-center gap-1 rounded-[4px] px-2 text-[11.5px] transition-colors ${
-              view === "list"
-                ? "bg-[var(--bg-elevated)] text-[var(--text-primary)]"
-                : "text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
-            }`}
-          >
-            <List size={11} strokeWidth={1.75} />
-            List
-          </button>
-        </div>
-
-        {view === "list" ? (
-          /* The same relationships without an SVG in the way: every skill is
-             a focusable row, and focusing one traces it in the inspector, so
-             this graph is navigable by keyboard and by screen reader too. */
-          <div className="min-h-0 flex-1 overflow-y-auto p-2 pt-12">
-            <ul className="flex flex-col gap-0.5">
-              {graph.nodes.map((node) => {
-                const on = node.id === active;
-                return (
-                  <li key={node.id}>
-                    <button
-                      type="button"
-                      onClick={() => setPinned((cur) => (cur === node.id ? null : node.id))}
-                      onFocus={() => setHovered(node.id)}
-                      onBlur={() => setHovered(null)}
-                      onMouseEnter={() => setHovered(node.id)}
-                      onMouseLeave={() => setHovered(null)}
-                      aria-pressed={node.id === pinned}
-                      className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors ${
-                        on ? "bg-[#82AAFF]/10" : "hover:bg-[var(--bg-elevated)]"
-                      }`}
-                    >
-                      <span className="min-w-0 flex-1 truncate font-mono text-[12.5px] text-[color:var(--accent)]">
-                        {node.label}
-                      </span>
-                      <span className="shrink-0 text-[11.5px] tabular-nums text-[var(--text-tertiary)]">
-                        {node.outDegree} out · {node.inDegree} in
-                      </span>
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        ) : (
-        <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="h-full w-full" role="img" aria-label="Skill reference graph">
-          <g>
-            {graph.edges.map((e, i) => {
-              const a = points.get(e.source);
-              const b = points.get(e.target);
-              if (!a || !b) return null;
-              const isOut = active && e.source === active;
-              const isIn = active && e.target === active;
-              const on = isOut || isIn;
-              // pull the control point toward the centre so edges read as
-              // chords instead of overlapping straight lines
-              const cx = r2(C + (a.x + b.x - 2 * C) * 0.18);
-              const cy = r2(C + (a.y + b.y - 2 * C) * 0.18);
-              return (
-                <path
-                  key={i}
-                  d={`M ${a.x} ${a.y} Q ${cx} ${cy} ${b.x} ${b.y}`}
-                  fill="none"
-                  stroke={isOut ? OUT_COLOR : isIn ? IN_COLOR : EDGE_COLOR}
-                  strokeWidth={on ? 1.6 : 0.7}
-                  opacity={active ? (on ? 0.85 : 0.06) : 0.3}
-                  className={reduce ? undefined : "transition-[opacity,stroke-width] duration-200"}
-                />
-              );
-            })}
-          </g>
-
-          <g>
-            {graph.nodes.map((node) => {
-              const p = points.get(node.id)!;
-              const deg = node.inDegree + node.outDegree;
-              const r = r2(3 + (deg / maxDeg) * 7);
-              const dim = active ? !related?.touching.has(node.id) : false;
-              const rightSide = Math.cos(p.angle) > -0.01;
-              const lx = r2(C + Math.cos(p.angle) * (R + 14));
-              const ly = r2(C + Math.sin(p.angle) * (R + 14));
-
-              const isPinned = node.id === pinned;
-              const isHovered = node.id === hovered;
-              const isFocused = node.id === focused;
-              const toggle = () => setPinned((cur) => (cur === node.id ? null : node.id));
-
-              return (
-                <g
-                  key={node.id}
-                  role="button"
-                  tabIndex={0}
-                  aria-pressed={isPinned}
-                  aria-label={`${node.label}: ${node.outDegree} references out, ${node.inDegree} in`}
-                  className={`cursor-pointer focus:outline-none ${reduce ? "" : "transition-opacity duration-200"}`}
-                  opacity={dim ? 0.2 : 1}
-                  onMouseEnter={() => setHovered(node.id)}
-                  onMouseLeave={() => setHovered(null)}
-                  onFocus={() => {
-                    setFocused(node.id);
-                    setHovered(node.id);
-                  }}
-                  onBlur={() => {
-                    setFocused(null);
-                    setHovered(null);
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      toggle();
-                    }
-                  }}
-                  onClick={toggle}
-                >
-                  {/* The pin is a halo plus a ring plus a fill, so it survives
-                      hovering another node and does not rely on colour alone. */}
-                  {isPinned && (
-                    <circle cx={p.x} cy={p.y} r={r + 7} fill={NODE_ACTIVE} opacity={0.18} />
-                  )}
-                  {isFocused && (
-                    <circle cx={p.x} cy={p.y} r={r + 5} fill="none" stroke={NODE_ACTIVE} strokeWidth={2} />
-                  )}
-                  <circle
-                    cx={p.x}
-                    cy={p.y}
-                    r={isPinned ? r + 1.5 : r}
-                    fill={isPinned ? NODE_ACTIVE : NODE_COLOR}
-                    stroke={isPinned || isHovered ? NODE_ACTIVE : "none"}
-                    strokeWidth={isPinned ? 2 : isHovered ? 1.2 : 0}
-                    opacity={isPinned || isHovered ? 1 : 0.8}
-                  />
-                  {/* generous invisible hit area — the dots are small */}
-                  <circle cx={p.x} cy={p.y} r={16} fill="transparent" />
-                  <text
-                    x={lx}
-                    y={ly}
-                    fontSize={11}
-                    fontFamily="var(--font-mono, monospace)"
-                    fill={isPinned ? NODE_ACTIVE : "var(--text-secondary)"}
-                    fontWeight={isPinned || isHovered ? 600 : 400}
-                    textAnchor={rightSide ? "start" : "end"}
-                    dominantBaseline="middle"
-                    transform={rightSide ? undefined : `rotate(180 ${lx} ${ly})`}
-                    style={{ transformBox: "fill-box" }}
-                  >
-                    {node.id}
-                  </text>
-                </g>
-              );
-            })}
-          </g>
-        </svg>
-        )}
-
-        {view === "graph" && (
-          <div className="pointer-events-none absolute bottom-3 left-4 flex items-center gap-4 text-[11px] text-[var(--text-tertiary)]">
-            <span className="inline-flex items-center gap-1.5">
-              <span className="h-px w-4" style={{ background: OUT_COLOR }} /> references
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <span className="h-px w-4" style={{ background: IN_COLOR }} /> referenced by
-            </span>
-          </div>
-        )}
+const SkillGraphCanvas = dynamic(
+  () => import("./skill-graph-canvas").then((m) => m.SkillGraphCanvas),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex h-full items-center justify-center text-[13px] text-[var(--text-tertiary)]">
+        Loading the map…
       </div>
+    ),
+  },
+);
 
-      <aside className="flex shrink-0 flex-col overflow-hidden rounded-[16px] border border-[var(--border-subtle)] bg-[var(--glass-frame)] backdrop-blur-sm lg:w-[320px]">
-        <AnimatePresence mode="wait">
-          {activeNode && related ? (
-            <motion.div
-              key={activeNode.id}
-              initial={reduce ? false : { opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={reduce ? undefined : { opacity: 0 }}
-              transition={{ duration: 0.15 }}
-              className="flex min-h-0 flex-1 flex-col"
-            >
-              <div className="flex shrink-0 items-start justify-between gap-2 border-b border-[var(--border-subtle)] px-4 py-3">
-                <div className="min-w-0">
-                  <p className="truncate font-mono text-[13px] font-semibold text-[color:var(--accent)]">{activeNode.label}</p>
-                  <p className="mt-1 text-[11.5px] text-[var(--text-tertiary)]">
-                    {activeNode.outDegree} out · {activeNode.inDegree} in
-                  </p>
-                </div>
-                {pinned && (
-                  <button
-                    type="button"
-                    onClick={() => setPinned(null)}
-                    aria-label="Clear selection"
-                    className="shrink-0 rounded-md p-1 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)]"
-                  >
-                    <X size={13} />
-                  </button>
-                )}
-              </div>
+export type SkillGraphViewMode = "canvas" | "list";
 
-              <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3">
-                {activeNode.summary && (
-                  <p className="mb-4 text-[12.5px] leading-6 text-[var(--text-secondary)]">{activeNode.summary}</p>
-                )}
-                <RefList title="References" icon={<ArrowUpRight size={12} />} color={OUT_COLOR} ids={related.out} />
-                <RefList title="Referenced by" icon={<ArrowDownLeft size={12} />} color={IN_COLOR} ids={related.inc} />
-                <div className="flex flex-wrap gap-1.5">
-                  <Link
-                    href={`/skills/${activeNode.id}`}
-                    className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-[var(--border-subtle)] px-3 text-[12.5px] text-[var(--text-secondary)] transition-colors hover:border-[#82AAFF]/50 hover:text-[color:var(--accent)]"
-                  >
-                    <ExternalLink size={12} strokeWidth={1.75} />
-                    Open detail
-                  </Link>
-                  <Link
-                    href={`/skills/${activeNode.id}/workspace`}
-                    className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-[#82AAFF]/40 bg-[#82AAFF]/10 px-3 text-[12.5px] font-medium text-[color:var(--accent)] transition-colors hover:bg-[#82AAFF]/20"
-                  >
-                    Open workspace
-                  </Link>
-                </div>
-              </div>
-            </motion.div>
-          ) : (
-            <motion.div
-              key="empty"
-              initial={reduce ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={reduce ? undefined : { opacity: 0 }}
-              className="flex flex-1 flex-col items-center justify-center gap-2 px-6 text-center"
-            >
-              <p className="text-[13px] leading-[1.6] text-[var(--text-tertiary)]">
-                Hover a skill to trace its references. Click to keep it pinned. Switch to List to reach every skill by
-                keyboard.
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </aside>
-    </div>
-  );
+const CANVAS_MIN_WIDTH = "(min-width: 768px)";
+
+function toggleClass(on: boolean) {
+  return `inline-flex h-7 items-center gap-1.5 rounded-[6px] px-2.5 text-[12px] transition-colors ${
+    on
+      ? "bg-[var(--bg-elevated)] font-medium text-[var(--text-primary)]"
+      : "text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+  }`;
 }
 
-function RefList({
+function RelationList({
   title,
   icon,
   color,
   ids,
+  byId,
 }: {
   title: string;
   icon: React.ReactNode;
   color: string;
   ids: string[];
+  byId: Map<string, SkillNode>;
 }) {
   return (
-    <div className="mb-4 last:mb-0">
-      <p className="mb-1.5 flex items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.07em] text-[var(--text-tertiary)]">
+    <div className="flex flex-col gap-1.5">
+      <p className="flex items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.07em] text-[var(--text-tertiary)]">
         <span style={{ color }}>{icon}</span>
         {title} ({ids.length})
       </p>
@@ -358,11 +74,269 @@ function RefList({
             <Link
               key={id}
               href={`/skills/${id}`}
-              className="rounded-full border border-[var(--border-subtle)] px-2 py-0.5 font-mono text-[11.5px] text-[var(--text-secondary)] transition-colors hover:border-[#82AAFF]/50 hover:text-[color:var(--accent)]"
+              className="rounded-full border border-[var(--border-subtle)] px-2 py-0.5 font-mono text-[11.5px] text-[var(--text-secondary)] transition-colors hover:border-[var(--skill-node)] hover:text-[color:var(--skill-node)]"
             >
-              {id}
+              {byId.get(id)?.label ?? `cmk:${id}`}
             </Link>
           ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function SkillGraphView({ graph }: { graph: SkillGraph }) {
+  const reduce = useReducedMotion() ?? false;
+  const wideEnoughForCanvas = useMediaQuery(CANVAS_MIN_WIDTH);
+  const showMiniMap = useMediaQuery("(min-width: 1280px)") === true;
+
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [requestedView, setRequestedView] = useState<SkillGraphViewMode | null>(null);
+  const [positions, setPositions] = useState<Record<string, SkillGraphPosition>>({});
+  const [initialised, setInitialised] = useState(false);
+  const deepLinkRead = useRef(false);
+
+  const layout = useMemo(() => layoutSkillGraph(graph.nodes), [graph.nodes]);
+  const byId = useMemo(() => new Map(graph.nodes.map((n) => [n.id, n])), [graph.nodes]);
+
+  // Read once, ever: the sync effect below rewrites the query string, and a
+  // second read would pick up what it just wrote.
+  useEffect(() => {
+    if (deepLinkRead.current) return;
+    deepLinkRead.current = true;
+
+    const params = new URLSearchParams(window.location.search);
+    const skill = normalizeSkillId(params.get("skill") ?? params.get("focus"));
+    if (skill && graph.nodes.some((n) => n.id === skill)) setSelectedId(skill);
+
+    const view = params.get("view");
+    if (view === "canvas" || view === "list") setRequestedView(view);
+
+    const stored = readStoredLayout();
+    if (stored) setPositions(stored);
+    setInitialised(true);
+  }, [graph.nodes]);
+
+  // Canvas where there is room for one, list where there is not, and an
+  // explicit ?view= wins on any viewport.
+  const view: SkillGraphViewMode =
+    requestedView ?? (wideEnoughForCanvas === false ? "list" : "canvas");
+
+  useEffect(() => {
+    if (!initialised || wideEnoughForCanvas === null) return;
+    const params = new URLSearchParams(window.location.search);
+    if (selectedId) params.set("skill", selectedId);
+    else params.delete("skill");
+    if (requestedView) params.set("view", requestedView);
+    else params.delete("view");
+    params.delete("focus");
+    const search = params.toString();
+    window.history.replaceState(null, "", search ? `?${search}` : window.location.pathname);
+  }, [initialised, selectedId, requestedView, wideEnoughForCanvas]);
+
+  const select = useCallback((id: string) => {
+    setSelectedId((current) => (id === "" || current === id ? null : id));
+  }, []);
+
+  const handlePositions = useCallback((next: Record<string, SkillGraphPosition>) => {
+    setPositions(next);
+    writeStoredLayout(next);
+  }, []);
+
+  const resetLayout = useCallback(() => {
+    clearStoredLayout();
+    setPositions({});
+  }, []);
+
+  const selected = selectedId ? (byId.get(selectedId) ?? null) : null;
+  const relations = useMemo(() => {
+    if (!selectedId) return { out: [] as string[], inc: [] as string[] };
+    return {
+      out: graph.edges.filter((e) => e.source === selectedId).map((e) => e.target).sort(),
+      inc: graph.edges.filter((e) => e.target === selectedId).map((e) => e.source).sort(),
+    };
+  }, [graph.edges, selectedId]);
+
+  const inspector = selected ? (
+    <div className="flex min-h-0 flex-1 flex-col">
+      <div className="flex shrink-0 items-start justify-between gap-2 border-b border-[var(--border-subtle)] px-4 py-3">
+        <div className="min-w-0">
+          <p className="truncate font-mono text-[13px] font-semibold text-[color:var(--skill-node)]">
+            {selected.label}
+          </p>
+          <p className="mt-0.5 text-[11.5px] text-[var(--text-tertiary)]">
+            {selected.categoryLabel} · {selected.outDegree} out · {selected.inDegree} in
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setSelectedId(null)}
+          aria-label="Clear selection"
+          className="shrink-0 rounded-md p-1 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)]"
+        >
+          <X size={13} />
+        </button>
+      </div>
+
+      <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-4 py-3">
+        {selected.summary && (
+          <p className="line-clamp-4 text-[12.5px] leading-6 text-[var(--text-secondary)]">{selected.summary}</p>
+        )}
+        <RelationList
+          title="References"
+          icon={<ArrowUpRight size={12} />}
+          color="var(--skill-edge-out)"
+          ids={relations.out}
+          byId={byId}
+        />
+        <RelationList
+          title="Referenced by"
+          icon={<ArrowDownLeft size={12} />}
+          color="var(--skill-edge-in)"
+          ids={relations.inc}
+          byId={byId}
+        />
+        <div className="flex flex-wrap gap-1.5">
+          <Link
+            href={`/skills/${selected.id}`}
+            className="inline-flex h-8 items-center rounded-lg border border-[var(--border-subtle)] px-3 text-[12.5px] text-[var(--text-secondary)] transition-colors hover:border-[var(--border-strong)] hover:text-[var(--text-primary)]"
+          >
+            Open detail
+          </Link>
+          <Link
+            href={`/skills/${selected.id}/workspace`}
+            className="inline-flex h-8 items-center rounded-lg border border-[var(--skill-node)]/40 bg-[var(--skill-node)]/10 px-3 text-[12.5px] font-medium text-[color:var(--skill-node)] transition-colors hover:bg-[var(--skill-node)]/20"
+          >
+            Open workspace
+          </Link>
+        </div>
+      </div>
+    </div>
+  ) : (
+    <div className="flex flex-1 items-center justify-center px-6 text-center">
+      <p className="text-[13px] leading-[1.6] text-[var(--text-tertiary)]">
+        Pick a skill to trace what it references and what references it.
+      </p>
+    </div>
+  );
+
+  if (graph.nodes.length === 0) {
+    return (
+      <div className="flex min-h-0 flex-1 items-center justify-center rounded-[16px] border border-dashed border-[var(--border-subtle)]">
+        <p className="text-[13px] text-[var(--text-tertiary)]">No skills were found in this build.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex min-h-0 flex-1 flex-col gap-3">
+      <div className="flex shrink-0 flex-wrap items-center gap-2">
+        <div
+          role="group"
+          aria-label="Visualization view"
+          className="flex items-center gap-0.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--glass-elevated)] p-0.5"
+        >
+          <button
+            type="button"
+            onClick={() => setRequestedView("canvas")}
+            aria-pressed={view === "canvas"}
+            className={toggleClass(view === "canvas")}
+          >
+            <Share2 size={12} strokeWidth={1.75} />
+            Canvas
+          </button>
+          <button
+            type="button"
+            onClick={() => setRequestedView("list")}
+            aria-pressed={view === "list"}
+            className={toggleClass(view === "list")}
+          >
+            <List size={12} strokeWidth={1.75} />
+            List
+          </button>
+        </div>
+
+        {view === "canvas" && (
+          <button
+            type="button"
+            onClick={resetLayout}
+            className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-[var(--border-subtle)] px-2.5 text-[12px] text-[var(--text-secondary)] transition-colors hover:border-[var(--border-strong)] hover:text-[var(--text-primary)]"
+          >
+            <RotateCcw size={12} strokeWidth={1.75} />
+            Reset layout
+          </button>
+        )}
+
+        {view === "canvas" && (
+          <p className="ml-auto hidden items-center gap-3 text-[11px] text-[var(--text-tertiary)] sm:flex">
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-px w-4" style={{ background: "var(--skill-edge-out)" }} /> references
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-px w-4" style={{ background: "var(--skill-edge-in)" }} /> referenced by
+            </span>
+          </p>
+        )}
+      </div>
+
+      <div className="flex min-h-0 flex-1 flex-col gap-4 lg:flex-row">
+        <div className="relative min-h-[420px] flex-1 overflow-hidden rounded-[16px] border border-[var(--border-subtle)] bg-[var(--glass-surface)]">
+          {view === "canvas" ? (
+            <SkillGraphCanvas
+              nodes={layout.nodes}
+              edges={graph.edges}
+              lanes={layout.lanes}
+              laneWidth={layout.width}
+              selectedId={selectedId}
+              positions={positions}
+              showMiniMap={showMiniMap}
+              reduceMotion={reduce}
+              onSelect={select}
+              onPositionsChange={handlePositions}
+            />
+          ) : (
+            <div className="h-full overflow-y-auto p-2">
+              <ul className="flex flex-col gap-0.5">
+                {graph.nodes.map((node) => {
+                  const on = node.id === selectedId;
+                  return (
+                    <li key={node.id}>
+                      <button
+                        type="button"
+                        onClick={() => select(node.id)}
+                        aria-pressed={on}
+                        className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors ${
+                          on ? "bg-[var(--skill-node)]/10" : "hover:bg-[var(--bg-elevated)]"
+                        }`}
+                      >
+                        <span className="min-w-0 flex-1 truncate font-mono text-[12.5px] text-[color:var(--skill-node)]">
+                          {node.label}
+                        </span>
+                        <span className="hidden shrink-0 text-[11.5px] text-[var(--text-tertiary)] sm:inline">
+                          {node.categoryLabel}
+                        </span>
+                        <span className="shrink-0 text-[11.5px] tabular-nums text-[var(--text-tertiary)]">
+                          {node.outDegree} out · {node.inDegree} in
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        <aside className="hidden shrink-0 flex-col overflow-hidden rounded-[16px] border border-[var(--border-subtle)] bg-[var(--glass-frame)] lg:flex lg:w-[320px]">
+          {inspector}
+        </aside>
+      </div>
+
+      {/* Below lg the inspector is a bottom sheet: a 320px rail would leave
+          neither the map nor the panel usable. */}
+      {selected && (
+        <div className="fixed inset-x-0 bottom-0 z-40 max-h-[58vh] overflow-hidden rounded-t-[16px] border-t border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[0_-8px_32px_-12px_rgba(0,0,0,0.45)] lg:hidden">
+          <div className="flex max-h-[58vh] flex-col">{inspector}</div>
         </div>
       )}
     </div>

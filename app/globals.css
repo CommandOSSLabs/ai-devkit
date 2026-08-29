@@ -273,3 +273,46 @@
     background-color: var(--text-disabled);
   }
 }
+
+/* React Flow ships a light-mode chrome. These map its controls and minimap
+   onto the shell's own tokens so the canvas does not become the one panel on
+   the page with a different set of colours. */
+.skills-shell .react-flow__controls {
+  box-shadow: none;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.skills-shell .react-flow__controls-button {
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  width: 26px;
+  height: 26px;
+}
+
+.skills-shell .react-flow__controls-button:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.skills-shell .react-flow__controls-button svg {
+  fill: currentColor;
+}
+
+.skills-shell .react-flow__minimap {
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+}
+
+/* Styled here rather than through the nodeColor prop: that prop is read once
+   into an SVG fill and does not follow a theme change, while a class does. */
+.skills-shell .react-flow__minimap-node {
+  fill: var(--skill-node);
+  stroke: none;
+}
+
+.skills-shell .react-flow__attribution {
+  display: none;
+}

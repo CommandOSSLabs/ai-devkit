@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { extractFrontmatter } from "./frontmatter";
+import { CATEGORY_LABELS, CATEGORY_MAP } from "./skill-types";
 
 export type SkillNode = {
   /** directory name, e.g. "delivery-review" */
@@ -8,6 +9,10 @@ export type SkillNode = {
   /** frontmatter name, e.g. "cmk:delivery-review" */
   label: string;
   summary: string;
+  /** grouping id shared with the catalog, e.g. "delivery" */
+  category: string;
+  /** the catalog's own label for that group, e.g. "Delivery" */
+  categoryLabel: string;
   /** how many other skills reference this one */
   inDegree: number;
   /** how many other skills this one references */
@@ -99,13 +104,20 @@ export function getSkillGraph(): SkillGraph {
     }
   }
 
-  const nodes: SkillNode[] = ids.map((id) => ({
+  const nodes: SkillNode[] = ids.map((id) => {
+    // Same map the catalog groups by, so a skill cannot be filed under
+    // "Delivery" in one surface and somewhere else in the other.
+    const category = CATEGORY_MAP[id] ?? "other";
+    return {
     id,
     label: meta.get(id)?.label ?? `cmk:${id}`,
     summary: meta.get(id)?.summary ?? "",
+    category,
+    categoryLabel: CATEGORY_LABELS[category] ?? category,
     inDegree: inDegree.get(id) ?? 0,
     outDegree: targets.get(id)?.size ?? 0,
-  }));
+    };
+  });
 
   return { nodes, edges, dangling };
 }
