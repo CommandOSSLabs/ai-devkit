@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowUpRight, Search, SlidersHorizontal, X } from "lucide-react";
+import { ArrowRight, FolderOpen, Search, SlidersHorizontal, X } from "lucide-react";
 import type { SkillSummary } from "@/lib/skill-catalog";
 import type { SkillCategoryInfo } from "@/lib/skill-types";
 import { normalizeSkillId } from "@/lib/skill-id";
+import { useMediaQuery } from "@/lib/use-media-query";
 import { readRecentSkills } from "@/lib/recent-skills";
 import { SkillDetail, type SkillHandles } from "./skill-detail";
 
@@ -81,31 +82,6 @@ function scoreSkill(skill: SkillSummary, terms: string[]): number {
   return total;
 }
 
-function useMediaQuery(query: string) {
-  // Three-valued on purpose: `null` means "not measured yet". A boolean
-  // default would make the first client render commit to a layout before
-  // matchMedia has reported the viewport, and the URL sync below would act on
-  // that guess and drop a deep link the user actually arrived with.
-  const [matches, setMatches] = useState<boolean | null>(null);
-  useEffect(() => {
-    const mql = window.matchMedia(query);
-    const update = () => setMatches(mql.matches);
-    update();
-    // Both signals, because a missed `change` leaves the layout committed to a
-    // viewport that no longer exists — observed here as the detail panel
-    // staying mounted and collapsing to 40px after a window resize. `resize`
-    // fires on every viewport change, and React drops the update when the
-    // boolean is unchanged, so the redundancy is nearly free.
-    mql.addEventListener("change", update);
-    window.addEventListener("resize", update);
-    return () => {
-      mql.removeEventListener("change", update);
-      window.removeEventListener("resize", update);
-    };
-  }, [query]);
-  return matches;
-}
-
 function SkillCard({
   skill,
   selected,
@@ -120,20 +96,20 @@ function SkillCard({
   const [firstTrigger, ...restTriggers] = skill.triggers;
 
   // min-w-0: a grid item defaults to min-width:auto, so the truncating trigger
-  // line (whitespace-nowrap) would otherwise set the column's minimum width to
-  // the full phrase and push the whole grid past a phone's viewport.
+  // line would otherwise set the column's minimum width to the full phrase and
+  // push the whole grid past a phone's viewport.
   return (
     <article
       aria-current={splitView && selected ? "true" : undefined}
-      className={`group relative flex min-w-0 flex-col gap-2.5 rounded-[14px] border bg-[var(--glass-surface)] p-4 transition-colors ${
+      className={`group relative flex min-w-0 flex-col gap-2 rounded-[12px] border bg-[var(--glass-surface)] px-3.5 py-3 transition-colors ${
         splitView && selected
           ? "border-[#82AAFF]/60 bg-[#82AAFF]/[0.06]"
           : "border-[var(--border-subtle)] hover:border-[var(--border-strong)] focus-within:border-[#82AAFF]/60"
       }`}
     >
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <h3 className="truncate font-mono text-[13.5px] font-semibold text-[color:var(--accent)]">
+          <h3 className="truncate font-mono text-[13px] font-semibold text-[color:var(--accent)]">
             {/* A real link so it can be opened in a new tab and read by
                 assistive tech, intercepted only where a preview panel exists
                 to update instead. */}
@@ -145,27 +121,23 @@ function SkillCard({
                 e.preventDefault();
                 onSelect();
               }}
-              className="rounded-sm outline-none after:absolute after:inset-0 after:rounded-[14px] after:content-[''] focus-visible:underline focus-visible:decoration-2 focus-visible:underline-offset-4"
+              className="rounded-sm outline-none after:absolute after:inset-0 after:rounded-[12px] after:content-[''] focus-visible:underline focus-visible:decoration-2 focus-visible:underline-offset-4"
             >
               {skill.handle}
             </Link>
           </h3>
-          <p className="mt-0.5 truncate text-[13px] font-medium text-[var(--text-primary)]">{skill.title}</p>
+          <p className="mt-0.5 truncate text-[12.5px] text-[var(--text-primary)]">{skill.title}</p>
         </div>
-        <span className="inline-flex h-6 shrink-0 items-center rounded-full border border-[var(--border-subtle)] px-2 text-[11px] font-medium text-[var(--text-tertiary)]">
+        <span className="inline-flex h-5 shrink-0 items-center rounded-full border border-[var(--border-subtle)] px-2 text-[10.5px] text-[var(--text-tertiary)]">
           {skill.categoryLabel}
         </span>
       </div>
 
-      <p className="line-clamp-2 min-h-[2.6em] text-[12.5px] leading-[1.55] text-[var(--text-secondary)]">
-        {skill.summary || skill.description}
-      </p>
-
-      <div className="mt-auto flex items-end justify-between gap-3 pt-1">
-        {/* One phrase, not the whole trigger list: the card is for recognising
-            a skill, and version, file and reference counts moved to the detail
-            surface where someone is actually comparing them. */}
-        <span className="min-w-0 flex-1 truncate text-[12px] text-[var(--text-tertiary)]">
+      {/* The phrase you would actually type is the strongest recognition
+          signal a card can carry. Summaries and counts live in detail, where
+          someone is comparing rather than scanning. */}
+      <div className="flex items-center gap-2">
+        <span className="min-w-0 flex-1 truncate text-[11.5px] text-[var(--text-tertiary)]">
           {firstTrigger ? (
             <>
               <span className="text-[var(--text-disabled)]">Use when </span>
@@ -174,16 +146,25 @@ function SkillCard({
                 <span className="text-[var(--text-disabled)]"> +{restTriggers.length}</span>
               )}
             </>
-          ) : null}
+          ) : (
+            <span className="text-[var(--text-disabled)]">No trigger phrase</span>
+          )}
         </span>
 
         <Link
           href={`/skills/${skill.id}/workspace`}
-          className="relative z-[1] inline-flex h-7 shrink-0 items-center gap-1 rounded-md border border-[#82AAFF]/40 bg-[#82AAFF]/10 px-2 text-[11.5px] font-medium text-[color:var(--accent)] transition-colors hover:bg-[#82AAFF]/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+          title={`Open the ${skill.handle} workspace`}
+          aria-label={`Open the ${skill.handle} workspace`}
+          className="relative z-[1] inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-[#82AAFF]/40 bg-[#82AAFF]/10 text-[color:var(--accent)] transition-colors hover:bg-[#82AAFF]/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
         >
-          Open workspace
-          <ArrowUpRight size={11} strokeWidth={2} />
+          <FolderOpen size={12} strokeWidth={1.75} aria-hidden="true" />
         </Link>
+        <ArrowRight
+          size={13}
+          strokeWidth={1.75}
+          aria-hidden="true"
+          className="shrink-0 text-[var(--text-disabled)] transition-colors group-hover:text-[color:var(--accent)]"
+        />
       </div>
     </article>
   );
@@ -208,6 +189,7 @@ export function SkillCatalog({
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [recent, setRecent] = useState<string[]>([]);
   const [initialised, setInitialised] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const initialDeepLinkSkill = useRef<string | null>(null);
 
@@ -330,6 +312,33 @@ export function SkillCatalog({
 
   const filtered = query.trim() !== "" || category !== ALL || flags.length > 0;
 
+  // Default view only: once someone searches, filters by category or sorts,
+  // grouping by category would fight the ordering they asked for.
+  const grouped = useMemo(() => {
+    if (query.trim() !== "" || category !== ALL || sort !== "name") return null;
+    const groups = new Map<string, SkillSummary[]>();
+    for (const skill of results) {
+      const list = groups.get(skill.categoryLabel) ?? [];
+      list.push(skill);
+      groups.set(skill.categoryLabel, list);
+    }
+    return Array.from(groups.entries()).sort(([a], [b]) => a.localeCompare(b));
+  }, [results, query, category, sort]);
+
+  const activeFilters = [
+    ...(category !== ALL
+      ? [{ key: `category:${category}`, label: categories.find((c) => c.id === category)?.label ?? category, clear: () => setCategory(ALL) }]
+      : []),
+    ...flags.map((flag) => ({
+      key: `flag:${flag}`,
+      label: FLAGS.find((f) => f.value === flag)?.label ?? flag,
+      clear: () => toggleFlag(flag),
+    })),
+    ...(sort !== "name"
+      ? [{ key: "sort", label: SORTS.find((o) => o.value === sort)?.label ?? sort, clear: () => setSort("name") }]
+      : []),
+  ];
+
   const controls = (
     <div className="flex shrink-0 flex-col gap-3">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
@@ -370,25 +379,52 @@ export function SkillCatalog({
           )}
         </div>
 
-        <label className="flex h-10 shrink-0 items-center gap-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--glass-elevated)] px-3 text-[12.5px] text-[var(--text-secondary)]">
+        <button
+          type="button"
+          onClick={() => setFiltersOpen((v) => !v)}
+          aria-expanded={filtersOpen}
+          aria-controls="catalog-filters"
+          className={`flex h-10 shrink-0 items-center gap-2 rounded-lg border px-3 text-[12.5px] transition-colors ${
+            filtersOpen || flags.length > 0 || sort !== "name"
+              ? "border-[#82AAFF]/50 bg-[#82AAFF]/10 text-[color:var(--accent)]"
+              : "border-[var(--border-subtle)] bg-[var(--glass-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+          }`}
+        >
           <SlidersHorizontal size={13} strokeWidth={1.75} aria-hidden="true" />
-          <span className="sr-only sm:not-sr-only">Sort</span>
-          <select
-            value={sort}
-            onChange={(e) => setSort(e.target.value as SortKey)}
-            aria-label="Sort skills"
-            disabled={query.trim() !== ""}
-            title={query.trim() !== "" ? "Results are ranked by relevance while searching" : undefined}
-            className="cursor-pointer bg-transparent text-[12.5px] text-[var(--text-primary)] outline-none disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {SORTS.map((option) => (
-              <option key={option.value} value={option.value} className="bg-[var(--bg-surface)]">
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </label>
+          Filters
+        </button>
       </div>
+
+      {filtersOpen && (
+        <div
+          id="catalog-filters"
+          className="flex flex-wrap items-center gap-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--glass-elevated)] px-3 py-2"
+        >
+          <label className="flex items-center gap-2 text-[12.5px] text-[var(--text-secondary)]">
+            Sort
+            <select
+              value={sort}
+              onChange={(e) => setSort(e.target.value as SortKey)}
+              aria-label="Sort skills"
+              disabled={query.trim() !== ""}
+              title={query.trim() !== "" ? "Results are ranked by relevance while searching" : undefined}
+              className="cursor-pointer rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-2 py-1 text-[12.5px] text-[var(--text-primary)] outline-none disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {SORTS.map((option) => (
+                <option key={option.value} value={option.value} className="bg-[var(--bg-surface)]">
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <span aria-hidden="true" className="h-5 w-px bg-[var(--border-subtle)]" />
+          {FLAGS.map((flag) => (
+            <FilterChip key={flag.value} active={flags.includes(flag.value)} onClick={() => toggleFlag(flag.value)}>
+              {flag.label}
+            </FilterChip>
+          ))}
+        </div>
+      )}
 
       <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Filter by category">
         <FilterChip active={category === ALL} onClick={() => setCategory(ALL)}>
@@ -399,13 +435,24 @@ export function SkillCatalog({
             {c.label} <span className="tabular-nums opacity-60">{c.count}</span>
           </FilterChip>
         ))}
-        <span aria-hidden="true" className="mx-1 h-5 w-px bg-[var(--border-subtle)]" />
-        {FLAGS.map((flag) => (
-          <FilterChip key={flag.value} active={flags.includes(flag.value)} onClick={() => toggleFlag(flag.value)}>
-            {flag.label}
-          </FilterChip>
-        ))}
       </div>
+
+      {activeFilters.length > 0 && (
+        <div className="flex flex-wrap items-center gap-1.5" aria-label="Active filters">
+          {activeFilters.map((filter) => (
+            <button
+              key={filter.key}
+              type="button"
+              onClick={filter.clear}
+              className="inline-flex h-6 items-center gap-1 rounded-full border border-[#82AAFF]/40 bg-[#82AAFF]/10 px-2 text-[11.5px] text-[color:var(--accent)] transition-colors hover:bg-[#82AAFF]/20"
+            >
+              {filter.label}
+              <X size={10} strokeWidth={2.5} aria-hidden="true" />
+              <span className="sr-only">remove this filter</span>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 
@@ -429,8 +476,9 @@ export function SkillCatalog({
         </button>
       </div>
     ) : (
-      <div className={splitView ? "flex flex-col gap-3" : "grid gap-3 sm:grid-cols-2"}>
-        {results.map((skill) => (
+      (() => {
+        const gridClass = splitView ? "flex flex-col gap-2.5" : "grid gap-2.5 sm:grid-cols-2 xl:grid-cols-3";
+        const card = (skill: SkillSummary) => (
           <SkillCard
             key={skill.id}
             skill={skill}
@@ -438,8 +486,29 @@ export function SkillCatalog({
             splitView={splitView}
             onSelect={() => setSelectedId(skill.id)}
           />
-        ))}
-      </div>
+        );
+
+        // Category headings are the default organisation: at 34 skills across
+        // nine groups, category is the first useful cut, and a flat
+        // alphabetical wall makes the reader do that grouping themselves.
+        if (grouped) {
+          return (
+            <div className="flex flex-col gap-6">
+              {grouped.map(([label, group]) => (
+                <section key={label} className="flex flex-col gap-2.5">
+                  <h2 className="flex items-baseline gap-2 font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--text-tertiary)]">
+                    {label}
+                    <span className="tabular-nums text-[var(--text-disabled)]">[{group.length}]</span>
+                  </h2>
+                  <div className={gridClass}>{group.map(card)}</div>
+                </section>
+              ))}
+            </div>
+          );
+        }
+
+        return <div className={gridClass}>{results.map(card)}</div>;
+      })()
     );
 
   return (

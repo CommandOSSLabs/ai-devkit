@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { FileText, Layers } from "lucide-react";
+import { Layers } from "lucide-react";
 import { getCatalogCategories, getSkillCatalog } from "@/lib/skill-catalog";
 import { getRepoSnapshot } from "@/lib/repo-snapshot";
-import { REPO_SKILLS_TREE } from "@/lib/repo-links";
 import { SkillCatalog } from "@/components/skills/skill-catalog";
 import { RepoSnapshotChip } from "@/components/skills/repo-snapshot-chip";
 import { GooeyTextReveal } from "@/components/motion/gooey-text-reveal";
@@ -22,7 +21,6 @@ export default function SkillsBrowsePage() {
   const skills = getSkillCatalog();
   const categories = getCatalogCategories(skills);
   const snapshot = getRepoSnapshot();
-  const fileCount = skills.reduce((n, s) => n + s.files.length, 0);
   const handles = Object.fromEntries(skills.map((s) => [s.id, s.handle]));
 
   return (
@@ -42,19 +40,9 @@ export default function SkillsBrowsePage() {
           delay={0.05}
           className="flex w-full max-w-[62ch] flex-col gap-1"
         >
-          <h1 className="text-[19px] font-semibold tracking-[-0.02em] text-[var(--text-primary)]">Browse skills</h1>
+          <h1 className="text-[19px] font-semibold tracking-[-0.02em] text-[var(--text-primary)]">Skills</h1>
           <p className="text-[13px] leading-[1.6] text-[var(--text-secondary)]">
-            Find the right skill for the task you are working on. Every skill in{" "}
-            <a
-              href={REPO_SKILLS_TREE}
-              target="_blank"
-              rel="noreferrer"
-              className="text-[color:var(--accent)] underline decoration-[#82AAFF]/30 underline-offset-4 hover:decoration-[#82AAFF]"
-            >
-              CommandOSSLabs/ai-devkit
-            </a>
-            : what it does, when to reach for it, and what it works with. Open one to read it, or jump straight into its
-            files.
+            Find the right workflow, open its files, and adapt it to your repository.
           </p>
         </GooeyTextReveal>
         </div>
@@ -63,10 +51,6 @@ export default function SkillsBrowsePage() {
           <div className={metaChipClassName}>
             <Layers size={13} aria-hidden="true" />
             <span>{skills.length} skills</span>
-          </div>
-          <div className={metaChipClassName}>
-            <FileText size={13} aria-hidden="true" />
-            <span>{fileCount} files</span>
           </div>
           <RepoSnapshotChip snapshot={snapshot} />
         </div>
