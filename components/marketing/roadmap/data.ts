@@ -58,6 +58,7 @@ export const ROADMAP_ITEMS: RoadmapItem[] = [
     category: "Website",
     title: "Minimal skills explorer + relationship canvas",
     description: "A quieter category-first catalog and a pan-and-zoom map for tracing how skills reference each other.",
+    pr: `${REPO}/pull/24`,
   },
   {
     id: "repo-meta-rate-limit",

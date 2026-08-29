@@ -48,7 +48,7 @@ const ENTRIES: ChangelogEntry[] = [
       "**Visualize interactions** is a pan-and-zoom canvas now. Move skills around, trace what each one references and what references it, and reset to the canonical layout whenever you want.",
       "Every relationship is still available as an accessible **List view**, which is also what smaller screens get by default.",
       "**Skill detail, the workspace, Preview, Source, Edit and browser-local drafts** are all still there — this changed how you find a skill, not what you can do with it.",
-      `[$ gh pr view 16](${REPO}/pull/16)`,
+      `[$ gh pr view 24](${REPO}/pull/24)`,
     ],
   },
   {
