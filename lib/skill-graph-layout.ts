@@ -16,16 +16,19 @@ export type PersistedSkillGraphLayout = {
  * no longer exists, and restoring them would scatter nodes across lanes that
  * have moved.
  */
-export const LAYOUT_VERSION = 1;
+export const LAYOUT_VERSION = 2;
 
 const STORAGE_KEY = "ai-devkit-skill-graph-layout";
 
-const NODE_WIDTH = 188;
-const NODE_HEIGHT = 56;
-const COLUMN_GAP = 84;
-const ROW_GAP = 26;
-const LANE_GAP = 72;
-const LANE_HEADER = 40;
+// Sized so a card is readable at zoom 1 without hovering it: the handle, the
+// category and the degree counts all have to survive at their own font size,
+// because the map opens at a readable zoom rather than fitted to the viewport.
+const NODE_WIDTH = 204;
+const NODE_HEIGHT = 64;
+const COLUMN_GAP = 72;
+const ROW_GAP = 28;
+const LANE_GAP = 56;
+const LANE_HEADER = 44;
 
 /** Lane order, so the map reads the same way every time it is opened. */
 const LANE_ORDER = [
@@ -58,6 +61,8 @@ export type SkillGraphLayout = {
   nodes: PositionedSkillNode[];
   lanes: SkillGraphLane[];
   width: number;
+  /** full bounds of the laid-out map, so the canvas can frame it without measuring */
+  height: number;
 };
 
 /**
@@ -80,8 +85,11 @@ export function layoutSkillGraph(nodes: SkillNode[]): SkillGraphLayout {
   );
 
   // One column count for every lane, so lanes line up rather than ragging.
-  const largest = Math.max(1, ...Array.from(byCategory.values(), (list) => list.length));
-  const columns = Math.min(5, Math.max(3, Math.ceil(Math.sqrt(largest) + 1)));
+  // Three, not a function of the largest lane: at the readable node size a
+  // wider grid is wider than the canvas gets on a 1440 screen with the
+  // inspector docked, and a column you have to pan to find on first load is
+  // the same mistake as a node too small to read.
+  const columns = 3;
 
   const positioned: PositionedSkillNode[] = [];
   const lanes: SkillGraphLane[] = [];
@@ -119,6 +127,7 @@ export function layoutSkillGraph(nodes: SkillNode[]): SkillGraphLayout {
     nodes: positioned,
     lanes,
     width: columns * NODE_WIDTH + (columns - 1) * COLUMN_GAP,
+    height: Math.max(0, y - LANE_GAP),
   };
 }
 

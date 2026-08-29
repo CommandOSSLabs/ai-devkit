@@ -78,6 +78,16 @@ comparing two clusters needs to move things.
 whether the two clusters share any references, then returns to the canonical
 layout with one control.
 
+### Give the map the whole screen when reading it
+
+The map is the subject of the page, not an illustration inside a dashboard. A
+developer tracing a cluster needs the shell to get out of the way, and a node
+they can read without hovering it.
+
+**Scenario:** Someone opens the visualization, sees skill handles at a legible
+size without touching the zoom, presses `F`, and reads the whole map with the
+navigation, page header and stats gone; `Esc` brings them back.
+
 ### Use the map without a mouse or a large screen
 
 **Scenario:** Someone on a phone opens the visualization, gets a list of skills
@@ -140,6 +150,28 @@ still there.
 - **SKEX-3.6** If stored positions are unreadable or carry a different layout
   version, the visualization shall discard them and use the canonical layout.
 
+### Give the map the whole screen when reading it
+
+- **SKEX-7.1** The visualization shall open at a zoom at which a skill's handle
+  and category are legible without hovering or zooming in.
+- **SKEX-7.2** The visualization shall not fit the entire graph to the viewport
+  on load; fitting the whole graph shall be an explicit control.
+- **SKEX-7.3** The visualization shall provide a focus mode that hides the
+  application navigation, the page heading and the page statistics, and gives
+  the canvas the full application viewport.
+- **SKEX-7.4** Focus mode shall be reflected in the URL and restored from it.
+- **SKEX-7.5** While in focus mode, the inspector shall be an overlay and shall
+  not reduce the canvas.
+- **SKEX-7.6** Switching between focus mode and the standard layout shall not
+  unmount or duplicate the canvas, and shall preserve the current viewport.
+- **SKEX-7.7** The visualization shall accept `F` for focus mode, `R` for reset
+  layout and `Escape` to dismiss the open panel and then focus mode, and shall
+  ignore them while a text field has focus.
+- **SKEX-7.8** When a skill is selected, the visualization shall bring it into
+  view, raising the zoom to a legible level only if it is not already there.
+- **SKEX-7.9** The docked inspector shall occupy layout only while a skill is
+  selected.
+
 ### Use the map without a mouse or a large screen
 
 - **SKEX-4.1** The visualization shall provide a list view exposing every skill
@@ -171,6 +203,9 @@ still there.
   its background in both themes.
 - **SKEX-6.3** Skill markers in the visualization shall meet a contrast ratio of
   at least 3:1 against the canvas surface in both themes.
+- **SKEX-6.4** The catalog, the canvas in both layouts, the list view, the
+  mobile inspector, the skill detail and the workspace shall each report no
+  axe-core violations at WCAG 2.0/2.1 level A and AA.
 
 ## Scope
 

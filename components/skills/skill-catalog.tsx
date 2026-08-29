@@ -140,14 +140,14 @@ function SkillCard({
         <span className="min-w-0 flex-1 truncate text-[11.5px] text-[var(--text-tertiary)]">
           {firstTrigger ? (
             <>
-              <span className="text-[var(--text-disabled)]">Use when </span>
+              <span className="text-[var(--text-tertiary)]">Use when </span>
               <span className="text-[var(--text-secondary)]">&ldquo;{firstTrigger}&rdquo;</span>
               {restTriggers.length > 0 && (
-                <span className="text-[var(--text-disabled)]"> +{restTriggers.length}</span>
+                <span className="text-[var(--text-tertiary)]"> +{restTriggers.length}</span>
               )}
             </>
           ) : (
-            <span className="text-[var(--text-disabled)]">No trigger phrase</span>
+            <span className="text-[var(--text-tertiary)]">No trigger phrase</span>
           )}
         </span>
 
@@ -438,7 +438,7 @@ export function SkillCatalog({
       </div>
 
       {activeFilters.length > 0 && (
-        <div className="flex flex-wrap items-center gap-1.5" aria-label="Active filters">
+        <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Active filters">
           {activeFilters.map((filter) => (
             <button
               key={filter.key}
@@ -501,7 +501,7 @@ export function SkillCatalog({
                 <section key={label} className="flex flex-col gap-2.5">
                   <h2 className="flex items-baseline gap-2 font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--text-tertiary)]">
                     {label}
-                    <span className="tabular-nums text-[var(--text-disabled)]">[{group.length}]</span>
+                    <span className="tabular-nums text-[var(--text-tertiary)]">[{group.length}]</span>
                   </h2>
                   <div className={gridClass}>{group.map(card)}</div>
                 </section>

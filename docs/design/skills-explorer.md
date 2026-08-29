@@ -92,6 +92,54 @@ arrives, the whole map stays invisible, and `visibility: hidden` also makes
 every node unfocusable. The layout already knows every size, so the node
 objects carry `width` and `height` and the renderer never has to ask.
 
+### Focus mode
+
+Focus mode is application-level rather than the browser Fullscreen API, and it
+is implemented by collapsing the shell rather than by moving the canvas.
+`SkillGraphView` sets `data-skills-focus` on `<html>`; unlayered rules in
+`app/globals.css` then hide the icon rail, the page header and the page
+heading, drop the shell's padding, and remove the content column's
+`backdrop-filter`. The canvas grows into that space without changing position
+in the React tree, so the React Flow instance is neither unmounted nor
+duplicated and the viewport transform survives the switch untouched.
+
+Removing `backdrop-filter` is not cosmetic. A non-`none` value makes that
+column the containing block for every `fixed` descendant, which is what would
+otherwise pin the inspector drawer to the column instead of the viewport. In
+focus mode the column covers the screen anyway, so there is nothing left to
+blur.
+
+The layout exposes three class hooks for this and nothing else:
+`skills-column`, `skills-topbar` and `skills-content-pad`, plus
+`skills-page-head` on the route's own heading block.
+
+### Viewport policy
+
+The canvas does not fit the graph on load. Fitting eight lanes into a panel
+drove every card to a smear of unreadable colour, which is the defect this
+revision exists to remove. Instead:
+
+- With `?skill=`, the canvas centres that node at zoom 1.1.
+- Otherwise it anchors the map's top-left corner with a small margin at zoom 1,
+  so the first thing on screen is a whole card rather than a clipped column.
+- `Fit all` is a deliberate control. Below zoom 0.62 a node drops its metadata
+  row rather than rendering it at sub-8px.
+- Selecting a skill calls `reveal`, which moves the viewport only when the node
+  is outside the comfortable frame or the zoom is below legible. A canvas that
+  re-centres on every click fights the reader.
+- `Reset layout` restores canonical node positions; it does not touch the zoom.
+
+Every viewport computation is done from the container's own
+`getBoundingClientRect()` and written with `setViewport`, not from React Flow's
+measured size, for the same reason node dimensions are declared: measurement
+rides on ResizeObserver and the opening frame has to land exactly whether or
+not that has been delivered.
+
+Lane grids are three columns wide. At the readable node size a wider grid is
+wider than the canvas gets on a 1440 screen with the inspector docked, and a
+column you have to pan to find on first load is the same mistake as a node too
+small to read.
+
 ### `SkillGraphList`
 
 A table of every skill with its outgoing and incoming references as links. Rows
@@ -170,9 +218,23 @@ information the canvas draws.
 
 - The list view is the complete non-canvas equivalent, and the default under
   768px.
-- Below `lg` the inspector is a sheet over the map, with `role="dialog"`,
-  `aria-modal`, a label, focus moved in on open, Tab trapped inside and Escape
-  to close — the same contract as the workspace's file drawer.
+- The inspector docks beside the map only at 1280px and above and only while a
+  skill is selected. Everywhere else — narrower viewports, and focus mode at any
+  width — it is an overlay with `role="dialog"`, `aria-modal`, a label, focus
+  moved in on open, Tab trapped inside, Escape to close and focus returned to
+  the node it came from: the same contract as the workspace's file drawer.
+- `F` enters and leaves focus mode, `R` resets the layout, and `Escape` peels
+  one layer at a time — the open panel first, then focus mode. All three are
+  ignored while a text field, textarea or select has focus.
+- The workspace tab strip owns only tabs. A `tablist` may own nothing but
+  `tab`, so the close control sits inside its own tab; and because a focusable
+  control inside a tab is nested interactive content, the close affordance is
+  pointer-only and out of the accessibility tree, with `Delete` or `Backspace`
+  closing the focused tab instead.
+- `GooeyTextReveal` splits by line with no ARIA of its own. GSAP's `aria: auto`
+  labels the target and hides every generated line; on a paragraph that label is
+  prohibited, so assistive technology could drop it and find only hidden
+  children — a paragraph that reads as empty.
 - Canvas nodes are focusable, expose an accessible name including category and
   both degree counts, and toggle selection on Enter or Space. React Flow's own
   node focus is disabled so there is exactly one focus stop per node and the
@@ -187,6 +249,12 @@ information the canvas draws.
   relationship they hint at is available at full contrast in the traced state,
   the inspector and the list.
 - `prefers-reduced-motion` removes edge animation and view transitions.
+- axe-core 4.13 reports no WCAG 2.0/2.1 A or AA violations on the catalog, the
+  canvas in both layouts, the list view, the mobile inspector, the skill detail
+  or the workspace. Its `color-contrast` check returns *incomplete* over the
+  canvas, where backgrounds are `color-mix()` values it will not resolve, so
+  those are measured directly instead: the lowest ratio on graph and inspector
+  text is 5.03:1 dark and 5.35:1 light.
 
 ## Constraints
 

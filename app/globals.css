@@ -316,3 +316,37 @@
 .skills-shell .react-flow__attribution {
   display: none;
 }
+
+/* Canvas focus mode. The graph does not move in the tree and is never
+   unmounted: the shell's own chrome collapses out of its way from a single
+   attribute on <html>, so the canvas grows into the padding, the rail and the
+   header instead of being re-created inside a fixed overlay. Unlayered, so it
+   beats the Tailwind utilities it is overriding regardless of specificity. */
+html[data-skills-focus] .skills-shell {
+  padding: 0;
+  gap: 0;
+}
+
+html[data-skills-focus] .skills-shell > aside {
+  display: none;
+}
+
+/* backdrop-filter on this column makes it the containing block for every
+   fixed descendant. Dropping it in focus mode is what lets the inspector
+   drawer position against the viewport, and the column covers the whole
+   screen by then anyway, so there is nothing left to blur. */
+html[data-skills-focus] .skills-column {
+  border: 0;
+  border-radius: 0;
+  backdrop-filter: none;
+  background: var(--bg-base);
+}
+
+html[data-skills-focus] .skills-topbar,
+html[data-skills-focus] .skills-page-head {
+  display: none;
+}
+
+html[data-skills-focus] .skills-content-pad {
+  padding: 0;
+}

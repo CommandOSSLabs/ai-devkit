@@ -46,6 +46,7 @@ const ENTRIES: ChangelogEntry[] = [
     items: [
       "The **Skills catalog** is category-first and much more compact — a card carries the handle, the title and the phrase that triggers it, so choosing a workflow no longer means reading 34 descriptions.",
       "**Visualize interactions** is a pan-and-zoom canvas now. Move skills around, trace what each one references and what references it, and reset to the canonical layout whenever you want.",
+      "The map opens at a size you can actually read, and **`F` gives it the whole screen** — navigation, header and stats out of the way, inspector as an overlay. `Esc` comes back, `R` resets the layout.",
       "Every relationship is still available as an accessible **List view**, which is also what smaller screens get by default.",
       "**Skill detail, the workspace, Preview, Source, Edit and browser-local drafts** are all still there — this changed how you find a skill, not what you can do with it.",
       `[$ gh pr view 24](${REPO}/pull/24)`,

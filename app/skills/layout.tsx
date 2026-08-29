@@ -27,8 +27,8 @@ export default function SkillsLayout({
           <SkillsIconRail />
         </aside>
 
-        <div className="relative z-10 flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[color-mix(in_srgb,var(--bg-base)_92%,transparent)] backdrop-blur-sm">
-          <header className="shrink-0 border-b border-[var(--border-subtle)] px-4 py-4 sm:px-6">
+        <div className="skills-column relative z-10 flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[color-mix(in_srgb,var(--bg-base)_92%,transparent)] backdrop-blur-sm">
+          <header className="skills-topbar shrink-0 border-b border-[var(--border-subtle)] px-4 py-4 sm:px-6">
             <div className="flex items-center justify-between gap-3">
               <Link href="/" className="flex items-center gap-2 lg:hidden">
                 <div className="flex h-7 w-7 items-center justify-center rounded-md border border-[var(--border-strong)] bg-[var(--bg-surface)]">
@@ -60,7 +60,7 @@ export default function SkillsLayout({
           </header>
 
           <main className="flex min-h-0 flex-1 flex-col overflow-hidden">
-            <div className="flex min-h-0 flex-1 flex-col p-4 sm:p-6">
+            <div className="skills-content-pad flex min-h-0 flex-1 flex-col p-4 sm:p-6">
               {children}
             </div>
           </main>
