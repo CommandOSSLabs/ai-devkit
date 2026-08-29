@@ -40,6 +40,18 @@ const SITE = "https://skills.commandoss.com";
 
 const ENTRIES: ChangelogEntry[] = [
   {
+    date: "August 29, 2026",
+    shortDate: "Aug 29",
+    title: "A quieter skills catalog and an interactive relationship map",
+    items: [
+      "The **Skills catalog** is category-first and much more compact — a card carries the handle, the title and the phrase that triggers it, so choosing a workflow no longer means reading 34 descriptions.",
+      "**Visualize interactions** is a pan-and-zoom canvas now. Move skills around, trace what each one references and what references it, and reset to the canonical layout whenever you want.",
+      "Every relationship is still available as an accessible **List view**, which is also what smaller screens get by default.",
+      "**Skill detail, the workspace, Preview, Source, Edit and browser-local drafts** are all still there — this changed how you find a skill, not what you can do with it.",
+      `[$ gh pr view 16](${REPO}/pull/16)`,
+    ],
+  },
+  {
     date: "August 14, 2026",
     shortDate: "Aug 14",
     title: "New: cmk:interpret, plus acceptance-criteria notation",

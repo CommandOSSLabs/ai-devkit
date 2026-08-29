@@ -53,12 +53,11 @@ const REPO = "https://github.com/CommandOSSLabs/ai-devkit";
 
 export const ROADMAP_ITEMS: RoadmapItem[] = [
   {
-    id: "browse-skills-nav",
+    id: "skills-explorer-canvas",
     status: "now",
     category: "Website",
-    title: "Browse Skills nav + loading transition",
-    description: "A dedicated nav button to browse skills, with a TextMorph transition while the list loads.",
-    pr: `${REPO}/pull/15`,
+    title: "Minimal skills explorer + relationship canvas",
+    description: "A quieter category-first catalog and a pan-and-zoom map for tracing how skills reference each other.",
   },
   {
     id: "repo-meta-rate-limit",
@@ -69,19 +68,21 @@ export const ROADMAP_ITEMS: RoadmapItem[] = [
     pr: `${REPO}/pull/13`,
   },
   {
-    id: "skill-detail-editor",
-    status: "now",
-    category: "Website",
-    title: "Skill detail view, styled like an editor",
-    description: "A code-editor-styled view for browsing a skill's own details, instead of the current layout. No PR yet — still in draft.",
-  },
-  {
     id: "cmk-visualize",
     status: "next",
     category: "Skills",
     title: "New skill: cmk:visualize",
     description: "Turns content you already have — a design doc, a tracker query, a raw description — into a rendered diagram, slide deck, or animated teaser, instead of a wall of markdown. One target shape: an isometric map of a repo's own infrastructure, dependencies and data paths traced from the real code, citing the files it read.",
     link: { label: "reference: isometric repo-map prompt", url: "https://x.com/JayScambler/status/2088356230968287547" },
+  },
+  {
+    id: "skills-dashboard",
+    status: "shipped",
+    category: "Website",
+    shippedDate: "Aug 29",
+    title: "Skills dashboard and local workspace",
+    description: "Browse, inspect and locally edit all skills through catalog, detail and code-editor-style workspace views.",
+    ref: { label: "c29ea93", url: `${REPO}/commit/c29ea93` },
   },
   {
     id: "cmk-interpret",
