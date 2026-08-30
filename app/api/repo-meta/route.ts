@@ -51,12 +51,24 @@ function githubHeaders(): HeadersInit {
   return headers;
 }
 
-async function getJson(url: string): Promise<unknown> {
-  const res = await fetch(url, {
-    headers: githubHeaders(),
-    next: { revalidate: REVALIDATE_SECONDS },
-  });
-  return res.ok ? res.json() : null;
+/**
+ * Distinguishes "GitHub answered, and this is the answer" from "the call
+ * failed" — an empty tag list and a rate-limited 403 both used to collapse to
+ * `null`, which made a transient outage indistinguishable from real data.
+ */
+type Fetched = { ok: true; data: unknown } | { ok: false };
+
+async function getJson(url: string): Promise<Fetched> {
+  try {
+    const res = await fetch(url, {
+      headers: githubHeaders(),
+      next: { revalidate: REVALIDATE_SECONDS },
+    });
+    if (!res.ok) return { ok: false };
+    return { ok: true, data: await res.json() };
+  } catch {
+    return { ok: false };
+  }
 }
 
 export async function GET() {
@@ -70,10 +82,24 @@ export async function GET() {
       ),
     ]);
 
-    const repoObj = repo as { stargazers_count?: number; license?: { spdx_id?: string }; pushed_at?: string } | null;
-    const commitObj = commit as { sha?: string } | null;
-    const tagsArr = tags as Array<{ name?: string }> | null;
-    const pullsArr = pulls as Array<{ number: number; title: string; merged_at: string | null }> | null;
+    // The repo endpoint carries stars, license and pushedAt — the numbers the
+    // page actually renders. If it did not come back there is nothing worth
+    // caching: answering 200 with an all-nulls body would let the CDN, Next's
+    // data cache and the client each hold that empty result for the full
+    // revalidate window, which is precisely the all-dashes state this route
+    // exists to prevent. Fail loudly and uncached instead, so the client's
+    // retry path engages and the next request re-asks GitHub.
+    if (!repo.ok) {
+      return NextResponse.json(EMPTY_REPO_META, {
+        status: 503,
+        headers: { "Cache-Control": "no-store" },
+      });
+    }
+
+    const repoObj = repo.data as { stargazers_count?: number; license?: { spdx_id?: string }; pushed_at?: string } | null;
+    const commitObj = (commit.ok ? commit.data : null) as { sha?: string } | null;
+    const tagsArr = (tags.ok ? tags.data : null) as Array<{ name?: string }> | null;
+    const pullsArr = (pulls.ok ? pulls.data : null) as Array<{ number: number; title: string; merged_at: string | null }> | null;
 
     const recentMerges: MergedPR[] = Array.isArray(pullsArr)
       ? pullsArr
@@ -95,6 +121,9 @@ export async function GET() {
       headers: { "Cache-Control": `public, max-age=0, s-maxage=${REVALIDATE_SECONDS}` },
     });
   } catch {
-    return NextResponse.json(EMPTY_REPO_META);
+    return NextResponse.json(EMPTY_REPO_META, {
+      status: 503,
+      headers: { "Cache-Control": "no-store" },
+    });
   }
 }

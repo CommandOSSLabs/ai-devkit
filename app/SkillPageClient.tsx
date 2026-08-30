@@ -197,7 +197,14 @@ function loadRepoMetaOnce(): Promise<RepoMeta> {
   // repository" numbers to all-dashes. The server route shares one quota
   // across all visitors and caches for 5 minutes, which keeps real GitHub
   // calls far under the limit regardless of traffic.
-  return fetch("/api/repo-meta").then((r) => (r.ok ? r.json() : EMPTY_REPO_META));
+  // Reject rather than resolve on a non-ok response: fetchRepoMeta's retry
+  // and don't-cache-the-failure logic below keys off a rejected promise, so
+  // resolving to EMPTY_REPO_META here would write an empty result straight
+  // into repoMetaCache and pin the page to all-dashes for the whole session.
+  return fetch("/api/repo-meta").then((r) => {
+    if (!r.ok) throw new Error(`/api/repo-meta responded ${r.status}`);
+    return r.json() as Promise<RepoMeta>;
+  });
 }
 
 function fetchRepoMeta(): Promise<RepoMeta> {
