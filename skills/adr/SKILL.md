@@ -1,7 +1,7 @@
 ---
 name: cmk:adr
-description: This skill should be used when the user asks to "record this decision", "we decided to use X over Y", "document why we chose this approach", "record an ADR", "update ADR-0003", or needs to create or update architecture decision records for system-level technical choices like choosing a database, communication protocol, or infrastructure pattern.
-version: 0.3.1
+description: Use when the user asks to "record this decision", "we decided to use X over Y", "document why we chose this approach", "record an ADR", "update ADR-0003", or needs to create or update architecture decision records for system-level technical choices like choosing a database, communication protocol, or infrastructure pattern.
+version: 0.3.2
 ---
 
 # ADR
