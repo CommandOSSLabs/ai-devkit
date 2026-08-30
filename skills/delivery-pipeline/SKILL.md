@@ -24,11 +24,13 @@ CMK owns the lifecycle. Superpowers executes inside it. The division:
 
 Before acting, read:
 
-1. `cmk:delivery-workflow`'s `references/scope-band.md` — tracking contract,
-   **scope band**, **docs-ready**, and the implement docs gate.
-2. `references/engineering-principles.md` — autonomy, production readiness,
+1. `cmk:delivery-workflow` — the tracking contract. Every phase operates
+   inside it.
+2. `cmk:delivery-workflow`'s `references/scope-band.md` — **scope band**,
+   **docs-ready**, and the implement docs gate.
+3. `references/engineering-principles.md` — autonomy, production readiness,
    and the delegation contract.
-3. Your runtime's binding for mechanics only (`cmk:delivery-workflow`'s
+4. Your runtime's binding for mechanics only (`cmk:delivery-workflow`'s
    `references/vendor-bindings.md`). Bindings supply mechanics; they never
    change phase order, gates, evidence, or acceptance.
 

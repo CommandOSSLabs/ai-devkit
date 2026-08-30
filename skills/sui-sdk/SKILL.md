@@ -20,7 +20,7 @@ that is stale training data, not a style choice. Use the right column:
 | Stale (JSON-RPC era) | Current (gRPC era) |
 | --- | --- |
 | TS: `JsonRpcProvider`, `SuiClient` from `@mysten/sui/client`, `getFullnodeUrl()` | `SuiGrpcClient` from `@mysten/sui/grpc` (`{ network, baseUrl }`) |
-| TS: `sui_getObject`, `getObject`, `getCoins`, `queryEvents`, `queryTransactionBlocks`, `getTransactionBlock` | `getObject` / `batchGetObjects` via gRPC + FieldMask; `listCoins`, `listEvents`, `listTransactions`, `getTransaction` |
+| TS: `sui_getObject`, `SuiClient.getObject`, `getCoins`, `queryEvents`, `queryTransactionBlocks`, `getTransactionBlock` | `SuiGrpcClient.getObject` / `batchGetObjects` with a FieldMask; `listCoins`, `listEvents`, `listTransactions`, `getTransaction` |
 | Frontend: `@mysten/dapp-kit` + `SuiClientProvider` | `@mysten/dapp-kit-core` / `@mysten/dapp-kit-react` with a `SuiGrpcClient` factory |
 | Raw `sui_*` / `suix_*` HTTP calls, `wss://` subscriptions | `LedgerService`, `StateService`, `TransactionExecutionService`, `SubscriptionService`, `MovePackageService` |
 | Rust: monorepo `sui-sdk` git dependency | crates.io `sui-rpc`, `sui-sdk-types`, `sui-crypto`, `sui-transaction-builder` (MystenLabs/sui-rust-sdk) |
