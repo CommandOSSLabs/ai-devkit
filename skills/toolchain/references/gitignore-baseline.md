@@ -5,6 +5,16 @@ ignored so an adopting repo can prune groups that don't apply rather than
 copying every line blindly — a repo with no compiled-language packages
 doesn't need that group's lines just because this file lists them.
 
+## Contents
+
+- [Worktree-local root](#worktree-local-root)
+- [Dependency directories](#dependency-directories)
+- [Build outputs (per ecosystem in use)](#build-outputs-per-ecosystem-in-use)
+- [Env-file policy](#env-file-policy)
+- [Editor / OS noise](#editor--os-noise)
+- [AI working artifacts](#ai-working-artifacts)
+- [Logs and local databases](#logs-and-local-databases)
+
 ## Worktree-local root
 
 ```

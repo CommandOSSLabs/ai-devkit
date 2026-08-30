@@ -1,7 +1,7 @@
 ---
 name: cmk:enclave
-description: This skill should be used when the user asks to "seal secrets into an enclave", "pack env into a TEE", "don't bake secrets into the EIF", "attestation-gated unwrap", "vendored enclave config", "set up Nautilus", "Nitro enclave secrets", "AWS KMS PCR policy", "attested Decrypt", "parent proxy KMS gateway", "seal seat config", or needs the attested boundary between a measured image, its host, and the principal that unwraps secrets.
-version: 0.2.1
+description: Use when the user asks to "seal secrets into an enclave", "pack env into a TEE", "don't bake secrets into the EIF", "attestation-gated unwrap", "vendored enclave config", "set up Nautilus", "Nitro enclave secrets", "AWS KMS PCR policy", "attested Decrypt", "parent proxy KMS gateway", "seal seat config", or needs the attested boundary between a measured image, its host, and the principal that unwraps secrets.
+version: 0.2.2
 ---
 
 # Enclave

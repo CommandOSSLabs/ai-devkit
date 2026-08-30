@@ -24,7 +24,9 @@ discard with a reason.
 ## Where
 - Skill body: `skills/delivery-review/SKILL.md` — sections Review depth,
   The two occasions, The lenses, Evidence or it did not happen, Verify
-  before acting, Disposition.
+  before acting, Disposition, Red Flags, Rationalizations.
+- `references/lenses.md` — the seven lenses in full, including the scans the
+  security lens must name and the classes it must report as not run.
 - `references/engines.md` — choosing or running a review engine at full
   depth.
 - `references/linear.md` — the skill body's conditional tracker-binding

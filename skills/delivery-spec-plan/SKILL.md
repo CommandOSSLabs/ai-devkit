@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-spec-plan
-description: This skill should be used when the user asks for a "spec", "design", "implementation plan", or "how should we build this" for a tracker issue, after context intake for any non-trivial change, and as phase 2 of the cmk:delivery-pipeline skill.
-version: 0.2.3
+description: Use when the user asks for a "spec", "implementation plan", or tracker-issue design scratch after intake — phase 2 of `cmk:delivery-pipeline`. Produces git-ignored scratch spec + plan with task dependency structure. Durable `docs/design/` docs → `cmk:design`.
+version: 0.3.3
 ---
 
 # Delivery Spec & Plan
@@ -28,7 +28,10 @@ tracker, and the PR description.
 Read `cmk:delivery-workflow` and `cmk:delivery-pipeline`'s context-efficiency
 reference before relying on the intake brief — the brief is a capsule, and
 the context-efficiency continuity rules decide when mutable inputs must be
-refreshed before planning on them.
+refreshed before planning on them. Confirm the intake brief's **scope band**
+and **docs-ready** before planning implementable tasks: if docs-ready is
+false for the band, stop and finish `cmk:requirements` (or an explicit
+exemption) rather than planning around a hole.
 
 Apply `cmk:delivery-pipeline`'s engineering-principles reference throughout:
 decide everything yourself, staff-level bar without overengineering, existing
@@ -122,15 +125,15 @@ Exclusive resources: none
   neither place is an obligation nobody enforces.
 
 Close with the issue's acceptance criteria mapped to the tasks that satisfy
-them — an AC with no task is a hole in the plan, and so is a
-surface-inventory item with no covering task. Planning is the cheapest
-moment to find out a criterion will not land: if no task can honestly
-satisfy one, take its disposition now, on the issue, per `cmk:delivery-workflow`'s
-`references/acceptance-criteria.md`.
+them — cite `PREFIX-N.M` when the requirements doc defines IDs. An AC with
+no task is a hole in the plan, and so is a surface-inventory item with no
+covering task. Planning is the cheapest moment to find a criterion will not
+land: if no task can honestly satisfy one, disposition it on the issue now
+per `cmk:delivery-workflow`'s `references/acceptance-criteria.md`.
 
-A plan whose tasks all serialize on one file is worth re-partitioning before
-it executes; sequential-by-accident is different from sequential-by-necessity,
-and only the second is worth paying for.
+A plan whose tasks all serialize on one file is worth re-partitioning
+before it executes; sequential-by-accident differs from sequential-by-
+necessity, and only the second is worth paying for.
 
 ## Exit gate
 

@@ -1,6 +1,6 @@
 ---
 name: cmk:cicd
-description: This skill should be used when the user asks to "set up CI", "speed up CI", "add a deploy workflow", "structure GitHub Actions", "self-hosted runners", "run CI locally", "JIT runner", "protect the main branch", "add security scanning", "scan for vulnerabilities", or needs to structure CI, deployment, and policy automation as composable host-runnable scripts that GitHub Actions only automates.
+description: Use when the user asks to "set up CI", "speed up CI", "add a deploy workflow", "structure GitHub Actions", "self-hosted runners", "run CI locally", "JIT runner", "protect the main branch", "add security scanning", "scan for vulnerabilities", or needs to structure CI, deployment, and policy automation as composable host-runnable scripts that GitHub Actions only automates.
 version: 0.4.0
 ---
 

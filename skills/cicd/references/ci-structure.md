@@ -3,6 +3,15 @@
 Mechanics for the single validation pipeline in `SKILL.md`'s CI structure
 facet.
 
+## Contents
+
+- [One pipeline, many gated area jobs](#one-pipeline-many-gated-area-jobs)
+- [Speed structure](#speed-structure)
+- [Tiered runners are configuration, not a workflow edit](#tiered-runners-are-configuration-not-a-workflow-edit)
+- [Cold-cache isolation is a trap, not a given](#cold-cache-isolation-is-a-trap-not-a-given)
+- [CI self-contract tests](#ci-self-contract-tests)
+- [Label-gated diagnostic jobs](#label-gated-diagnostic-jobs)
+
 ## One pipeline, many gated area jobs
 
 A single workflow validates every push and PR. A `changes` job runs first,
