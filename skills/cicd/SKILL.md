@@ -1,7 +1,7 @@
 ---
 name: cmk:cicd
-description: Use when the user asks to "set up CI", "speed up CI", "add a deploy workflow", "structure GitHub Actions", "self-hosted runners", "run CI locally", "JIT runner", "protect the main branch", or needs to structure CI, deployment, and policy automation as composable host-runnable scripts that GitHub Actions only automates.
-version: 0.3.4
+description: Use when the user asks to "set up CI", "speed up CI", "add a deploy workflow", "structure GitHub Actions", "self-hosted runners", "run CI locally", "JIT runner", "protect the main branch", "add security scanning", "scan for vulnerabilities", or needs to structure CI, deployment, and policy automation as composable host-runnable scripts that GitHub Actions only automates.
+version: 0.4.0
 ---
 
 # CI/CD
@@ -12,8 +12,9 @@ somewhere, and what gates or authenticates either one.
 
 ## Modes
 
-**Init** (default) — stand up the path-filtered CI pipeline, per-environment
-deploy workflows, policy gates, and the workflows README.
+**Init** (default) — stand up the path-filtered CI pipeline, its security
+scans, per-environment deploy workflows, policy gates, and the workflows
+README.
 
 **Update** — add, rename, or retire a workflow; update the README
 table and required checks in the same change.
@@ -24,8 +25,9 @@ never mutates.
 ## Three facets, one split
 
 - **CI structure** — one path-filtered validation pipeline gating everything
-  that runs on a push or PR. Read `references/ci-structure.md` when setting up
-  or speeding up CI.
+  that runs on a push or PR, security scans included. Read
+  `references/ci-structure.md` when setting up or speeding up CI, and
+  `references/security-scanning.md` when adding or gating a scan.
 - **Deploy & release** — dispatch-against-ref deployment of a reviewed commit
   to a named environment, plus release integrity for anything irreversible.
   Read `references/deploy-and-release.md` when adding or changing a deploy or
@@ -81,9 +83,13 @@ scheduled cold job whose own setup step silently re-warms a shared cache, so
 the regression it exists to catch can no longer show up); **skipped-job-
 reports-success** (a path-filtered job that didn't run still reports a green
 check, so the gating job itself, not the per-area jobs, must be what's
-required); **workflow-token-doesn't-trigger-CI** (automation that pushes with
-the built-in workflow token produces commits that never fire downstream CI,
-silently leaving a rewritten ref unverified); **speedup misattribution** (a
+required); **empty-scan-reads-as-clean** (the same failure one level in — a
+scanner missing its binary, its credentials, or its ruleset returns zero
+findings, which is indistinguishable from a passing scan, so coverage must
+be reported separately from findings); **workflow-token-doesn't-trigger-CI**
+(automation that pushes with the built-in workflow token produces commits
+that never fire downstream CI, silently leaving a rewritten ref
+unverified); **speedup misattribution** (a
 multi-part change to CI's wall-clock cuts the total, and every part gets
 credited — but tracing the win to its actual cause can reveal that one part
 did all of it and a sibling part is silently inert, contributing nothing
@@ -114,6 +120,12 @@ Report-only — never mutate:
   actual workflow job names — no drift between the two.
 - No long-lived cloud credential sits in a secret where OIDC federation is
   available.
+- A secret-scanning job runs on every pipeline invocation, not gated on
+  changed paths, and the dependency scan also runs on a schedule.
+- A scan that could not run fails its gate; the exit code for incomplete
+  coverage is distinct from the one for a clean run.
+- Every scan suppression carries a reason and an expiry, and an expired one
+  fails the gate.
 - `.github/workflows/README.md` lists every workflow and is current with the
   workflows on disk.
 - A claimed speedup names the specific job, step, or mechanism it traces to —
