@@ -3,6 +3,14 @@
 The full method for building a reconciliation ledger and choosing how the
 reconciled outcomes land on the tracker.
 
+## Contents
+
+- [Capture enough to classify, without prematurely designing](#capture-enough-to-classify-without-prematurely-designing)
+- [The reconciliation ledger](#the-reconciliation-ledger)
+- [Reconcile each classification's action](#reconcile-each-classifications-action)
+- [Choose the issue topology](#choose-the-issue-topology)
+- [Put reconciliation output on the right surface](#put-reconciliation-output-on-the-right-surface)
+
 ## Capture enough to classify, without prematurely designing
 
 For every candidate source outcome, capture:

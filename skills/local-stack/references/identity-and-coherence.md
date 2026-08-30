@@ -1,5 +1,13 @@
 # Identity and coherence
 
+## Contents
+
+- [Derivation recipe](#derivation-recipe)
+- [What the identity feeds](#what-the-identity-feeds)
+- [Coherence-guard checks](#coherence-guard-checks)
+- [Init-script shape](#init-script-shape)
+- [Generic shell sketch](#generic-shell-sketch)
+
 ## Derivation recipe
 
 Compute the identity from things the worktree already knows about itself —

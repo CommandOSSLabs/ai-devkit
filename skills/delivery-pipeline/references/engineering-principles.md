@@ -6,6 +6,20 @@ automatically — do not restate its conventions here or in delegation
 prompts; this file holds only what is specific to running the pipeline
 autonomously.
 
+## Contents
+
+- [Autonomy: decide, don't ask](#autonomy-decide-dont-ask)
+- [The quality bar](#the-quality-bar)
+- [Full-surface changes and deliberate compat](#full-surface-changes-and-deliberate-compat)
+- [No shortcut: production-ready foundation](#no-shortcut-production-ready-foundation)
+- [One code path across infra profiles](#one-code-path-across-infra-profiles)
+- [Host-runnable composition](#host-runnable-composition)
+- [Production readiness](#production-readiness)
+- [Track record: explicit beats remembered](#track-record-explicit-beats-remembered)
+- [Consistency across surfaces](#consistency-across-surfaces)
+- [Parallelize with subagents — through the platform, with evidence](#parallelize-with-subagents--through-the-platform-with-evidence)
+- [Proactivity: own the gap](#proactivity-own-the-gap)
+
 ## Autonomy: decide, don't ask
 
 The human is not available during the run. Every spec question, plan

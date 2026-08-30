@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-review
-description: This skill should be used when the user asks to "review my changes", "review this PR", "take a look at this diff", or "is this ready to ship" — before shipping tracked work (phase 4 of cmk:delivery-pipeline) or standalone against any pull request or local diff.
-version: 0.1.3
+description: Use when the user asks to "review my changes", "review this PR", "take a look at this diff", or "is this ready to ship" — before shipping tracked work (phase 4 of cmk:delivery-pipeline) or standalone against any pull request or local diff. Produces a depth-disclosed verdict with evidence-backed findings dispositioned against acceptance criteria (citing requirement IDs when present).
+version: 0.2.4
 ---
 
 # Delivery Review
@@ -69,34 +69,9 @@ a quiet default.
 
 ## The lenses
 
-1. **Correctness** — does the code do what it claims? Logic, boundaries,
-   error paths, concurrency, resource lifecycle; would each new test fail
-   if the behavior regressed?
-2. **Spec/design/requirements/AC compliance** — line by line against the
-   issue's *current* acceptance criteria, spec, design docs, and
-   requirements. Under-delivery against the issue's *intent* is a finding
-   even when a criterion's letter is met; a criterion checked in the
-   tracker with no proof reachable from the issue is a finding, and so is
-   one silently narrowed to match what got built rather than rescoped in
-   the open.
-3. **Code quality** — repo conventions (`docs/rules/common/naming.md`,
-   the doc-comment bar, role-first layout per `cmk:project-layout`),
-   language idioms, layering, over- and under-engineering, test quality.
-4. **Cross-surface consistency** — do code, doc comments, `docs/`, the
-   issue, and the PR text tell one story? Stale docs, drifted scope, and
-   invalidated comments are findings.
-5. **Edge cases** — inputs, states, and failure sequences the tests miss;
-   on a changed surface, unmigrated consumers, dual old/new paths, and
-   compat wiring with no recorded per-item disposition.
-6. **Security** — think like a bad actor with the diff in hand: injection,
-   authz gaps, trust-boundary confusion, resource exhaustion, secret
-   handling, and anything touching signed payloads, domain separators,
-   settlement, randomness, or wire parity.
-7. **Production readiness** — audit against `cmk:delivery-pipeline`'s
-   engineering-principles checklist and the spec's production-readiness
-   section: failure modes, config, secrets, migrations, observability,
-   rollout, limits, and host-runnable workflow scripts (`cmk:cicd`). A shortcut or workaround that forks the production-ready foundation (local-only, CI-only, one-cloud-only, "harden later") is a finding.
-   Accepted gaps must be stated somewhere durable; silent gaps are findings.
+The seven lenses (correctness, spec/AC compliance with requirement IDs,
+code quality, cross-surface consistency, edge cases, security, production
+readiness) — full definitions: read `references/lenses.md`.
 
 ## Evidence, or it did not happen
 
@@ -146,5 +121,20 @@ dispositioned and gates are green. Standalone mode ends with a verdict —
 approve or request changes — and findings posted to one surface. Before
 either exit, reconcile every delivery consequence on the affected tracker
 issues.
+
+## Red Flags
+
+- Bare "LGTM" / approve with a thin or empty evidence section
+- Skipping the AC walk because "nothing jumps out"
+- Treating Quick depth as permission to skip adversarial verification
+- Social proof ("nobody writes evidence sections") waiving the evidence bar
+
+## Rationalizations
+
+| Thought | Reality |
+|---|---|
+| "Just say LGTM if nothing jumps out" | Zero findings need a substantial evidence trail or the review failed — re-run it. |
+| "Nobody writes evidence sections" | Social proof does not replace `file:line` traces and commands-run. |
+| "Ship tonight — full lenses are overkill" | Depth may be Quick/Targeted; evidence and AC walk still run. |
 
 Using Linear as your tracker? Read `references/linear.md`.

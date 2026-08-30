@@ -1,7 +1,7 @@
 ---
 name: cmk:design
-description: This skill should be used when the user asks "how should we build this", "design the backend", "update the architecture", "draft a system design", "create a feature spec", "spec out this feature", or discusses architecture, tech stack changes, component design, or infrastructure layout. Covers drafting, refining, or updating distilled design documents under docs/design/ — system-wide or per-feature — checking for conflicts with upstream requirements and recorded decisions.
-version: 0.5.3
+description: Use when the user asks "how should we build this", "design the backend", "update the architecture", "draft a system design", "create a feature spec", "spec out this feature", or discusses architecture, tech stack changes, component design, or infrastructure layout. Covers drafting, refining, or updating distilled design documents under docs/design/ — system-wide or per-feature — checking for conflicts with upstream requirements and recorded decisions.
+version: 0.6.2
 ---
 
 # Design
@@ -20,9 +20,11 @@ Synthesize from whatever the user provides: conversation context, existing requi
 
 When the design subject is still an idea, interview before drafting: probe the constraints, failure modes, trust boundaries, and alternatives one question at a time, and distill the answers into the spec. Where an interview-driven skill is available in the session (e.g. superpowers' brainstorming/spec flow), use it as the elicitation engine; the distilled result lands here as the design doc. Generic architecture prose is a failure — the spec must be specific enough to disagree with.
 
+**Upstream product lock.** For feature-level design, if there is no adequate `docs/requirements/` for the outcome (missing, unconfirmed close package, or conflicts with the ask), REQUIRED SUB-SKILL: use `cmk:requirements` before writing mechanism. Do not invent product success criteria inside the design doc to fill that gap.
+
 ## Workflow: Create
 
-1. Normalize input into design context at the right level — system-wide architecture, sub-system/track design, or feature-level spec (see `references/design-conventions.md` § Design Levels).
+1. Normalize input into design context at the right level — system-wide architecture, sub-system/track design, or feature-level spec (see `references/design-conventions.md` § Design Levels). Confirm upstream requirements (and any close-package locks) before mechanism sections for feature-level work.
 2. Shape the document per `references/design-guidance.md`, aligning to local convention if one exists.
 3. Place at `docs/design/<topic>.md` — system-wide design may use `docs/design/system.md`; a multi-doc design tree gets a "read this tree" entry README.
 4. Use glossary terms (see `cmk:glossary`) for every system, component, and actor name; define new terms there, not inline.

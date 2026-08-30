@@ -6,6 +6,25 @@ Each section defines a file path and its exact content.
 Every directory gets exactly one `README.md`: a map of what lives there and
 when to read it — not a mirror of the content.
 
+## Contents
+
+- [docs/README.md](#docsreadmemd)
+- [docs/templates/README.md](#docstemplatesreadmemd)
+- [docs/templates/requirements.md](#docstemplatesrequirementsmd)
+- [docs/templates/design.md](#docstemplatesdesignmd)
+- [docs/templates/adr.md](#docstemplatesadrmd)
+- [docs/decisions/README.md](#docsdecisionsreadmemd)
+- [docs/requirements/README.md](#docsrequirementsreadmemd)
+- [docs/design/README.md](#docsdesignreadmemd)
+- [docs/rules/README.md](#docsrulesreadmemd)
+- [docs/rules/common/README.md](#docsrulescommonreadmemd)
+- [docs/guides/README.md](#docsguidesreadmemd)
+- [docs/runbooks/README.md](#docsrunbooksreadmemd)
+- [docs/reports/README.md](#docsreportsreadmemd)
+- [docs/research/README.md](#docsresearchreadmemd)
+- [docs/knowledge/README.md](#docsknowledgereadmemd)
+- [docs/ai/README.md](#docsaireadmemd)
+
 ---
 
 ## docs/README.md
