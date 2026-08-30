@@ -45,18 +45,6 @@ jobs:
     steps: [ ... ]
 ```
 
-## The security job is the exception to path gating
-
-Area gating assumes a change's blast radius matches its file paths. That
-holds for build and test jobs and breaks for security: a lockfile bump
-touches one file and can alter the whole dependency graph, and a credential
-lands in fixtures a `src/**` filter never sees.
-
-Gate the dependency scan on manifests and lockfiles rather than on the area
-that owns them, and run the secret scan unconditionally — no `if:` on a
-`changes` output. Read `references/security-scanning.md` for the class list
-and what each gate does with a scan that could not run.
-
 ## Speed structure
 
 - **Concurrency group per ref**, `cancel-in-progress` on pull requests only —

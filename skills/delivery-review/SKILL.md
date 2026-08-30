@@ -53,10 +53,11 @@ Choosing or running a review engine at full depth? Read `references/engines.md`.
 
 ## The two occasions
 
-**Boundary review** — a concrete cross-work or risk boundary: a join of two
-or more issues or branches, a shared or public contract, a persisted format,
-a deployable-component handoff, an upstream pin replacement, or a changed
-consumer interface. State the trigger and inspect every relevant lens.
+**Boundary review** — a concrete cross-work or risk boundary: a join of
+two or more issues or branches, a shared or public contract, a persisted
+format, a deployable-component handoff, an upstream pin replacement, or a
+changed consumer interface. State the trigger and inspect every relevant
+lens.
 
 **Pre-ship review** — mandatory before every completed issue or branch
 ships, and before every combined integration output; `cmk:delivery-ship`
