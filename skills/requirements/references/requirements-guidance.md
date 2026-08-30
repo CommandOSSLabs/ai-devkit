@@ -8,15 +8,12 @@ has nothing to say in has failed as surely as one that omits what matters.
 any strong requirements doc accomplishes, and the recurring patterns that get
 it there.
 
-## Contents
-
 - [What the document must accomplish](#what-the-document-must-accomplish)
 - [Acceptance criteria](#acceptance-criteria) — the required section
   - [What one criterion is](#what-one-criterion-is)
   - [Choosing the notation](#choosing-the-notation) — `ears` vs `rfc2119`
   - [`ears`](#ears--one-trigger-one-behaviour-always-shall)
   - [`rfc2119`](#rfc2119--conformance-strength-per-statement)
-- [Guarding existing behavior](#guarding-existing-behavior)
 - [Locked decisions](#locked-decisions)
 - [Technical products get technical requirements](#technical-products-get-technical-requirements)
 - [Progressive disclosure](#progressive-disclosure)
@@ -111,32 +108,6 @@ An `ears` document has no strength axis: every criterion is mandatory by
 construction. A behaviour that would be `SHOULD` or `MAY` is not an acceptance
 criterion — it is a design constraint (`docs/design/`) or an engineering rule
 (`docs/rules/`).
-
-## Guarding existing behavior
-
-When Iterate (or Create that extends an existing surface) adds behavior beside
-criteria that must keep working, write an explicit guard — do not rely on the
-old criterion remaining "obviously" in force.
-
-**EARS form:**
-
-```
-**<PREFIX>-<story>.<n>** (guard) WHEN <condition> THE SYSTEM SHALL CONTINUE TO
-<existing observable behavior>.
-```
-
-**RFC 2119 form:** keep the existing MUST statement and add a companion that
-the new behavior MUST NOT weaken it (or restate the MUST under the new
-context). Prefer clarity over clever cross-references.
-
-Rules:
-
-- One guard per load-bearing existing behavior on the touched surface — not one
-  vague "nothing else breaks" line.
-- If a file or section has no behavior at risk, write an explicit
-  `no behavior to guard` note in the change summary so the skip is visible.
-- Guards carry ordinary IDs and stay in `## Acceptance Criteria`; they are not
-  a separate informal list.
 
 ## Locked decisions
 

@@ -1,7 +1,7 @@
 ---
 name: cmk:sync
-description: Use when the user asks to "sync skills with upstream", "pull upstream skill updates", "reconcile vendored skills", "update the skills lockfile", or whenever a repo's vendored `.agents/skills/` copies have drifted from the upstream kit.
-version: 0.1.1
+description: This skill should be used when the user asks to "sync skills with upstream", "pull upstream skill updates", "reconcile vendored skills", "update the skills lockfile", or whenever a repo's vendored `.agents/skills/` copies have drifted from the upstream kit.
+version: 0.1.0
 ---
 
 # Sync

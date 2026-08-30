@@ -1,12 +1,5 @@
 # Runners
 
-## Contents
-
-- [Interactive runner](#interactive-runner)
-- [Headless runner](#headless-runner)
-- [Choosing a mode](#choosing-a-mode)
-- [Log hygiene](#log-hygiene)
-
 ## Interactive runner
 
 Purpose: a single command that brings up an entire stack in one terminal for

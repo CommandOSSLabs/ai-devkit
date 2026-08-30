@@ -3,16 +3,6 @@
 Mechanics for treating CI, deploy, and operator steps as scripts that
 any host can run. The YAML (or other remote CI file) only composes them.
 
-## Contents
-
-- [Scripts are the workflow](#scripts-are-the-workflow)
-- [Language](#language)
-- [Composer-contract drift](#composer-contract-drift)
-- [Mutate gate](#mutate-gate)
-- [Host matrix](#host-matrix)
-- [Debug on the host that ran the step](#debug-on-the-host-that-ran-the-step)
-- [When a remote job fails](#when-a-remote-job-fails)
-
 ## Scripts are the workflow
 
 Each step is independently invocable on a machine. A step that only

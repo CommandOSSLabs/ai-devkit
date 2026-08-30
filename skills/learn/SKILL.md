@@ -1,7 +1,7 @@
 ---
 name: cmk:learn
-description: Use when the user asks to "remember this", "save this learning", "capture the key findings", "what do we know about X", "save that gotcha", or needs to extract and record non-obvious learnings, gotchas, and valuable knowledge from conversations, research sessions, debugging, files, or user instructions.
-version: 0.2.2
+description: This skill should be used when the user asks to "remember this", "save this learning", "capture the key findings", "what do we know about X", "save that gotcha", or needs to extract and record non-obvious learnings, gotchas, and valuable knowledge from conversations, research sessions, debugging, files, or user instructions.
+version: 0.2.1
 ---
 
 # Learn

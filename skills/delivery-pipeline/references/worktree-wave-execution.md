@@ -13,17 +13,6 @@ build state private by construction, and as a second effect give every task a
 private branch, which removes the commit contamination that forced path-scoped
 review packages.
 
-## Contents
-
-- [Wave eligibility](#wave-eligibility)
-- [Dispatch](#dispatch)
-- [Join and cleanup](#join-and-cleanup)
-- [Reconciliation between tasks](#reconciliation-between-tasks)
-- [Shared state has one writer](#shared-state-has-one-writer)
-- [Thrash detection](#thrash-detection)
-- [Snapshots never ship](#snapshots-never-ship)
-- [Runtime bindings](#runtime-bindings)
-
 ## Wave eligibility
 
 Tasks may share a wave only when all three hold:

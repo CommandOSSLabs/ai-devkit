@@ -1,7 +1,7 @@
 ---
 name: cmk:rust
-description: Use when the user asks to "set up error handling", "add a feature flag", "structure this crate", "what's our clippy/lint policy", "why is this test flaky under nextest", "add dependency hygiene checks", or needs to apply idiomatic Rust practices — error types, module boundaries, feature flags, lint/format/test wiring, dependency hygiene — inside a crate whose shape is already decided by the system's design.
-version: 0.1.1
+description: This skill should be used when the user asks to "set up error handling", "add a feature flag", "structure this crate", "what's our clippy/lint policy", "why is this test flaky under nextest", "add dependency hygiene checks", or needs to apply idiomatic Rust practices — error types, module boundaries, feature flags, lint/format/test wiring, dependency hygiene — inside a crate whose shape is already decided by the system's design.
+version: 0.1.0
 ---
 
 # Rust

@@ -3,14 +3,6 @@
 Mechanics for the deploy-and-release facet in `SKILL.md`, and the GitHub ↔ IaC
 contract it specifies on behalf of `cmk:infra`.
 
-## Contents
-
-- [Validation and deployment are separate workflows](#validation-and-deployment-are-separate-workflows)
-- [Dispatch-against-ref, not branch-triggered promotion](#dispatch-against-ref-not-branch-triggered-promotion)
-- [The GitHub ↔ IaC contract, specified](#the-github-iac-contract-specified)
-- [Deploy orchestrator plus legs](#deploy-orchestrator-plus-legs)
-- [Release integrity](#release-integrity)
-
 ## Validation and deployment are separate workflows
 
 The CI workflow validates; it never deploys. Each deployable thing gets its

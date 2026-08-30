@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-simplify
-description: Use when the user asks to "simplify", "clean up the diff", "polish the changed code", or "run a simplify pass" without changing behavior — or when phase 3b of `cmk:delivery-pipeline` needs a whole-branch quality cleanup. Produces a behavior-preserving polish of the changed surface with verification still green.
-version: 0.1.1
+description: This skill should be used when the user asks to "simplify", "clean up the diff", "polish the changed code", or "run a simplify pass" without changing behavior — and as the delivery-pipeline phase-3 epilogue (3b) after implement and before review.
+version: 0.1.0
 ---
 
 # Delivery Simplify

@@ -1,7 +1,7 @@
 ---
 name: cmk:discover-efforts
-description: Use when the user asks to "discover the delivery efforts here", "audit this body of work before we file issues", "reconcile these prompts, requirements, designs, or code against the tracker", "figure out what issues we actually need before starting", or hands over an uncertain body of work that needs a reconciled tracker issue set before delivery begins.
-version: 0.1.2
+description: This skill should be used when the user asks to "discover the delivery efforts here", "audit this body of work before we file issues", "reconcile these prompts, requirements, designs, or code against the tracker", "figure out what issues we actually need before starting", or hands over an uncertain body of work that needs a reconciled tracker issue set before delivery begins.
+version: 0.1.1
 ---
 
 # Discover Efforts

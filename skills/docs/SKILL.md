@@ -1,7 +1,7 @@
 ---
 name: cmk:docs
-description: Use when the user asks to "set up docs", "initialize docs", "docs scaffold", "check if our docs structure is current", "update the docs structure", "check docs connectedness", or needs to bootstrap, update, or verify the /docs directory structure with navigation READMEs and document templates.
-version: 0.3.1
+description: This skill should be used when the user asks to "set up docs", "initialize docs", "docs scaffold", "check if our docs structure is current", "update the docs structure", "check docs connectedness", or needs to bootstrap, update, or verify the /docs directory structure with navigation READMEs and document templates.
+version: 0.3.0
 ---
 
 # Docs

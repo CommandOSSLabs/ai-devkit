@@ -60,4 +60,3 @@ docker-compose.override.yml
 **/evals-workspace/**/with_skill/
 **/evals-workspace/**/without_skill/
 **/evals-workspace/**/benchmark.json
-.skills/

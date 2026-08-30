@@ -1,7 +1,7 @@
 ---
 name: cmk:toolchain
-description: Use when the user asks to "set up gitignore", "pin the toolchain", "configure the workspace", "which tool does what", "add a formatter/linter", or needs to assign unambiguous tool roles, pin runtime versions, and establish a gitignore baseline for a repo.
-version: 0.2.1
+description: This skill should be used when the user asks to "set up gitignore", "pin the toolchain", "configure the workspace", "which tool does what", "add a formatter/linter", or needs to assign unambiguous tool roles, pin runtime versions, and establish a gitignore baseline for a repo.
+version: 0.2.0
 ---
 
 # Toolchain

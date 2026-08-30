@@ -13,12 +13,6 @@ thing in this repository.
   [`../design/`](../design/); how to operate it belongs in
   [`../runbooks/`](../runbooks/).
 
-## Index
-
-| Guide | When |
-|---|---|
-| [`on-ramps.md`](./on-ramps.md) | Unsure which `cmk:*` skill starts the situation |
-
 ## When to read
 
 When you know what you need to do and want the established way to do it.
