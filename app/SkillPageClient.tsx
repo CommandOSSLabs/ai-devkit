@@ -190,29 +190,21 @@ let repoMetaCache: RepoMeta | null = null;
 let repoMetaPromise: Promise<RepoMeta> | null = null;
 
 function loadRepoMetaOnce(): Promise<RepoMeta> {
-  return Promise.all([
-    fetch("https://api.github.com/repos/CommandOSSLabs/ai-devkit").then((r) => (r.ok ? r.json() : null)),
-    fetch("https://api.github.com/repos/CommandOSSLabs/ai-devkit/commits/main").then((r) => (r.ok ? r.json() : null)),
-    fetch("https://api.github.com/repos/CommandOSSLabs/ai-devkit/tags?per_page=1").then((r) => (r.ok ? r.json() : null)),
-    fetch("https://api.github.com/repos/CommandOSSLabs/ai-devkit/pulls?state=closed&sort=updated&direction=desc&per_page=8").then((r) =>
-      r.ok ? r.json() : null
-    ),
-  ]).then(([repo, commit, tags, pulls]) => {
-    const recentMerges: MergedPR[] = Array.isArray(pulls)
-      ? pulls
-          .filter((pr) => pr?.merged_at)
-          .slice(0, 3)
-          .map((pr) => ({ number: pr.number, title: pr.title, mergedAt: pr.merged_at }))
-      : [];
-
-    return {
-      stars: repo?.stargazers_count ?? null,
-      license: repo?.license?.spdx_id ?? null,
-      pushedAt: repo?.pushed_at ?? null,
-      commitSha: commit?.sha ? String(commit.sha).slice(0, 7) : null,
-      latestTag: Array.isArray(tags) && tags[0]?.name ? tags[0].name : null,
-      recentMerges,
-    };
+  // Routed through our own /api/repo-meta instead of calling GitHub
+  // directly from the browser: unauthenticated GitHub REST calls are
+  // capped at 60/hr *per source IP*, so every visitor's own browser was
+  // burning its own budget on every page load — one round of testing (or
+  // one shared office/NAT IP) was enough to degrade the "live from the
+  // repository" numbers to all-dashes. The server route shares one quota
+  // across all visitors and caches for 5 minutes, which keeps real GitHub
+  // calls far under the limit regardless of traffic.
+  // Reject rather than resolve on a non-ok response: fetchRepoMeta's retry
+  // and don't-cache-the-failure logic below keys off a rejected promise, so
+  // resolving to EMPTY_REPO_META here would write an empty result straight
+  // into repoMetaCache and pin the page to all-dashes for the whole session.
+  return fetch("/api/repo-meta").then((r) => {
+    if (!r.ok) throw new Error(`/api/repo-meta responded ${r.status}`);
+    return r.json() as Promise<RepoMeta>;
   });
 }
 
