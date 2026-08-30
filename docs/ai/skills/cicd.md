@@ -9,7 +9,11 @@ policy gates plus automation credentials that govern both.
 ## Approach
 CI structure: a `changes` job path-filters the diff and gates per-area jobs,
 with concurrency-per-ref, ecosystem caching, config-selected runner tiers, and
-a scheduled, deliberately cache-isolated cold-resolve job. Deploy and release:
+a scheduled, deliberately cache-isolated cold-resolve job. Security scanning
+sits inside that pipeline as four classes — code, dependencies, secrets,
+infrastructure — scoped to what the diff touches but disclosed either way,
+with the secret scan exempt from path gating and a scan that could not run
+failing its gate rather than reading as clean. Deploy and release:
 `workflow_dispatch` inputs carry an explicit commit SHA and target
 environment (dispatch-against-ref), a deploy orchestrator calls per-piece
 `workflow_call` legs under two concurrency layers, and irreversible releases
@@ -22,7 +26,8 @@ where pushes must trigger CI, and OIDC over static cloud keys. Specifies the
 GitHub ↔ IaC 1:1:1 mapping (stack ↔ GitHub Environment ↔ deploy workflow)
 that `cmk:infra` names but leaves to this skill to wire. Names
 speedup misattribution as a named trap alongside cold-cache poisoning,
-skipped-job-reports-success, workflow-token-doesn't-trigger-CI,
+skipped-job-reports-success, empty-scan-reads-as-clean,
+workflow-token-doesn't-trigger-CI,
 evidence-floor negation, and composer-contract drift. Host-runnable
 scripts prefer TypeScript (or the repo's existing runtime); shell is
 host bootstrap only; a shared mutating CLI refuses without `--confirm`
@@ -39,7 +44,12 @@ repo.
   (TypeScript default, shell bootstrap only, no third ops language),
   composer-contract drift, mutate gate, host matrix, JIT slot count,
   one-fix-per-push.
-- `references/ci-structure.md` — the `changes` job/path-filter shape,
+- `references/security-scanning.md` — the four scan classes, scoping them to
+  the effort, not-applicable vs. could-not-run, per-class placement, exit
+  codes, suppressions as accepted gaps with an expiry, proving the gate
+  gates.
+- `references/ci-structure.md` — the `changes` job/path-filter shape, the
+  security job as the exception to path gating,
   concurrency and caching, config-selected runner tiers, deliberate
   cold-cache isolation, CI self-contract tests (implementation site
   and path-filter lockstep), label-gated diagnostics.
