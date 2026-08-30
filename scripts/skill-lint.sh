@@ -12,7 +12,7 @@ fail() { violations+=("$1"); }
 
 # Pre-existing exceptions. A new entry here must be a deliberate, reviewed
 # decision, not a way to silence a fresh violation.
-SIZE_BUDGET_ALLOWLIST=(codebase-docs)
+SIZE_BUDGET_ALLOWLIST=()
 CROSS_PACKAGE_PATH_ALLOWLIST=(
   "skills/docs/references/scaffold-manifest.md"
   "skills/sui-devstack/references/instance-isolation.md"
@@ -77,7 +77,7 @@ check_size_budget() {
   for skill_md in skills/*/SKILL.md; do
     skill_name=$(basename "$(dirname "$skill_md")")
     lines=$(wc -l < "$skill_md" | tr -d ' ')
-    if [ "$lines" -gt 150 ] && ! in_allowlist "$skill_name" "${SIZE_BUDGET_ALLOWLIST[@]}"; then
+    if [ "$lines" -gt 150 ] && ! in_allowlist "$skill_name" ${SIZE_BUDGET_ALLOWLIST[@]+"${SIZE_BUDGET_ALLOWLIST[@]}"}; then
       fail "$skill_md: $lines lines exceeds the 150-line SKILL.md budget"
     fi
   done

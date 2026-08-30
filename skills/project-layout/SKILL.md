@@ -1,7 +1,7 @@
 ---
 name: cmk:project-layout
-description: This skill should be used when the user asks to "set up the repo structure", "organize the monorepo", "where should this package live", "restructure folders", "add a new package", or needs to establish or audit a role-first monorepo layout with per-ecosystem workspaces, library placement rules, and vendored-source conventions.
-version: 0.2.0
+description: Use when the user asks to "set up the repo structure", "organize the monorepo", "where should this package live", "restructure folders", "add a new package", or needs to establish or audit a role-first monorepo layout with per-ecosystem workspaces, library placement rules, and vendored-source conventions.
+version: 0.2.1
 ---
 
 # Project Layout

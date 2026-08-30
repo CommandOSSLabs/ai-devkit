@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-intake
-description: This skill should be used when the user asks to "start work on TICKET-123", "pick up this issue", "get the context for this ticket", or begins any tracked work — and as phase 1 of the cmk:delivery-pipeline skill.
-version: 0.1.0
+description: Use when the user asks to "start work on TICKET-123", "pick up this issue", "get the context for this ticket", "intake this issue", or begins any tracked work — and as phase 1 of the cmk:delivery-pipeline skill. Produces a context brief, branch/worktree, stated scope band, and docs-ready check (routing to `cmk:requirements` when the band requires it).
+version: 0.2.2
 ---
 
 # Delivery Intake
@@ -66,6 +66,16 @@ If reading reveals the issue's scope is stale (already partly delivered,
 superseded, or split), update it and its relations now, before building on a
 wrong picture.
 
+**Scope band + docs-ready.** State the band out loud, record it on the issue,
+and check docs-ready per `cmk:delivery-workflow`'s scope-band reference. If
+docs-ready is false, REQUIRED SUB-SKILL: use `cmk:requirements` before phase 3
+(or record an explicit exemption with owner). Do not restate the band table
+here.
+
+**Defect path.** When the issue is unexpected broken behavior (bug, regression,
+incident leftover), capture reproduction and suspected cause on the issue (or
+block on investigation) before planning a fix.
+
 ## 3. Branch and worktree
 
 - Use the tracker's suggested branch name, if it generates one; otherwise the
@@ -93,7 +103,9 @@ never committed:
 ```
 # TICKET-123 context brief
 Outcome: <the accepted outcome, in one paragraph>
-Acceptance criteria: <the current checklist, each item marked met / unmet, met ones naming their proof>
+Scope band: <trivial | patch | feature>
+Docs-ready: <yes / no — if no, what's missing; requirements path or exemption>
+Acceptance criteria: <the current checklist, each item marked met / unmet, met ones naming their proof; cite PREFIX-N.M when the requirements doc defines IDs>
 Constraints & invariants: <from docs, the issue, or code — incl. any invariant classes touched>
 Prior art & patterns: <files/subsystems to model after>
 Scope boundaries: <what neighboring issues own; what is explicitly out>
