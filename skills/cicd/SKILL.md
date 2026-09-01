@@ -1,7 +1,7 @@
 ---
 name: cmk:cicd
-description: Use when the user asks to "set up CI", "speed up CI", "add a deploy workflow", "structure GitHub Actions", "self-hosted runners", "run CI locally", "JIT runner", "protect the main branch", "add security scanning", "scan for vulnerabilities", or needs to structure CI, deployment, and policy automation as composable host-runnable scripts that GitHub Actions only automates.
-version: 0.4.0
+description: Use when the user asks to "set up CI", "speed up CI", "add a deploy workflow", "structure GitHub Actions", "self-hosted runners", "persistent runner fleet", "runner pool", "runner capacity", "runner concurrency", "runner parallelism", "multi-project CI host", "runner isolation", "runner lifecycle", "runner cleanup", "run CI locally", "JIT runner", "protect the main branch", "add security scanning", "scan for vulnerabilities", or needs to structure CI, deployment, and policy automation as composable host-runnable scripts that GitHub Actions only automates.
+version: 0.5.0
 ---
 
 # CI/CD
@@ -52,6 +52,12 @@ local, AWS, GCP, and production are profiles over one production-ready
 path (`cmk:infra`, `cmk:local-stack`). JIT concurrent-job count,
 language, extract, and mutate-gate rules are `references/host-runnable.md`;
 attested packing is `cmk:enclave`.
+
+## Persistent self-hosted runner fleets
+
+A persistent agent takes one job at a time; capacity comes from distinct agents,
+not workflow `strategy.max-parallel`. Read `references/self-hosted-runner-fleets.md`
+for pool sizing, shared-host isolation, naming, lifecycle, state, or cleanup.
 
 ## GitHub ↔ IaC mapping is this skill's contract
 
@@ -135,7 +141,9 @@ Report-only — never mutate:
   script entry point the workflow only invokes.
 - Those scripts support Linux and macOS on amd64 and arm64, or fail
   closed with a stated reason.
-- A JIT host registration names how many concurrent jobs it will run.
+- A JIT registration names its concurrent job count; persistent fleet capacity
+  maps each slot to one configured agent.
+- Every persistent pool and cleanup selector has one project owner.
 - Programmable workflow steps are TypeScript (or the repo's chosen
   runtime); remaining shell is host bootstrap only.
 - A mutating host-runnable script refuses without an explicit confirm

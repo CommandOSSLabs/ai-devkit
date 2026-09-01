@@ -31,12 +31,16 @@ workflow-token-doesn't-trigger-CI,
 evidence-floor negation, and composer-contract drift. Host-runnable
 scripts prefer TypeScript (or the repo's existing runtime); shell is
 host bootstrap only; a shared mutating CLI refuses without `--confirm`
-or a documented CI env. Ends with a
+or a documented CI env. Persistent self-hosted fleets map one configured
+agent/service/directory to each concurrent slot, give each pool one project
+owner, and scope routing, state, caches, lifecycle, and cleanup accordingly.
+Ends with a
 `## Verify` section for report-only checks a caller can run against a target
 repo.
 
 ## Where
 - Skill body: `skills/cicd/SKILL.md` — sections `Three facets, one split`,
+  `Persistent self-hosted runner fleets`,
   `GitHub ↔ IaC mapping is this skill's contract`, `` `workflows/README.md`
   is the operating doc ``, `What this teaches vs. what a project owns`,
   `Verify`.
@@ -44,6 +48,11 @@ repo.
   (TypeScript default, shell bootstrap only, no third ops language),
   composer-contract drift, mutate gate, host matrix, JIT slot count,
   one-fix-per-push.
+- `references/self-hosted-runner-fleets.md` — persistent-agent concurrency,
+  project-owned pools on shared hosts, routing and access boundaries,
+  project/slot directories and mutable state, privilege-separated bootstrap,
+  lifecycle transactions, exact Docker ownership, staged migration, and
+  collision/isolation verification.
 - `references/security-scanning.md` — the four scan classes, scoping them to
   the effort, not-applicable vs. could-not-run, per-class placement, exit
   codes, suppressions as accepted gaps with an expiry, proving the gate
@@ -64,6 +73,8 @@ repo.
   automation auth (pinned actions, non-persisted credentials, GitHub App
   vs. workflow token, OIDC), and critical-invariant verification as its
   own required job class.
+- `skills/cicd/eval.json` — behavioral contracts for persistent-agent
+  capacity, shared-host project isolation, and fail-closed service lifecycle.
 
 ## Links
 - `cmk:infra` — names the environment vocabulary and requires a deploy path

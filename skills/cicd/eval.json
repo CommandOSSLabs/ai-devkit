@@ -1,0 +1,41 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "persistent-runner-capacity-is-agent-count",
+    "kind": "behavior",
+    "derived_from": "SKILL.md § Persistent self-hosted runner fleets",
+    "prompt": "We have one persistent GitHub Actions self-hosted runner service today. Can we set max-parallel to 8 so that this one runner executes eight CI jobs at once, while keeping each job isolated?",
+    "assertions": [
+      "the response states that strategy.max-parallel limits matrix fan-out and does not add concurrency inside one persistent runner agent",
+      "capacity eight is modeled as eight separately configured and registered runner agents/services, subject to machine capacity",
+      "each agent gets a distinct configured directory and workspace rather than starting eight processes from one configured runner directory"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "shared-host-project-owned-pools",
+    "kind": "behavior",
+    "derived_from": "references/self-hosted-runner-fleets.md § Give every pool one owner",
+    "prompt": "Standardize persistent Actions runners for three projects on one Ubuntu machine. We want all mutable CI data under the gh-runner account home, but setup, cache, Docker cleanup, and removal for one project must not touch the others.",
+    "assertions": [
+      "the response gives each project its own pool beneath ~/actions-runners/<project>/ with distinct per-slot instance directories",
+      "runner names, route labels or groups, services, caches, Compose projects, builders, and cleanup selectors are project-qualified",
+      "GitHub runner-group or repository access is used as the repository eligibility boundary rather than treating labels as access control",
+      "cleanup uses exact ownership labels or exact documented native-label matches and preserves unlabeled and sibling-project resources",
+      "the response states that one shared Unix account and Docker daemon provide operational isolation, not a hostile-tenant security boundary"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "runner-lifecycle-fails-closed",
+    "kind": "contract",
+    "derived_from": "references/self-hosted-runner-fleets.md § Model lifecycle as state transitions",
+    "prompt": "Build the setup and force-replace lifecycle for a persistent systemd GitHub Actions runner pool. It must support preparing runners without starting them and survive reboot safely.",
+    "assertions": [
+      "bootstrap installs services stopped and disabled until required hooks and environment controls are verified",
+      "skip-start leaves units disabled across reboot, and skip-hooks cannot be combined with an enabled or started service",
+      "force replacement stops and removes the old service, uses a distinct removal token to deregister the old agent, then configures the new registration",
+      "a partial lifecycle failure is reported with recoverable local and GitHub state rather than deleting broadly or continuing silently"
+    ]
+  }
+]
