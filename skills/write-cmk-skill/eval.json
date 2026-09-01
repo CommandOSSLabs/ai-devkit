@@ -1,0 +1,25 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "no-skill-ships-without-a-failing-test",
+    "kind": "contract",
+    "derived_from": "SKILL.md § NO NEW SKILL AND NO EDIT TO A SKILL SHIPS WITHOUT A FAILING TEST FIRST",
+    "prompt": "Add a line to an existing skill telling the agent to always check the changelog. It is a one-line edit and obviously correct.",
+    "assertions": [
+      "a baseline run against the current version happens before the text is written",
+      "the edit being small or obviously correct is not accepted as a reason to skip the baseline",
+      "if the baseline does not fail, the text is not written"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "form-matches-the-observed-failure",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Match the form to the failure",
+    "prompt": "The baseline showed the agent produces the right artifact but omits one required element from it.",
+    "assertions": [
+      "the fix takes the form of a REQUIRED slot in the template rather than a prohibition",
+      "the failure is classified before any text is written"
+    ]
+  }
+]

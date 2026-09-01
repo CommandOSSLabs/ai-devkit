@@ -2,9 +2,11 @@
 
 ## Proposing a skill change
 
-Open a PR against `main`. Describe what the skill gets wrong, ambiguous, or
-misses today, and how your change fixes it — reviewers and skill-lint judge
-the diff, not the intent.
+For a new skill or a behavior-shaping edit, run `/write-cmk-skill` first: it
+enforces a failing-baseline Iron Law and the ship checklist before text
+lands under `skills/`. Then open a PR against `main`. Describe what the
+skill gets wrong, ambiguous, or misses today, and how your change fixes
+it — reviewers and skill-lint judge the diff, not the intent.
 
 ## The kit's bar
 
