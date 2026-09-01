@@ -1,7 +1,7 @@
 ---
 name: cmk:sync
 description: Use when the user asks to "sync skills with upstream", "pull upstream skill updates", "reconcile vendored skills", "update the skills lockfile", or whenever a repo's vendored `.agents/skills/` copies have drifted from the upstream kit.
-version: 0.1.1
+version: 0.1.2
 ---
 
 # Sync
@@ -25,7 +25,7 @@ Read `references/skills-lock.md`.
   the local adaptation.
 - **sync** — the three-way reconcile (below).
 - **contribute** — review local amendments flagged as generic; prepare them
-  as upstream contributions.
+  as upstream contributions (below).
 
 ## Workflow (sync mode)
 
@@ -44,6 +44,19 @@ Read `references/skills-lock.md`.
    reconcile completed.
 
 Running the reconcile? Read `references/reconciliation.md`.
+
+## Workflow (contribute mode)
+
+1. Collect candidates flagged as generic (from a prior sync, or re-scan per
+   `references/reconciliation.md`).
+2. Drop anything that belongs under `## Project adaptations` or carries
+   project vocabulary — those stay local; sync never promotes them.
+3. For every remaining candidate that will edit an upstream `cmk:*` skill:
+   **name `/write-cmk-skill` for the user to run** before preparing the PR.
+   Do not invoke it — `cmk:write-cmk-skill` is user-invoked. Skip this step
+   only when the user already completed that pass for this amendment set.
+4. After that pass (or explicit skip), prepare the upstream contribution PR
+   from the reviewed generic amendments.
 
 ## Scope rule
 

@@ -48,7 +48,9 @@ out of your own diff. CI runs the same script on every PR touching
 If your repo vendored the skills via `cmk:agent-vendors` and evolved one
 locally, don't just keep the fix local. Run `cmk:sync` in **contribute**
 mode: it reviews local amendments flagged as generic-looking upstream
-candidates and prepares them as a PR back here.
+candidates, names `/write-cmk-skill` for you to run on those candidates,
+then prepares them as a PR back here. Pure `## Project adaptations` stay
+local and skip that gate.
 
 ## Commits
 
