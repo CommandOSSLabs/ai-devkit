@@ -40,6 +40,7 @@ language/framework subfolder), loaded only when the matching task comes up:
 | Committing or opening a PR | `docs/rules/common/git-workflow.md` |
 | Adding or changing a CLI command | `docs/rules/common/cli-surfaces.md` |
 | Long-running or background work | `docs/rules/common/agent-conduct.md` |
+| Reading anything the repo didn't author | `docs/rules/common/untrusted-input.md` |
 
 [add a row per every other file already present in `docs/rules/common/` (a
 pre-existing baseline topic this skill didn't seed, or a project- or
@@ -67,13 +68,13 @@ temp directory or an ad-hoc `tmp/`.
   actual invariants stated by an existing design doc or ADR — never from
   aspiration about what the repository should eventually look like.
 - Every pointer row in the rules table must resolve to a file that exists at
-  seed time. Seed the matching rules file first (see the six templates
+  seed time. Seed the matching rules file first (see the seven templates
   alongside this one), then add its row; never add a row for a file the seed
   step didn't create.
 - Drop a row entirely rather than pointing it at a file that doesn't exist —
   a dangling pointer is worse than a missing rule.
 - Add a row for every other file already present in `docs/rules/common/`
-  too, not only the six this skill seeds — a pre-existing baseline topic
+  too, not only the seven this skill seeds — a pre-existing baseline topic
   (for example one scaffolded earlier by a docs-setup pass) is unreachable
   from `CLAUDE.md` if it never gets a row, even though the file itself is
   fine.
