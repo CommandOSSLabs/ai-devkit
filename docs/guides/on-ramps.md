@@ -8,7 +8,8 @@ point here; they do not restate this table.
 | Brand-new / adopt / verify repo facets | `cmk:repo-setup` |
 | Docs tree missing or drifted | `cmk:docs` |
 | What already covers this? which specs touch these files? what did we decline? | `cmk:capability-map` |
-| Save / draft product requirements; close package; AC + guards | `cmk:requirements` |
+| Grill / interview / underspecified idea / close package | `cmk:elicit` |
+| Save / draft product requirements; AC + guards | `cmk:requirements` |
 | How to build it (mechanism, architecture) | `cmk:design` |
 | Record a hard-to-reverse decision | `cmk:adr` |
 | Lock a term / vocabulary drift | `cmk:glossary` |
@@ -28,7 +29,7 @@ Rules of thumb:
 
 > Derive capability neighbors before drafting a spec (`cmk:capability-map`). Advisory — it never blocks, and an absent registry is a clean no-op.
 
-> Never draft `docs/requirements/` from a bare label — close package first (`cmk:requirements`).
+> Never draft `docs/requirements/` from a bare label — close package first (`cmk:elicit`), then write (`cmk:requirements`).
 
 > State **scope band** before implement; meet **docs-ready** (`cmk:delivery-workflow`).
 

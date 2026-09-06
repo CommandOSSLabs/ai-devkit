@@ -61,7 +61,9 @@ standards.
 
 ## Skills per Phase
 
-- Phase 1: `cmk:requirements` — `skills/requirements/SKILL.md`
+- Phase 1: `cmk:elicit` (`skills/elicit/SKILL.md`) interviews until a confirmed
+  close package; `cmk:requirements` (`skills/requirements/SKILL.md`) writes
+  `docs/requirements/<topic>.md` from that package.
 - Phase 2: `cmk:design` — `skills/design/SKILL.md`; `cmk:adr` —
   `skills/adr/SKILL.md` for decisions that constrain it
 - Before Phases 1 and 2, and again at review: `cmk:capability-map` —

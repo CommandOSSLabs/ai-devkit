@@ -1,7 +1,7 @@
 ---
 name: cmk:design
 description: Use when the user asks "how should we build this", "design the backend", "update the architecture", "draft a system design", "create a feature spec", "spec out this feature", or discusses architecture, tech stack changes, component design, or infrastructure layout. Covers drafting, refining, or updating distilled design documents under docs/design/ — system-wide or per-feature — checking for conflicts with upstream requirements and recorded decisions.
-version: 0.7.1
+version: 0.8.0
 ---
 
 # Design
@@ -36,7 +36,10 @@ continues.
 
 ## Elicitation
 
-When the design subject is still an idea, interview before drafting: probe the constraints, failure modes, trust boundaries, and alternatives one question at a time, and distill the answers into the spec. Where an interview-driven skill is available in the session (e.g. superpowers' brainstorming/spec flow), use it as the elicitation engine; the distilled result lands here as the design doc. Generic architecture prose is a failure — the spec must be specific enough to disagree with.
+When the design subject is still an idea, REQUIRED SUB-SKILL: use `cmk:elicit`
+before writing mechanism. Do not re-implement interview cards here. Distill the
+confirmed close package into the spec. Generic architecture prose is a failure
+— the spec must be specific enough to disagree with.
 
 **Upstream product lock.** For feature-level design, if there is no adequate `docs/requirements/` for the outcome (missing, unconfirmed close package, or conflicts with the ask), REQUIRED SUB-SKILL: use `cmk:requirements` before writing mechanism. Do not invent product success criteria inside the design doc to fill that gap.
 

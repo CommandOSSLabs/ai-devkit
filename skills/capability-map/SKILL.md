@@ -1,7 +1,7 @@
 ---
 name: cmk:capability-map
 description: Use when the user asks "what already covers this", "does this exist already", "which specs touch these files", "was this already ruled out", "where did we write down that we decided against it", "register a capability", or "backfill the capability registry" — and whenever a requirements or design doc is about to be written and the neighboring capabilities, their owned paths, and the items they already declined are not yet on the table. Produces the capability registry `docs/capabilities/INDEX.md` and an advisory neighbor envelope. Looking up scope a spec already declined lands here; recording a new hard-to-reverse technical decision is `cmk:adr`.
-version: 0.3.0
+version: 0.3.1
 ---
 
 # Capability Map
@@ -42,8 +42,9 @@ is about it, or via `cmk:docs`.
 
 ## Workflow: Neighbors
 
-The moment other skills call. Runs before a requirements interview, before
-design mechanism, in an intake context brief, and during review.
+The moment other skills call. Runs before `cmk:elicit`'s first card, before
+a requirements draft, before design mechanism, in an intake context brief,
+and during review.
 
 1. Collect **seeds**: candidate paths (files or directories the work will touch)
    and key terms from the idea, issue, or diff. No seeds and no registry ⇒ no-op.

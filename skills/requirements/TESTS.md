@@ -64,3 +64,21 @@ Should-not-fire: "start work on TICKET-123" → delivery-intake; "how should we 
 - Description trimmed (less workflow summary; kept outcome noun + neighbor disambiguation).
 - Micro-test docs-ready gate (grok-4.5): `COMPLIANT_ACTION_TAKEN: yes`; softer wording would not help skip.
 - Micro-test description routing (grok-4.5): Q save-as-requirements→A; TICKET start→intake; how to build→design; close package→A; verify before claiming→ship (correct non-fire on A–C).
+
+## v0.6.0 — interview extracted to `cmk:elicit`
+
+RED (old v0.5.1, same roster): "save as requirements" on a thin label interviews
+*inside* this skill (elicit S1 RED used `cmk:requirements`'s protocol; elicit
+did not exist). "close package" in the description stole grill/close-package
+queries from the interview primitive.
+
+GREEN (v0.6.0): unsettled input is REQUIRED SUB-SKILL `cmk:elicit`; a confirmed
+package is Create/Iterate with no re-interview; `references/elicitation-protocol.md`
+removed (one home is `cmk:elicit`). Description drops "close package" as a
+should-fire; neighbor line points grill/interview/close-package-without-a-file
+at `cmk:elicit`.
+
+Should-fire (held): "save this as requirements", "write the acceptance
+criteria", "SHALL CONTINUE TO".
+Should-not-fire (held): "grill me on billing" → elicit; "emit a close package"
+→ elicit.

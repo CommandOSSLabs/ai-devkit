@@ -1,6 +1,6 @@
 # Skills
 
-The `cmk:*` skill packages under [`skills/`](../../../skills/): eight docs-family skills, thirteen setup-family skills, nine delivery-family skills, two knowledge-family skills, and one session-discipline skill (`cmk:interpret`). Each is a directory with a `SKILL.md` (frontmatter `name`/`description`/`version` plus the body the agent reads), and most ship a `references/` folder of guidance, templates, and conventions the workflow loads on demand.
+The `cmk:*` skill packages under [`skills/`](../../../skills/): nine docs-family skills, thirteen setup-family skills, nine delivery-family skills, two knowledge-family skills, and one session-discipline skill (`cmk:interpret`). Each is a directory with a `SKILL.md` (frontmatter `name`/`description`/`version` plus the body the agent reads), and most ship a `references/` folder of guidance, templates, and conventions the workflow loads on demand.
 
 Docs-family skills follow the same shape: a "Workflow: Create" / "Workflow: Iterate" pair, with placement rules, shaping guidance, and templates kept out of `SKILL.md` itself and cited via "Read `references/<file>.md`" lines. Setup-family skills instead follow a facet shape (modes and/or a single workflow, plus a report-only `## Verify` section). Delivery-family skills follow a tracker-neutral phase/gate shape and never carry a `## Verify` section — that contract is setup-family only. Knowledge-family skills are reference packs with no create/iterate or phase shape at all. See [conventions.md](./conventions.md) for the exceptions and the full breakdown.
 
@@ -10,6 +10,7 @@ Docs-family skills follow the same shape: a "Workflow: Create" / "Workflow: Iter
 - [codebase-docs.md](./codebase-docs.md) — `cmk:codebase-docs`, this very skill — `docs/ai/` navigation tree.
 - [design.md](./design.md) — `cmk:design`, system-wide and feature-level design docs.
 - [docs.md](./docs.md) — `cmk:docs`, scaffolds/maintains the `/docs` directory itself.
+- [elicit.md](./elicit.md) — `cmk:elicit`, interview protocol; confirmed close package; never writes `docs/requirements/`.
 - [glossary.md](./glossary.md) — `cmk:glossary`, the repository's shared normative vocabulary.
 - [learn.md](./learn.md) — `cmk:learn`, captures non-obvious knowledge into `docs/knowledge/`.
 - [requirements.md](./requirements.md) — `cmk:requirements`, product requirements documents.
