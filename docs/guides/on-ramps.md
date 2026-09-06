@@ -7,11 +7,13 @@ point here; they do not restate this table.
 |---|---|
 | Brand-new / adopt / verify repo facets | `cmk:repo-setup` |
 | Docs tree missing or drifted | `cmk:docs` |
+| What already covers this? which specs touch these files? what did we decline? | `cmk:capability-map` |
 | Save / draft product requirements; close package; AC + guards | `cmk:requirements` |
 | How to build it (mechanism, architecture) | `cmk:design` |
 | Record a hard-to-reverse decision | `cmk:adr` |
 | Lock a term / vocabulary drift | `cmk:glossary` |
 | Capture a gotcha | `cmk:learn` → promote with `cmk:rule` when it must be enforced |
+| Do the requirement IDs, designs, and registry still agree? | `cmk:trace-audit` |
 | AI navigation map under `docs/ai/` | `cmk:codebase-docs` |
 | Uncertain body of work → issue set | `cmk:discover-efforts` |
 | Start / pick up a tracker issue | `cmk:delivery-intake` (or `cmk:delivery-pipeline` end-to-end) |
@@ -23,6 +25,8 @@ point here; they do not restate this table.
 | CI / local stack / MCP / toolchain alone | matching setup facet (`cmk:cicd`, `cmk:local-stack`, …) |
 
 Rules of thumb:
+
+> Derive capability neighbors before drafting a spec (`cmk:capability-map`). Advisory — it never blocks, and an absent registry is a clean no-op.
 
 > Never draft `docs/requirements/` from a bare label — close package first (`cmk:requirements`).
 

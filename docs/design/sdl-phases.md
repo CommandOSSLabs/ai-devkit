@@ -2,7 +2,7 @@
 
 **Status:** active
 **Owner:** ai-devkit maintainers
-**Last updated:** 2026-08-09
+**Last updated:** 2026-09-06
 **Scope:** System-wide — the development lifecycle the `cmk:*` skills are shaped around
 
 This document defines the software development lifecycle (SDL) phases the
@@ -64,6 +64,14 @@ standards.
 - Phase 1: `cmk:requirements` — `skills/requirements/SKILL.md`
 - Phase 2: `cmk:design` — `skills/design/SKILL.md`; `cmk:adr` —
   `skills/adr/SKILL.md` for decisions that constrain it
+- Before Phases 1 and 2, and again at review: `cmk:capability-map` —
+  `skills/capability-map/SKILL.md` — derives which capabilities already own the
+  surface and what they already declined. Advisory; an absent
+  `docs/capabilities/INDEX.md` is a clean no-op.
+- Phases 5–6 and before any ship claim: `cmk:trace-audit` —
+  `skills/trace-audit/SKILL.md` — checks that requirement IDs, the designs that
+  cite them, and the capability registry still agree. Errors block
+  ship-readiness; warnings are reported.
 - Any phase: `cmk:learn` writes non-obvious findings into `docs/knowledge/`;
   `cmk:rule` promotes them into `docs/rules/`; `cmk:glossary` keeps the
   shared vocabulary normative — it fires whenever a term is coined,
@@ -71,6 +79,8 @@ standards.
 
 ## Links
 
+- Capability registry: [`../capabilities/INDEX.md`](../capabilities/INDEX.md) — which capability owns what
+- Shared spec knowledge: [`spec-knowledge-sharing.md`](./spec-knowledge-sharing.md)
 - Requirements: [`../requirements/`](../requirements/) — Phase 1 output
 - Decisions: [`../decisions/`](../decisions/) — constraints this lifecycle honors
 - Engineering rules: [`../rules/README.md`](../rules/README.md)
