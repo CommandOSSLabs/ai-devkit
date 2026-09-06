@@ -23,6 +23,7 @@ Companion material (pressure-testing protocol, influence wording) lives in
 - Skill body: `skills/write-cmk-skill/SKILL.md`
 - Pressure-testing protocol: `skills/write-cmk-skill/references/pressure-testing.md`
 - Influence wording: `skills/write-cmk-skill/references/influence-principles.md`
+- Pressure-test record: `skills/write-cmk-skill/TESTS.md`
 - Eval fixtures: `skills/write-cmk-skill/eval.json`
 - Mechanical lint: `scripts/skill-lint.sh`
 - House style for PRs: `CONTRIBUTING.md`

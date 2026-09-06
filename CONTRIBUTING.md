@@ -2,7 +2,7 @@
 
 ## Proposing a skill change
 
-For a new skill or a behavior-shaping edit, run `/write-cmk-skill` first: it
+For a new skill or a behavior-shaping edit, run `/cmk:write-cmk-skill` first: it
 enforces a failing-baseline Iron Law and the ship checklist before text
 lands under `skills/`. Then open a PR against `main`. Describe what the
 skill gets wrong, ambiguous, or misses today, and how your change fixes
@@ -48,7 +48,7 @@ out of your own diff. CI runs the same script on every PR touching
 If your repo vendored the skills via `cmk:agent-vendors` and evolved one
 locally, don't just keep the fix local. Run `cmk:sync` in **contribute**
 mode: it reviews local amendments flagged as generic-looking upstream
-candidates, names `/write-cmk-skill` for you to run on those candidates,
+candidates, names `/cmk:write-cmk-skill` for you to run on those candidates,
 then prepares them as a PR back here. Pure `## Project adaptations` stay
 local and skip that gate.
 

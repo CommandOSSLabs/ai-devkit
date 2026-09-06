@@ -1,7 +1,7 @@
 ---
 name: cmk:write-cmk-skill
 description: A pressure-tested cmk skill (SKILL.md, references, TESTS.md) ready to ship, or a review of whether an existing one is.
-version: 1.0.0
+version: 1.0.1
 disable-model-invocation: true
 ---
 
@@ -48,7 +48,7 @@ Classify the baseline failure before writing anything; the form that fixes one f
 - **Keyword coverage**: pack the description with the words an agent or user would actually search or think — symptoms, the literal error text (`error`, `exception`, `e2e`, `tech debt`), tool and file names (`tasks.md`), and synonyms (`spike`, `mock up`). Discovery is keyword match; a skill nobody finds is a skill that doesn't exist. The outcome noun does double duty here.
 - **Two failure directions, both tested not guessed.** *Over*-summarizing has the failure mode above; *under*-specifying is the commoner one — the skill never fires at all. Keyword coverage and the outcome noun fight the second; omitting the workflow steps fights the first. The description is the highest-leverage line in the skill and the one field you cannot eyeball — trigger-test it per `references/pressure-testing.md`.
 - **House conventions — deliberate divergences from the generic guidance, kept for self-invocation.** Descriptions open in the second person ("Use when…") because the line reads as a direct instruction to the deciding agent; must-not-skip content uses `## Red Flags`, `## The Iron Law`, or a `<NON-NEGOTIABLE>` block, the house equivalent of a generic `## Critical` header. Both stay consistent across the set — an outlier that mixes styles is drift, not variety.
-- User-invoked skills carry `disable-model-invocation: true` — so they **cannot be auto-invoked**, and no skill body may tell the agent to *invoke* one. A hand-off reaches a user-invoked skill only by naming it for the user to run (`/write-cmk-skill`, `/interpret`); `REQUIRED SUB-SKILL: use \`x\`` is for model-invocable targets only. Directing the agent to invoke a `disable-model-invocation` skill is a dead-end hand-off — a real bug, not a style nit.
+- User-invoked skills carry `disable-model-invocation: true` — so they **cannot be auto-invoked**, and no skill body may tell the agent to *invoke* one. A hand-off reaches a user-invoked skill only by naming it for the user to run (`/cmk:write-cmk-skill`, `/cmk:interpret`); ``REQUIRED SUB-SKILL: use `x` `` is for model-invocable targets only. Directing the agent to invoke a `disable-model-invocation` skill is a dead-end hand-off — a real bug, not a style nit.
 - **Two description audiences, and every rule above is about the model-facing one.** A model-invocable description routes: it earns keyword coverage, symptom words, and the outcome noun. A `disable-model-invocation` description **routes nothing** — the agent never sees it, and the user reaches the skill by typing its name. Write those as one plain human-facing line naming the deliverable. Packing keywords into a user-invoked description is text nothing reads; "discovery still depends on the words the user types" is false — the user types the *name*.
 
 ## Vocabulary
@@ -82,7 +82,7 @@ One excellent worked example beats many mediocre ones: complete, runnable, comme
 
 ## Cross-references
 
-Reference other skills in this set as prose — `REQUIRED SUB-SKILL: use \`cmk:learn\`` — never as file links into another skill's folder. Links force-load content and couple folders. Files that live beside your own SKILL.md are referenced by relative filename, with pointer wording that says when to load them.
+Reference other skills in this set as prose — ``REQUIRED SUB-SKILL: use `cmk:learn` `` — never as file links into another skill's folder. Links force-load content and couple folders. Files that live beside your own SKILL.md are referenced by relative filename, with pointer wording that says when to load them.
 
 ## Rationalizations
 

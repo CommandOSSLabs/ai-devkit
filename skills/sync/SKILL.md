@@ -1,7 +1,7 @@
 ---
 name: cmk:sync
 description: Use when the user asks to "sync skills with upstream", "pull upstream skill updates", "reconcile vendored skills", "update the skills lockfile", or whenever a repo's vendored `.agents/skills/` copies have drifted from the upstream kit.
-version: 0.1.2
+version: 0.1.3
 ---
 
 # Sync
@@ -52,9 +52,11 @@ Running the reconcile? Read `references/reconciliation.md`.
 2. Drop anything that belongs under `## Project adaptations` or carries
    project vocabulary — those stay local; sync never promotes them.
 3. For every remaining candidate that will edit an upstream `cmk:*` skill:
-   **name `/write-cmk-skill` for the user to run** before preparing the PR.
+   **name `/cmk:write-cmk-skill` for the user to run** before preparing the PR.
    Do not invoke it — `cmk:write-cmk-skill` is user-invoked. Skip this step
-   only when the user already completed that pass for this amendment set.
+   when the user already completed that pass for this amendment set, **or**
+   when the skill package is not installed in this repo (selective/old
+   vendor) — then say so and ask whether to proceed without the gate or stop.
 4. After that pass (or explicit skip), prepare the upstream contribution PR
    from the reviewed generic amendments.
 

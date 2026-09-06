@@ -45,10 +45,12 @@ generic skill is flagged with its file, section, and a one-line rationale.
 Flagging is sync's job; actually preparing and contributing it back upstream
 is *contribute* mode's job, never a side effect of running sync.
 
-Before contribute prepares that PR, name `/write-cmk-skill` for the user to
-run on the candidate set — the kit's authoring Iron Law and ship checklist
-live there. Do not invoke `cmk:write-cmk-skill` from sync (user-invoked).
-Pure `## Project adaptations` stay local and skip that gate.
+Before contribute prepares that PR, name `/cmk:write-cmk-skill` for the user
+to run on the candidate set — the kit's authoring Iron Law and ship checklist
+live there. Do not invoke `cmk:write-cmk-skill` from sync (user-invoked). If
+the package is not installed (selective or pre-gate vendor), say so and ask
+whether to proceed without the gate or stop. Pure `## Project adaptations`
+stay local and skip that gate.
 
 ## Failure honesty
 

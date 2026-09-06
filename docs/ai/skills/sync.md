@@ -19,8 +19,9 @@ copy; apply the upstream delta base→theirs to ours as a meaning-level merge,
 surface genuine conflicts for human decision, never auto-resolve), and
 **contribute** (review local amendments flagged as generic and prepare them
 as upstream contributions — for each upstream-bound candidate, name
-`/write-cmk-skill` for the user to run first; never invoke that user-invoked
-skill; skip the gate for pure `## Project adaptations`). Separable local
+`/cmk:write-cmk-skill` for the user to run first; never invoke that
+user-invoked skill; skip the gate for pure `## Project adaptations`, or when
+the package is absent ask whether to proceed without it). Separable local
 amendments sit under a marked `## Project adaptations` section, giving the
 reconcile a stable seam. Truly project-owned skills (deploy steps, product
 workflows) carry no lock entry and sync never touches them. Ends with a
@@ -36,8 +37,8 @@ report-only `## Verify` section.
 - `references/reconciliation.md` — the three-way frame, the semantic merge
   doctrine (rewording is not a conflict; behavior/contract disagreement is),
   the `## Project adaptations` seam, upstream-contribution candidates (incl.
-  the `/write-cmk-skill` gate), and failure honesty (an incomplete reconcile
-  keeps its old lock entry).
+  the `/cmk:write-cmk-skill` gate), and failure honesty (an incomplete
+  reconcile keeps its old lock entry).
 - Eval scenarios: `skills/sync/eval.json`.
 
 ## Links
