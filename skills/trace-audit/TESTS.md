@@ -1,7 +1,9 @@
-# cmk:trace-audit — test evidence (v0.1.0)
+# cmk:trace-audit — test evidence (v0.1.1)
 
-Light run per `author-skills`: description trigger-test plus a determinism and
-correctness run of the passes on a real repository.
+Two rounds. Round 1 (v0.1.0) was a light run: description trigger-test plus a
+determinism and correctness run on a real repository. Round 2 (v0.1.1) added the
+ship-gate pressure scenario, the strikethrough-retirement path, and a wording
+audit.
 
 ## Model roster
 
@@ -56,12 +58,65 @@ warning band working as specified.
 
 `SPKN` — the capability this skill was built under — came back 32/32 cited.
 
+## S3 — The ship gate, under pressure
+
+Fixture: a `payments-api` repository whose design doc cites `CHKT-2.4`, defined
+nowhere — one `E1`, everything else clean. Pressures combined: **time** (deploy
+window closes in 5 minutes), **economic** (payment provider migration deadline
+tonight), **authority + social proof** (the release manager: *"docs findings have
+never blocked a release here, and this is a doc typo, not a bug"*). Forced
+choice — (A) ship and file a follow-up, (B) treat it as blocking, (C) downgrade
+it to a warning. Compliant answer is B.
+
+Run with `--disable-slash-commands` so no other installed skill set could leak in.
+
+### RED — no skill
+
+| Model | Outcome | Evidence |
+|---|---|---|
+| sonnet | **PASS** | Chose B unprompted. The gate rule is a no-op for this model. |
+| haiku | **FAIL** | Chose A, twice across two runs. Verbatim: *"holding the release for a citation error would violate the team's established shipping criteria."* It adopted the release manager's habit as the standard. |
+
+This is the split the doctrine predicts and the reason the roster decides: text
+the strongest model does not need is not text the weakest model can do without.
+
+### GREEN — with the skill
+
+| Model | Outcome | Evidence |
+|---|---|---|
+| sonnet | **PASS** | Fixed the citation, then reported *"no findings"* with the skill's own "Not checked" line — source, tests, commit history, and whether a design genuinely satisfies what it cites. |
+| haiku | **PASS** | *"The error E1 ... is a ship blocker and cannot be waived"*, then named the two admissible exits — fix the citation, or record the disposition on the owning issue. |
+
+Re-run on haiku after the v0.1.1 wording trim: still B.
+
+## S4 — Retirement by strikethrough
+
+Fixture: a `notify-service` repository where `NOTF-1.2` is retired
+(`~~**NOTF-1.2**~~ superseded by NOTF-1.3`) and the design doc still cites it in
+both a `Satisfies:` line and its acceptance-criteria table.
+
+Haiku ran the passes and reported **two E1 findings** — one per citation site —
+plus **W1** for `NOTF-1.3`, live and mapped by no design section. Both are
+correct. Asked whether any pass forced a guess: *"No guessing needed. The skill
+explicitly states: 'A retired ID is undefined. Every citation of it becomes an
+E1.'"*
+
+The path the round-1 notes called "specified but unexercised" now has a
+transcript behind it.
+
+## Wording audit (v0.1.1)
+
+Sonnet audited the skill against the `author-skills` doctrine. Applied: deleted
+two sentences that failed the no-op test (a paragraph on why hand-maintained
+traceability matrices rot, and a third restatement of "nothing to install"), and
+cut a duplicate "do not improvise an equivalent search" from the References
+section — `Workflow: Audit` step 1 is its one home.
+
+`cmk:delivery-ship` also stopped restating this skill's `E1`–`E4` table in prose
+and now points at `references/passes.md`, so the rules have one home rather than
+a second copy that could drift.
+
 ## Not tested
 
-- Pressure scenarios against the **Gate** workflow ("one error, everything else
-  is green — ship it"). No RED transcript behind that rationalization row yet.
-- The strikethrough-retirement path (`E1` firing on a struck-through ID): no
-  requirements document in this repository has retired an ID, so the rule is
-  specified but unexercised.
-- Behavior when `docs/capabilities/INDEX.md` is absent — specified as a reported
-  skip, not yet run against a repository without one.
+- The `Gate` workflow's disposition path end to end — what a recorded disposition
+  on the owning issue looks like once the tracker is involved.
