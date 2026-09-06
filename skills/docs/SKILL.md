@@ -1,7 +1,7 @@
 ---
 name: cmk:docs
 description: Use when the user asks to "set up docs", "initialize docs", "docs scaffold", "check if our docs structure is current", "update the docs structure", "check docs connectedness", or needs to bootstrap, update, or verify the /docs directory structure with navigation READMEs and document templates.
-version: 0.3.1
+version: 0.4.0
 ---
 
 # Docs
@@ -24,7 +24,7 @@ Read `references/scaffold-manifest.md` for the complete file manifest and exact 
 
 **Update** — Re-sync after devkit changes. Create newly added files, compare each `README.md` against the manifest and report divergences, add new templates without overwriting customized ones. Confirm with user before modifying existing files.
 
-**Verify** — Dry-run. Report gaps and divergences without creating or modifying anything. Connectedness check: report canonical docs (in `decisions/`, `requirements/`, `design/`) with no inbound links from any other doc (orphans), and links pointing at missing files (dangling).
+**Verify** — Dry-run. Report gaps and divergences without creating or modifying anything. Connectedness check: report canonical docs (in `decisions/`, `requirements/`, `design/`) with no inbound links from any other doc (orphans), and links pointing at missing files (dangling). Where `docs/capabilities/INDEX.md` exists, `cmk:trace-audit` is the sharper form of the same check — run it and report its findings rather than restating them here.
 
 ## Workflow
 
@@ -33,6 +33,7 @@ Read `references/scaffold-manifest.md` for the complete file manifest and exact 
 3. Compare against `references/scaffold-manifest.md`.
 4. Execute based on mode (init → create missing; update → create missing + offer fixes; verify → report only).
 5. Create directories before contents, in order: `docs/`, `templates/`, `decisions/`, `requirements/`, `design/`, `rules/`, `rules/common/`, `guides/`, `runbooks/`, `reports/`, `research/`, `knowledge/`, `ai/`.
+   `capabilities/` is **opt-in**: create it only when the user asks for the capability registry, and never as part of a default Init. A repository without it works exactly as before — see `cmk:capability-map`.
 6. For each directory, create `README.md`.
 7. Report: created, skipped, diverged, updated.
 
@@ -45,3 +46,4 @@ Read `references/scaffold-manifest.md` for the complete file manifest and exact 
 - Init mode never modifies existing files
 - Update mode confirms before modifying
 - Verify mode makes no file changes
+- `capabilities/` is created on request only, never by default
