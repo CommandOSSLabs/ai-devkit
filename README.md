@@ -66,10 +66,12 @@ This devkit solves that by using structured documentation as the shared state. T
 | Skill | Purpose |
 |---|---|
 | `cmk:docs` | Bootstrap or update the `/docs` directory structure |
+| `cmk:capability-map` | Register capabilities and derive, at ask time, which specs already own a surface and what they declined |
 | `cmk:requirements` | Create or iterate product/feature requirements in docs/requirements/ |
 | `cmk:design` | Create or iterate distilled design in docs/design/ — system-wide or per-feature |
 | `cmk:adr` | Create or update decisions in docs/decisions/ |
 | `cmk:glossary` | Create or maintain the shared normative glossary of systems, components, and actors |
+| `cmk:trace-audit` | Mechanical docs check — requirement IDs, design citations, and capability registry integrity |
 | `cmk:codebase-docs` | Generate or update hierarchical, AI-navigable docs under `docs/ai/` |
 | `cmk:learn` | Extract and record non-obvious learnings and gotchas |
 | `cmk:rule` | Codify engineering standards into `docs/rules/` |
