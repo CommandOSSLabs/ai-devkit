@@ -24,6 +24,7 @@ when to read it — not a mirror of the content.
 - [docs/research/README.md](#docsresearchreadmemd)
 - [docs/knowledge/README.md](#docsknowledgereadmemd)
 - [docs/ai/README.md](#docsaireadmemd)
+- [Opt-in: docs/capabilities/](#opt-in-docscapabilities)
 
 ---
 
@@ -234,7 +235,15 @@ Group criteria under the need they serve; the first number is that group.
 **Owner:** @[handle]
 **Last updated:** YYYY-MM-DD
 **Scope:** System-wide or feature-level — state which
+**Capability:** [registry code from docs/capabilities/INDEX.md — feature-level docs; omit when no registry]
+**Owns:** [`path/`, `path/file.ts` — the files and directories this capability owns]
+**Declined:** [thing declined — reason | thing declined — reason]
 
+<!-- Capability / Owns / Declined form the capability card: the bounded unit another
+     spec author reads instead of this whole document. Declined entries each carry
+     their reason, and summarize the ## Scope out-of-scope narrative.
+     See cmk:capability-map references/registry-conventions.md. Omit in a repo
+     with no docs/capabilities/ registry. -->
 <!-- Captures the technical "how" as a spec: approach, mechanism, and guarantees, independent of the implementing language/framework; architecture, components, cross-cutting concerns, or feature-level detail. -->
 <!-- The sections below are a menu, not a form: shape the doc to the system and drop what has nothing to say. -->
 
@@ -690,3 +699,66 @@ the right code instead of restating it.
 
 First, on any task — to find which source files a topic lives in.
 ````
+
+---
+
+## Opt-in: docs/capabilities/
+
+**Never created by a default Init.** Scaffold these two files only when the user
+asks for the capability registry. A repository without them behaves exactly as
+it did before — `cmk:capability-map` treats an absent registry as a clean no-op,
+and `cmk:trace-audit` skips its registry passes and reports the skip.
+
+When they are created, add one line to `docs/README.md`'s directory tree —
+`├── capabilities/  # capability registry → which spec owns what` — and one row
+to its "When to read what" list.
+
+### docs/capabilities/README.md
+
+**Path:** `docs/capabilities/README.md`
+
+````markdown
+# Capabilities
+
+The capability registry: which capabilities exist in this repository, what part
+of the codebase each one owns, and which documents specify it.
+
+This directory holds exactly one substantive file — [`INDEX.md`](./INDEX.md).
+It is a registry, not a document tree. Requirements live in
+[`../requirements/`](../requirements/), design in [`../design/`](../design/).
+
+## Conventions
+
+- One row per capability, sorted by code.
+- The **code** is the requirements document's `ID prefix` — one key, not two.
+  It is unique across the repository and permanent: a retired capability keeps
+  its row with `Status: deprecated` and never releases its code.
+- An absent document or an unowned surface is written `— none —`, never left
+  blank. A deliberate absence and an oversight must not read alike.
+- Rows are written only after explicit confirmation — see `cmk:capability-map`.
+- Nothing here is generated. Neighbors, overlaps and coverage are derived from
+  this file and the design-doc card headers at the moment they are asked for.
+
+## When to read
+
+Before writing a requirements or design document — to find which capabilities
+already share the surface, and what they already declined and why.
+````
+
+### docs/capabilities/INDEX.md
+
+**Path:** `docs/capabilities/INDEX.md`
+
+````markdown
+# Capability Registry
+
+One row per capability. The code is the requirements document's `ID prefix`,
+unique repo-wide and permanent. Row grammar and card conventions:
+`cmk:capability-map` references/registry-conventions.md.
+
+| Code | Capability | Requirements | Design | Status | Surface roots |
+|---|---|---|---|---|---|
+````
+
+The table ships empty. Rows are added by `cmk:capability-map`, one confirmation
+at a time — never inferred in bulk from the existing docs tree.
