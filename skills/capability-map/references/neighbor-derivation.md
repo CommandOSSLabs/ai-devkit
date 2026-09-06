@@ -31,8 +31,9 @@ further file reads.
   first line to the first `##` heading. Never the body.
 - Read each path at most once. A path already in the snapshot is not re-opened.
 
-**No registry file ⇒ explicit no-op.** Say the registry is absent, return an
-empty envelope, and let the caller continue. Do not infer capabilities from
+**No registry file ⇒ explicit no-op.** Render the envelope with its first line
+as `No-op: \`docs/capabilities/INDEX.md\` is absent.` — that line is a required
+slot, not an illustration — then let the caller continue. Do not infer capabilities from
 directory names, git history, or file contents. Do not prompt for adoption.
 
 **No seeds** — no candidate paths and no terms — is also a no-op. Say so.
