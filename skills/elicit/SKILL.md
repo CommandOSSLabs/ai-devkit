@@ -1,7 +1,7 @@
 ---
 name: cmk:elicit
 description: Use when the user asks to "grill me", "interview me", "elicit", "stress-test this plan", "close package", "shared understanding", "we're underspecified", or the input is an idea or solution sketch still needing decisions — including when another skill needs an interview before it writes. Produces a confirmed close package of scope band, problem, success, boundaries, constraints, and open points. Durable `docs/requirements/` → `cmk:requirements`; how to build → `cmk:design`.
-version: 0.1.0
+version: 0.2.0
 ---
 
 # Elicit
@@ -14,9 +14,10 @@ nested.
 ## References
 
 Read `references/elicitation-protocol.md` before the first card — it is the
-**one home** for scope band, problem lock, question cards, close package, and
-the post-yes hand-off. Band **When** meanings live in `cmk:delivery-workflow`'s
-`references/scope-band.md`; do not restate that table.
+**one home** for scope band, problem lock, question cards, and the close
+package. The no-write / one-decision Iron Laws live in this file. Band **When**
+meanings live in `cmk:delivery-workflow`'s `references/scope-band.md`; do not
+restate that table.
 
 ## Neighbors before the first card
 
@@ -34,13 +35,13 @@ continues.
 ```
 DO NOT WRITE OR OVERWRITE docs/requirements/**.
 A CONFIRMED CLOSE PACKAGE IS NOT A LICENSE TO DRAFT.
-Hand the write to cmk:requirements (or the parent). Never invoke the writer
-to "be helpful" because someone said the interview skill writes the PRD.
+Name cmk:requirements for the user to run, or return the package to the parent.
+Do not invoke Create. Never invoke the writer to "be helpful" because someone
+said the interview skill writes the PRD.
 ```
 
 No acceptance criteria, ID prefixes, notation, or requirements files from this
-skill. Glossary/`cmk:adr` updates as a passive side effect of a settled term or
-a three-gate decision are allowed; they are not a requirements draft.
+skill.
 
 ## The Iron Law — one decision
 
@@ -57,9 +58,8 @@ never a truncated picker.
 ## Workflow
 
 1. State the **scope band** out loud (`trivial` | `patch` | `feature`).
-2. If elicitation applies, follow the protocol: problem lock when the ask is
-   solution-shaped, then one card at a time, then the close package, then wait
-   for an explicit yes.
+2. Follow `references/elicitation-protocol.md` through cards and the close
+   package. Wait for an explicit yes.
 3. On yes: stop. Return the package to the parent, or name `cmk:requirements`
    for the user. Do not start Create/Iterate here.
 4. On correction: edit the package and re-confirm.
@@ -68,7 +68,6 @@ never a truncated picker.
 
 - A confirmed close package per `references/elicitation-protocol.md`
 - Scope band stated; neighbors reported before the first card
-- Zero files written under `docs/requirements/`
 - Nested: the parent's interview item stays in-progress until that yes
 
 ## Red Flags — stop and return to one card or the hand-off
@@ -89,7 +88,7 @@ never a truncated picker.
 | Thought | Reality |
 |---|---|
 | "You ordered every question in one paste and rejected one-at-a-time under standup pressure" | One decision per message is the Iron Law. A firehose is a different interview. Ask one card; wait. |
-| "The close package already had an explicit yes, and under cmk:requirements that hand-off is Workflow Create — write the draft now, not a second skill" | Yes ends the interview. Writing `docs/requirements/` is `cmk:requirements`. Name it; do not draft. |
+| "The close package already had an explicit yes, and under cmk:requirements that hand-off is Workflow Create — write the draft now, not a second skill" | Yes ends the interview. Name `cmk:requirements`; do not invoke Create. |
 | "The eng lead said the interview skill writes the PRD — that's the whole point" | The point of this skill is the confirmed package. A second skill owns the file. Authority does not merge them. |
 | "Don't make me invoke a second skill / being pragmatic, just write it" | Pragmatism changes when you report, not whether the writer is this skill. |
 | "Nobody on this team one-at-a-times" | Social proof does not batch forks. One card; the next round is after the answer. |

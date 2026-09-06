@@ -92,3 +92,30 @@ a feature spec for how it is built → design.
 |---|---|
 | Exactly one decision per message; firehose / standup / "nobody one-at-a-times" is not a waiver | RED S3; Iron Law — one decision; rationalization row |
 | Do not write `docs/requirements/**`; yes hands off to `cmk:requirements` | RED S4; Iron Law — no durable write; rationalization rows |
+
+## Wording pass — v0.2.0 (author-skills micro-test)
+
+One-variable fork on the no-write Iron Law, grok-4.5, S4, 5 reps each, fresh
+context. Control (no skill) remains RED S4 = B.
+
+| Variant | Line under test | 5 reps |
+|---|---|---|
+| **A** (v0.1.0) | "Hand the write to cmk:requirements (or the parent). Never invoke the writer…" | 5/5 OPTION_A |
+| **B** (shipped) | "Name cmk:requirements for the user to run… Do not invoke Create." | 5/5 OPTION_A |
+
+Compliance tied. Shipped **B**: "Hand the write" and "Never invoke" named
+opposite acts; A transcripts still complied but cited the contradictory
+"hand the write" line. B cites "name" / "do not invoke Create".
+
+Also this pass (no-op / duplication sweep, not a second fork):
+
+- Removed the glossary/`cmk:adr` exemption under the no-write Iron Law
+  (nuance clause; glossary in this kit lives at `docs/requirements/glossary.md`).
+- Protocol no longer restates the firehose waiver or the no-write body;
+  those homes are the Iron Laws in `SKILL.md`.
+- Confirmation ask: "The write is `cmk:requirements` — a separate step, not
+  this yes."
+- Workflow step 2 is a pointer at the protocol, not a restatement of cards.
+
+S3 regression after the protocol cut: grok-4.5 OPTION_A, cited the one-decision
+Iron Law. S4 covered by the B column above.

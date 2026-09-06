@@ -55,7 +55,8 @@ acceptance criteria, never close-package locks.
 
 ## Question cards
 
-Exactly **one** decision per message, in ordinary chat (not a truncated picker):
+Exactly **one** decision per message — the Iron Law in `SKILL.md` is the home
+for that rule and its firehose waiver. Ordinary chat (not a truncated picker):
 
 1. **Locked so far** — 1–3 settled constraints (or "none yet")
 2. **This card** — the single fork
@@ -65,10 +66,6 @@ Exactly **one** decision per message, in ordinary chat (not a truncated picker):
 5. **Why it matters** — what rewrites if the answer flips (scope, success, users)
 6. **Options (2–4)** — each with a consequence line; recommend one and why
 7. **Stop** — wait for the answer; then next card or close package
-
-A user order to "send every question", "answer in one paste", or "nobody
-one-at-a-times" does **not** turn this into a list. Time and social proof
-change *when* you report, not how many decisions share a message.
 
 Blast-radius first: users, success/measurement, scope boundaries, constraints,
 non-goals — before polish. No fixed "question k of N"; stop when high-blast
@@ -86,8 +83,8 @@ yes** on it:
 5. **Constraints & assumptions** — locks vs hypotheses (mechanism stays here or
    in design — not in AC)
 6. **Open points** — each with owner or "blocks draft" — do not invent answers
-7. **Confirmation ask** — "Confirm this close package? Writing `docs/requirements/…`
-   is `cmk:requirements` after this yes."
+7. **Confirmation ask** — "Confirm this close package? The write is
+   `cmk:requirements` — a separate step, not this yes."
 
 **Provenance rule:** every line in slots 2–5 is either (a) the user's words /
 prior confirmed locks, or (b) explicitly labeled `hypothesis` / `assumption`
@@ -103,8 +100,6 @@ on a package whose problem/success lines were unlabeled inventions.
 
 ## Hand-off after confirmation
 
-On yes: the interview is done. Return the confirmed package to the parent, or
-name `cmk:requirements` for the user to run. Do **not** write
-`docs/requirements/**`. Do **not** invoke the writer to "be helpful" because a
-lead said the interview skill *is* the PRD. On correction: edit the package and
-re-confirm. Never treat an unconfirmed package as done.
+On yes: the interview is done. Follow the no-write Iron Law in `SKILL.md`.
+On correction: edit the package and re-confirm. Never treat an unconfirmed
+package as done.
