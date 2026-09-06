@@ -1,6 +1,6 @@
 # Skills
 
-The `cmk:*` skill packages under [`skills/`](../../../skills/): eight docs-family skills, thirteen setup-family skills, nine delivery-family skills, two knowledge-family skills, and one session-discipline skill (`cmk:interpret`). Each is a directory with a `SKILL.md` (frontmatter `name`/`description`/`version` plus the body the agent reads), and most ship a `references/` folder of guidance, templates, and conventions the workflow loads on demand.
+The `cmk:*` skill packages under [`skills/`](../../../skills/): eight docs-family skills, thirteen setup-family skills, nine delivery-family skills, two knowledge-family skills, one session-discipline skill (`cmk:interpret`), and one meta skill (`cmk:write-cmk-skill`). Each is a directory with a `SKILL.md` (frontmatter `name`/`description`/`version` plus the body the agent reads), and most ship a `references/` folder of guidance, templates, and conventions the workflow loads on demand.
 
 Docs-family skills follow the same shape: a "Workflow: Create" / "Workflow: Iterate" pair, with placement rules, shaping guidance, and templates kept out of `SKILL.md` itself and cited via "Read `references/<file>.md`" lines. Setup-family skills instead follow a facet shape (modes and/or a single workflow, plus a report-only `## Verify` section). Delivery-family skills follow a tracker-neutral phase/gate shape and never carry a `## Verify` section — that contract is setup-family only. Knowledge-family skills are reference packs with no create/iterate or phase shape at all. See [conventions.md](./conventions.md) for the exceptions and the full breakdown.
 
@@ -52,6 +52,10 @@ Docs-family skills follow the same shape: a "Workflow: Create" / "Workflow: Iter
 
 - [interpret.md](./interpret.md) — `cmk:interpret`, companion session beside another window: stance plus a carry-back reply. User-invoked.
 
+## Meta
+
+- [write-cmk-skill.md](./write-cmk-skill.md) — `cmk:write-cmk-skill`, author or review a `cmk:*` skill under a failing-baseline Iron Law. User-invoked.
+
 ## Cross-cutting
 
-- [conventions.md](./conventions.md) — shared shape across all skills (frontmatter, references folder, docs-family create/iterate pattern, setup-family facet shape, delivery-family phase/gate shape, knowledge-family reference packs).
+- [conventions.md](./conventions.md) — shared shape across all skills (frontmatter, references folder, docs-family create/iterate pattern, setup-family facet shape, delivery-family phase/gate shape, knowledge-family reference packs, session/meta user-invoked skills).

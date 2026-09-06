@@ -20,6 +20,7 @@ point here; they do not restate this table.
 | Open PR / close ticket with evidence | `cmk:delivery-ship` |
 | Handoff to another agent | `cmk:delivery-handoff` |
 | Vendor skills / sync upstream | `cmk:agent-vendors` / `cmk:sync` |
+| Create / edit / review a `cmk:*` skill | `cmk:write-cmk-skill` (user-invoked) |
 | CI / local stack / MCP / toolchain alone | matching setup facet (`cmk:cicd`, `cmk:local-stack`, …) |
 
 Rules of thumb:
