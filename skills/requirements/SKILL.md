@@ -1,7 +1,7 @@
 ---
 name: cmk:requirements
 description: Use when the user asks to "save this as requirements", "draft requirements", "draft a PRD", "let's define what we're building", "update the requirements", "write the acceptance criteria", "what are the acceptance criteria for X", "close package", "SHALL CONTINUE TO", or discusses product scope, success criteria, user needs, guards for existing behavior, or what a system must do before anyone decides how to build it. Produces `docs/requirements/<topic>.md` with problem, success criteria, scope, and IDed acceptance criteria. Tracker-issue AC → `cmk:delivery-intake`; how to build → `cmk:design`.
-version: 0.5.0
+version: 0.5.1
 ---
 
 # Requirements
@@ -28,13 +28,11 @@ or term each conclusion rests on.
 
 The completion criterion is a sentence you can say out loud: *which registered
 capabilities share this surface and how this work differs — or that none does,
-after stating the coverage numbers.* A neighbor's declined item is a recorded
-decision with a reason: answer the reason in the close package, or route the
-reversal explicitly. Do not step over it.
+after stating the coverage numbers.* A neighbor's declined item is answered in
+the close package per that file's § Grounded claims.
 
-Advisory always. An empty or thin result is stated with its coverage numbers and
-the workflow continues; it never blocks, and an absent
-`docs/capabilities/INDEX.md` is a clean no-op.
+Advisory: an empty result is stated with its coverage numbers and the workflow
+continues.
 
 ## Elicitation
 

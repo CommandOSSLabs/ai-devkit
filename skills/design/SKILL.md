@@ -1,7 +1,7 @@
 ---
 name: cmk:design
 description: Use when the user asks "how should we build this", "design the backend", "update the architecture", "draft a system design", "create a feature spec", "spec out this feature", or discusses architecture, tech stack changes, component design, or infrastructure layout. Covers drafting, refining, or updating distilled design documents under docs/design/ — system-wide or per-feature — checking for conflicts with upstream requirements and recorded decisions.
-version: 0.7.0
+version: 0.7.1
 ---
 
 # Design
@@ -27,14 +27,12 @@ design will touch and the subject's key terms. Report the neighbors, their owned
 paths, and their declined items, citing a code plus a path or term for every
 conclusion.
 
-Two things come out of it. A neighbor that already owns a path this design
-claims is either a reuse opportunity to take, or an overlap to state and justify
-in the doc. A neighbor's declined item that this design is about to reverse is
-answered explicitly — with its original reason addressed — or it is not reversed.
+A neighbor that already owns a path this design claims is either a reuse
+opportunity to take, or an overlap to state and justify in the doc. A declined
+item this design would reverse is answered per that file's § Grounded claims.
 
-Advisory always: an empty or thin result is reported with its coverage numbers
-and the work continues, and an absent `docs/capabilities/INDEX.md` is a clean
-no-op.
+Advisory: an empty result is reported with its coverage numbers and the work
+continues.
 
 ## Elicitation
 

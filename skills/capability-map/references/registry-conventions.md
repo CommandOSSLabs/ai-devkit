@@ -66,9 +66,8 @@ scanning one table.
 - Directories end in `/`: `src/billing/`, not `src/billing`.
 - Globs are allowed where a family is owned: `src/billing-*/`.
 - A root claims its subtree. Do not enumerate children of a root already listed.
-- Overlapping roots between two capabilities are legitimate and are exactly the
-  signal the derivation exists to surface. Do not resolve an overlap by trimming
-  a root to make the table look tidy.
+- Overlapping roots between two capabilities stay exactly as recorded — the
+  overlap itself is the signal a spec author needs.
 
 File-level precision belongs in the design doc's `**Owns:**` line, not here.
 

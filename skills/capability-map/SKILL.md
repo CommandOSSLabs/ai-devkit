@@ -1,7 +1,7 @@
 ---
 name: cmk:capability-map
 description: Use when the user asks "what already covers this", "does this exist already", "which specs touch these files", "was this already ruled out", "where did we write down that we decided against it", "register a capability", or "backfill the capability registry" — and whenever a requirements or design doc is about to be written and the neighboring capabilities, their owned paths, and the items they already declined are not yet on the table. Produces the capability registry `docs/capabilities/INDEX.md` and an advisory neighbor envelope. Looking up scope a spec already declined lands here; recording a new hard-to-reverse technical decision is `cmk:adr`.
-version: 0.2.0
+version: 0.3.0
 ---
 
 # Capability Map
@@ -14,9 +14,9 @@ already here, and how is this different".
 Two responsibilities, one home:
 
 - **The registry** — `docs/capabilities/INDEX.md`, the only stored artifact of
-  the layer. Rows are written only after explicit confirmation.
+  the layer.
 - **Neighbor derivation** — an ask-time read over that registry and the design
-  card headers. Nothing is generated, nothing is cached, nothing can go stale.
+  card headers.
 
 ## References
 
@@ -35,11 +35,10 @@ DERIVATION NEVER GATES — NOT EVEN WHEN IT COMES BACK EMPTY.
 
 ## Absent registry is a supported state
 
-If `docs/capabilities/INDEX.md` does not exist, every derivation is an explicit
-**no-op**: say so, return an empty result, and let the calling workflow continue
-unchanged. Do not invent capabilities, do not infer them from directory names,
-and do not prompt the user to adopt the registry mid-task. Offer creation only
-when the user's own request is about the registry, or via `cmk:docs`.
+An absent `docs/capabilities/INDEX.md` is a supported state, not a
+misconfiguration — derivation no-ops per `references/neighbor-derivation.md`
+§ Snapshot first. Offer to create the registry only when the user's own request
+is about it, or via `cmk:docs`.
 
 ## Workflow: Neighbors
 
@@ -57,9 +56,6 @@ design mechanism, in an intake context brief, and during review.
    differs, citing codes and path or term evidence — or that none does, after
    stating the coverage numbers.*
 
-Advisory in every caller. An empty or thin result is reported and the workflow
-continues.
-
 ## Workflow: Register
 
 When a capability is about to get its first requirements or design document.
@@ -67,9 +63,8 @@ When a capability is about to get its first requirements or design document.
 1. Derive neighbors first (Workflow: Neighbors). If an existing capability
    already covers the work, say so with evidence and stop — the change belongs
    on that capability, not on a new row.
-2. Propose the **code**: 2–12 chars, `[A-Z][A-Z0-9]{1,11}`, unique against every
-   row in the registry including deprecated ones. It becomes the requirements
-   doc's `ID prefix`; there is no second key.
+2. Propose the **code** per `references/registry-conventions.md` § Capability
+   codes. It becomes the requirements doc's `ID prefix`; there is no second key.
 3. Propose the full row per `references/registry-conventions.md` — code, name,
    requirements path, design path, status, surface roots — using `— none —` for
    a document that does not exist yet.
@@ -115,8 +110,7 @@ block in the same pass, since it has already read what the block needs.
 
 - `docs/capabilities/INDEX.md` rows, each explicitly confirmed before writing
 - A derivation envelope per `references/neighbor-derivation.md` — never a file
-- Codes that are unique repo-wide, permanent, and identical to the requirements
-  doc's `ID prefix`
+- Codes assigned per `references/registry-conventions.md` § Capability codes
 - `owns_coverage` reported on every derivation, including empty ones
 - Every overlap or "already declined" claim citing a code plus a path or term
 

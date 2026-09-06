@@ -1,7 +1,7 @@
 ---
 name: cmk:trace-audit
 description: Use when the user asks to "check the docs are consistent", "audit traceability", "do the requirement IDs still line up", "check the capability registry", "find orphan docs", or before claiming tracked work is ship-ready — and as the mechanical docs check `cmk:delivery-review` and `cmk:delivery-ship` run. Reports referential integrity across `docs/requirements/`, `docs/design/`, and `docs/capabilities/INDEX.md`. Docs-only: never searches application source or tests.
-version: 0.1.0
+version: 0.1.1
 ---
 
 # Trace Audit
@@ -9,16 +9,14 @@ version: 0.1.0
 The vertical layer of the docs tree: do the acceptance-criterion IDs, the design
 documents that cite them, and the capability registry still agree?
 
-Every project that has kept a traceability matrix by hand has watched it rot,
-because keeping it correct is unpaid work nobody notices until an audit. So this
-is not a discipline — it is a fixed sequence of text-search passes with a fixed
-rule on their output. Nothing to install, no linter, no interpreter.
+Not a discipline — a fixed sequence of text-search passes with a fixed rule on
+their output.
 
 ## References
 
 Read `references/passes.md` before reporting anything. It is the **one home**
 for the passes, their exact patterns, and the rule that turns their output into
-findings. Run the passes; do not improvise an equivalent search.
+findings.
 
 ## Scope
 

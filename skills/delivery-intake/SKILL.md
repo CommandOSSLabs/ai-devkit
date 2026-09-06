@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-intake
 description: Use when the user asks to "start work on TICKET-123", "pick up this issue", "get the context for this ticket", "intake this issue", or begins any tracked work — and as phase 1 of the cmk:delivery-pipeline skill. Produces a context brief, branch/worktree, stated scope band, and docs-ready check (routing to `cmk:requirements` when the band requires it).
-version: 0.3.0
+version: 0.3.1
 ---
 
 # Delivery Intake
@@ -119,12 +119,8 @@ The brief is the handoff to the spec phase (and to any subagent) — it must
 stand alone without this session's context.
 
 Fill the capability-neighbors line by deriving it (`cmk:capability-map`,
-Workflow: Neighbors) from the issue's candidate paths and key terms. It is
-advisory: an empty or thin result is recorded with its coverage numbers and
-intake continues, and an absent `docs/capabilities/INDEX.md` is a clean no-op.
-What it buys is the one thing a fresh session cannot reconstruct — that a
-neighboring capability already owns these files, or already declined this idea
-and said why.
+Workflow: Neighbors) from the issue's candidate paths and key terms. Advisory:
+an empty result is recorded with its coverage numbers and intake continues.
 
 Before leaving intake, run the tracker reconciliation checkpoint: every stale
 fact, missing relation, planning property, scope boundary, and downstream
