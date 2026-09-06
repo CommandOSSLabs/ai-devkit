@@ -16,6 +16,10 @@ SIZE_BUDGET_ALLOWLIST=(codebase-docs)
 CROSS_PACKAGE_PATH_ALLOWLIST=(
   "skills/docs/references/scaffold-manifest.md"
   "skills/sui-devstack/references/instance-isolation.md"
+  # Documents the capability registry's cell format, whose paths are relative to
+  # docs/capabilities/ by design so the rows render as working links. Same
+  # category as scaffold-manifest.md: example docs content, not a skill path.
+  "skills/capability-map/references/registry-conventions.md"
 )
 # "<file>:<name>" pairs: a cmk:<name> token in <file> that names a
 # hypothetical/example skill rather than citing a real one.
