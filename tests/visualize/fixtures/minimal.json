@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "repo": { "name": "fixture", "commit": "abc1234" },
+  "diagramType": "system-architecture",
+  "altitude": { "mode": "budget", "budget": 20, "grouping": "directory" },
+  "nodes": [
+    { "id": "app", "label": "app/", "kind": "ui", "citations": [{ "file": "app/page.tsx", "line": 1 }] },
+    { "id": "lib", "label": "lib/", "kind": "module", "citations": [{ "file": "lib/skills.ts", "line": 1 }] }
+  ],
+  "edges": [
+    {
+      "id": "app->lib",
+      "source": "app",
+      "target": "lib",
+      "path": "data",
+      "citations": [{ "file": "app/page.tsx", "line": 3 }],
+      "samples": [{ "text": "getSkills()", "citation": { "file": "app/page.tsx", "line": 3 } }]
+    }
+  ],
+  "folded": [],
+  "gaps": []
+}
