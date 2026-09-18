@@ -4,14 +4,26 @@ on:
   pull_request:
     paths:
       - "skills/**"
+      # The registration check reads these, so a change to any of them can
+      # break the lint without touching skills/ at all: dropping a
+      # CATEGORY_MAP entry, deleting a docs page, or removing a roster row.
+      - "lib/skill-types.ts"
+      - "docs/ai/skills/**"
       - "scripts/skill-lint.sh"
+      - "scripts/skill-registry-keys.py"
       - ".github/workflows/skill-lint.yml"
   push:
     branches:
       - main
     paths:
       - "skills/**"
+      # The registration check reads these, so a change to any of them can
+      # break the lint without touching skills/ at all: dropping a
+      # CATEGORY_MAP entry, deleting a docs page, or removing a roster row.
+      - "lib/skill-types.ts"
+      - "docs/ai/skills/**"
       - "scripts/skill-lint.sh"
+      - "scripts/skill-registry-keys.py"
       - ".github/workflows/skill-lint.yml"
 
 jobs:
