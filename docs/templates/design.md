@@ -4,6 +4,15 @@
 **Owner:** @[handle]
 **Last updated:** YYYY-MM-DD
 **Scope:** System-wide or feature-level — state which
+**Capability:** [registry code from docs/capabilities/INDEX.md — feature-level docs; omit when no registry]
+**Owns:** [`path/`, `path/file.ts` — the files and directories this capability owns]
+**Declined:** [thing declined — reason | thing declined — reason]
+
+<!-- Capability / Owns / Declined form the capability card: the bounded unit another
+     spec author reads instead of this whole document. Declined entries each carry
+     their reason, and summarize the ## Scope out-of-scope narrative.
+     See cmk:capability-map references/registry-conventions.md. Omit in a repo
+     with no docs/capabilities/ registry. -->
 
 <!-- Captures the technical "how": architecture, tech stack, components, cross-cutting concerns, or feature-level implementation detail. -->
 

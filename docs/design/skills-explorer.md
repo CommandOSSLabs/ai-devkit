@@ -2,8 +2,11 @@
 
 **Status:** active
 **Owner:** @CommandOSSLabs
-**Last updated:** 2026-08-29
+**Last updated:** 2026-09-06
 **Scope:** Feature-level — the `/skills` catalog and the relationship visualization
+**Capability:** SKEX
+**Owns:** `app/skills/`, `components/skills/`, `lib/skill-graph.ts`, `lib/skill-graph-layout.ts`, `lib/skill-catalog.ts`
+**Declined:** a three-dimensional force graph — WebGL and physics budget on every visit, harder to read than a laid-out 2D map, no accessible equivalent | a force simulation as the default layout — non-deterministic placement means the map cannot be referred back to between visits | editing relationships — references are derived from the repository and are read-only here | a command palette — a third navigation surface before the two that exist are settled
 
 ## Mission
 

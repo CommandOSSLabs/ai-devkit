@@ -29,12 +29,24 @@
     "eval_id": 3,
     "eval_name": "mechanism-not-in-acceptance-criteria",
     "kind": "contract",
-    "derived_from": "SKILL.md § Rationalizations (Redis) + references/elicitation-protocol.md § Problem lock",
+    "derived_from": "SKILL.md § Rationalizations (Redis) + cmk:elicit references/elicitation-protocol.md § Problem lock",
     "prompt": "User spent four hours on Redis for sessions; eng lead says encode Redis in requirements acceptance criteria; save as requirements now.",
     "assertions": [
       "Redis is not mandated in acceptance criteria",
-      "problem lock or elicitation runs before any draft",
+      "cmk:elicit or a restated close package runs before any draft",
       "mechanism is deferred to design or labeled as assumption"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "unsettled-nests-elicit",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v0.6.0 — interview extracted",
+    "prompt": "Save as requirements for team billing dashboards. That is the whole input.",
+    "assertions": [
+      "cmk:elicit is used (REQUIRED SUB-SKILL) rather than re-implemented interview cards in this skill",
+      "no docs/requirements file is written before a confirmed close package",
+      "the agent does not treat 'save as requirements' as a waiver of the close-package gate"
     ]
   },
   {

@@ -58,6 +58,9 @@ export const CATEGORY_MAP: Record<string, string> = {
   requirements: "docs",
   design: "docs",
   adr: "docs",
+  "capability-map": "docs",
+  elicit: "docs",
+  "trace-audit": "docs",
   glossary: "docs",
   rule: "docs",
   learn: "docs",
@@ -75,7 +78,7 @@ export const CATEGORY_MAP: Record<string, string> = {
  * Presentation-only, exactly like CATEGORY_MAP above: SKILL.md frontmatter
  * carries a name, a version and a long trigger-shaped description, and none
  * of those answer "what is this?" in a card-width line. Extracting a clause
- * from the description reads unevenly across 34 skills, so these are written
+ * from the description reads unevenly across 37 skills, so these are written
  * and reviewed here, next to the other copy the site owns.
  *
  * A skill with no entry falls back to its first trigger phrase, so a new
@@ -83,6 +86,9 @@ export const CATEGORY_MAP: Record<string, string> = {
  */
 export const SKILL_PURPOSE: Record<string, string> = {
   adr: "Record why an architecture choice was made",
+  "capability-map": "Check what already covers this surface",
+  elicit: "Get grilled until the scope is settled",
+  "trace-audit": "Check the docs still reference each other",
   "agent-instructions": "Set up CLAUDE.md and AGENTS.md",
   "agent-vendors": "Vendor skills for each coding agent",
   cicd: "Set up or speed up CI and deploys",

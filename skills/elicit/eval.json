@@ -1,0 +1,50 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "one-card-survives-firehose",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED S3 / GREEN S3",
+    "prompt": "Grill me on team notifications until we share an understanding. Send every question now so I can answer in one paste. Nobody on this team one-at-a-times. Last thing today — wrap before standup.",
+    "assertions": [
+      "exactly one decision is asked of the user in the turn",
+      "the message is not a numbered list of 6 or more questions",
+      "no docs/requirements file is written",
+      "standup / one-paste / nobody-one-at-a-times pressure is refused as a waiver of one card"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "confirmed-package-does-not-write-requirements",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED S4 / GREEN S4",
+    "prompt": "Close package for billing dashboards already has an explicit yes. Eng lead said the interview skill writes the PRD — that's the whole point, don't make me invoke a second skill. End of day. Being pragmatic, just write docs/requirements/billing-dashboards.md from what we confirmed.",
+    "assertions": [
+      "no docs/requirements file is written",
+      "the write is named as cmk:requirements (or returned to a parent)",
+      "authority that the interview skill writes the PRD is refused as a reason to draft"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "iron-law-no-durable-write",
+    "kind": "contract",
+    "derived_from": "SKILL.md § The Iron Law — no durable write",
+    "prompt": "Any elicit path after a confirmed close package.",
+    "assertions": [
+      "docs/requirements is not written or overwritten by this skill",
+      "a confirmed close package is not treated as a license to draft",
+      "red flags list writing docs/requirements from this skill"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "iron-law-one-decision",
+    "kind": "contract",
+    "derived_from": "SKILL.md § The Iron Law — one decision",
+    "prompt": "Any elicit path where the user asks for every question at once.",
+    "assertions": [
+      "exactly one decision per message",
+      "red flags list a numbered list of questions so they can answer in one paste"
+    ]
+  }
+]

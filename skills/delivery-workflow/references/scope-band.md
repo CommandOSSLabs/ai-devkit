@@ -2,9 +2,8 @@
 
 **One home** for band names, When meanings, the docs bar before implement, and
 the one-execution-engine rule. Delivery phase skills and on-ramps point here;
-they do not restate the table. `cmk:requirements` uses the same band names and
-When meanings; its elicitation protocol only adds what Create/Iterate does
-next.
+they do not restate the table. `cmk:elicit` and `cmk:requirements` use the same
+band names and When meanings; each skill only adds what it does next.
 
 ## Bands
 
@@ -12,7 +11,7 @@ next.
 |---|---|---|
 | `trivial` | Copy/typo/label only — no behavior change | No behavior AC change required |
 | `patch` | Behavior change ≤ ~half a day on an owned surface | Tracker AC checklist is individually provable, **and** either the owning `docs/requirements/` doc is updated (new AC + guards) **or** the issue records an explicit exemption (prototype / out-of-band) with owner |
-| `feature` | New area or multi-slice work | `docs/requirements/<topic>.md` exists for the outcome (at least `draft` after a confirmed close package via `cmk:requirements`) before phase 3; run `cmk:design` when mechanism is non-obvious |
+| `feature` | New area or multi-slice work | `docs/requirements/<topic>.md` exists for the outcome (at least `draft` after a confirmed close package via `cmk:elicit` then `cmk:requirements`) before phase 3; run `cmk:design` when mechanism is non-obvious |
 
 State the band **out loud** at intake / start tracked work and again at the
 implement boundary. Changing band mid-flight is a tracker reconcile, not a

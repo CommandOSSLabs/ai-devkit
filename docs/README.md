@@ -7,6 +7,7 @@ This directory is the source of truth for documentation in this repository.
 ```
 docs/
 ├── README.md        # this navigation map
+├── capabilities/    # capability registry → which spec owns what
 ├── decisions/       # Architecture Decision Records
 ├── requirements/    # product/project requirements
 ├── design/          # distilled system and feature design
@@ -23,6 +24,7 @@ docs/
 ## When to read what
 
 - **Any task:** [`ai/`](./ai/) — find the right source files for a topic.
+- **Before writing any spec:** [`capabilities/`](./capabilities/) — which capability already owns this surface, and what it already declined.
 - **New feature or scope change:** [`requirements/`](./requirements/) — what we're building and why.
 - **Architecture or implementation:** [`design/`](./design/) — how a subsystem works; check [`decisions/`](./decisions/) for constraints.
 - **Writing code:** [`rules/`](./rules/) — the standards for the area you're touching.
@@ -40,6 +42,10 @@ docs/
 - `reports/` entries are named `YYYY-MM-DD-<topic>.md` and are **immutable**
   facts about a moment — never revised to stay current. Durable conclusions
   get distilled into `design/` or `runbooks/`.
+- `capabilities/INDEX.md` is the one registry of capability codes. A code is the
+  requirements doc's `ID prefix`, unique repo-wide and permanent. Rows are
+  written only after explicit confirmation; nothing under `capabilities/` is
+  generated.
 - `decisions/` entries are named `NNNN-<slug>.md`; numbers are monotonic and
   never reused.
 - Every directory has exactly one `README.md`: a map of what lives there and

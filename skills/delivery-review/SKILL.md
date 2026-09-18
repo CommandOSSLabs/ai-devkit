@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-review
 description: Use when the user asks to "review my changes", "review this PR", "take a look at this diff", or "is this ready to ship" — before shipping tracked work (phase 4 of cmk:delivery-pipeline) or standalone against any pull request or local diff. Produces a depth-disclosed verdict with evidence-backed findings dispositioned against acceptance criteria (citing requirement IDs when present).
-version: 0.2.4
+version: 0.3.1
 ---
 
 # Delivery Review
@@ -71,6 +71,14 @@ a quiet default.
 The seven lenses (correctness, spec/AC compliance with requirement IDs,
 code quality, cross-surface consistency, edge cases, security, production
 readiness) — full definitions: read `references/lenses.md`.
+
+## Capability overlap and docs integrity
+
+Two checks run beside the lenses, catching what a lens reading the diff in isolation cannot.
+
+**Reuse-miss.** Derive capability neighbors (`cmk:capability-map`) from the diff's changed paths. Where the change reimplements behavior a neighbor owns, or does something a neighbor explicitly declined, raise a finding citing that code and the shared path or the declined entry with its reason. Advisory input, verified like any other claim; an empty result is stated with its coverage numbers and is never a finding on its own.
+
+**Docs integrity.** Run `cmk:trace-audit` and disposition its findings with the rest: errors (`E1`–`E4`) are ship blockers, warnings (`W1`–`W3`) are reported. It reports referential integrity only — whether a design section genuinely satisfies the criterion it cites is this skill's spec/AC lens, not the check's.
 
 ## Evidence, or it did not happen
 

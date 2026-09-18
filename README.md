@@ -47,7 +47,7 @@ Requirements ──▶ Design ──▶ Plan ──▶ Implement ──▶ Simpl
 
 Three principles keep the flow coherent:
 
-- **Guidance over forms.** The requirements and design skills follow shaping directives, not fixed templates — they interview when the input is still an idea and distill documents specific to your product rather than generic ones.
+- **Guidance over forms.** `cmk:elicit` interviews when the input is still an idea. The requirements and design skills follow shaping directives, not fixed templates, and distill documents specific to your product rather than generic ones.
 - **Coherence cascades.** Docs cross-reference each other, so changing one means checking what it links to and what links back. Skills detect conflicts — a design contradicting a locked decision, a term drifting from the glossary — and flag them for you to resolve instead of silently overriding.
 - **Progressive disclosure.** Every docs folder README is a concise navigation index; depth lives one level down. Agents and humans read only what the task at hand needs.
 
@@ -66,10 +66,13 @@ This devkit solves that by using structured documentation as the shared state. T
 | Skill | Purpose |
 |---|---|
 | `cmk:docs` | Bootstrap or update the `/docs` directory structure |
+| `cmk:capability-map` | Register capabilities and derive, at ask time, which specs already own a surface and what they declined |
+| `cmk:elicit` | Interview until a confirmed close package; does not write `docs/requirements/` |
 | `cmk:requirements` | Create or iterate product/feature requirements in docs/requirements/ |
 | `cmk:design` | Create or iterate distilled design in docs/design/ — system-wide or per-feature |
 | `cmk:adr` | Create or update decisions in docs/decisions/ |
 | `cmk:glossary` | Create or maintain the shared normative glossary of systems, components, and actors |
+| `cmk:trace-audit` | Mechanical docs check — requirement IDs, design citations, and capability registry integrity |
 | `cmk:codebase-docs` | Generate or update hierarchical, AI-navigable docs under `docs/ai/` |
 | `cmk:learn` | Extract and record non-obvious learnings and gotchas |
 | `cmk:rule` | Codify engineering standards into `docs/rules/` |
@@ -122,9 +125,18 @@ Set up the docs structure for this project
 Check if our docs structure is up to date with the latest devkit
 ```
 
-### 2. Requirements — `cmk:requirements`
+### 2. Elicit — `cmk:elicit`
 
-Define what to build and why — the upstream source of truth everything downstream references. Works from conversation, Notion/Google Docs links, or an interview when all you have is an idea.
+Interview when all you have is an idea. Stops at a confirmed close package; it does not write `docs/requirements/`.
+
+```
+Grill me on billing dashboards
+We're underspecified on the session store — walk the decisions
+```
+
+### 3. Requirements — `cmk:requirements`
+
+Define what to build and why — the upstream source of truth everything downstream references. Works from conversation, Notion/Google Docs links, or a confirmed close package from `cmk:elicit`.
 
 ```
 We just discussed the billing system requirements — save that as requirements
@@ -132,7 +144,7 @@ Use this Notion doc to draft requirements for the new onboarding flow: [link]
 Update the requirements — we're cutting the SSO requirement from v1
 ```
 
-### 3. Design — `cmk:design`
+### 4. Design — `cmk:design`
 
 Design how to build it as an implementation-agnostic spec — system-wide or per-feature. Checks upstream requirements and decisions for conflicts; cascades accepted changes downstream.
 
