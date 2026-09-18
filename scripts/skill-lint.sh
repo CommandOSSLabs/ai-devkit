@@ -22,6 +22,10 @@ CROSS_PACKAGE_PATH_ALLOWLIST=(
 CITATION_ALLOWLIST=(
   "skills/codebase-docs/eval.json:foo"
 )
+# Skills knowingly absent from the docs roster and the site registry. Every
+# entry is a documented gap, not a pass: `enclave` shipped before this check
+# existed and still has no docs/ai/skills/ page.
+REGISTRATION_ALLOWLIST=(enclave)
 
 in_allowlist() {
   local needle="$1"; shift
@@ -196,6 +200,37 @@ except Exception as e:
   done
 }
 
+# --- 6. Skill registration ------------------------------------------------------
+# A skill directory is only half a skill: adding skills/<name>/ without
+# registering it leaves an orphan package in the docs tree and renders the
+# skill degraded on the site. Nothing above notices, because skills are
+# filesystem-discovered (lib/skills.ts) and every missing registry entry has a
+# silent fallback -- a CATEGORY_MAP miss falls to "other", and a SKILL_PURPOSE
+# miss falls back to a trigger phrase scraped from the description. Four
+# registration points, checked per skill directory.
+registry_keys() {
+  python3 scripts/skill-registry-keys.py "$1"
+}
+
+check_skill_registration() {
+  local name category_keys purpose_keys
+  category_keys=$(registry_keys CATEGORY_MAP) || exit 1
+  purpose_keys=$(registry_keys SKILL_PURPOSE) || exit 1
+
+  for name in $(find skills -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort); do
+    in_allowlist "$name" "${REGISTRATION_ALLOWLIST[@]}" && continue
+
+    [ -f "docs/ai/skills/$name.md" ] ||
+      fail "skills/$name/: no docs/ai/skills/$name.md (orphan skill package)"
+    grep -q "(\./$name\.md)" docs/ai/skills/README.md ||
+      fail "skills/$name/: not rostered in docs/ai/skills/README.md"
+    grep -qx "$name" <<<"$category_keys" ||
+      fail "skills/$name/: no CATEGORY_MAP entry in lib/skill-types.ts (site renders it under \"other\")"
+    grep -qx "$name" <<<"$purpose_keys" ||
+      fail "skills/$name/: no SKILL_PURPOSE entry in lib/skill-types.ts (site scrapes a trigger phrase instead)"
+  done
+}
+
 mentions_file=""
 main() {
   mentions_file=$(mktemp)
@@ -209,6 +244,7 @@ main() {
   check_citations_resolve
   check_cross_package_paths
   check_eval_json
+  check_skill_registration
 
   if [ "${#violations[@]}" -gt 0 ]; then
     echo "skill-lint: ${#violations[@]} violation(s) found:" >&2
@@ -219,7 +255,7 @@ main() {
     exit 1
   fi
 
-  echo "skill-lint: OK (frontmatter, size, references, citations, paths, eval.json across skills/)"
+  echo "skill-lint: OK (frontmatter, size, references, citations, paths, eval.json, registration across skills/)"
 }
 
 main "$@"
