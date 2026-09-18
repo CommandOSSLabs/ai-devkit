@@ -1,6 +1,6 @@
 ---
 name: cmk:visualize
-description: This skill should be used when the user asks to "visualize this repo", "map this codebase", "draw the architecture", "show me how this fits together", or wants a diagram of a system traced from its real code. Produces a validated scene graph and renders it as an interactive isometric map or a static SVG, citing the file behind every node and edge.
+description: Use when the user asks to "visualize this repo", "map this codebase", "draw the architecture", "show me how this fits together", or wants a diagram of a system traced from its real code. Produces a validated scene graph and renders it as an interactive isometric map or a static SVG, citing the file behind every node and edge.
 version: 0.1.0
 ---
 
