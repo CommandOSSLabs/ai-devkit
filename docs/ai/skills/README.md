@@ -1,6 +1,6 @@
 # Skills
 
-The `cmk:*` skill packages under [`skills/`](../../../skills/): eight docs-family skills, thirteen setup-family skills, nine delivery-family skills, two knowledge-family skills, and one session-discipline skill (`cmk:interpret`). Each is a directory with a `SKILL.md` (frontmatter `name`/`description`/`version` plus the body the agent reads), and most ship a `references/` folder of guidance, templates, and conventions the workflow loads on demand.
+The `cmk:*` skill packages under [`skills/`](../../../skills/): nine docs-family skills, thirteen setup-family skills, nine delivery-family skills, two knowledge-family skills, and one session-discipline skill (`cmk:interpret`). Each is a directory with a `SKILL.md` (frontmatter `name`/`description`/`version` plus the body the agent reads), and most ship a `references/` folder of guidance, templates, and conventions the workflow loads on demand.
 
 Docs-family skills follow the same shape: a "Workflow: Create" / "Workflow: Iterate" pair, with placement rules, shaping guidance, and templates kept out of `SKILL.md` itself and cited via "Read `references/<file>.md`" lines. Setup-family skills instead follow a facet shape (modes and/or a single workflow, plus a report-only `## Verify` section). Delivery-family skills follow a tracker-neutral phase/gate shape and never carry a `## Verify` section — that contract is setup-family only. Knowledge-family skills are reference packs with no create/iterate or phase shape at all. See [conventions.md](./conventions.md) for the exceptions and the full breakdown.
 
@@ -14,6 +14,7 @@ Docs-family skills follow the same shape: a "Workflow: Create" / "Workflow: Iter
 - [learn.md](./learn.md) — `cmk:learn`, captures non-obvious knowledge into `docs/knowledge/`.
 - [requirements.md](./requirements.md) — `cmk:requirements`, product requirements documents.
 - [rule.md](./rule.md) — `cmk:rule`, codifies engineering standards into `docs/rules/`.
+- [visualize.md](./visualize.md) — `cmk:visualize`, traces a codebase into a validated scene graph and renders it as a map; every node cites the file that proves it.
 
 ## Setup family
 
