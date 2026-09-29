@@ -109,6 +109,12 @@ This devkit solves that by using structured documentation as the shared state. T
 | `cmk:sui-sdk` | gRPC-first guidance for talking to a Sui full node — JSON-RPC is deprecated |
 | `cmk:sui-devstack` | Worktree-safe local Sui network setup for development and e2e tests |
 
+### Design family
+
+| Skill | Purpose |
+|---|---|
+| `cmk:blueprint-animation` | Animated before → after UX redesign (or one-screen explainer), explained step by step through a blueprint drawing. Third-party port of [moguzbulbul/blueprint-animation](https://github.com/moguzbulbul/blueprint-animation) — **CC BY-NC 4.0, non-commercial use only** |
+
 ## Usage
 
 A deeper tour, in the order docs build on each other when starting a new project. Every line in the blocks below is a real trigger — paste and go.

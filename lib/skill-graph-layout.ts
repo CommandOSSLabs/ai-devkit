@@ -16,7 +16,7 @@ export type PersistedSkillGraphLayout = {
  * no longer exists, and restoring them would scatter nodes across lanes that
  * have moved.
  */
-export const LAYOUT_VERSION = 3;
+export const LAYOUT_VERSION = 4;
 
 const STORAGE_KEY = "ai-devkit-skill-graph-layout";
 
@@ -39,6 +39,7 @@ const LANE_ORDER = [
   "agent",
   "testing",
   "sui",
+  "design",
   "sync",
   "session",
   "other",
