@@ -22,6 +22,7 @@ export const CATEGORY_LABELS: Record<string, string> = {
   docs: "Documentation",
   testing: "Testing & Code",
   sui: "Sui Network",
+  design: "Design",
   session: "Session",
   other: "Other",
 };
@@ -66,6 +67,7 @@ export const CATEGORY_MAP: Record<string, string> = {
   rust: "testing",
   "sui-sdk": "sui",
   "sui-devstack": "sui",
+  "blueprint-animation": "design",
   interpret: "session",
 };
 
@@ -86,6 +88,7 @@ export const SKILL_PURPOSE: Record<string, string> = {
   "agent-instructions": "Set up CLAUDE.md and AGENTS.md",
   "agent-vendors": "Vendor skills for each coding agent",
   cicd: "Set up or speed up CI and deploys",
+  "blueprint-animation": "Animate a UX redesign as a blueprint",
   "codebase-docs": "Generate AI-navigable codebase docs",
   "delivery-handoff": "Hand tracked work to another agent",
   "delivery-intake": "Pick up a ticket and gather its context",
