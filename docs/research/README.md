@@ -12,6 +12,12 @@ questions, kept for the reasoning as much as the answer.
   distilled into [`../design/`](../design/) or
   [`../decisions/`](../decisions/).
 
+## Investigations
+
+- [`skill-ecosystem-and-kit-improvements.md`](./skill-ecosystem-and-kit-improvements.md)
+  — 2026-10-11: what the kit should do next; curated third-party skills
+  table; agent-skill trends and personalization layers.
+
 ## When to read
 
 Before investigating a question someone may already have explored.
