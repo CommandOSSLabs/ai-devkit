@@ -18,6 +18,7 @@ thing in this repository.
 | Guide | When |
 |---|---|
 | [`on-ramps.md`](./on-ramps.md) | Unsure which `cmk:*` skill starts the situation |
+| [`companion-skills.md`](./companion-skills.md) | Choosing a third-party skill, or the optional Plannotator step |
 
 ## When to read
 

@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-spec-plan
 description: Use when the user asks for a "spec", "implementation plan", or tracker-issue design scratch after intake — phase 2 of `cmk:delivery-pipeline`. Produces git-ignored scratch spec + plan with task dependency structure. Durable `docs/design/` docs → `cmk:design`.
-version: 0.3.3
+version: 0.3.4
 ---
 
 # Delivery Spec & Plan
@@ -12,14 +12,10 @@ another layer of detail: current codebase reality, concrete approach choices,
 and the back-and-forth reasoning that ends when the plan is solid enough to
 execute without further debate. That layer is this phase's product.
 
-Use `superpowers:brainstorming`, when present, to pressure-test the spec, and
-`superpowers:writing-plans`, when present, to author the plan — otherwise
-follow the same shape unaided. Two adaptations apply regardless: their
-human-approval checkpoints do not apply here — decide, and record the
-decision where this phase already requires it — and **the phase ends when
-the plan is written.** Plan authoring normally chains straight into an
-execution engine; here it stops, because the plan is the deliverable and the
-next delivery phase (`cmk:delivery-pipeline`) owns engine selection.
+Use `superpowers:brainstorming` and `superpowers:writing-plans` when present;
+otherwise follow the same shape. Their human-approval checkpoints do not
+apply — decide and record it. The phase ends when the plan is written;
+`cmk:delivery-pipeline` owns what runs it.
 
 Specs and plans go to git-ignored scratch. They are working artifacts, never
 the record; durable conclusions reach `docs/design/`, `docs/decisions/`, the
@@ -144,7 +140,11 @@ surface. If one genuinely cannot be resolved safely it is a recorded
 blocker per the principles — not a silent guess, and not a question parked
 for the human.
 
-Reconcile the tracker before exit: decisions or discoveries that change
-scope, acceptance, constraints, relations, estimate, timing, risk,
-interfaces, or another issue's plan are recorded on the owning issues now,
-rather than waiting for implementation or ship.
+Reconcile the tracker before exit when a decision changes scope, acceptance,
+constraints, relations, estimate, timing, risk, interfaces, or another issue's
+plan.
+
+If Plannotator is already installed, hand the written plan to
+`/plannotator-annotate` and keep its notes with the plan. Absence is a no-op:
+do not install it, do not pipe its installer, and do not block exit. Contract:
+`docs/guides/companion-skills.md`.
