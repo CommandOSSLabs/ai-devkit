@@ -18,8 +18,10 @@ slices the plan at the task heading still hands the obligations to the
 builder. Closes with acceptance criteria mapped to the tasks that satisfy
 them. Uses `superpowers:brainstorming` and `superpowers:writing-plans` when
 present, with human-approval checkpoints replaced by recorded autonomous
-decisions, and stops the moment the plan is written — engine selection
-belongs to `cmk:delivery-pipeline`, not this phase.
+decisions, and stops when the plan is written — engine selection belongs to
+`cmk:delivery-pipeline`, not this phase. If Plannotator is already installed,
+the exit hands the plan to `/plannotator-annotate` and does not block on its
+absence (`docs/guides/companion-skills.md`).
 
 ## Where
 - Skill body: `skills/delivery-spec-plan/SKILL.md` — sections Spec, Plan,

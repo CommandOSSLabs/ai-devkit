@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-ship
 description: Use when the user asks to "ship this", "open the PR", "push this to review", "update the tracker and open a PR", "close out this ticket", or "verify before claiming done" — when implementation and review are done, and as phase 5 of the cmk:delivery-pipeline skill. Produces a PR, tracker reconciliation, and fresh verification evidence for every completion claim.
-version: 0.3.3
+version: 0.3.4
 ---
 
 # Delivery Ship
@@ -93,8 +93,12 @@ cover and the same-issue-ID rule, see `cmk:delivery-workflow`'s
 `references/pr-traceability.md` — don't restate it here. Its evidence
 section is where step 1's verification output lands.
 
-Repository-local references use repo-root-relative paths in inline code —
-never branch-specific blob/tree URLs.
+Repository-local references use repo-root-relative paths in inline code — never branch-specific blob/tree URLs.
+
+If Plannotator is already installed, offer `/plannotator-review` on the diff
+before the PR opens and fold accepted notes in. Absence is a no-op: do not
+install it and do not pipe its installer. Contract:
+`docs/guides/companion-skills.md`.
 
 ## 4. Reconcile the tracker
 
@@ -119,16 +123,11 @@ Using Linear as your tracker? Read `references/linear.md`.
 
 ## 5. Retire the run's scratch workspaces
 
-This phase is the only one that may delete a phase-3 execution workspace —
-the ledger, task briefs, task reports, and review packages at the path the
-run notes record. Delete it only after the evidence it carries is
-reflected on durable surfaces: the PR's test evidence, the tracker record,
-and any doc updates that shipped with the change. It is git-ignored scratch,
-so leaving it costs nothing and deleting it early costs a reviewer their
-trail. Never touch another issue's or another run's workspace.
-
-The issue's worktree and branch are not scratch and are not retired here.
-They stay in place for review feedback and for any later agent in the relay.
+Only this phase may delete a phase-3 execution workspace (ledger, briefs,
+reports, review packages at the path the run notes record), and only after
+that evidence is on the PR, the tracker, and the docs that shipped. It is
+git-ignored scratch. Never touch another run's workspace. The issue's
+worktree and branch stay for review.
 
 ## 6. Done means delivered
 

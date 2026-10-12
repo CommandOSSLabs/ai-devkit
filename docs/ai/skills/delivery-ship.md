@@ -14,10 +14,12 @@ Re-runs every gate fresh, walks acceptance criteria one final time against
 actual behavior, and confirms the pre-ship review ran to completion at its
 selected depth with that depth disclosed — a review that did not run, or
 ran undisclosed, means this phase has not started. Rebases to a
-straight-line history, opens the PR against the canonical branch (a
-stacked issue's PR may target its parent's branch as a draft only), and
-reconciles the owning issue: move to review state, back-fill anything
-stale, file issues for deferred findings, notify stakeholders. Only this
+straight-line history, offers `/plannotator-review` on the diff only when
+Plannotator is already installed (`docs/guides/companion-skills.md`), then
+opens the PR against the canonical branch (a stacked issue's PR may target
+its parent's branch as a draft only), and reconciles the owning issue: move
+to review state, back-fill anything stale, file issues for deferred findings,
+notify stakeholders. Only this
 phase may delete a phase-3 execution workspace, and only once its evidence
 is durable elsewhere. The issue reaches its done state only when every
 acceptance criterion is checked with reachable evidence or moved to a named
