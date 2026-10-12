@@ -23,6 +23,7 @@ export const CATEGORY_LABELS: Record<string, string> = {
   testing: "Testing & Code",
   sui: "Sui Network",
   session: "Session",
+  meta: "Meta",
   other: "Other",
 };
 
@@ -67,6 +68,7 @@ export const CATEGORY_MAP: Record<string, string> = {
   "sui-sdk": "sui",
   "sui-devstack": "sui",
   interpret: "session",
+  "write-cmk-skill": "meta",
 };
 
 /**
@@ -75,7 +77,7 @@ export const CATEGORY_MAP: Record<string, string> = {
  * Presentation-only, exactly like CATEGORY_MAP above: SKILL.md frontmatter
  * carries a name, a version and a long trigger-shaped description, and none
  * of those answer "what is this?" in a card-width line. Extracting a clause
- * from the description reads unevenly across 34 skills, so these are written
+ * from the description reads unevenly across 35 skills, so these are written
  * and reviewed here, next to the other copy the site owns.
  *
  * A skill with no entry falls back to its first trigger phrase, so a new
@@ -116,6 +118,7 @@ export const SKILL_PURPOSE: Record<string, string> = {
   "test-resources": "Share fixtures across slow tests",
   testcontainers: "Start throwaway service containers in tests",
   toolchain: "Pin versions and assign tool roles",
+  "write-cmk-skill": "Author or review a cmk skill",
 };
 
 /** The quoted phrases a description advertises as triggers. */

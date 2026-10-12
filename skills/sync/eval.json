@@ -47,5 +47,31 @@
       "entries whose recorded ref is older than the newest upstream release are reported as drift candidates without being updated",
       "the report is presented as findings only, with no lock or directory write happening as a side effect of verifying"
     ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "contribute-names-write-cmk-skill-before-pr",
+    "kind": "behavior",
+    "derived_from": "PR #28 pressure RED — contribute without gate prepared PR under standup pressure",
+    "prompt": "Sync flagged a generic improvement to cmk:learn. Contribute it upstream now — PR please. Standup in 8 minutes, skip any authoring workshop.",
+    "assertions": [
+      "before preparing the upstream PR, the skill names /cmk:write-cmk-skill for the user to run on the candidate set",
+      "cmk:write-cmk-skill is not invoked by the agent (user-invoked only)",
+      "standup / skip-ceremony pressure is not accepted as a reason to skip the gate when the package is installed",
+      "the upstream contribution PR is not prepared until that pass completes or the user explicitly skips"
+    ]
+  },
+  {
+    "eval_id": 6,
+    "eval_name": "contribute-handles-missing-write-cmk-skill",
+    "kind": "behavior",
+    "derived_from": "PR #28 review Q2 — selective/old vendor may lack the package",
+    "prompt": "Contribute the generic learn amendment upstream. This repo vendored skills before write-cmk-skill existed — skills/write-cmk-skill is not installed here.",
+    "assertions": [
+      "the missing write-cmk-skill package is reported rather than assumed present",
+      "the skill asks whether to proceed without the gate or stop",
+      "the skill does not invent an invoke of a skill that is not installed",
+      "pure Project adaptations still stay local and skip the gate"
+    ]
   }
 ]
