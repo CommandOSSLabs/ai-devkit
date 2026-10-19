@@ -6,11 +6,11 @@
 
 ## cmk:sync
 
-model-invoked · core · v0.2.0
+model-invoked · core · v0.3.0
 
 Use when the user asks to "sync skills with upstream", "pull upstream skill updates", "reconcile vendored skills", "update the skills lockfile", or whenever a repo's vendored `.agents/skills/` copies have drifted from the upstream kit.
 
 - **Where:** `skills/sync/SKILL.md`
 - **References:** `references/reconciliation.md`, `references/skills-lock.md`
 - **Cites:** `cmk:agent-vendors`, `cmk:design`
-- **Evidence:** `eval.json`
+- **Evidence:** `TESTS.md`, `eval.json`

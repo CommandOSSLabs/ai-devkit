@@ -1,7 +1,7 @@
 ---
 name: cmk:sync
 description: Use when the user asks to "sync skills with upstream", "pull upstream skill updates", "reconcile vendored skills", "update the skills lockfile", or whenever a repo's vendored `.agents/skills/` copies have drifted from the upstream kit.
-version: 0.2.0
+version: 0.3.0
 ---
 
 # Sync
@@ -42,7 +42,11 @@ Read `references/skills-lock.md`.
    candidates.
 9. Update the lock (new ref + new pristine hash) only for skills whose
    reconcile completed.
-10. List upstream skills with no lock entry that belong to core or to a pack in
+10. In the same commit, regenerate the adapters of each of those skills from its new
+    frontmatter (`cmk:agent-vendors`'s `references/adapter-template.md`). Claude Code
+    routes on the adapter's description, not the canonical one: a sync that left this
+    out kept 24 of 27 adapters on the old descriptions, and its report never said so.
+11. List upstream skills with no lock entry that belong to core or to a pack in
     `[packs] installed` (`cmk:agent-vendors`'s `references/packs.md`) as additions
     for `cmk:agent-vendors` update; ignore the skills of packs the repo did not
     take. A locked skill upstream no longer ships is flagged for removal, never

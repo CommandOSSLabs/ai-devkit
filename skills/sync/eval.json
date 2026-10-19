@@ -47,5 +47,17 @@
       "entries whose recorded ref is older than the newest upstream release are reported as drift candidates without being updated",
       "the report is presented as findings only, with no lock or directory write happening as a side effect of verifying"
     ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "adapters-follow-the-synced-canonical",
+    "prompt": "Sync our vendored skills with upstream ai-devkit, take the latest ref, update the lock for whatever completes, and commit.",
+    "assertions": [
+      "every skill whose reconcile completed has its Claude Code adapter (.claude/skills/<dir>/SKILL.md) regenerated from the new canonical frontmatter in the same commit as its lock entry",
+      "no adapter's description differs from its canonical skill's description after the commit",
+      "a skill held back for a conflict keeps its old adapter and its old lock entry"
+    ],
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 0.3.0"
   }
 ]
