@@ -73,6 +73,7 @@ Not “later NFR” ceremony. Worked close shape: `references/example.md`.
 
 ## Operate → observability
 
-Telemetry/tracing readiness gap → REQUIRED SUB-SKILL: use `cmk:observability`,
-**then** one `operate` card on the finding. Rollback/page/toil alone → `operate`
+Telemetry/tracing readiness gap → with `cmk:observability` installed, REQUIRED
+SUB-SKILL: use `cmk:observability`, **then** one `operate` card on the finding;
+without it, the `operate` card names the gap. Rollback/page/toil alone → `operate`
 card only (no assess).

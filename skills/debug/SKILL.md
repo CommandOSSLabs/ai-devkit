@@ -19,7 +19,7 @@ Causal confirmation is human-only — see **Causal disposition** (one home).
 
 ## Phase 1 — Build the feedback loop (the gate)
 
-IF the reported failure is on a **deployed** environment (production, staging, remote dev) and no remote evidence pack exists yet: REQUIRED SUB-SKILL: use `cmk:incident` first. That pack **is** this Phase 1 signal. Do not `kubectl exec` or replay mutating requests against production as the loop.
+IF the reported failure is on a **deployed** environment (production, staging, remote dev) and no remote evidence pack exists yet: when `cmk:incident` is installed, REQUIRED SUB-SKILL: use `cmk:incident` first — that pack **is** this Phase 1 signal; when it is not, the signal is the failing request and its logs or traces read from that environment, captured before any theory. Do not `kubectl exec` or replay mutating requests against production as the loop.
 
 Before ANY theory-building, construct and RUN a **red-capable signal**: one command — a test invocation, a script, a curl — that is red now because of this exact bug and will go green when it is fixed. Build the right feedback loop and the bug is 90% fixed; every later phase merely consumes it.
 

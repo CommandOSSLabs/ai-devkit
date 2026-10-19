@@ -13,7 +13,7 @@ A spike is throwaway code whose only job is to answer one design question. The q
 Identify the question first — from the request, the surrounding code, or by asking:
 
 - **"Does this logic / state model hold up?"** → [references/LOGIC.md](references/LOGIC.md): an interactive terminal app over a pure logic module the user can drive by hand.
-- **"What should this look like?"** → REQUIRED SUB-SKILL: use `cmk:ui-brief` — the UI branch is that skill now: divergent real-HTML variants behind a switcher, a review loop, and a locked ui-brief. [references/UI.md](references/UI.md) is a pointer.
+- **"What should this look like?"** → with the UI pack installed, REQUIRED SUB-SKILL: use `cmk:ui-brief`; without it, say the UI branch needs that pack and run the logic branch only if the question has one. The UI branch is that skill now: divergent real-HTML variants behind a switcher, a review loop, and a locked ui-brief. [references/UI.md](references/UI.md) is a pointer.
 
 Picking the wrong branch wastes the whole spike. If it's genuinely ambiguous and the user is unreachable, choose by proximity (backend module → logic; page or component → UI) and record the assumption at the top of the spike.
 

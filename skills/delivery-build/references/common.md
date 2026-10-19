@@ -120,16 +120,19 @@ After the last task (waves / inline) or last unlocked unit (story):
    `skip: no polish predicate` on the Close branch notes. EOD, demo
    pressure, "inspect was clean", and "small enough to feel optional" are
    **not** predicates.
-4. **Acceptance.** REQUIRED SUB-SKILL: use `cmk:acceptance`. Breaks →
+4. **Acceptance.** When `cmk:acceptance` is installed, REQUIRED SUB-SKILL: use
+   `cmk:acceptance`; when it is not, drive the affected flow through the running
+   system yourself and record what you observed (`cmk:evidence`). Breaks →
    `cmk:debug`, then promote passing checks to committed tests that describe
    the domain behavior (docs-only spine — no requirement-ID tags required in
    test files).
 5. **Product walk — observable conditional.** Evaluate the **walk predicate**
-   below. No clause true → do not open the product-walk trio. Any clause true →
-   REQUIRED SUB-SKILL: use `cmk:dogfood-plan` (it owns vet), then **execute what
+   below. No clause true → do not open the product-walk trio. Any clause true and
+   the acceptance pack installed → REQUIRED SUB-SKILL: use `cmk:dogfood-plan` (it owns vet), then **execute what
    it wrote** — REQUIRED SUB-SKILL: use `cmk:dogfood-run` where the runtime can
    drive the app, else record the human ticks. Naming the run instead of doing
-   it leaves step 6 unable to write green.
+   it leaves step 6 unable to write green. Any clause true without the pack → name the walk the person
+   should do in the close receipt.
 6. **Close receipt.** Load `references/close-receipt.md` and follow its producer recipe.
    Issue it only after the final mutation and only from evidence bound to that
    HEAD. Rerun a producer only when its evidence is missing or stale.

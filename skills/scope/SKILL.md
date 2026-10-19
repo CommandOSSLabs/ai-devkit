@@ -151,8 +151,8 @@ with trade-offs. Lead with a recommendation. YAGNI-prune. The user picks.
 | **2** | multi-task feature | full requirements → design → plan triad |
 
 If the work spans multiple independent subsystems, decompose here. Two or more
-sub-features: REQUIRED SUB-SKILL: use `cmk:roadmap` so every sub-feature
-exists as a `ROAD-N`. Deferred, not declined.
+sub-features: REQUIRED SUB-SKILL: use `cmk:roadmap` (when installed; else list each in the frame) so
+every sub-feature exists as a `ROAD-N` or a named later ticket. Deferred, not declined.
 
 **Done when:** you have said "This is tier N because ..." and, if decomposed,
 every sub-feature exists as a `ROAD-N` and you have named which one goes first.
