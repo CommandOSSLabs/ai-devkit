@@ -1,0 +1,114 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "surface-disposition-on-a-contract-change",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED — S-SURF (omission)",
+    "prompt": "A TypeScript billing service has calculateTotal(items, taxRate) in src/pricing.ts, called from src/api/checkout.ts, src/api/quote.ts, src/admin/report.ts, and src/jobs/nightly-invoice.ts. src/storage/orders.ts documents that Order.totalCents is persisted to the orders table AND emitted on the order.settled webhook consumed by two external partners. Approved requirements ask for volume-tier discounts that change the computed total for qualifying orders. Produce Step 1 and Step 2 of design.md. The release cut is Friday; decide everything yourself and do not ask questions.",
+    "assertions": [
+      "the architecture section that changes calculateTotal carries a Surface: block, because the section changes the value something with existing readers returns",
+      "the Surface: block enumerates readers found by reference search, not only the ones named in prose elsewhere in the document",
+      "the persisted orders row and the order.settled webhook each appear as their own reader rows, not folded into a caller row",
+      "every Surface: row carries exactly one of replace, compat, or frozen",
+      "the two external webhook partners are not dismissed as unaffected on the grounds that the field name and type are unchanged",
+      "a frozen row names either the workaround that leaves the contract untouched or the owner agreement its shipping is gated on",
+      "a compat row names the follow-up that removes the second live path",
+      "the design does not claim the change is zero-impact merely because the callers need no code edits"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "no-surface-slot-for-brand-new-code",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules this evidence owns — slot is conditional on existing readers",
+    "prompt": "Approved requirements ask for a brand-new CSV export endpoint in a service that has never had one. Nothing in the repo calls any export code today and no existing function, column, route, or event changes. Produce Step 2 of design.md.",
+    "assertions": [
+      "the architecture section omits the Surface: line rather than inventing readers for code nothing reads yet",
+      "omitting Surface: here is not reported as an incomplete section"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "locality-is-not-surface",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED — Locality: leave written on readers whose returned value changed",
+    "prompt": "A design changes what an existing shared function returns for some inputs. Every call site keeps compiling and needs no edit. Write the Locality: and Surface: lines for that architecture section.",
+    "assertions": [
+      "Locality: describes where the edit lands and may legitimately say leave or extend for the untouched neighbours",
+      "Surface: still lists those untouched call sites, because their returned value changes",
+      "the two lines are not collapsed into one, and Surface: is not omitted on the grounds that no neighbour file is edited"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "elements-no-requirement-forces-are-cut",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Does it need to exist at all?",
+    "prompt": "Your draft design introduces a provider registry, a config layer, and an events hook. Walk the elements against the approved requirements and produce the final component list.",
+    "assertions": [
+      "each surviving element is traced to a requirement that forces it",
+      "elements no requirement forces are cut at design time rather than deferred to review",
+      "an element is not kept because a neighbouring module or a future need is expected to want it"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "ui-design-section-fires-on-rendered-surface",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § UI design fork — RED des-a/des-b zero layout/state/a11y content; GREEN des-c all five slots",
+    "prompt": "Approved requirements add a filter bar with counts, a selected state, and an empty-state message to an existing styled board. Produce design.md.",
+    "assertions": [
+      "design.md carries a ## UI design section with Grounding naming the repo file the tokens come from",
+      "each surface fills Layout, Components, States, Type & color, and A11y",
+      "every reachable visible state (default, hover/focus, selected, empty) has a States line",
+      "colors are cited as token names, never raw hex"
+    ]
+  },
+  {
+    "eval_id": 6,
+    "eval_name": "ui-design-section-deleted-without-surface",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § UI design fork — GREEN des-d should-not-fire",
+    "prompt": "Approved requirements add load-time data validation with console warnings only; the rendered board is explicitly unchanged. Produce design.md.",
+    "assertions": [
+      "the ## UI design section is deleted rather than filled with invented visual content"
+    ]
+  },
+  {
+    "eval_id": 7,
+    "eval_name": "names-understand-when-author-has-never-read-subsystem",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v1.5.0 — name the walk skill (now /cmk:explain) when the author has never read the subsystem",
+    "prompt": "Write the design for CACHE. I have never read this cache subsystem. Skip orientation.",
+    "assertions": [
+      "the first message names /cmk:explain for the user to run",
+      "the agent does not run understand itself",
+      "a scan digest is not treated as a substitute for that walk"
+    ]
+  },
+  {
+    "eval_id": 8,
+    "eval_name": "behavioral-property-not-taken-from-precedent",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v1.7.0 — RED 2/3 mapped an exactly-once REQ onto a SELECT ... FOR UPDATE SKIP LOCKED whose locks release before the dispatch, one citing production precedent and one citing the code comment",
+    "prompt": "A repo whose db helper exposes one/maybeOne/many/none and no transaction primitive. A shipped retry sweeper calls claimDue, a standalone `select ... for update skip locked`, then dispatches and sets status in later calls; a comment above it says the locking is what makes it safe to run on every replica. An approved requirement says each scheduled message SHALL be dispatched exactly once across replicas. Write the design.",
+    "assertions": [
+      "the exactly-once property is derived from what the claim statement itself does under concurrent replicas, not from the sweeper already running in production",
+      "the code comment asserting safety is treated as a claim to check, not as evidence",
+      "a Satisfies line for the exactly-once requirement is not attached to unchanged reuse of that SELECT-based primitive",
+      "verifying that every cited signature and call site exists is not treated as having verified the guarantee"
+    ]
+  },
+  {
+    "eval_name": "system-design-has-security-section",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Merge into cmk:design 1.0.0 — D1",
+    "prompt": "/cmk:design — draft the system design for the whole service (not one feature) under docs/design/, based on what's in the repo.",
+    "assertions": [
+      "docs/design/system.md is written, not a feature triad design.md",
+      "it has a Security section with Assumptions, Gaps and Controls",
+      "a missing control found in the code (e.g. no authentication) is listed under Gaps"
+    ],
+    "eval_id": 9
+  }
+]

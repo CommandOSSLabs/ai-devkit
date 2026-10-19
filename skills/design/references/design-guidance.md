@@ -49,7 +49,7 @@ Whatever its shape, a reader must be able to extract:
 
 Design is layered, and each layer is its own doc (or tree); the level
 definitions and the never-silently-contradict rule live in
-`references/design-conventions.md` § Design Levels.
+`references/system-and-track.md` § Levels and placement.
 
 ## Multi-doc design trees
 
