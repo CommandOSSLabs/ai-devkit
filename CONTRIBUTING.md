@@ -27,7 +27,9 @@ a memory of how things used to work.
 - A package holds `SKILL.md`, optional `TESTS.md` and `eval.json`, and the
   folders `references/`, `scripts/` and `agents/`. Every reference file is
   named by `SKILL.md` or another reference of the same skill; every script is
-  executable and named as `scripts/<file>`.
+  executable and named as `scripts/<file>`. A Python library module (no
+  shebang, no `__main__`) is instead imported by a sibling script; `test_*`
+  files are exempt.
 - `REQUIRED SUB-SKILL` names only model-invocable skills. A user-invoked skill
   (`disable-model-invocation: true`) is named for the person to run.
 - A skill file never reaches outside its own package with a relative `../`

@@ -15,10 +15,6 @@ fail() { violations+=("$1"); }
 # Pre-existing exceptions. A new entry here must be a deliberate, reviewed
 # decision, not a way to silence a fresh violation. The size budget is a
 # ratchet in scripts/skill-size-budget.json, checked by skill_checks.py.
-CROSS_PACKAGE_PATH_ALLOWLIST=(
-  "skills/docs/references/scaffold-manifest.md"
-  "skills/sui-devstack/references/instance-isolation.md"
-)
 # "<file>:<name>" pairs: a cmk:<name> token in <file> that names a
 # hypothetical/example skill rather than citing a real one.
 CITATION_ALLOWLIST=(
@@ -160,17 +156,7 @@ check_citations_resolve() {
     | xargs grep -oHE 'cmk:[a-z][a-z0-9-]*' /dev/null | sort -u)
 }
 
-# --- 4. Cross-package paths ---------------------------------------------------
-check_cross_package_paths() {
-  local f
-  while IFS= read -r f; do
-    if grep -q '\.\./' "$f" && ! in_allowlist "$f" "${CROSS_PACKAGE_PATH_ALLOWLIST[@]}"; then
-      fail "$f: contains '../' (cross-package path); skill files must be self-contained"
-    fi
-  done < <(find skills -type f | sort)
-}
-
-# --- 5. eval.json validity -----------------------------------------------------
+# --- 4. eval.json validity -----------------------------------------------------
 check_eval_json() {
   local f err
   for f in $(find skills -name eval.json | sort); do
@@ -185,7 +171,7 @@ except Exception as e:
   done
 }
 
-# --- 6. Ratchet, descriptions, evals, hand-offs, scripts, package root ------
+# --- 5. Ratchet, descriptions, evals, hand-offs, scripts, paths, package root
 check_python() {
   local line
   while IFS= read -r line; do
@@ -203,7 +189,6 @@ main() {
   check_dangling_references "$mentions_file"
   check_orphan_references "$mentions_file"
   check_citations_resolve
-  check_cross_package_paths
   check_eval_json
   check_python
 

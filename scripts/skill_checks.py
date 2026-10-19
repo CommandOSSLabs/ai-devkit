@@ -93,32 +93,63 @@ for d in skills:
 
 # --- hand-offs ------------------------------------------------------------------------
 # A user-invoked skill cannot be invoked by another skill; it can only be named for the
-# person to run. A REQUIRED SUB-SKILL line that names one is a dead end.
+# person to run. A REQUIRED SUB-SKILL directive whose target is one is a dead end; the
+# target is the cmk: name right after "REQUIRED SUB-SKILL:" (other names on the line,
+# such as a /cmk:x example, are prose).
+DIRECTIVE = re.compile(r"REQUIRED SUB-SKILL:\s*(?:use\s+)?`?cmk:([a-z][a-z0-9-]*)")
 for f in sorted(glob.glob("skills/*/SKILL.md") + glob.glob("skills/*/references/**/*.md", recursive=True)):
     for no, line in enumerate(text(f).splitlines(), 1):
-        if "REQUIRED SUB-SKILL" not in line:
-            continue
-        for target in re.findall(r"cmk:([a-z][a-z0-9-]*)", line):
+        for target in DIRECTIVE.findall(line):
             if target in user_invoked:
                 fail(f"{f}:{no}: REQUIRED SUB-SKILL names user-invoked cmk:{target}; name it for the person to run instead")
 
 # --- bundled scripts ------------------------------------------------------------------
-# A script sits in skills/<name>/scripts/, is executable, and is named as
-# scripts/<file> by the skill's SKILL.md or one of its references. Subfolders of
-# scripts/ (test data) are not checked.
+# A script sits in skills/<name>/scripts/. An entry point (a .sh file, or a .py file
+# with a shebang or a __main__ block) is executable and named as scripts/<file> by the
+# skill's SKILL.md or one of its references. A Python module with neither is a library:
+# it is reached when a sibling script imports it. test_* files are exempt. Subfolders
+# of scripts/ (test data) are not checked.
 for d in skills:
     sdir = f"{d}/scripts"
     if not os.path.isdir(sdir):
         continue
     corpus = "".join(text(p) for p in [f"{d}/SKILL.md"] + glob.glob(f"{d}/references/**/*.md", recursive=True))
-    for s in sorted(os.listdir(sdir)):
+    entries = sorted(s for s in os.listdir(sdir)
+                     if os.path.isfile(f"{sdir}/{s}") and not s.startswith((".", "test_")))
+    for s in entries:
         p = f"{sdir}/{s}"
-        if not os.path.isfile(p) or s.startswith("."):
+        if s.endswith(".py") and not text(p).startswith("#!") and "__main__" not in text(p):
+            stem = s[:-3]
+            if not any(re.search(rf"^\s*(?:from|import)\s+{re.escape(stem)}\b", text(f"{sdir}/{o}"), re.M)
+                       for o in os.listdir(sdir) if o != s and o.endswith(".py")):
+                fail(f"{p}: library module imported by no sibling script")
             continue
-        if not os.access(p, os.X_OK) and s.endswith((".sh", ".py")):
+        if s.endswith((".sh", ".py")) and not os.access(p, os.X_OK):
             fail(f"{p}: script is not executable")
-        if f"scripts/{s}" not in corpus and not s.startswith("test_"):
+        if f"scripts/{s}" not in corpus:
             fail(f"{p}: never named as scripts/{s} by its SKILL.md or references")
+
+# --- cross-package paths --------------------------------------------------------------
+# A package is self-contained: a relative path may not climb out of skills/<name>/.
+# Resolved from the file that holds it, `../x` in references/f.md stays inside (it is a
+# path in a template or a consumer repo); in SKILL.md or eval.json it leaves. TESTS.md is
+# evidence no agent loads, so the paths it quotes are not checked. `.../` is an ellipsis.
+UP = re.compile(r"(?<![.\w])((?:\.\./)+)")
+for d in skills:
+    for root, _, files in os.walk(d):
+        depth = 0 if root == d else root[len(d) + 1:].count("/") + 1
+        for fn in sorted(files):
+            p = f"{root}/{fn}"
+            if p == f"{d}/TESTS.md":
+                continue
+            try:
+                body = text(p)
+            except (UnicodeDecodeError, OSError):
+                continue
+            for no, line in enumerate(body.splitlines(), 1):
+                if any(len(m) // 3 > depth for m in UP.findall(line)):
+                    fail(f"{p}:{no}: relative path climbs out of {d}/; cite cmk:<name> instead")
+                    break
 
 # --- package root ---------------------------------------------------------------------
 # Detail lives in references/; a stray .md beside SKILL.md is never linted for reach.
