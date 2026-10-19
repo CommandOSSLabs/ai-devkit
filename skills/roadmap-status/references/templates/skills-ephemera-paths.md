@@ -27,7 +27,7 @@ Examples: `.skills/SPAY/`, `.skills/WEBPAR/`, `.skills/SKNS/`.
 | `.skills/research/` | Dated research notes (`<date>-<topic>.md`) |
 | `.skills/decisions/` | Boundary decision records (`DEC-*.md`, adoption) |
 | `.skills/pr-packages/<stable-id>/` | **Retired.** `cmk:delivery-ship` no longer writes this tree. Leave existing dirs; do not author new ones. |
-| `.skills/understand/` | Explainer pages (`<slug>.html`) from `cmk:explain` |
+| `.skills/explain/` | Explainer pages (`<slug>.html`) from `cmk:explain` |
 | `.skills/dashboard/` | Weekly progress pages from `/cmk:progress-chart` (`<date>.json` snapshot, `<date>.notes.json`, `<date>.html`) |
 | `.skills/system-docs/<entry-key>/` | System-doc authoring digests (`state.md`, `evidence.md`, `proposal.md`) for `/cmk:system-docs`; entry-key path mirroring (e.g. `codebase/map`) |
 

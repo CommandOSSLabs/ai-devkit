@@ -18,7 +18,7 @@
     "derived_from": "TESTS.md § RED — 2026-10-06 (A and B: chat-only prose, no file, no diagram, for a feature spanning six files)",
     "prompt": "Same refunds request; the traced path crosses http.py, refunds.py, events.py, worker.py, gateway.py, and notify.py.",
     "assertions": [
-      "one self-contained HTML file is written at .skills/understand/<slug>.html",
+      "one self-contained HTML file is written at .skills/explain/<slug>.html",
       "the page has, in order, In short, Map, Walk one example, Surprises, Check yourself (in the user's language)",
       "the Map is inline SVG with file:line labels, not ASCII",
       "the page loads no remote script, stylesheet, or font"

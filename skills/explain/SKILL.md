@@ -46,7 +46,7 @@ both, nothing else.
    and the chat answer (step 4). Fewer → the chat answer alone.
    *Done when: you know which.*
 3. **The page.** One self-contained HTML file at
-   `.skills/understand/<slug>.html` in the repo root (create the folder). No
+   `.skills/explain/<slug>.html` in the repo root (create the folder). No
    CDN, no remote fonts or scripts; readable in light and dark. Sections, in
    order:
    1. **In short** — at most 5 sentences, written to the sentence rules below.
