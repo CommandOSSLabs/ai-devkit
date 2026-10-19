@@ -215,3 +215,8 @@ against the jdk set (77 skills, jdk names).
 | "I've never read the invoicing code. Walk me through how an invoice goes from booking to paid …" | 1/1 | 0/1 | 5/5 |
 
 The converted description still named jdk `why`; it now points at `cmk:research`.
+
+
+## Smoke after the cmk rename (2026-10-19)
+
+skill-tester-haiku on harbor-ledger (`KIT=cmk`, all 93 skills): **PASS** — "walk me through how an invoice goes from a booking to paid": cited `file:line` answer, `cmk:visualize` loaded for the page, step-through of one booking, surprises, ended on one self-check question. Found the page written under `.skills/understand/` (jdk name) — fixed to `.skills/explain/` in `3d5ba86`.
