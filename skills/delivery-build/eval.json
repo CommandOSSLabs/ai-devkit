@@ -225,7 +225,7 @@
     "derived_from": "references/continuous.md § Continuous scheduler",
     "prompt": "Run a story-unit task and then a continuous task.",
     "assertions": [
-      "both routes load execute-common/task-lifecycle.md for brief, dispatch, evidence, review, fix, and ledger rules",
+      "both routes load references/task-lifecycle.md for brief, dispatch, evidence, review, fix, and ledger rules",
       "story-unit adds only unit derivation, human unlock, and unit synthesis",
       "single-task story units reuse the task's clean Standards and Spec verdicts instead of dispatching a duplicate reviewer"
     ]

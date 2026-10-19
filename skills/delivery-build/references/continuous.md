@@ -103,7 +103,8 @@ Before each worker or reviewer resume, run the lease preflight from
    prerequisites are ledgered clean.
 2. If the set has one task, run the shared task lifecycle on the feature branch.
 3. If the set has multiple tasks, prove each pair's `Files:` surfaces are
-   disjoint and check `worktree_isolation`. Overlap or missing isolation reduces
+   disjoint, that no two name the same `Exclusive resources:` entry (a port, a
+   database, a shared build root), and check `worktree_isolation`. Overlap or missing isolation reduces
    the effective set to serial; record the degradation in the runtime sidecar.
 4. For a parallel set, record `WBASE`. Each lane keeps **one worktree for the
    whole run** so its build cache stays warm — a fresh worktree per task
@@ -112,9 +113,9 @@ Before each worker or reviewer resume, run the lease preflight from
    later sets: `git -C .worktrees/<branch>-lane<k> switch -c <branch>-taskN WBASE`.
    Invoke the shared lifecycle. A worker/reviewer lease may continue across
    ready sets only along its own dependency lane.
-5. After every task in the set has clean Standards and Spec verdicts, merge in
-   deterministic task order. A conflict stops the scheduler; it is never solved
-   blind. Then run the **wave gate** at the merged HEAD: compile and lint every
+5. After every task in the set has clean Standards and Spec verdicts, join them in
+   deterministic task order by `references/wave-joins.md` (rebase, then
+   `merge --ff-only`). A conflict stops the scheduler; it is never solved blind. Then run the **wave gate** at the merged HEAD: compile and lint every
    target in the workspace (`project.md` **Wave gate**, else its typecheck and
    lint commands), judged against the lint baseline. Red → no ledger lines;
    REQUIRED SUB-SKILL: use `cmk:debug`, one fix dispatch, gate again. Green →
