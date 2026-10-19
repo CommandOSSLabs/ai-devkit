@@ -30,3 +30,23 @@ named for states and owners, "doesn't exist in this checkout". That page lives i
 repo, not in the repos that install the skill. The pointer now names
 `docs/agents/triage-labels.md`, which `cmk:repo-config` writes into every repo. Wording
 only.
+
+
+## W9 chain on the cmk kit (ADR 0001 P3, 2026-10-19)
+
+All 93 skills installed (`scenarios/wf-run-cmk.sh`), harbor-ledger with `latefee-plan` and
+`fmt-plan`; GitHub = the stateful `bin/gh` (`gh-board.sh` + `gh-roles.sh`); Linear = the fake
+MCP, team LED (`linear-board.sh`, PRs still on `bin/gh`). Scored by `wf-score.py` /
+`linear-score.py` from tracker state and calls, not from the report.
+
+| Step | GitHub haiku | GitHub sonnet | Linear haiku | Linear sonnet |
+|---|---|---|---|---|
+| `/cmk:idea` SMS idea | filed, `status:shaping` only, frame comment | same | LED-109, Backlog + `status:shaping`, frame comment | same |
+| `/cmk:shape #24` (no spec) | `status:shaping` only, stopped for the tier | same | Backlog + `status:shaping`, stopped | same |
+| `/cmk:go #23` | `building` → `in-review`, PR `Closes #23`, 7 subagents | same, plus a follow-up ticket for deferred findings | In Progress → In Review, PR `Fixes LED-23` | same, `cmk:tdd` ×4, simplify, ship |
+| `/cmk:board` | 0 writes; PR #14 decision, #25 question, #27 untriaged, #24 ready with no spec, #21 missing in-review | same | 0 writes, PR decision listed | same |
+| `/cmk:release` | v0.5.0, #23 `status:shipped` | same | — (merge does not close a fake-Linear issue) | — |
+
+Found and fixed: both GitHub `/cmk:go` runs built without loading `cmk:delivery-build` — the
+converter had turned "use `build-in-waves`" into a pointer at one of its references; the
+pipeline now hands off to the skill (`cf82c3c`).
