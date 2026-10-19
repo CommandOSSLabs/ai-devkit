@@ -4,12 +4,13 @@ Two entry shapes, one behavior. The point of modeling dependencies in the
 tracker is that both the *membership* and the *execution order* of a body
 of work can be read off the graph instead of guessed:
 
-- **Explicit list** — the named issues are the accepted seed set.
+- **Explicit list** — the named issues are the scope. A named issue blocked by an
+  unfinished issue outside the list is not eligible this run; its row says which.
 - **Single seed issue** — the named issue is the seed; include its
   independently deliverable children when they jointly own its outcome.
 
-Compute the transitive closure of the accepted dependency graph. Walk the
-blocking relation recursively to include every unfinished prerequisite.
+For a single seed, compute the transitive closure of the accepted dependency graph. Walk
+the blocking relation recursively to include every unfinished prerequisite.
 Walk the blocked-by-this relation recursively only while the downstream
 issue belongs to the same accepted outcome or is in the seed set.
 Parent/child edges determine grouping, never execution order; a related
@@ -55,8 +56,8 @@ Then:
    in each worktree before any local dev (see `cmk:local-stack`); never
    source another worktree's environment or bypass its coherence check.
 5. **Orchestrate, don't implement.** Own the graph, the tracks, the
-   per-issue state, dispatching and verifying workers, cluster assurance,
-   and the final report. Do not edit code in any issue's worktree
+   per-issue state, dispatching `cmk:delivery-build` per issue, cluster
+   assurance, and the final report. Do not edit code in any issue's worktree
    yourself. Keep per-issue state in scratch artifacts, not in your head.
 6. **A handoff pin is immutable evidence, not a floating branch.**
    Publishing a replacement pin supersedes the old one and immediately
@@ -68,10 +69,8 @@ Then:
    execution has begun.
 7. **Cluster assurance.** A join triggers a targeted review over the
    combined diff: interface consistency, duplicated logic, naming and docs
-   alignment, integration behavior. After each issue's phase 3 join (and
-   after a multi-feeder join onto a combined branch), run phase 3b Simplify
-   on that joined branch before its pre-ship review — see
-   `phase-3b-simplify.md`. Run the full review over every completed issue
+   alignment, integration behavior. After a multi-feeder join onto a combined branch, run REQUIRED SUB-SKILL: use
+   `cmk:delivery-simplify` on that joined branch before its pre-ship review. Run the full review over every completed issue
    and over the final combined output. Findings route to the owning issue's
    disposition flow; the cluster review holds no separate disposition
    authority.
@@ -79,6 +78,6 @@ Then:
 If an issue fails or blocks, don't stall the run: finish everything not
 downstream of it, record the blocker on that issue, and report it.
 
-Branch and PR mechanics: `references/stacked-pr-flow.md`.
+Branch and PR mechanics: `cmk:delivery-ship`'s `references/stacked-pr-flow.md`.
 
 Using Linear as your tracker? Read `references/linear.md`.

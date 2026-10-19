@@ -1,145 +1,113 @@
 ---
 name: cmk:delivery-pipeline
-description: Use when the user asks to "work on", "deliver", "tackle", "pick up", or "implement" a tracker issue (TICKET-123), a list of issues, or a body of tracked work expected to finish without supervision — even if they never say "pipeline". Also use when handed a cluster of related issues, or a single issue whose surrounding cluster should be derived from tracker dependencies. Produces reviewable PR(s), an up-to-date tracker graph, and a completion report — only after docs-ready for the stated scope band.
-version: 0.5.3
+description: Use when every ready ticket on the board, or a named set or cluster of tickets, must be built, reviewed and opened as pull requests in one unattended run — the delivery behind /cmk:go, "deliver the board", "work on TICKET-123", "build every ready ticket", ending with one message for whatever needs the operator.
+version: 1.0.0
 ---
 
-# Delivery Pipeline
+# Delivery pipeline
 
-Deliver tracker-tracked work end to end with no human in the loop. When the
-user returns, the outcome is a reviewable PR (or PRs), an up-to-date tracker
-graph, and a written track record of every material fact, decision, state
-change, handoff, and follow-up — not a list of questions.
+Take the board's eligible tickets to pull requests while the operator is away. Each one
+goes through the same chain a single ticket gets, in dependency order, and the run ends
+with one message.
 
-CMK owns the lifecycle. Superpowers executes inside it. The division:
-
-| CMK owns | superpowers owns |
-|---|---|
-| The tracker as the delivery ledger | how a task is implemented and debugged |
-| Phase order and gates | the per-task implement → review → fix loop |
-| Repo quality bar, production readiness | spec pressure-testing and plan authoring |
-| Review lenses, evidence bar, disposition, depth disclosure | completion verification |
-| Autonomy — no human gates | parallel-dispatch hygiene |
-| Cluster dependency graph, readiness frontier, task independence | |
-
-Before acting, read:
-
-1. `cmk:delivery-workflow`'s `references/scope-band.md` — tracking contract,
-   **scope band**, **docs-ready**, and the implement docs gate.
-2. `references/engineering-principles.md` — autonomy, production readiness,
-   and the delegation contract.
-3. Your runtime's binding for mechanics only (`cmk:delivery-workflow`'s
-   `references/vendor-bindings.md`). Bindings supply mechanics; they never
-   change phase order, gates, evidence, or acceptance.
-
-## Working with superpowers
-
-Superpowers skills assume a human-supervised session. Adapt them everywhere:
-
-1. **Human gates are suppressed.** Consent, approval, "which approach?", or
-   typed confirmation do not apply — decide and record on the durable
-   surface the phase already requires (spec, review record, PR, or tracker
-   issue). A question that cannot be decided safely is a recorded blocker
-   (`references/engineering-principles.md` § Autonomy). Four calls keep a
-   named CMK owner: plan conflict → `cmk:delivery-review`; colliding review
-   feedback → that skill; branch integration → phase 5 opens a PR against a
-   canonical branch; starting on default → intake already placed the run.
-2. **A skill returns at its boundary** — it does not advance the phase or
-   delete a workspace. `superpowers:writing-plans` ends when the plan is
-   written; `superpowers:subagent-driven-development` ends at the last
-   task's ledger line without deleting its workspace (phases 4–5 read it)
-   or chaining into `superpowers:finishing-a-development-branch`;
-   `superpowers:using-git-worktrees` reports the existing worktree.
-
-Intake creates the issue worktree/branch; nobody removes it. A skill may
-create scratch workspace; phase 5 retires it once evidence is durable.
-Specs/plans stay git-ignored; durable conclusions reach `docs/design/`,
-`docs/decisions/`, the tracker, and the PR.
-
-## Phase 0: run notes
-
-Once per run, write to git-ignored scratch (e.g.
-`docs/plans/<issue>-run-notes.md`): the active runtime, the worktree path
-per issue, the path of phase 3's execution workspace, any review depth the
-operator explicitly chose, and the phase-3b simplify outcome once known.
-Every later phase and handoff receiver reads this instead of rediscovering
-it — keep it to those fields only.
-
-## The phases
-
-| Phase | Skill / engine | CMK adds |
-|---|---|---|
-| 1. Intake | `cmk:delivery-intake` | all of it — the tracker has no superpowers equivalent |
-| 2. Spec & plan | `cmk:delivery-spec-plan`, via `superpowers:brainstorming` + `superpowers:writing-plans` | design-doc inputs; `Depends on:`, `File scope:`, `Exclusive resources:`, and binding obligations inside each task body |
-| 3. Implement | `superpowers:subagent-driven-development` (below) | wave dispatch and its safety fixes |
-| 3b. Simplify | `cmk:delivery-simplify` | whole-branch quality cleanup after implement (Claude `/simplify` contract) |
-| 4. Review | `cmk:delivery-review` | lenses, evidence bar, adversarial verification, disposition, depth disclosure |
-| 5. Ship | `cmk:delivery-ship` | PR, tracker reconciliation, evidence |
-| (any boundary) | `cmk:delivery-handoff` | relay prompt for another agent |
-
-Each phase skill is independently invokable when the user asks for just
-that slice, through the runtime's own skill mechanism or by reading the
-file directly. Phases are checkpoints, not ceremonies: a one-line config
-fix does not need a design spec, but it still needs intake, task proof,
-review, and ship. Scale phase depth to the change; never skip one outright.
-
-**Before phase 3:** docs-ready for the stated scope band must hold — one home
-is `cmk:delivery-workflow`'s scope-band reference (intake states the band). If
-unmet, REQUIRED SUB-SKILL: use `cmk:requirements` during or right after intake /
-phase 2; do not enter phase 3 while docs-ready is false.
-
-Executing phase 3? Read `references/phase-3-execution.md`. Phase 3b?
-Read `references/phase-3b-simplify.md`.
-
-## Single-issue mode
-
-One issue (or one issue plus sub-issues jointly delivering one outcome):
-run phases 1–5 in order inside one worktree (including 3b after 3).
-
-## Cluster mode
-
-Delivering a named list of related issues, or a single seed issue whose
-surrounding cluster should be derived from tracker dependencies? Read
-`references/cluster-mode.md` before scheduling anything — it covers
-dependency closure, readiness gates, frontier scheduling, and
-worktree-per-issue.
-
-## Cross-agent handoff
-
-The operator may run phases on different AI agents to exploit each one's
-strengths. When asked to hand off — or told up front that a later phase
-belongs to another agent — stop at the phase boundary and follow
-`cmk:delivery-handoff`. Continuity is non-negotiable: every agent in the
-relay works in the same worktree and branch per issue, navigating into the
-worktrees intake created rather than creating, re-basing, or wiping any.
-That is why every phase writes its state to artifacts — the next agent
-reconstructs the work from files, never from a chat it wasn't part of.
-
-## Completion report
-
-End every run with a report the user can act on in one read:
+## The Iron Law
 
 ```
-## Delivered
-- TICKET-123 <title> — PR #N (base: <branch>), status: review state
-  - outcome summary, entry points, test evidence one-liner
-  - acceptance: <n of m criteria checked with evidence; the rest by disposition>
-## Decisions made autonomously
-- <decision> — rationale recorded at <surface>
-## Rescoped (if any)
-- TICKET-123 — criteria removed and why, now carried by TICKET-124 with its own AC
-## Deferred / follow-ups
-- TICKET-125 <new issue> — why deferred, priority, estimate, links
-## Blocked (if any)
-- TICKET-126 — blocker, recorded where, suggested unblock
+EVERY TICKET GETS ITS OWN BUILD, REVIEW AND LANDING. A BOARD OF THEM IS NOT A REASON TO SKIP ONE.
 ```
 
-A run that narrowed an issue says so in its own section rather than
-folding it into deferrals. When review ran below full depth, or phase 3b
-was skipped or single-pass, plain words say so — no reader recovers that
-unless it is written down. Every line must already exist on its durable
-surface; the report summarizes the track record, never its only copy.
+Four baseline runs on a four-ticket board, ten approved tasks, without this skill: all
+four wrote every task in the controller. Across the four there were 0 implementer or
+reviewer dispatches, 0 `cmk:delivery-review` and 0 `cmk:delivery-ship`, and one run loaded no skill
+at all. A haiku run explained: "I built the formatting work inline, test-first, rather
+than through the execute skills, since the tasks were small." Six PRs went up that
+nobody but their author had read. The operator reviews tonight on the strength of a
+review that never ran.
 
-Delegating or refreshing state anywhere in this pipeline? Read
-`references/engineering-principles.md` and `references/context-efficiency.md`.
-Using Linear as your tracker? Read `references/linear.md`.
+## 1. The frontier
+
+Read the tracker operations from `docs/agents/issue-tracker.md`. When the operator named
+tickets, the ready tickets in scope are those alone. A ticket is eligible
+when its status is the tracker's ready state and its feature's `requirements.md`,
+`design.md` and `tasks.md` all read `Status: Approved`. A **tier-1 fix** is eligible too.
+That is a `bug` whose `Requirements covered:` IDs are all defined in a `requirements.md`
+or in `docs/specs/fixes.md`, with one of them a `SHALL CONTINUE TO` guard: the mini-spec
+`/cmk:shape` writes once its root cause is confirmed. Its feature may read `Implemented`, and it
+has no `tasks.md` of its own. Three baseline runs moved an approved fix like this, #28
+(BERTH-4.1 and its guard 4.2), back to `shaping` for lacking `tasks.md`, which would send
+every fixed bug round the loop forever. Order the eligible ones by `Blocked by:`.
+
+A ready ticket with no spec is sized first: state its scope band on the ticket by
+`cmk:delivery-workflow`'s `references/scope-band.md`, then apply its § Unattended work.
+A `trivial` one is eligible. A `patch` one becomes a tier-1 fix: write its mini-spec with
+REQUIRED SUB-SKILL: use `cmk:requirements` (tier-1 mode — change requirement plus guard,
+appended to the owning spec), put the IDs on the ticket as `Requirements covered:`, and
+its PR body opens with **Decisions taken**. A `feature` one is not eligible. In the
+baseline, a half-day due-date change on an approved feature went to the person as "not
+buildable yet" for lacking `tasks.md`.
+
+Every other ready ticket leaves the ready column before any build starts. In one edit,
+swap its ready role for `shaping` (`docs/agents/triage-labels.md`). Then comment the pieces
+it lacks on it: which of `requirements.md`, `design.md` and `tasks.md` is missing or not
+`Approved`. In three baseline runs #24 had no spec, and all three left it
+`ready-for-agent`, saying "not eligible" only in the final message. The board kept offering
+it to the next run and to every person.
+*Done when: every ready ticket is eligible, in order, or moved to `shaping` with what it
+lacks.*
+
+WHEN the tickets in scope block one another, or the operator named one ticket whose
+cluster must be derived from its relations, read `references/cluster-mode.md` before
+ordering: execution-ready pins, the frontier, and diamond and fan-in joins.
+
+## 2. Each eligible ticket, in order
+
+1. **Branch** from `Default PR base:` in `docs/agents/project.md`. A ticket blocked by
+   one delivered in this run branches from that ticket's branch instead.
+2. REQUIRED SUB-SKILL: use `cmk:delivery-build`'s `references/continuous.md` on its `tasks.md`. For a tier-1 fix, first
+   claim the ticket the way `cmk:delivery-build`'s `references/tracker-sync.md` says and record it in
+   `.skills/<CODE>/tickets.md`. Then REQUIRED SUB-SKILL: use `cmk:tdd`, with one red
+   test for the fix requirement and one for its guard.
+3. REQUIRED SUB-SKILL: use `cmk:delivery-review` on the ticket's range.
+4. REQUIRED SUB-SKILL: use `cmk:delivery-ship` with action `pr`. A stacked ticket's PR is
+   based on its blocker's branch.
+
+*Done when: the ticket has a PR whose review and receipt came from those three skills.*
+
+## 3. A question only the operator can answer
+
+A sub-skill would stop to ask the operator, whether in a pre-flight review, a boundary
+decision or a review finding that needs a ruling. In this run the stop is a decision
+taken and shown:
+
+1. Build the option that leaves every documented contract as it is: a consumer named in
+   `docs/`, a test that pins a shape, a persisted format.
+2. Head that PR's body with **Needs a decision before merge**, giving the question, the
+   option built and the one-line change for the other.
+3. Carry on with the ticket and with the rest of the board.
+
+The PR is where the operator decides, so parking the ticket costs them the PR. Two of
+the four baseline runs parked refunds on the portal-enum question. One left Tasks 1–2
+unpushed in a worktree, and neither started the late-fee ticket that waited on it. The
+two that built the contract-keeping option and asked in the PR delivered three PRs each.
+
+A denied command is the same kind of stop. Do not retry it. Take the route that needs
+none of it — skip the status stamp, or keep the worktree you already have — and record
+the skipped step in that PR. One run had its refund worker's
+`git worktree remove … && git branch -d …` denied before any code was written. It
+stopped there with "I'm not doing either without your OK", and two tickets with
+approved plans ended the afternoon with no PR.
+
+## 4. The message
+
+One message, in this order:
+
+1. A table with one row per ready ticket: PR and base, or not eligible and what it lacks.
+2. Every **Needs a decision before merge** item, each with its PR and the option built.
+3. Every **Decisions taken** on a patch built without a mini-spec, each with its PR.
+4. Rescoped criteria (now carried by which ticket), deferred follow-ups (each a ticket), and
+   blockers (recorded where) — or `none`.
+
+*Done when: the message is sent and every ready ticket has a row.*
+
+Refreshing tracker state across a long run, or briefing a subagent? Read
+`references/context-efficiency.md`. Using Linear? Read `references/linear.md`.
