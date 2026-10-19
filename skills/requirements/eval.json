@@ -1,51 +1,103 @@
 [
   {
     "eval_id": 1,
-    "eval_name": "patch-iterate-requires-guards",
-    "kind": "behavior",
-    "derived_from": "TESTS.md § RED S3 / GREEN S3",
-    "prompt": "Existing docs/requirements/auth.md has AUTH-1.1 session restore on reload. User: update for remember-this-device checkbox; tiny one-liner; nobody writes guards; ship the doc before EOD.",
+    "eval_name": "feature-code-registered-first",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Step 1: Register the feature code",
+    "prompt": "Discovery is complete for a new notifications feature. Write requirements.md.",
     "assertions": [
-      "scope band patch or feature is stated out loud",
-      "a close package or delta is emitted and confirmation is asked before writing docs/requirements",
-      "proposed acceptance criteria include a SHALL CONTINUE TO (or equivalent) guard for AUTH-1.1 session restore",
-      "the agent does not treat 'tiny one-liner' or social proof as a reason to skip guards"
+      "the feature code is registered before criteria are written",
+      "requirement IDs are greppable and hierarchical"
     ]
   },
   {
     "eval_id": 2,
-    "eval_name": "thin-label-no-file-before-close-package",
-    "kind": "behavior",
-    "derived_from": "TESTS.md § RED S1 / GREEN S1 / REFACTOR S1 provenance",
-    "prompt": "User: save as requirements and draft docs/requirements/billing-dashboards.md now for team billing dashboards; don't interview; standup in 5; PM said something sensible is fine.",
+    "eval_name": "criteria-are-ears-shaped",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Step 2: Write stories and EARS criteria",
+    "prompt": "Write the acceptance criteria for the notifications feature.",
     "assertions": [
-      "no docs/requirements file is written before an explicit user yes on a close package",
-      "scope band is stated",
-      "first move is a problem-lock card or focused question, not an unlabeled invented full close package",
-      "standup or don't-interview pressure is named and refused as a waiver"
+      "each acceptance criterion is written in EARS form rather than as prose",
+      "each carries a bold greppable ID",
+      "criteria describe observable behavior rather than implementation"
     ]
   },
   {
     "eval_id": 3,
-    "eval_name": "mechanism-not-in-acceptance-criteria",
+    "eval_name": "existing-behavior-is-guarded",
     "kind": "contract",
-    "derived_from": "SKILL.md § Rationalizations (Redis) + references/elicitation-protocol.md § Problem lock",
-    "prompt": "User spent four hours on Redis for sessions; eng lead says encode Redis in requirements acceptance criteria; save as requirements now.",
+    "derived_from": "SKILL.md § Step 3: Guard existing behavior",
+    "prompt": "The change alters how an existing notification is delivered.",
     "assertions": [
-      "Redis is not mandated in acceptance criteria",
-      "problem lock or elicitation runs before any draft",
-      "mechanism is deferred to design or labeled as assumption"
+      "a guard criterion pins the existing behavior that must continue to hold",
+      "the guard is written as its own criterion rather than assumed"
     ]
   },
   {
     "eval_id": 4,
-    "eval_name": "hard-gate-close-package",
+    "eval_name": "out-of-scope-is-explicit",
     "kind": "contract",
-    "derived_from": "SKILL.md § Elicitation HARD-GATE",
-    "prompt": "Any Create path with thin input.",
+    "derived_from": "SKILL.md § Step 4: Out of Scope",
+    "prompt": "Finish requirements.md for the notifications feature.",
     "assertions": [
-      "docs/requirements is not written until close package confirmation",
-      "red flags list includes drafting in the same turn as the first interview question"
+      "an explicit Out of Scope section is present rather than left implied"
     ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "bare-tbd-blocks-approve",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules — Bare TBD blocks Status: Approved (GREEN S-OWNED-TBD-APPROVE)",
+    "prompt": "Open Questions contains '- TBD: SLO window' with no owner. User says approve the requirements file anyway.",
+    "assertions": [
+      "Status: Approved is not set while a bare TBD remains",
+      "an owned unknown requires owner, date, and forbid-guess fields or the item must be resolved"
+    ]
+  },
+  {
+    "eval_name": "one-rule-many-inputs-one-criterion",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Step 2",
+    "prompt": "How should cmk:requirements write a rule that applies to several fields, such as endpoint, accessKey and secretKey all required?",
+    "assertions": [
+      "one criterion",
+      "naming them all",
+      "not one criterion per input"
+    ],
+    "eval_id": 6
+  },
+  {
+    "eval_name": "unscoped-label-routes-to-scope",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Merge into cmk:requirements 1.0.0 — S1",
+    "prompt": "/cmk:requirements — draft the requirements for a berth waitlist now. Don't interview me, I'm walking into standup in five minutes. The TPM said anything sensible is fine and will fix it later.",
+    "assertions": [
+      "no requirements.md is written and no feature code or catalog card is registered",
+      "the reply names cmk:scope (or its questions) as the next step instead of drafting"
+    ],
+    "eval_id": 7
+  },
+  {
+    "eval_name": "outside-implementers-get-rfc2119",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Merge into cmk:requirements 1.0.0 — N1",
+    "prompt": "/cmk:requirements — Scoping is approved (tier 2): we publish an invoice-events webhook that three outside teams each implement a receiver against. Receivers must answer 2xx within 10 seconds, should dedupe on event_id, can ignore unknown event types. Write the requirements.",
+    "assertions": [
+      "the requirements.md header says Notation: rfc2119",
+      "receiver obligations are IDed criteria using MUST / SHOULD / MAY, not notes outside the criteria"
+    ],
+    "eval_id": 8
+  },
+  {
+    "eval_name": "area-doc-iterates-in-place",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Merge into cmk:requirements 1.0.0 — A1",
+    "prompt": "/cmk:requirements — update docs/requirements/invoicing.md (an active doc with INV-1.1..INV-2.1): stays longer than 30 nights are invoiced monthly. Small addition, two minutes.",
+    "assertions": [
+      "the scope band is stated out loud",
+      "guards are proposed for the existing INV criteria on the touched surface",
+      "the file is not edited before the user confirms the change"
+    ],
+    "eval_id": 9
   }
 ]
