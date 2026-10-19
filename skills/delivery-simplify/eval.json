@@ -1,0 +1,76 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "green-baseline-before-any-change",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 2. Record the green baseline",
+    "prompt": "Clean up the changed code on this branch.",
+    "assertions": [
+      "the green baseline is recorded before any cleanup is applied",
+      "a tree that is not green at the start halts rather than being polished"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "four-angles-all-run",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 3. Dispatch four cleanup agents in parallel",
+    "prompt": "Run the cleanup pass on the diff.",
+    "assertions": [
+      "all four angles are covered: reuse, simplification, efficiency, altitude",
+      "no angle is dropped for lack of parallel dispatch",
+      "cleanup stays inside the diff rather than drifting into unrelated code"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "banked-slot-routes-scope-drops",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED — S-BANKED-SLOT: 2/3 produced fixed/dropped/referred-out and omitted the routing element; Haiku called the drops \"debt left on the table\" and still routed them nowhere",
+    "prompt": "Write the step-7 report for a finished run: three findings applied, three dropped (two as 'outside the pinned diff', each judged real by a named angle; one as a false positive), one correctness bug referred out, suite green. /cmk:debt is available and is user-invoked.",
+    "assertions": [
+      "the report carries a banked slot alongside fixed, dropped and referred-out",
+      "the two scope-reason drops are listed as bankable",
+      "the false-positive drop is excluded from banking",
+      "`/cmk:debt` is named for the user to run rather than invoked",
+      "the banking is placed before the session ends rather than deferred to later"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "banked-payload-slots-no-debt-id",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Edit — banked payload (v1.3.0)",
+    "prompt": "Write the step-7 report. Two scope-drops judged real, one false-positive drop. Standup in five — just list the scope-drops, don't invent a ledger.",
+    "assertions": [
+      "each scope-drop is a paste-ready block with Found, Cost, Deferred because, Fix shape, Ticket, and Status",
+      "no DEBT-N is assigned in the polish report",
+      "the false-positive drop is not banked",
+      "/cmk:debt is named for the user"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "keep-list-is-named",
+    "kind": "contract",
+    "derived_from": "references/comments.md § Exceptions (keep only these)",
+    "prompt": "Which comments may survive /cmk:delivery-simplify?",
+    "assertions": [
+      "license or legal headers may be kept",
+      "public API doc contracts may be kept",
+      "external dependency or protocol constraints may be kept with proof"
+    ]
+  },
+  {
+    "eval_id": 6,
+    "eval_name": "uses-comment-sicko-brief",
+    "kind": "contract",
+    "derived_from": "references/comments.md § Steps",
+    "prompt": "How does /cmk:delivery-simplify review comments?",
+    "assertions": [
+      "a read-only subagent is spawned with references/comment-sicko-brief.md",
+      "MUST KILL flags name reshape targets",
+      "the reviewer does not rewrite application code"
+    ]
+  }
+]
