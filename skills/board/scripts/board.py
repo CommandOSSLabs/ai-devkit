@@ -198,11 +198,24 @@ print("### Ready")
 for i in by["ready-for-agent"]:
     st = spec.get(code_of(i) or "")
     ok = tier1(i) or (st and all(v == "Approved" for v in st.values()))
-    if not ok and not (st and st["requirements"] in ("Implemented", "Shipped")):
-        drift.append(f"#{i['number']} is ready, but its spec is " + ("missing" if not st else ", ".join(f"{k} {v}" for k, v in st.items())))
+    # A ready ticket with no spec is sized by /cmk:go (delivery-workflow's scope-band.md): a
+    # trivial or patch one is built, a feature one goes back to Shaping. Only a feature band
+    # stated on the ticket makes the missing spec a disagreement.
+    band = (re.findall(r"Scope band:\s*\**`?(trivial|patch|feature)", " ".join(
+        [i.get("body") or ""] + [c.get("body") or "" for c in i.get("comments") or []])) or [None])[-1]
+    if ok:
+        line = "eligible, tier-1 fix" if tier1(i) else "eligible"
+    elif not st and band in ("trivial", "patch"):
+        line = f"eligible, {band}" + (": /cmk:go writes its mini-spec first" if band == "patch" else "")
+    elif not st and not band:
+        line = "no spec, unsized: /cmk:go sizes it, builds a trivial or patch one, sends a feature one back to Shaping"
+    else:
+        line = "NOT eligible"
+        if not (st and st["requirements"] in ("Implemented", "Shipped")):
+            drift.append(f"#{i['number']} is ready, but its spec is " + ("missing (scope band feature)" if not st else ", ".join(f"{k} {v}" for k, v in st.items())))
     blk = [int(b) for b in re.findall(r"Blocked by:\s*((?:#\d+[ ,]*)+)", i.get("body") or "") for b in re.findall(r"\d+", b)]
     blk = [b for b in blk if b in open_nums]
-    print(f"- #{i['number']} {i['title']} — {('eligible, tier-1 fix' if tier1(i) else 'eligible') if ok else 'NOT eligible'}" + (f", blocked by {', '.join('#%d' % b for b in blk)}" if blk else ""))
+    print(f"- #{i['number']} {i['title']} — {line}" + (f", blocked by {', '.join('#%d' % b for b in blk)}" if blk else ""))
 if not by["ready-for-agent"]:
     print("none")
 

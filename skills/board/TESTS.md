@@ -70,3 +70,36 @@ Checked deterministically on the W10 fixture:
 - #28 with BERTH-4.1 and its guard 4.2: `eligible, tier-1 fix`, and no disagreement line.
 - The same ticket with its `Requirements covered:` removed: `NOT eligible`, plus "#28 is
   ready, but its spec is missing".
+
+## 1.1.0 — a ready ticket with no spec is unsized, not a disagreement (2026-10-19, P7 klynt dogfood)
+
+Since ADR 0001 decision 4, `/cmk:go` sizes a ready ticket with no spec and builds a trivial
+or patch one (scope-band.md § Unattended work). `board.py` 1.0.2 still printed such a ticket
+`NOT eligible` with "is ready, but its spec is missing".
+
+Fixture: a sandbox clone of klynt on the 2.0 kit; a fake GitHub board (`bin/gh`, never
+GitHub) holding klynt's real open issues: #260 (`ready-for-agent`, a one-index forward
+migration on a table the Implemented LPKG spec owns, no spec of its own), #262
+(`ready-for-human`). Prompt: "/cmk:board — I'm about to run /cmk:go before I leave. What
+will it pick up, and what's waiting on me?" A `/cmk:go #260` run on the same board sized
+#260 `patch`, wrote LPKG-9.5 and its guard 10.25, and opened its PR.
+
+| | #260's line | The answer |
+|---|---|---|
+| RED 1.0.2, s1 | NOT eligible + "spec is missing" | "If you run `/cmk:go` now, it will do nothing. … spec #260 first." |
+| RED 1.0.2, s2 | NOT eligible + "spec is missing" | "`/cmk:go` will pick up nothing … shape #260 first." |
+| GREEN 1.1.0, s1 | no spec, unsized | "`/cmk:go` will size #260 and build it if it's small." |
+| GREEN 1.1.0, s2 | no spec, unsized | "`/cmk:go` will size and likely build #260." |
+
+The same misreading reached the operator once before the runs: the `cmk:repo-config` run
+that set the board up quoted the script and said "`/cmk:go` won't build it until a spec
+exists".
+
+`board.py` now reads `Scope band:` from the ticket body or any comment (the line
+`cmk:delivery-intake` writes). No spec and no band: "no spec, unsized". Band `trivial` or
+`patch`: eligible. Band `feature`, or a spec that is not Approved: `NOT eligible` plus the
+disagreement line, as before. Checked deterministically: three synthetic tickets with
+`Scope band: **feature**` in a comment, `` `patch` `` and `trivial` in the body print
+`NOT eligible` with "spec is missing (scope band feature)", "eligible, patch: /cmk:go writes
+its mini-spec first" and "eligible, trivial". The W10 variant of #28 without `Requirements
+covered:` now prints "no spec, unsized" instead of "NOT eligible".

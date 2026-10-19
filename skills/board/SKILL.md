@@ -1,7 +1,7 @@
 ---
 name: cmk:board
 description: Shows the whole board by state, starting with everything waiting on you, and every place the board and the repo disagree. Run it with /cmk:board.
-version: 1.0.2
+version: 1.1.0
 disable-model-invocation: true
 ---
 

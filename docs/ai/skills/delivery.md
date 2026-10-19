@@ -17,7 +17,7 @@ Sweeps the tickets assigned to you into a classified, dependency-ordered list wi
 
 ## cmk:board
 
-user-invoked (`/cmk:board`) · core · v1.0.2
+user-invoked (`/cmk:board`) · core · v1.1.0
 
 Shows the whole board by state, starting with everything waiting on you, and every place the board and the repo disagree. Run it with /cmk:board.
 

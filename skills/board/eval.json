@@ -9,8 +9,20 @@
       "scripts/board.py runs before any line of the report",
       "the open PR's parked decision is quoted verbatim",
       "the untriaged ticket and the needs-info question both appear under Waiting on you",
-      "a ready ticket with no approved spec appears under Board and repo disagree",
+      "a ready ticket whose spec exists but is not Approved, or whose stated scope band is feature with no spec, appears under Board and repo disagree",
       "nothing is written to the tracker"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "unsized-ready-ticket-goes-to-go",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 1.1.0",
+    "prompt": "/cmk:board — I'm about to run /cmk:go before I leave. What will it pick up, and what's waiting on me?",
+    "assertions": [
+      "a ready ticket with no spec and no stated scope band is reported as unsized, which /cmk:go sizes and builds when trivial or patch",
+      "the report does not say /cmk:go will skip or do nothing with that ticket",
+      "the ticket draws no Board and repo disagree line"
     ]
   }
 ]
