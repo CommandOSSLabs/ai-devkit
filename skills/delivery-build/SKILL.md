@@ -13,7 +13,8 @@ call it directly on an approved plan.
 
 ## Pick the mode
 
-Read `Execution-mode:` in the header of `tasks.md`, then load exactly one mode file:
+A mode the person picked when the plan was approved wins. Otherwise read `Execution-mode:` in
+the header of `tasks.md`. Then load exactly one mode file — it writes the header:
 
 | Condition | Mode | Read |
 |---|---|---|

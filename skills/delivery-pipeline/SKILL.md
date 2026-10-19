@@ -63,7 +63,7 @@ ordering: execution-ready pins, the frontier, and diamond and fan-in joins.
 
 1. **Branch** from `Default PR base:` in `docs/agents/project.md`. A ticket blocked by
    one delivered in this run branches from that ticket's branch instead.
-2. REQUIRED SUB-SKILL: use `cmk:delivery-build`'s `references/continuous.md` on its `tasks.md`. For a tier-1 fix, first
+2. REQUIRED SUB-SKILL: use `cmk:delivery-build` on its `tasks.md` (continuous mode). For a tier-1 fix, first
    claim the ticket the way `cmk:delivery-build`'s `references/tracker-sync.md` says and record it in
    `.skills/<CODE>/tickets.md`. Then REQUIRED SUB-SKILL: use `cmk:tdd`, with one red
    test for the fix requirement and one for its guard.
