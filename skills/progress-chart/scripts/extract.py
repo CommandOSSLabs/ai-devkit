@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Derive one progress snapshot (JSON) from a repo's roadmap, catalog, specs and git.
 
 Read-only and deterministic: the same repo, revision and --today give the same

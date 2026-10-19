@@ -172,7 +172,7 @@ class TestSetupNotes(unittest.TestCase):
             kinds = {n["kind"] for n in notes}
             self.assertIn("skills_not_ignored", kinds)
             self.assertIn("specs_index_missing", kinds)
-            self.assertTrue(any("configure-repo" in str(n.get("detail", "")).lower() for n in notes))
+            self.assertTrue(any("repo-config" in str(n.get("detail", "")).lower() for n in notes))
 
     def test_clean_when_ignored_and_index_present(self):
         import tempfile

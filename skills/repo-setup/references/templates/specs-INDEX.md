@@ -5,7 +5,7 @@ Domain router for the capability catalog. Feature cards live under
 owning shard before writing `requirements.md`. Codes are 2–12 chars, A-Z0-9,
 start with a letter, unique forever (never reuse a retired code).
 
-Agents query via pack `load-subgraph/references/catalog-query.md`; they must not
+Agents query via `cmk:feature-graph`'s `references/catalog-query.md`; they must not
 paste the full catalog into context.
 
 **Roadmap item** on each shard card binds the feature CODE to a live `ROAD-N`

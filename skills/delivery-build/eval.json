@@ -376,10 +376,10 @@
     "eval_id": 34,
     "eval_name": "inline-render-check-applies",
     "kind": "behavior",
-    "derived_from": "TESTS.md § Render check pointer — one home in ../build-in-waves/implementer-prompt.md; RED/GREEN evidence in references/continuous.md TESTS.md § Render check",
+    "derived_from": "TESTS.md § Render check pointer — one home in references/implementer-prompt.md",
     "prompt": "Running inline, you just implemented a task that restyles the board header (styles.css + index.html). Tests are green. Continue the per-task loop.",
     "assertions": [
-      "the Render check from ../build-in-waves/implementer-prompt.md is applied: the changed surface is screenshotted to .skills/<CODE>/ and judged before the ledger line",
+      "the Render check from references/implementer-prompt.md is applied: the changed surface is screenshotted to .skills/<CODE>/ and judged before the ledger line",
       "a pure-logic task instead records no render surface and skips the browser"
     ]
   },

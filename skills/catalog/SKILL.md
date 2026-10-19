@@ -17,7 +17,7 @@ Model-invoked skills that see mapping gaps or a stale reverse checkpoint MUST
 
 **Load when needed:** `cmk:feature-graph`’s `catalog-query.md` (shared card grammar);
 `references/passes.md` + `references/envelope.md` (reverse); `references/export-fields.md`;
-`templates/` (stubs, gitignore). Do not paste `tombstones.jsonl` into chat.
+`references/templates/` (stubs, gitignore). Do not paste `tombstones.jsonl` into chat.
 
 ## Preflight
 
@@ -95,7 +95,8 @@ Refuse unless Catalog sync is `index-only`. Confirm or offer
 
 For each CODE, resolve Spec dir under `docs/specs/`:
 
-- Missing → propose Draft stubs from `templates/triad-stub/`
+- Missing → propose Draft stubs from `references/templates/triad-stub/requirements.md`,
+  `references/templates/triad-stub/design.md`, `references/templates/triad-stub/tasks.md`
 - Files without `<!-- map-features-materialize-stub: v1 -->` → **refuse clobber**
 - Stub-fingerprinted only → may refresh on confirm
 

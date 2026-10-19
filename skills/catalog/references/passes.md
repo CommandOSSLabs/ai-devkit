@@ -69,7 +69,7 @@ git diff --name-status -z -M <base>..<head>
 3. **Drop generated/vendor/lockfile paths** via `GENERATED_PATH_GLOBS`. Remaining
    paths are candidates.
 4. **Load catalog ownership.** From live `docs/specs/` (tracked or local overlay),
-   following **`skills/execution/load-subgraph/references/catalog-query.md`**
+   following **`cmk:feature-graph`'s `references/catalog-query.md`**
    (shared catalog only: Domain router + `catalog/*.md`) and cmk:feature-graph Pass R
    for the full CODE set on disk. Prefer the shared extractor
    `scripts/owns.py` when running mechanically:

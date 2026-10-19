@@ -63,7 +63,7 @@ class TestRender(unittest.TestCase):
         self.assertIn("b324ee232", happened)
         plan = page.split('id="plan"', 1)[1].split("</section>", 1)[0]
         self.assertIn("MILE-2", plan)
-        self.assertIn("/assess-milestone", plan)
+        self.assertIn("/cmk:milestone-review", plan)
 
     def test_a_feature_without_a_ledger_does_not_read_as_zero_done(self):
         from render import progress

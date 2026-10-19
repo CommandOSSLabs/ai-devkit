@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# host-status.sh — read a build-on-host run from this machine.
+# host-status.sh — read a cmk:delivery-remote run from this machine.
 #
 # One copy per repo, reused by every feature. Every per-run value comes from
 # .skills/<CODE>/host-run.json; nothing about a run is edited into this file.
@@ -20,7 +20,7 @@
 # CODE resolution: -c CODE, else $HOSTBUILD_CODE, else the only open run record.
 #
 # Read-only. It never returns work, pushes, merges, or reclaims — those are
-# build-on-host's return leg and reclaim phase, and they are not one keystroke.
+# cmk:delivery-remote's return leg and reclaim phase, and they are not one keystroke.
 #
 # Exit codes (state, wait): 0 finished clean · 1 died with no exit code
 #   · 2 no record / unusable record · 3 still running · N the run's own code.

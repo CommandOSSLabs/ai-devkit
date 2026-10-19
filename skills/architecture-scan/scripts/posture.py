@@ -4,7 +4,7 @@
 Run from inside the repo being scanned:
     python3 <skill-root>/scripts/posture.py [--days 180] [--repo PATH]
 
-Writes .skills/scan-architecture/posture.json and prints the strip. When a
+Writes .skills/architecture-scan/posture.json and prints the strip. When a
 previous posture exists, every number carries its delta.
 
 No thresholds, by design: file size confounds most code metrics (El Emam et al.,
@@ -127,7 +127,7 @@ def main():
         "most_changed": [{"path": p, "commits": c} for p, c in churn.most_common(8)],
     }
 
-    out = os.path.join(root, ".skills/scan-architecture/posture.json")
+    out = os.path.join(root, ".skills/architecture-scan/posture.json")
     prev = json.load(open(out)) if os.path.exists(out) else None
     os.makedirs(os.path.dirname(out), exist_ok=True)
     json.dump(now, open(out, "w"), indent=2)

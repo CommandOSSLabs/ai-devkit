@@ -1,4 +1,5 @@
-"""Deterministic map-features reverse runner (rfeat-1.0).
+#!/usr/bin/env python3
+"""Deterministic catalog reverse runner (rfeat-1.0).
 
 Pure classification + envelope builder. Optional git/CLI wrappers for
 mechanical runs. Never mints Feature CODEs or writes docs/specs/.
@@ -146,7 +147,7 @@ def _novel_singleton_boost(locs: list[str], owns_vocab: set[str]) -> int:
 
 
 def setup_readiness_notes(repo_root: Path, *, specs_dir: str = "docs/specs") -> list[dict[str, Any]]:
-    """Advisory setup gaps — do not block the envelope; name /configure-repo."""
+    """Advisory setup gaps — do not block the envelope; name /cmk:repo-config."""
     root = Path(repo_root)
     notes: list[dict[str, Any]] = []
     if not _gitignore_ignores_skills(root):
@@ -155,7 +156,7 @@ def setup_readiness_notes(repo_root: Path, *, specs_dir: str = "docs/specs") -> 
                 "kind": "skills_not_ignored",
                 "detail": (
                     ".skills/ is not gitignored — overlay write disabled "
-                    "(stateless). Run /configure-repo so reconcile can index OBS."
+                    "(stateless). Run /cmk:repo-config so reconcile can index OBS."
                 ),
             }
         )
@@ -166,8 +167,8 @@ def setup_readiness_notes(repo_root: Path, *, specs_dir: str = "docs/specs") -> 
                 "kind": "specs_index_missing",
                 "detail": (
                     f"{specs_dir}/INDEX.md missing — owns_coverage will be 0; "
-                    "brownfield-bootstrap only. Run /configure-repo (seed INDEX) "
-                    "then /map-features dispose to register Recognized cards."
+                    "brownfield-bootstrap only. Run /cmk:repo-config (seed INDEX) "
+                    "then /cmk:catalog dispose to register Recognized cards."
                 ),
             }
         )
@@ -395,7 +396,7 @@ def reconcile_repo(
                 "kind": "overlay_write_skipped",
                 "detail": (
                     "--write-overlay requested but blocked; fix .skills/ gitignore "
-                    "via /configure-repo, then re-run."
+                    "via /cmk:repo-config, then re-run."
                 ),
             }
         )
@@ -442,7 +443,7 @@ def render_envelope(env: dict[str, Any]) -> str:
 
 
 def main(argv: list[str] | None = None) -> int:
-    p = argparse.ArgumentParser(description="map-features reverse rfeat-1.0 runner")
+    p = argparse.ArgumentParser(description="catalog reverse rfeat-1.0 runner")
     p.add_argument("--repo", type=Path, default=Path.cwd())
     p.add_argument("--specs-dir", default="docs/specs")
     p.add_argument("--base", default="")

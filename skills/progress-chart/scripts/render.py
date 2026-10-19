@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Render a progress snapshot (from extract.py) into one self-contained HTML page.
 
 The page is a weekly briefing for a person: names before IDs, plain states, human
@@ -403,7 +404,7 @@ def plan_section(s: dict, ctx: dict) -> str:
     close = ""
     if closable:
         close = ('<h3>Milestones ready to close</h3><p class="sub">Every item in these milestones is done. '
-                 'Confirm each with /assess-milestone before marking it Closed.</p><ul class="items">'
+                 'Confirm each with /cmk:milestone-review before marking it Closed.</p><ul class="items">'
                  + "".join(f'<li><span><span class="name">{e(ms[m]["name"])}</span>{tag(m)}</span>'
                            f'<span class="sub clamp" title="{e(ms[m]["outcome"])}">{e(ms[m]["outcome"])}</span></li>' for m in closable) + "</ul>")
 
@@ -601,7 +602,7 @@ def health_section(s: dict, ctx: dict) -> str:
         gap = cov["live_items"] - cov["with_after"]
         msg = (f'<p><b>{cov["with_after"]} of {cov["live_items"]}</b> roadmap items say what they wait for (their <code>After:</code> line). ')
         msg += (f'The other {gap} are read as waiting on the item listed above them, so "ready to start" and the longest chain '
-                'show less parallel work than there really is. Add the missing lines through plan-milestones.</p>' if gap
+                'show less parallel work than there really is. Add the missing lines through /cmk:roadmap.</p>' if gap
                 else "So the order on this page is exactly what the roadmap says.</p>")
         lines.append(msg)
     finds = "".join(f'<li>{pill("alert", FINDING.get(x["rule"], x["rule"]))} {e(x["item"])}: {e(x["detail"])}</li>' for x in s["findings"])

@@ -27,14 +27,15 @@ generalizable path, dead-ends, or mid-task corrections. Skip trivial chats.
 2. **Three lenses in parallel** (read-only subagents; different models when
    possible): Judgment (what should have been non-negotiable), Tooling (what
    script/lint/check would have caught it), Divergent (what a skeptical peer
-   would refuse). Templates in `references/` beside this file.
+   would refuse). Templates: `references/judgment-reviewer.md`,
+   `references/tooling-reviewer.md`, `references/divergent-reviewer.md`.
 3. **Synthesize** into Accepted / Rejected / Backlog. Prefer encoding lessons
    as lint, test, metadata, or schema over more prose
    (`encode-lessons-in-structure`).
 4. **Present and wait.** Show the full list. Apply only what the user approves.
 5. **Apply via cmk:skill-authoring.** Trivial one-line fixes: parent edits.
    Substantive edits or new skills: name `/cmk:skill-authoring` and follow its
-   RED→GREEN cycle — reflect never skips the failing-test bar for skill text.
+   RED→GREEN cycle — retro never skips the failing-test bar for skill text.
 6. **Summarize** edits applied, new skills, backlog filed, drops with reasons.
 
 ## Rationalizations

@@ -1,1 +1,24 @@
-{}
+{
+  "catalog": 155,
+  "debug": 186,
+  "delivery-pr": 190,
+  "delivery-remote": 194,
+  "dogfood-plan": 207,
+  "dogfood-run": 215,
+  "goal": 165,
+  "incident": 152,
+  "milestone-review": 184,
+  "pathfind": 189,
+  "pivot": 195,
+  "problem": 194,
+  "prompt": 192,
+  "release": 157,
+  "repo-config": 198,
+  "roadmap": 190,
+  "roadmap-status": 171,
+  "scope": 166,
+  "traceability": 188,
+  "ux-brief": 160,
+  "verdict": 197,
+  "visualize": 185
+}

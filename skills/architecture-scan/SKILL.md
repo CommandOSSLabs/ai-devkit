@@ -23,7 +23,7 @@ The working directory decides which repo is measured — run it from the repo un
 
 It prints and records four things: rules `mechanised/total` with the prose-only IDs named, change locality (median files and modules per commit, and the share of commits spanning more than one module), cross-module co-change pairs, and the most-changed files. A rule no check defends is a wish, and this count says how many the repo is carrying.
 
-The record lands in `.skills/scan-architecture/posture.json` (local, never committed). When one already exists, every number comes back with its delta since the previous scan — that delta is the only evidence that the last scan's pick moved anything.
+The record lands in `.skills/architecture-scan/posture.json` (local, never committed). When one already exists, every number comes back with its delta since the previous scan — that delta is the only evidence that the last scan's pick moved anything.
 
 Then read `docs/requirements/glossary.md` (the domain names good seams) and `docs/decisions/` (decisions not to re-litigate), with the numbers already in hand. Co-change pairs and the most-changed files name the modules to open first: design defects that only history reveals never surface in a reading pass.
 
