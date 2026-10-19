@@ -2,76 +2,103 @@
 
 **Status:** active
 **Owner:** ai-devkit maintainers
-**Last updated:** 2026-08-09
+**Last updated:** 2026-10-19
 **Scope:** System-wide — the development lifecycle the `cmk:*` skills are shaped around
 
-This document defines the software development lifecycle (SDL) phases the
-devkit's skills serve, and which document each phase produces.
+The lifecycle is a **closed workflow**: every ticket is in exactly one state, each move
+between states belongs to one command or the person, and the person owns three gates —
+**approve** a spec or plan, **answer** a question on a ticket, **merge** a PR. Agents do the
+rest. The states and their movers are owned by `cmk:delivery-workflow`
+(`skills/delivery-workflow/references/closed-workflow.md`); this page maps the phases onto
+them and names what each phase writes. Why the lifecycle has this shape:
+[`../decisions/0001-jdk-engine-cmk-shape.md`](../decisions/0001-jdk-engine-cmk-shape.md).
 
-## Phase 1: Requirements
+## Contents
 
-**Goal:** capture the product/business "what and why" before technical design.
+- [The five commands](#the-five-commands)
+- [Phase 1: Shape](#phase-1-shape)
+- [Phase 2: Build](#phase-2-build)
+- [Phase 3: Review and ship](#phase-3-review-and-ship)
+- [Phase 4: Release](#phase-4-release)
+- [How much each change needs](#how-much-each-change-needs)
+- [Any phase](#any-phase)
+- [Links](#links)
 
-- Primary output: `docs/requirements/<topic>.md`
-- Scope: problem, timing, success criteria, user needs, scope boundaries
-- No technical architecture detail — that belongs to Phase 2
+## The five commands
 
-## Phase 2: Design
+| Command | Moves | Output |
+|---|---|---|
+| `/cmk:idea` | Inbox → Shaping | The ticket, its tier and its open questions |
+| `/cmk:shape #N` | Shaping → Ready (on the person's approval) | The spec triad, or the confirmed cause and mini-spec for a bug |
+| `/cmk:go [#N…]` | Ready → Building → In review | One PR per ticket, one message at the end |
+| `/cmk:board` | none | What waits on the person, what agents are doing, where board and repo disagree |
+| `/cmk:release` | Done → Shipped | The version, the tag, the decision record |
 
-**Goal:** produce the technical "how" that becomes the source of truth for
-implementation.
+Every skill below still works on its own; the five are the short path.
 
-- Primary output: `docs/design/<topic>.md` — system-wide (`system.md`) or
-  feature-level
-- Upstream input: the requirements doc it satisfies
-- Constraints: recorded decisions in `docs/decisions/`; a design that
-  contradicts one means the decision is revisited, not silently overridden
+## Phase 1: Shape
 
-## Phase 3: Planning
+**Goal:** settle what the change is before anyone builds it.
 
-**Goal:** translate the design into an execution plan.
+- `cmk:scope` sizes it (tier 0, 1 or 2 = scope band trivial, patch, feature) and frames it;
+  `cmk:interview` closes the open decisions one card at a time.
+- `cmk:requirements` writes `docs/specs/<date>-<feature>/requirements.md` — stories, EARS (or
+  RFC 2119) criteria with stable IDs, guards for existing behavior. A product area's living
+  requirements stay in `docs/requirements/<topic>.md`.
+- `cmk:design` writes the triad's `design.md` (or `docs/design/system.md` and track docs);
+  `cmk:adr` records a decision that is hard to reverse, surprising, and a real trade-off.
+- `cmk:delivery-spec-plan` writes `tasks.md`; the person's approval of it makes the ticket Ready.
+- The feature registry is `docs/specs/INDEX.md` and its catalog shards (`cmk:catalog`).
 
-- Primary output: implementation plan with milestones, sequencing, and
-  dependencies
-- The plan maps directly back to the approved design doc
+## Phase 2: Build
 
-## Phase 4: Implementation
+**Goal:** turn an approved plan into commits that are each proven.
 
-**Goal:** implement code according to the design and plan.
+- `cmk:delivery-pipeline` (behind `/cmk:go`) sizes any ready ticket with no spec, claims each
+  eligible one, and runs `cmk:delivery-build` per ticket: continuous waves of subagents,
+  human-gated story units, or inline.
+- Every task is test-first (`cmk:tdd`) and reviewed on two axes before its ledger line;
+  `cmk:debug` owns unexpected failures; `cmk:evidence` owns every "it works".
+- `cmk:delivery-simplify` cleans the joined branch without changing behavior.
 
-- Primary output: code changes and supporting documentation updates
-- Keep implementation aligned with the latest design decisions
+## Phase 3: Review and ship
 
-## Phase 5: Testing
+**Goal:** a PR a person can merge on the strength of what it shows.
 
-**Goal:** verify behavior meets requirements and success criteria.
+- `cmk:delivery-review` reviews the range on two separate axes — the repo's standards and the
+  spec, ID by ID — plus invariants, UI and blast radius where they apply.
+- `cmk:delivery-ship` ticks the ticket's criteria with their proof, opens the PR ready (never a
+  draft), and moves the ticket to In review. `cmk:delivery-pr` watches CI.
+- The person merges; `Closes #N` closes the ticket.
 
-- Primary output: test evidence (automated tests, manual verification notes
-  where needed)
-- Validate both expected flows and critical failure paths
+## Phase 4: Release
 
-## Phase 6: Code Review
+**Goal:** a named version whose tickets read Shipped.
 
-**Goal:** ensure quality, maintainability, and compliance with engineering
-standards.
+- `/cmk:release` runs the gates, writes the version and tag, records the verdict
+  (`cmk:verdict`), and marks the cut's tickets shipped.
 
-- Primary output: reviewed and approved change set
-- Review focus: simplification opportunities, security practices, formatting,
-  naming conventions, and overall code quality
+## How much each change needs
 
-## Skills per Phase
+| Scope band | Before it is built | Unattended (`/cmk:go`) |
+|---|---|---|
+| `trivial` | Nothing beyond the ticket | Built |
+| `patch` | A mini-spec: the change requirement plus its guard | The pipeline writes the mini-spec, builds, and heads the PR with **Decisions taken** |
+| `feature` | The approved triad | Never built without it — back to Shaping |
 
-- Phase 1: `cmk:requirements` — `skills/requirements/SKILL.md`
-- Phase 2: `cmk:design` — `skills/design/SKILL.md`; `cmk:adr` —
-  `skills/adr/SKILL.md` for decisions that constrain it
-- Any phase: `cmk:learn` writes non-obvious findings into `docs/knowledge/`;
-  `cmk:rule` promotes them into `docs/rules/`; `cmk:glossary` keeps the
-  shared vocabulary normative — it fires whenever a term is coined,
-  contested, or drifting, in any phase, not on request alone
+The table's home is `skills/delivery-workflow/references/scope-band.md`.
+
+## Any phase
+
+- `cmk:glossary` keeps the vocabulary normative — it fires whenever a term is coined,
+  contested, or drifting.
+- `cmk:learn` writes non-obvious findings into `docs/knowledge/`; `cmk:rule` promotes them into
+  `docs/rules/`.
+- `cmk:explain` and `cmk:research` answer how something works and why it is this way.
+- `cmk:delivery-handoff` passes the work to another agent at any boundary.
 
 ## Links
 
-- Requirements: [`../requirements/`](../requirements/) — Phase 1 output
-- Decisions: [`../decisions/`](../decisions/) — constraints this lifecycle honors
+- Decision: [`../decisions/0001-jdk-engine-cmk-shape.md`](../decisions/0001-jdk-engine-cmk-shape.md)
+- Workflow guide: [`../guides/workflow.md`](../guides/workflow.md)
 - Engineering rules: [`../rules/README.md`](../rules/README.md)
-- Common baseline rules: [`../rules/common/README.md`](../rules/common/README.md)

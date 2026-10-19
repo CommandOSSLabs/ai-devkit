@@ -1,7 +1,7 @@
 # Rules
 
 ## What
-The engineering-rules tree under `docs/rules/`. Domain-partitioned — `common/` for language-agnostic standards, `{language}/` and `{framework}/` for stack-specific rules. The [`cmk:rule`](../skills/rule.md) skill writes into this tree; this repo ships a populated `common/` baseline.
+The engineering-rules tree under `docs/rules/`. Domain-partitioned — `common/` for language-agnostic standards, `{language}/` and `{framework}/` for stack-specific rules. The [`cmk:rule`](../skills/docs.md#cmkrule) skill writes into this tree; this repo ships a populated `common/` baseline.
 
 ## Where
 - Rules root README and structure: `docs/rules/README.md`.

@@ -18,9 +18,10 @@ Never mix two paths in one repo — the agent would see two competing copies of 
 
 Prerequisite: the agent needs the upstream skills to copy from. Clone this repository somewhere readable, or install one of the read-only paths below first and vendor from that copy.
 
-1. Follow `cmk:agent-vendors` (in `skills/agent-vendors/SKILL.md` if the skill isn't yet invocable) to establish the canonical `.agents/skills/cmk-<name>/` home and generate the adapters each vendor in use needs.
+1. Follow `cmk:agent-vendors` (in `skills/agent-vendors/SKILL.md` if the skill isn't yet invocable) to establish the canonical `.agents/skills/cmk-<name>/` home and generate the adapters each vendor in use needs. It vendors the **core** skills plus the **packs** the user names — roadmap, acceptance, ui, ops, quality, project, maintainers, extras (`skills/agent-vendors/references/packs.md`) — and records them under `[packs] installed` in `.agents/skills.lock`.
 2. Follow `cmk:sync` in baseline mode (`skills/sync/SKILL.md`) to record the upstream ref, SHA, and pristine content hash per skill in `.agents/skills.lock`.
 3. If a trial install served as the copy source, remove it afterward — see [Switching paths](#switching-paths).
+4. Run `cmk:repo-setup` ("Set up this repo"): it writes `docs/agents/` through `cmk:repo-config` — tracker, the closed workflow's state labels, verify commands — which the delivery skills read.
 
 Per-vendor adapters, by discovery tier:
 
@@ -29,6 +30,8 @@ Per-vendor adapters, by discovery tier:
 - **Codex** — direct-discovery: reads `.agents/skills/` directly, no adapter needed.
 - **OpenCode** — direct-discovery: points its skill-paths config at `.agents/skills/` directly.
 - **Cursor** — rule-mirror: a narrower `.cursor/rules/cmk-<name>.mdc` covering only the skills that function as standing rules.
+
+Upgrading from 1.x to 2.0 changes most skills; read [MIGRATIONS.md](./MIGRATIONS.md) first.
 
 Upgrading: run `cmk:sync` in sync mode ("Sync our vendored skills with upstream"). It reconciles base (pristine at the locked SHA), theirs (current upstream), and ours (your evolved copy) at the meaning level — your adaptations survive, and genuine conflicts are presented for a human decision, never auto-resolved.
 
@@ -45,11 +48,11 @@ npx skills add CommandOSSLabs/ai-devkit -g     # user scope — read the caveat 
 
 The two scopes have different consequences. **Repo scope** (the default) writes into the current repository, so each repo carries its own copy and nothing leaks between projects. **User scope** (`-g`) writes one shared copy under your home directory (e.g. `~/.claude/skills/`) that every repo on the machine sees: any edit leaks into all of them, two repos that need the skill to behave differently conflict, and there is no per-repo baseline to reconcile against. Prefer repo scope.
 
-Either way, treat skills.sh copies as read-only: `npx skills update` overwrites local edits with upstream — there is no merge. The moment you want to adapt a skill to your repo, graduate to the vendored path.
+skills.sh installs every skill, packs included. Either way, treat skills.sh copies as read-only: `npx skills update` overwrites local edits with upstream — there is no merge. The moment you want to adapt a skill to your repo, graduate to the vendored path.
 
 ## Plugin trial (zero setup, read-only)
 
-Try the kit before vendoring anything into your repo. Plugin skills are immutable — you can't adapt them per-repo, and upgrades replace the whole kit at once. Claude Code only; other agents install via skills.sh or the vendored path.
+Try the kit before vendoring anything into your repo. Plugin skills are immutable — you can't adapt them per-repo, upgrades replace the whole kit at once, and every pack comes with it. Claude Code only; other agents install via skills.sh or the vendored path.
 
 ```bash
 claude plugin add CommandOSSLabs/ai-devkit

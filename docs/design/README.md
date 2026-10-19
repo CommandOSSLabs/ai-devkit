@@ -15,6 +15,13 @@ shaped that way.
 - Distilled, not raw: a design doc is the curated source of truth, not a
   transcript of the exploration behind it.
 
+## Index
+
+| Doc | Covers |
+|---|---|
+| [`sdl-phases.md`](./sdl-phases.md) | The lifecycle the skills serve: the closed workflow, its phases, and what each writes |
+| [`skills-explorer.md`](./skills-explorer.md) | The skills explorer web app |
+
 ## When to read
 
 Before implementing or changing a subsystem — and read

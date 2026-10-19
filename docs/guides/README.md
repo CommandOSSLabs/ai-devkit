@@ -17,6 +17,7 @@ thing in this repository.
 
 | Guide | When |
 |---|---|
+| [`workflow.md`](./workflow.md) | How a ticket moves from idea to shipped: the five commands and the board |
 | [`on-ramps.md`](./on-ramps.md) | Unsure which `cmk:*` skill starts the situation |
 | [`companion-skills.md`](./companion-skills.md) | Choosing a third-party skill, or the optional Plannotator step |
 

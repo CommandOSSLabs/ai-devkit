@@ -1,31 +1,37 @@
 # On-ramps
 
-**One home** for which `cmk:*` skill starts a situation. Root agent instructions
-point here; they do not restate this table.
+**One home** for which `cmk:*` skill starts a situation. Root agent instructions point
+here; they do not restate this table.
 
 | Situation | Start here |
 |---|---|
-| Brand-new / adopt / verify repo facets | `cmk:repo-setup` |
-| Docs tree missing or drifted | `cmk:docs` |
-| Save / draft product requirements; close package; AC + guards | `cmk:requirements` |
-| How to build it (mechanism, architecture) | `cmk:design` |
+| An idea to put on the board | `/cmk:idea` |
+| Turn a ticket into an approved spec, or a bug into a confirmed cause | `/cmk:shape #N` |
+| Build ready tickets to pull requests | `/cmk:go` (or `/cmk:go #N`) |
+| What waits on me, what agents are doing | `/cmk:board` |
+| Cut a release | `/cmk:release` |
+| Size a change, decide what it needs before building | `cmk:scope` |
+| Requirements and acceptance criteria | `cmk:requirements` |
+| How to build it (feature, system, track) | `cmk:design` |
+| Plan an approved design into tasks | `cmk:delivery-spec-plan` |
+| Something is broken and the cause is unknown | `cmk:debug` |
+| Write the test first | `cmk:tdd` |
+| Prove a claim before calling it done | `cmk:evidence` |
+| Review a diff or PR | `cmk:delivery-review` |
+| Open the PR, merge, keep or discard a branch | `cmk:delivery-ship` |
+| Understand how something works | `cmk:explain` |
+| Why the code is this way, or an external fact with citations | `cmk:research` |
 | Record a hard-to-reverse decision | `cmk:adr` |
-| Lock a term / vocabulary drift | `cmk:glossary` |
-| Capture a gotcha | `cmk:learn` → promote with `cmk:rule` when it must be enforced |
-| AI navigation map under `docs/ai/` | `cmk:codebase-docs` |
-| Uncertain body of work → issue set | `cmk:discover-efforts` |
-| Start / pick up a tracker issue | `cmk:delivery-intake` (or `cmk:delivery-pipeline` end-to-end) |
-| Spec + plan for a ticket | `cmk:delivery-spec-plan` |
-| Review diff / PR | `cmk:delivery-review` |
-| Open PR / close ticket with evidence | `cmk:delivery-ship` |
-| Handoff to another agent | `cmk:delivery-handoff` |
-| Vendor skills / sync upstream | `cmk:agent-vendors` / `cmk:sync` |
-| CI / local stack / MCP / toolchain alone | matching setup facet (`cmk:cicd`, `cmk:local-stack`, …) |
+| Lock a term, vocabulary drift | `cmk:glossary` |
+| Turn a conversation or spec into tickets | `cmk:discover-efforts` |
+| Hand off to another agent | `cmk:delivery-handoff` |
+| New, adopted or drifted repo setup | `cmk:repo-setup` |
+| Vendor skills, sync upstream | `cmk:agent-vendors` / `cmk:sync` |
 
 Rules of thumb:
 
-> Never draft `docs/requirements/` from a bare label — close package first (`cmk:requirements`).
+> A feature needs its approved spec before it is built; a patch needs its mini-spec
+> (`cmk:delivery-workflow`).
 
-> State **scope band** before implement; meet **docs-ready** (`cmk:delivery-workflow`).
-
-> When two skills both seem to apply, the delivery / process skill wins; it will call the docs skill.
+> When two skills both seem to apply, the delivery or process skill wins; it calls the
+> docs skill.
