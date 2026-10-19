@@ -678,3 +678,12 @@ with no `tasks.md` passes. Decision-boundary rows are keyed `delivery-ship:<acti
 GREEN (1.0.0, skill-tester-haiku, same clean branch): all three criteria ticked `[x]` on #28
 with a comment naming the proof per criterion (the new test, the driven API for old and new
 invoices, the five response fields), then `Closes #28`.
+
+
+## Description routing after the cmk rename (2026-10-19)
+
+`skill-fixtures/bin/trigger.py`, all 93 skills, sonnet ×5, baseline the jdk set.
+
+| Prompt | jdk `land-branch` | converted description | shipped |
+|---|---|---|---|
+| "The branch is reviewed and green. Open the pull request against dev." | 3/5 | **0/5** | 5/5 |

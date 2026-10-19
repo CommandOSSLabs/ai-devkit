@@ -168,3 +168,15 @@ four angles were the same text on both sides (`references/angles.md` removed).
 |---|---|---|
 | "Minh pushed branch 28-due-date … asked me to look it over before he opens the PR. Give it a simplify pass" — branch with a hand-rolled day loop by Minh | jdk-only | **RED** — rewrote `dueDateFor` in Minh's checkout, left it uncommitted |
 | same | 1.0.0 (§ 1b Whose branch it is) | **GREEN** — newest commit by Minh → read-only; four findings for him, nothing applied, checkout clean |
+
+
+## Description routing after the cmk rename (2026-10-19)
+
+`skill-fixtures/bin/trigger.py`, all 93 skills, sonnet ×5, baseline the jdk set.
+
+| Prompt | jdk `polish-diff` | converted description | shipped |
+|---|---|---|---|
+| "My branch works but there's duplicated date math and a pointless loop — clean it up without changing behavior." | 5/5 | **0/5** (1/5 with keywords appended) | 5/5 |
+
+Same description text under the new name lost the route; the shipped one opens on the verbs a
+user types (clean up, simplify, refactor, tidy, polish).

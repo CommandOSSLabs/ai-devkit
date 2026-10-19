@@ -1,6 +1,6 @@
 ---
 name: cmk:delivery-ship
-description: Use when a finished feature branch needs integration or disposition — produces a local merge, pull request, kept branch, discard, or block with reviewer-readable commits and pull-request text. Not for reviewing an existing PR (cmk:delivery-review) or cutting a version (cmk:release).
+description: Use when a finished branch needs to land — open the pull request, merge it locally, keep it, discard it, or block it — producing reviewer-readable commits and pull-request text, with the ticket moved to in-review. Not for reviewing an existing PR (cmk:delivery-review) or cutting a version (cmk:release).
 version: 1.0.0
 ---
 

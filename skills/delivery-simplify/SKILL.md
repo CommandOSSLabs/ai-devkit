@@ -1,6 +1,6 @@
 ---
 name: cmk:delivery-simplify
-description: Use when changed code needs a quality cleanup actually applied rather than reported — code that reimplements a helper the repo already has, needless complexity, dead code, wasted work or repeated I/O, tech debt, a bandaid fix at the wrong depth. The behavior-preserving refactor over a diff, branch, or PR before merge, and the execute-family close step when a polish predicate holds. For correctness bugs, a crash, or a merge verdict use cmk:delivery-review or root-cause instead.
+description: Use when the user asks to clean up, simplify, refactor, tidy, or polish working code — duplicated logic, a pointless loop, dead code, needless complexity, a helper reimplemented — producing the cleanup applied to the diff with behavior unchanged and the suite still green. Not for bugs or a merge verdict (cmk:delivery-review, cmk:debug).
 version: 1.0.0
 ---
 
