@@ -107,6 +107,8 @@ crossing. Never emit a record for `keep`.
 ### PR
 
 Load `references/prepare.md` **Author PR text** (REQUIRED SUB-SKILL: use `cmk:prose`).
+WHEN Plannotator is already installed, offer `/plannotator-review` on the diff first and fold
+accepted notes in; absent, skip it — never install it or pipe its installer.
 Push the branch — `--force-with-lease` when sequencing rewrote a published one —
 then create or update the PR for the memoized base. Submit title/body bytes from
 process-temp files, never interpolated as shell input; keep the worktree.
