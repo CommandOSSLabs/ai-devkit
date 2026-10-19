@@ -147,17 +147,17 @@ check_orphan_references() {
 # caught; the one known non-citation (a hypothetical skill name in an eval
 # fixture prompt) is exempted by exact "<file>:<name>" pair in
 # CITATION_ALLOWLIST, not by excluding eval.json from the scan.
+# One grep over every file: a process substitution per file crashes macOS's
+# bash 3.2 once the tree holds a few hundred files.
 check_citations_resolve() {
   local f name
-  for f in skills/*/SKILL.md $(find skills/*/references -name '*.md' 2>/dev/null) skills/*/eval.json; do
-    [ -e "$f" ] || continue
-    while IFS= read -r name; do
-      [ -z "$name" ] && continue
-      if [ ! -d "skills/$name" ] && ! in_allowlist "$f:$name" "${CITATION_ALLOWLIST[@]}"; then
-        fail "$f: cmk:$name does not resolve to skills/$name/"
-      fi
-    done < <(grep -oE 'cmk:[a-z][a-z0-9-]*' "$f" | sed 's/^cmk://' | sort -u)
-  done
+  while IFS=: read -r f _ name; do
+    [ -z "$name" ] && continue
+    if [ ! -d "skills/$name" ] && ! in_allowlist "$f:$name" "${CITATION_ALLOWLIST[@]}"; then
+      fail "$f: cmk:$name does not resolve to skills/$name/"
+    fi
+  done < <( { ls skills/*/SKILL.md skills/*/eval.json 2>/dev/null; find skills/*/references -name '*.md' 2>/dev/null; } \
+    | xargs grep -oHE 'cmk:[a-z][a-z0-9-]*' /dev/null | sort -u)
 }
 
 # --- 4. Cross-package paths ---------------------------------------------------
