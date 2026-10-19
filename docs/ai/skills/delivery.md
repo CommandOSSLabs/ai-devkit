@@ -61,7 +61,7 @@ Use when the user asks to "start work on TICKET-123", "pick up this issue", "get
 
 ## cmk:delivery-pipeline
 
-model-invoked · core · v1.0.0
+model-invoked · core · v1.1.0
 
 Use when every ready ticket on the board, or a named set or cluster of tickets, must be built, reviewed and opened as pull requests in one unattended run — the delivery behind /cmk:go, "deliver the board", "work on TICKET-123", "build every ready ticket", ending with one message for whatever needs the operator.
 

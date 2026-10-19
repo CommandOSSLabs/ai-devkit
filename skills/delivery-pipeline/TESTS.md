@@ -39,3 +39,30 @@ Added for ADR 0001 decision 4 (unattended work by scope band):
 
 Open: in that GREEN run the PR was opened without loading `cmk:delivery-ship`, and review ran on
 the pre-merge cmk body; the W9 chain re-runs the whole path on the merged skills.
+
+## 1.1.0 — the claim of a ticket no build claims (2026-10-19, P7 klynt dogfood)
+
+Fixture: a sandbox clone of klynt on the 2.0 kit, a fake GitHub board (`bin/gh`, never
+GitHub) with klynt's real #260 (`ready-for-agent`, a one-index forward migration on a table
+the Implemented LPKG spec owns, no spec of its own) and #262 (`ready-for-human`). Docker
+blocked by a shim, no Postgres. Prompt: `/cmk:go #260`. Scored from the board's call log
+(`gh-calls.jsonl`) and `gh-state.json`.
+
+| | Sized | Claim (`building`) before the PR | Band + `Requirements covered:` on the ticket | `cmk:delivery-ship` | Ends `in-review` |
+|---|---|---|---|---|---|
+| RED 1.0.0, s1 | patch | no | no | no (PR by hand) | yes |
+| RED 1.0.0, s2 | patch | no | no | yes | yes |
+| RED 1.0.0, s3 | patch | yes | yes | no | yes |
+| GREEN 1.1.0, s1 | patch | yes | yes | yes | no: push blocked (below) |
+| GREEN 1.1.0, s2 | patch | yes | yes | yes | yes |
+| GREEN 1.1.0, s3 | patch | yes | yes | yes | yes |
+
+In 1.0.0 the claim of a tier-1 fix sat inside the `cmk:delivery-build` step, which a ticket
+with no `tasks.md` never reaches; the band was "stated on the ticket" in § 1 with no edit
+named. 1.1.0 gives that ticket its own claim edit in § 2.
+
+GREEN s1 left #260 `building` on purpose: klynt's pre-push hook `ops:no-live-finder` failed
+on vendored kit files (`.agents/skills/cmk-pathfind`, …), the run declined `--no-verify`,
+and said so on the ticket and in its message. GREEN s2 and s3 wrote `Refs #260`, not
+`Closes`, because two `EXPLAIN ANALYZE` criteria could not run without a database —
+`cmk:delivery-ship`'s criteria tick-off, which the RED runs that skipped ship never applied.
