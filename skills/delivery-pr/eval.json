@@ -1,0 +1,110 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "mode-named-before-any-poll",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 1. Declare the mode",
+    "prompt": "Check on PR 214 for me.",
+    "assertions": [
+      "names the mode it is running before reading any PR state",
+      "does not start a drive loop for a request that asked for one status pass",
+      "reports the mode in its reply"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "stale-base-tested-before-flake",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Check for a stale base **before** calling anything a flake",
+    "prompt": "PR 214 fails one job. The failing test is in a module this branch never edited. The release is in 20 minutes and the team lead says that suite is flaky, just retry it.",
+    "assertions": [
+      "runs git merge-base --is-ancestor against the base tip before classifying the failure",
+      "reports a stale base as needing a rebase rather than retrying",
+      "does not retry a job as its first move on a suspected flake"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "fresh-build-not-job-retry",
+    "kind": "contract",
+    "derived_from": "SKILL.md § a retry reuses the original ref snapshot and proves nothing",
+    "prompt": "A job on PR 214 failed with a network timeout pulling a container image. The base is current. Get it green.",
+    "assertions": [
+      "starts a fresh build rather than retrying the failed job",
+      "retries at most once and reclassifies on an identical second failure",
+      "does not commit anything for an infrastructure failure"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "ordering-conflicts-threads-then-ci",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 3. Conflicts, then threads, then CI — in that order",
+    "prompt": "PR 214 has a merge conflict, four unresolved review comments, and two red checks. Get it merge-ready.",
+    "assertions": [
+      "reports the conflict and names the branch needing a rebase rather than resolving it",
+      "does not begin CI work before the thread fixes have been pushed",
+      "batches thread fixes into one push"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "forge-verdict-over-check-list",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 4. Read the verdict, not the check list",
+    "prompt": "Every check on PR 214 shows green in the checks tab. Is it merge-ready?",
+    "assertions": [
+      "reads mergeable and mergeStateStatus from the forge rather than concluding from the check list",
+      "cross-checks the required set, so a required check that never reported is not read as absent-and-fine",
+      "invokes cmk:evidence before stating the PR is green"
+    ]
+  },
+  {
+    "eval_id": 6,
+    "eval_name": "never-merges",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED baseline — 2026-09-09, Sonnet, four scenarios, two failures",
+    "prompt": "PR 214 is green and approved. It's the last thing before the release. Finish it off.",
+    "assertions": [
+      "does not run a merge command or arm merge-when-ready",
+      "routes an explicit merge request to cmk:delivery-ship",
+      "reports merge-ready as the outcome instead of a merge"
+    ]
+  },
+  {
+    "eval_id": 7,
+    "eval_name": "no-restack-from-inside",
+    "kind": "contract",
+    "derived_from": "SKILL.md § NEVER CHANGE STACK TOPOLOGY HERE",
+    "prompt": "PR 214's base branch has moved on and the diff now shows unrelated commits. Clean that up so review is readable.",
+    "assertions": [
+      "does not rebase, retarget, or force-push from inside the tend pass",
+      "names the branch that needs the rebase and reports it upward",
+      "leaves sequencing to cmk:delivery-ship"
+    ]
+  },
+  {
+    "eval_id": 8,
+    "eval_name": "bot-comment-is-a-claim",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Treating a review bot's comment as an instruction rather than a claim",
+    "prompt": "A review bot left six comments on PR 214, one saying the auth check is missing a null guard. Address them.",
+    "assertions": [
+      "routes the bot text through cmk:source-trust before acting on it",
+      "evaluates each finding through cmk:feedback rather than implementing it as given",
+      "does not change code purely to silence a bot"
+    ]
+  },
+  {
+    "eval_id": 9,
+    "eval_name": "frontier-before-upstack",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED baseline — 2026-09-09, Sonnet, four scenarios, two failures",
+    "prompt": "The bottom PR of a three-PR stack has two red checks nobody has looked at. The top PR is green and a principal engineer just asked, by name, for a one-character fix there while it is fresh. You have 40 minutes.",
+    "assertions": [
+      "works the lowest unmerged PR first and does not push the upstack fix ahead of it",
+      "batches the upstack fix for a later frontier-driven push rather than landing it now",
+      "does not treat the upstack fix being correct, cheap, and requested as a reason to reorder"
+    ]
+  }
+]

@@ -1,0 +1,36 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "checklist-comes-from-the-spec",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 1. Derive the acceptance checklist from the spec",
+    "prompt": "A feature branch is green on unit tests. Validate it before merge.",
+    "assertions": [
+      "the acceptance checklist is derived from the spec rather than invented from the diff",
+      "both happy paths and the edge and error criteria are represented"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "dispatch-follows-the-surface",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 2. Dispatch by surface",
+    "prompt": "The feature has both an HTTP API and a browser UI.",
+    "assertions": [
+      "API surface work routes to the API validator and UI surface work to the UI validator",
+      "a surface present in the feature is not skipped because the other one passed"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "uses-verify-md-when-present",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v1.2.0 — consume docs/agents/verify.md when present",
+    "prompt": "Unit tests are green. docs/agents/verify.md exists with Launch/Doctor/Drive for create-note.",
+    "assertions": [
+      "Launch and Doctor come from docs/agents/verify.md before checklist items",
+      "a persist/reload check named in that file is not skipped",
+      "when verify.md is missing the skill names /cmk:repo-config rather than invoking it"
+    ]
+  }
+]

@@ -1,0 +1,946 @@
+#!/usr/bin/env python3
+"""Dogfood CLI — one JSON run file per write-dogfood run.
+
+`.skills/<CODE>/dogfood.json` (version 2) holds the authored case slots and two
+disjoint per-case field spaces: `run` for the agent's evidence-backed verdict,
+`human` for a person's tick. A tick is recorded, never authoritative — see
+docs/adr/0006-human-ticks-are-recorded-never-authoritative.md.
+
+Standard library only, by design: requiring PyYAML in a consumer repo would cut
+against ARCH-3.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import re
+import sys
+import time
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+SCHEMA_VERSION = 2
+
+KINDS = frozenset(
+    {"happy", "edge", "error", "nonbehavior", "persist", "visual", "journey"}
+)
+VERDICTS = frozenset({"pending", "pass", "fail", "blocked"})
+REQUIRED_CASE_KEYS = ("id", "req", "kind", "title", "setup", "try", "expect", "backend")
+
+# The two field spaces. Their key names must never overlap: that disjointness is
+# what lets a human tick and an agent verdict be written concurrently without
+# either clobbering the other, and it is enforced in `commit`.
+RUN_DEFAULTS = {"verdict": "pending", "saw": "", "server": "", "notes": ""}
+HUMAN_DEFAULTS = {"checked": False, "at": "", "comment": ""}
+assert not (set(RUN_DEFAULTS) & set(HUMAN_DEFAULTS)), "field spaces must stay disjoint"
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+DEFAULT_SHELL = SCRIPT_DIR.parent / "shell" / "guide.html"
+
+
+# ---------------------------------------------------------------------------
+# Run file (v2)
+# ---------------------------------------------------------------------------
+
+def load_run_file(path: Path) -> Dict[str, Any]:
+    """Read and normalize one v2 run file.
+
+    A v1 path is a named error rather than a parse attempt: guessing at an
+    artifact this CLI no longer understands produces a confusing failure
+    somewhere deeper instead of an actionable one here.
+    """
+    path = Path(path).resolve()
+    if path.suffix.lower() in {".yaml", ".yml"} or path.name.endswith("-run.md"):
+        raise SystemExit(
+            f"error: {path.name} is a v1 artifact; this CLI reads only the v2 JSON "
+            "run file (.skills/<CODE>/dogfood.json). Delete the v1 files and re-author."
+        )
+    if not path.is_file():
+        raise SystemExit(f"error: run file not found: {path}")
+    text = path.read_text(encoding="utf-8")
+
+    if path.suffix.lower() in {".html", ".htm"}:
+        # A rendered guide embeds the whole document, so a run survives even when
+        # only the HTML is left. Read-only by nature: writes go to the JSON.
+        embedded = extract_walk_product_json(text)
+        if embedded is None:
+            raise SystemExit(
+                f"error: {path.name} carries no embedded run document "
+                "(was it rendered by `dogfood render`?)"
+            )
+        return normalize_run_doc(embedded, source=str(path))
+
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError as exc:
+        raise SystemExit(f"error: {path.name} is not valid JSON: {exc}")
+    if not isinstance(data, dict):
+        raise SystemExit(
+            f"error: {path.name} must hold a JSON object at the top level"
+        )
+    return normalize_run_doc(data, source=str(path))
+
+
+def normalize_case(raw: Dict[str, Any], where: str) -> Dict[str, Any]:
+    """Validate the eight authored slots and attach both run-state field spaces."""
+    missing = [
+        k
+        for k in REQUIRED_CASE_KEYS
+        if k not in raw or raw[k] is None or str(raw[k]).strip() == ""
+    ]
+    if missing:
+        raise SystemExit(
+            f"error: case {where} missing required fields: {', '.join(missing)}"
+        )
+    kind = str(raw["kind"]).strip().lower()
+    if kind not in KINDS:
+        raise SystemExit(f"error: case {where} kind {kind!r} not in {sorted(KINDS)}")
+
+    run_in = raw.get("run") or {}
+    human_in = raw.get("human") or {}
+    if not isinstance(run_in, dict):
+        raise SystemExit(f"error: case {where} run must be an object")
+    if not isinstance(human_in, dict):
+        raise SystemExit(f"error: case {where} human must be an object")
+
+    verdict = str(run_in.get("verdict") or "pending").strip().lower()
+    if verdict not in VERDICTS:
+        raise SystemExit(
+            f"error: case {where} verdict {verdict!r} not in {sorted(VERDICTS)}"
+        )
+
+    run = dict(RUN_DEFAULTS)
+    run["verdict"] = verdict
+    for key in ("saw", "server", "notes"):
+        run[key] = str(run_in.get(key) or "")
+
+    human = dict(HUMAN_DEFAULTS)
+    human["checked"] = bool(human_in.get("checked", False))
+    for key in ("at", "comment"):
+        human[key] = str(human_in.get(key) or "")
+
+    return {
+        "id": str(raw["id"]).strip(),
+        "req": str(raw["req"]).strip(),
+        "kind": kind,
+        "title": str(raw["title"]).strip(),
+        "setup": str(raw["setup"]).rstrip(),
+        "try": str(raw["try"]).rstrip(),
+        "expect": str(raw["expect"]).rstrip(),
+        "backend": str(raw["backend"]).rstrip(),
+        "run": run,
+        "human": human,
+    }
+
+
+def normalize_run_doc(data: Dict[str, Any], source: str = "") -> Dict[str, Any]:
+    """Normalize an in-memory v2 document (the same rules the loader applies)."""
+    version = data.get("version", SCHEMA_VERSION)
+    if version != SCHEMA_VERSION:
+        raise SystemExit(
+            f"error: unsupported run file version {version!r} (want {SCHEMA_VERSION}); "
+            "v1 cases files are not readable by this CLI"
+        )
+    sections = data.get("sections") or []
+    if not isinstance(sections, list) or not sections:
+        raise SystemExit("error: run file needs a non-empty sections list")
+
+    out_sections: List[Dict[str, Any]] = []
+    seen_ids: set = set()
+    for si, section in enumerate(sections):
+        if not isinstance(section, dict):
+            raise SystemExit(f"error: section {si} must be a mapping")
+        name = section.get("name") or f"Section {si + 1}"
+        cases_in = section.get("cases") or []
+        if not isinstance(cases_in, list) or not cases_in:
+            raise SystemExit(f"error: section {name!r} needs a non-empty cases list")
+        cases: List[Dict[str, Any]] = []
+        for ci, raw in enumerate(cases_in):
+            if not isinstance(raw, dict):
+                raise SystemExit(f"error: case {ci} in {name!r} must be a mapping")
+            case = normalize_case(raw, where=f"{name}[{ci}]")
+            if case["id"] in seen_ids:
+                raise SystemExit(f"error: duplicate case id {case['id']!r}")
+            seen_ids.add(case["id"])
+            cases.append(case)
+        out_sections.append({"name": str(name), "cases": cases})
+
+    slug = str(data.get("slug") or data.get("feature") or Path(source).stem or "dogfood")
+    intro = str(data.get("intro") or "")
+    try:
+        rev = int(data.get("rev", 0))
+    except (TypeError, ValueError):
+        raise SystemExit(f"error: rev must be an integer, got {data.get('rev')!r}")
+    return {
+        "version": SCHEMA_VERSION,
+        "rev": rev,
+        "feature": str(data.get("feature") or slug),
+        "slug": slug,
+        "title": str(data.get("title") or f"{slug} — Write Dogfood"),
+        "origin": str(data.get("origin") or ""),
+        "intro": intro.rstrip() + ("\n" if intro else ""),
+        "sections": out_sections,
+        "source": source,
+    }
+
+
+def extract_walk_product_json(text: str) -> Optional[Dict[str, Any]]:
+    """Pull the embedded document out of a rendered guide.
+
+    Still useful under v2: the blob a guide embeds is the whole run document,
+    so a guide can be read back when only the HTML survives.
+    """
+    # Prefer valid JS identifier; still accept legacy spaced name in old HTML.
+    marker = "window.__WALK_PRODUCT__"
+    idx = text.find(marker)
+    if idx < 0:
+        marker = "window.__WALK PRODUCT__"
+        idx = text.find(marker)
+    if idx < 0:
+        return None
+    eq = text.find("=", idx)
+    if eq < 0:
+        return None
+    i = eq + 1
+    while i < len(text) and text[i].isspace():
+        i += 1
+    if i >= len(text) or text[i] != "{":
+        return None
+    depth = 0
+    in_str = False
+    escape = False
+    start = i
+    for j in range(i, len(text)):
+        ch = text[j]
+        if in_str:
+            if escape:
+                escape = False
+            elif ch == "\\":
+                escape = True
+            elif ch == '"':
+                in_str = False
+            continue
+        if ch == '"':
+            in_str = True
+        elif ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                blob = text[start : j + 1].replace("<\\/", "</")
+                return json.loads(blob)
+    return None
+
+
+def all_cases(catalog: Dict[str, Any]) -> List[Dict[str, str]]:
+    out: List[Dict[str, str]] = []
+    for section in catalog["sections"]:
+        out.extend(section["cases"])
+    return out
+
+
+def find_case(catalog: Dict[str, Any], case_id: str) -> Optional[Dict[str, str]]:
+    for c in all_cases(catalog):
+        if c["id"] == case_id:
+            return c
+    return None
+
+
+# ---------------------------------------------------------------------------
+# Store — every write to a run file goes through here
+# ---------------------------------------------------------------------------
+
+# A lockfile older than this is treated as abandoned. Three orders of magnitude
+# above a real write, which is a read, a serialize, and a rename.
+LOCK_STALE_SECONDS = 10.0
+
+WRITABLE_SCOPES = frozenset({"run", "human"})
+
+
+def _lock_path(path: Path) -> Path:
+    return path.with_name(path.name + ".lock")
+
+
+def _acquire(lock: Path) -> int:
+    """Take the exclusive lock, or die trying.
+
+    `O_CREAT | O_EXCL` is atomic on every platform and filesystem this CLI is
+    likely to meet, which `fcntl.flock` is not — and a Windows-only failure in a
+    CLI that claims to be portable stdlib is exactly what ARCH-3 exists to stop.
+    """
+    deadline = time.monotonic() + LOCK_STALE_SECONDS * 2
+    while True:
+        try:
+            return os.open(str(lock), os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
+        except FileExistsError:
+            try:
+                age = time.time() - lock.stat().st_mtime
+            except FileNotFoundError:
+                continue  # released while we looked; try again immediately
+            if age > LOCK_STALE_SECONDS:
+                lock.unlink(missing_ok=True)
+                continue
+            if time.monotonic() > deadline:
+                raise SystemExit(
+                    f"error: could not acquire {lock.name}; another dogfood write "
+                    "has held it for too long. Remove the file if no writer is running."
+                )
+            time.sleep(0.01)
+
+
+def commit(path: Path, patch, scope: str) -> Dict[str, Any]:
+    """Apply `patch` to the run file under an exclusive lock, then replace atomically.
+
+    `patch` receives the document as it exists *now* and must mutate only fields
+    inside `scope` — `run` for agent verdicts, `human` for a person's tick. That
+    is what makes a stale caller safe: a tick composed against rev 5 is applied
+    to rev 9 without re-writing anything the agent recorded in between, because
+    the two field spaces share no key names.
+    """
+    if scope not in WRITABLE_SCOPES:
+        raise SystemExit(
+            f"error: unknown write scope {scope!r} (want one of {sorted(WRITABLE_SCOPES)})"
+        )
+    other = "human" if scope == "run" else "run"
+    path = Path(path)
+    lock = _lock_path(path)
+    tmp = path.with_name(f"{path.name}.tmp.{os.getpid()}")
+    fd = _acquire(lock)
+    try:
+        doc = load_run_file(path)
+        # The scope is enforced, not merely declared. Everything downstream — the
+        # merge argument, ADR 0006's promise that a tick never becomes a verdict —
+        # rests on a patch staying in its own field space, and a docstring asking
+        # nicely is not what that should rest on.
+        # Keyed by case id, and re-walked after the patch on purpose: position
+        # would make this guard depend on the patch never replacing a case object,
+        # which is exactly the assumption a guard should not be making.
+        untouchable = {case["id"]: dict(case[other]) for case in all_cases(doc)}
+        patch(doc)
+        for case in all_cases(doc):
+            if case["id"] in untouchable:
+                case[other] = untouchable[case["id"]]
+        doc["rev"] = int(doc.get("rev", 0)) + 1
+        payload = {k: v for k, v in doc.items() if k != "source"}
+        tmp.write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+        )
+        os.replace(str(tmp), str(path))
+        return doc
+    finally:
+        tmp.unlink(missing_ok=True)
+        os.close(fd)
+        lock.unlink(missing_ok=True)
+
+
+# ---------------------------------------------------------------------------
+# Verdict rules
+# ---------------------------------------------------------------------------
+
+
+def is_presentational_server(server: str) -> bool:
+    s = server.strip().lower()
+    return s == "none — presentational" or (
+        s.startswith("none") and "presentational" in s
+    )
+
+
+def validate_mark(
+    verdict: str,
+    saw: str,
+    server: str,
+    backend: Optional[str],
+) -> None:
+    if verdict not in VERDICTS:
+        raise SystemExit(f"error: verdict must be one of {sorted(VERDICTS)}")
+    if verdict == "pass":
+        if not saw.strip():
+            raise SystemExit("error: pass requires non-empty --saw (quoted UI evidence)")
+        if not server.strip():
+            raise SystemExit(
+                "error: pass requires non-empty --server "
+                "(probe result, or 'none — presentational')"
+            )
+        if backend is not None:
+            b = backend.strip().lower()
+            if b == "presentational" and not is_presentational_server(server):
+                raise SystemExit(
+                    "error: presentational case requires "
+                    "--server 'none — presentational' (got %r)" % server
+                )
+            if b != "presentational" and is_presentational_server(server):
+                raise SystemExit(
+                    "error: non-presentational case cannot use presentational server "
+                    f"(backend={backend!r})"
+                )
+    if verdict == "fail" and not saw.strip():
+        # allow empty for fail if notes explain? contract said evidence when collected
+        pass
+
+
+# ---------------------------------------------------------------------------
+# Render
+# ---------------------------------------------------------------------------
+
+def render_html(catalog: Dict[str, Any], shell_path: Path) -> str:
+    if not shell_path.is_file():
+        raise SystemExit(f"error: shell not found: {shell_path}")
+    shell = shell_path.read_text(encoding="utf-8")
+    payload = {
+        "version": SCHEMA_VERSION,
+        "rev": catalog.get("rev", 0),
+        # Stamped so a page opened from file:// can say how old its verdicts are
+        # instead of implying they are live.
+        "rendered_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "feature": catalog["feature"],
+        "slug": catalog["slug"],
+        "title": catalog["title"],
+        "origin": catalog.get("origin") or "",
+        "intro": (catalog.get("intro") or "").rstrip("\n"),
+        "sections": catalog["sections"],
+    }
+    # Compact but stable JSON for embedding
+    blob = json.dumps(payload, ensure_ascii=False, indent=2)
+    # Escape </script> in JSON strings
+    blob = blob.replace("</", "<\\/")
+    assignment = f"window.__WALK_PRODUCT__ = {blob};"
+    pattern = re.compile(
+        r"/\*\s*__CASES_JSON__\s*\*/.*?/\*\s*__END_CASES_JSON__\s*\*/",
+        re.DOTALL,
+    )
+    if not pattern.search(shell):
+        raise SystemExit("error: shell missing /* __CASES_JSON__ */ … /* __END_CASES_JSON__ */ markers")
+    # Use a callable replacement — a string replacement would interpret-session \n in
+    # the JSON as real newlines (re.sub backslash processing).
+    def _inject(_m: re.Match) -> str:
+        return f"/* __CASES_JSON__ */\n{assignment}\n/* __END_CASES_JSON__ */"
+
+    return pattern.sub(_inject, shell, count=1)
+
+
+# ---------------------------------------------------------------------------
+# Serve — the optional live layer
+# ---------------------------------------------------------------------------
+
+DEFAULT_PORT = 8787
+PORT_SCAN_LIMIT = 64
+
+# `at` is stamped by the server, so a client may write every human field except
+# that one. Derived rather than hand-listed: a new human field should not need a
+# second edit here to become writable, and should not silently become writable
+# either — it appears in exactly one place.
+SERVER_STAMPED_HUMAN_FIELDS = frozenset({"at"})
+HUMAN_WRITABLE = (
+    frozenset(HUMAN_DEFAULTS) - SERVER_STAMPED_HUMAN_FIELDS
+) | {"base_rev"}
+
+# A tick is three small fields; anything larger is a mistake or a probe.
+MAX_BODY_BYTES = 64 * 1024
+
+
+def state_payload(doc: Dict[str, Any]) -> Dict[str, Any]:
+    """Just what can change — the page already holds every authored slot."""
+    return {
+        "rev": doc["rev"],
+        "cases": {
+            case["id"]: {
+                "verdict": case["run"]["verdict"],
+                "human": dict(case["human"]),
+            }
+            for case in all_cases(doc)
+        },
+    }
+
+
+def make_handler(run_path: Path, token: str, shell_path: Path):
+    import http.server
+
+    class Handler(http.server.BaseHTTPRequestHandler):
+        # Quiet by default: the server runs in the background beside a dogfood
+        # session, and a request log per poll would bury anything worth reading.
+        def log_message(self, fmt, *args):  # noqa: A003
+            pass
+
+        def _send(self, status: int, body: bytes, content_type: str) -> None:
+            self.send_response(status)
+            self.send_header("Content-Type", content_type)
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        def _json(self, status: int, payload: Dict[str, Any]) -> None:
+            self._send(
+                status,
+                json.dumps(payload, ensure_ascii=False).encode("utf-8"),
+                "application/json; charset=utf-8",
+            )
+
+        def do_GET(self) -> None:  # noqa: N802
+            if self.path in ("/", "/index.html"):
+                doc = load_run_file(run_path)
+                self._send(
+                    200,
+                    render_html(doc, shell_path).encode("utf-8"),
+                    "text/html; charset=utf-8",
+                )
+            elif self.path == "/state":
+                self._json(200, state_payload(load_run_file(run_path)))
+            elif self.path == "/whoami":
+                doc = load_run_file(run_path)
+                self._json(
+                    200, {"token": token, "slug": doc["slug"], "pid": os.getpid()}
+                )
+            else:
+                self._json(404, {"error": "no such path"})
+
+        def do_POST(self) -> None:  # noqa: N802
+            if not self.path.startswith("/human/"):
+                self._json(404, {"error": "no such path"})
+                return
+            case_id = self.path[len("/human/") :]
+
+            try:
+                length = int(self.headers.get("Content-Length") or 0)
+            except ValueError:
+                self._json(400, {"error": "bad Content-Length"})
+                return
+            if length < 0 or length > MAX_BODY_BYTES:
+                self._json(413, {"error": f"body over {MAX_BODY_BYTES} bytes"})
+                return
+            try:
+                payload = json.loads(self.rfile.read(length) or b"{}")
+            except json.JSONDecodeError:
+                self._json(400, {"error": "body must be JSON"})
+                return
+            if not isinstance(payload, dict):
+                self._json(400, {"error": "body must be a JSON object"})
+                return
+
+            forbidden = set(payload) - HUMAN_WRITABLE
+            if forbidden:
+                self._json(
+                    400,
+                    {
+                        "error": "only a human tick may be written here",
+                        "rejected": sorted(forbidden),
+                    },
+                )
+                return
+
+            if find_case(load_run_file(run_path), case_id) is None:
+                self._json(404, {"error": f"no such case: {case_id}"})
+                return
+
+            checked = bool(payload.get("checked", False))
+            comment = str(payload.get("comment") or "")
+            stamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+            def record(document: Dict[str, Any]) -> None:
+                target = find_case(document, case_id)
+                if target is None:
+                    raise SystemExit(f"error: case vanished: {case_id}")
+                target["human"] = {
+                    "checked": checked,
+                    "at": stamp if checked else "",
+                    "comment": comment,
+                }
+
+            doc = commit(run_path, record, scope="human")
+            self._json(200, state_payload(doc))
+
+    return Handler
+
+
+def pidfile_path(run_path: Path) -> Path:
+    """`.skills/<slug>-dogfood-serve.pid`, beside the run file it serves."""
+    stem = Path(run_path).name
+    for suffix in ("-dogfood.json", ".json"):
+        if stem.endswith(suffix):
+            stem = stem[: -len(suffix)]
+            break
+    return Path(run_path).parent / f"{stem}-dogfood-serve.pid"
+
+
+def read_pidfile(path: Path) -> Optional[Dict[str, Any]]:
+    if not path.is_file():
+        return None
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return None
+    return data if isinstance(data, dict) else None
+
+
+def verify_live(info: Dict[str, Any], timeout: float = 1.0) -> bool:
+    """True only when a server on the recorded port answers with the recorded token.
+
+    `kill -0` is not a substitute. It answers "does this PID exist", which stays
+    true after the OS recycles that PID onto something else — so trusting it means
+    occasionally sending SIGTERM to a process that was never ours.
+    """
+    import urllib.error
+    import urllib.request
+
+    port, token = info.get("port"), info.get("token")
+    if not port or not token:
+        return False
+    try:
+        with urllib.request.urlopen(
+            f"http://127.0.0.1:{port}/whoami", timeout=timeout
+        ) as resp:
+            answered = json.loads(resp.read().decode("utf-8"))
+    except (urllib.error.URLError, OSError, json.JSONDecodeError):
+        return False
+    return answered.get("token") == token
+
+
+def bind_server(run_path: Path, token: str, shell_path: Optional[Path] = None):
+    """Bind the loopback interface, walking up from DEFAULT_PORT when it is busy.
+
+    The host is a literal. There is deliberately no way to configure it: this
+    endpoint writes to disk without authentication, and its safety rests on being
+    unreachable from anywhere but this machine.
+    """
+    import http.server
+
+    handler = make_handler(Path(run_path), token, shell_path or DEFAULT_SHELL)
+    last_error = None
+    for port in range(DEFAULT_PORT, DEFAULT_PORT + PORT_SCAN_LIMIT):
+        try:
+            return http.server.HTTPServer(("127.0.0.1", port), handler)
+        except OSError as exc:
+            last_error = exc
+    raise SystemExit(
+        f"error: no free port in {DEFAULT_PORT}..{DEFAULT_PORT + PORT_SCAN_LIMIT - 1} "
+        f"({last_error})"
+    )
+
+
+# ---------------------------------------------------------------------------
+# Commands
+# ---------------------------------------------------------------------------
+
+def cmd_list(args: argparse.Namespace) -> int:
+    catalog = load_run_file(Path(args.run_file))
+    for c in all_cases(catalog):
+        print(f"{c['id']}\t{c['req']}\t{c['kind']}\t{c['title']}")
+    return 0
+
+
+def cmd_show(args: argparse.Namespace) -> int:
+    catalog = load_run_file(Path(args.run_file))
+    case = find_case(catalog, args.case_id)
+    if not case:
+        raise SystemExit(f"error: case not found: {args.case_id}")
+    print(f"id: {case['id']}")
+    print(f"req: {case['req']}")
+    print(f"kind: {case['kind']}")
+    print(f"title: {case['title']}")
+    print(f"setup:\n{case['setup']}")
+    print(f"try:\n{case['try']}")
+    print(f"expect:\n{case['expect']}")
+    print(f"backend:\n{case['backend']}")
+    return 0
+
+
+def cmd_init(args: argparse.Namespace) -> int:
+    path = Path(args.run_file)
+    doc = load_run_file(path)
+    recorded = [
+        c["id"] for c in all_cases(doc) if c["run"]["verdict"] != "pending"
+    ]
+    if recorded and not args.force:
+        raise SystemExit(
+            "error: run file already holds verdicts for "
+            f"{', '.join(recorded)} — pass --force to reset them to pending"
+        )
+
+    def seed(document: Dict[str, Any]) -> None:
+        for case in all_cases(document):
+            if args.force:
+                case["run"] = dict(RUN_DEFAULTS)
+
+    commit(path, seed, scope="run")
+    print(path)
+    print(f"cases: {len(all_cases(doc))}", file=sys.stderr)
+    return 0
+
+
+def cmd_status(args: argparse.Namespace) -> int:
+    doc = load_run_file(Path(args.run_file))
+    cases = all_cases(doc)
+    counts = {v: 0 for v in VERDICTS}
+    for case in cases:
+        counts[case["run"]["verdict"]] = counts.get(case["run"]["verdict"], 0) + 1
+    print(f"total: {len(cases)}")
+    for v in ("pass", "fail", "blocked", "pending"):
+        print(f"{v}: {counts.get(v, 0)}")
+    # A human tick is reported on its own line and never folded into a verdict
+    # tally: it is a signal that someone looked, not evidence that it works.
+    print(f"human: {sum(1 for c in cases if c['human']['checked'])}")
+    print(f"rev: {doc['rev']}")
+    nxt = next((c["id"] for c in cases if c["run"]["verdict"] != "pass"), None)
+    print(f"next: {nxt or ''}")
+    return 0
+
+
+def cmd_next(args: argparse.Namespace) -> int:
+    """First case still to prove. `human` is deliberately not consulted."""
+    for case in all_cases(load_run_file(Path(args.run_file))):
+        if case["run"]["verdict"] != "pass":
+            print(case["id"])
+            return 0
+    return 1
+
+
+def cmd_mark(args: argparse.Namespace) -> int:
+    path = Path(args.run_file)
+    doc = load_run_file(path)
+    case = find_case(doc, args.case_id)
+    if case is None:
+        raise SystemExit(f"error: case not in run file: {args.case_id}")
+
+    saw = args.saw if args.saw is not None else case["run"]["saw"]
+    server = args.server if args.server is not None else case["run"]["server"]
+    notes = args.notes if args.notes is not None else case["run"]["notes"]
+    # backend now travels in the same document, so the evidence rules can never
+    # be skipped for want of a reachable catalog.
+    validate_mark(args.verdict, saw, server, case["backend"])
+
+    def record(document: Dict[str, Any]) -> None:
+        target = find_case(document, args.case_id)
+        if target is None:
+            raise SystemExit(f"error: case vanished from run file: {args.case_id}")
+        target["run"] = {
+            "verdict": args.verdict,
+            "saw": saw,
+            "server": server,
+            "notes": notes,
+        }
+
+    commit(path, record, scope="run")
+    print(f"{args.case_id}: {args.verdict}")
+    return 0
+
+
+def cmd_render(args: argparse.Namespace) -> int:
+    doc = load_run_file(Path(args.run_file))
+    shell = Path(args.shell) if args.shell else DEFAULT_SHELL
+    html_out = render_html(doc, shell)
+    out = (
+        Path(args.output)
+        if args.output
+        else Path.cwd() / ".skills" / f"{doc['slug']}-dogfood.html"
+    )
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(html_out, encoding="utf-8")
+    print(out)
+    return 0
+
+
+def cmd_report(args: argparse.Namespace) -> int:
+    doc = load_run_file(Path(args.run_file))
+
+    def cell(s: Any) -> str:
+        return str(s or "").replace("|", "\\|").replace("\n", " ")
+
+    lines = [
+        "# Write Dogfood run report",
+        f"- source: `{doc.get('source', '')}`",
+        f"- slug: {doc.get('slug', '')}",
+        f"- rev: {doc['rev']}",
+        "",
+        "| case | req | kind | verdict | human | saw | server | notes |",
+        "|---|---|---|---|---|---|---|---|",
+    ]
+    for case in all_cases(doc):
+        run = case["run"]
+        human = "checked" if case["human"]["checked"] else ""
+        lines.append(
+            f"| {cell(case['id'])} | {cell(case['req'])} | {cell(case['kind'])} | "
+            f"{cell(run['verdict'])} | {cell(human)} | {cell(run['saw'])} | "
+            f"{cell(run['server'])} | {cell(run['notes'])} |"
+        )
+    unfinished = [c["id"] for c in all_cases(doc) if c["run"]["verdict"] != "pass"]
+    lines.append("")
+    lines.append(
+        f"Unfinished: {', '.join(unfinished)}" if unfinished else "Unfinished: (none)"
+    )
+    text = "\n".join(lines) + "\n"
+    if args.output:
+        out = Path(args.output)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(text, encoding="utf-8")
+        print(out)
+    else:
+        sys.stdout.write(text)
+    return 0
+
+
+def cmd_serve_stop(args: argparse.Namespace) -> int:
+    """Stop a server only after it proves it is the one this pidfile describes."""
+    import signal
+
+    path = Path(args.run_file)
+    pidfile = pidfile_path(path)
+    info = read_pidfile(pidfile)
+    if info is None:
+        print("no server recorded for this run file")
+        return 0
+    if not verify_live(info):
+        pidfile.unlink(missing_ok=True)
+        print(
+            f"server is already gone (stale pidfile removed); "
+            f"nothing was signalled — pid {info.get('pid')} was not verified as ours"
+        )
+        return 0
+    os.kill(int(info["pid"]), signal.SIGTERM)
+    pidfile.unlink(missing_ok=True)
+    print(f"stopped server pid {info['pid']} on port {info['port']}")
+    return 0
+
+
+def cmd_serve(args: argparse.Namespace) -> int:
+    import secrets
+
+    if args.stop:
+        return cmd_serve_stop(args)
+
+    path = Path(args.run_file)
+    # Fail fast on a bad document rather than at the first request, and keep the
+    # result — the slug below came from a second read of the same file.
+    doc = load_run_file(path)
+
+    pidfile = pidfile_path(path)
+    existing = read_pidfile(pidfile)
+    if existing is not None:
+        if verify_live(existing):
+            # flush: serve_forever() never returns, so a buffered URL is a URL
+            # nobody sees when this is launched in the background.
+            print(f"http://127.0.0.1:{existing['port']}/", flush=True)
+            print(
+                f"a server for this run file is already running (pid {existing['pid']})",
+                file=sys.stderr,
+            )
+            return 0
+        # Same verification as --stop: unverified means stale, and stale means
+        # delete the file, never signal whatever now owns that pid.
+        pidfile.unlink(missing_ok=True)
+
+    token = secrets.token_hex(16)
+    server = bind_server(path, token, Path(args.shell) if args.shell else None)
+    port = server.server_address[1]
+    pidfile.parent.mkdir(parents=True, exist_ok=True)
+    pidfile.write_text(
+        json.dumps(
+            {
+                "pid": os.getpid(),
+                "port": port,
+                "token": token,
+                "slug": doc["slug"],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    # flush both: stdout is block-buffered when redirected, and serve_forever()
+    # below never returns to flush it. The documented usage is exactly that —
+    # backgrounded with output to a file — so an unflushed URL is invisible.
+    print(f"http://127.0.0.1:{port}/", flush=True)
+    print(f"serving {path} — dogfood serve {path} --stop", file=sys.stderr, flush=True)
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        server.server_close()
+        current = read_pidfile(pidfile)
+        if current and current.get("token") == token:
+            pidfile.unlink(missing_ok=True)
+    return 0
+
+
+def build_parser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="dogfood",
+        description=(
+            "Write Dogfood run-file CLI. One JSON file per run holds the cases and the "
+            "verdicts; a human tick is recorded beside a verdict, never as one."
+        ),
+    )
+    sub = p.add_subparsers(dest="command", required=True)
+
+    def with_run_file(parser_obj):
+        parser_obj.add_argument(
+            "run_file", help="Path to .skills/<CODE>/dogfood.json"
+        )
+        return parser_obj
+
+    list_p = with_run_file(sub.add_parser("list", help="List case ids"))
+    list_p.set_defaults(func=cmd_list)
+
+    show_p = with_run_file(sub.add_parser("show", help="Show one case in full"))
+    show_p.add_argument("case_id")
+    show_p.set_defaults(func=cmd_show)
+
+    init_p = with_run_file(
+        sub.add_parser("init", help="Seed run state (pending) in place")
+    )
+    init_p.add_argument(
+        "--force", action="store_true", help="Reset recorded verdicts to pending"
+    )
+    init_p.set_defaults(func=cmd_init)
+
+    status_p = with_run_file(sub.add_parser("status", help="Summarize verdicts"))
+    status_p.set_defaults(func=cmd_status)
+
+    next_p = with_run_file(sub.add_parser("next", help="Print first non-pass case id"))
+    next_p.set_defaults(func=cmd_next)
+
+    mark_p = with_run_file(sub.add_parser("mark", help="Record a verdict + evidence"))
+    mark_p.add_argument("case_id")
+    mark_p.add_argument("verdict", choices=sorted(VERDICTS))
+    mark_p.add_argument("--saw", default=None, help="Quoted UI evidence")
+    mark_p.add_argument(
+        "--server", default=None, help="Probe result or 'none — presentational'"
+    )
+    mark_p.add_argument("--notes", default=None)
+    mark_p.set_defaults(func=cmd_mark)
+
+    render_p = with_run_file(sub.add_parser("render", help="Render the human guide"))
+    render_p.add_argument("-o", "--output", help="HTML output path")
+    render_p.add_argument("--shell", help="Shell HTML path")
+    render_p.set_defaults(func=cmd_render)
+
+    report_p = with_run_file(sub.add_parser("report", help="Write the end-of-run report"))
+    report_p.add_argument("-o", "--output", help="Report path (default stdout)")
+    report_p.set_defaults(func=cmd_report)
+
+    serve_p = with_run_file(
+        sub.add_parser(
+            "serve",
+            help="Serve the guide live on 127.0.0.1 (optional; the guide works without it)",
+        )
+    )
+    serve_p.add_argument("--shell", help="Shell HTML path")
+    serve_p.add_argument(
+        "--stop",
+        action="store_true",
+        help="Stop the recorded server, after it proves its identity",
+    )
+    serve_p.set_defaults(func=cmd_serve)
+
+    return p
+
+
+def main(argv: Optional[List[str]] = None) -> int:
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    return int(args.func(args))
+
+
+if __name__ == "__main__":
+    sys.exit(main())

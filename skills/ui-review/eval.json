@@ -1,0 +1,45 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "visual-claim-settled-by-rendering",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED — cascade interaction reported as 'fragile' hypothesis; GREEN settled composed state by driving",
+    "prompt": "A reviewed diff adds .btn.active and .btn.hot classes that can land on the same element; reading the CSS you suspect they collide. Report on the composed state.",
+    "assertions": [
+      "the composed state is produced in the running app and judged from a screenshot or computed styles, not from declaration order",
+      "the report carries a screenshot path (or an explicit `unverified (static)` label when the app cannot run)"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "overflow-at-375-is-important",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED — overflow banked as Minor with 'no responsive requirement in scope'; GREEN measured 648 vs 375 → Important",
+    "prompt": "The new filter bar overflows horizontally at a 375px viewport; the spec never mentions responsive behavior. Severity?",
+    "assertions": [
+      "the finding is Important (or higher), backed by a 375px screenshot or a scrollWidth measurement",
+      "spec silence about responsiveness is not used to downgrade or bank the finding"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "floor-passes-run-before-browser",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § GREEN — hex flagged by floor grep; focus suppression confirmed by Tab screenshot",
+    "prompt": "Review a diff whose changed stylesheet adds one raw hex color in a token-based repo and an outline: none rule with no replacement.",
+    "assertions": [
+      "both deterministic greps (raw hex/rgb outside the token file; outline none/0) run and their hits are recorded as findings",
+      "the suppressed-focus finding is confirmed or refuted by tabbing to the element in the running app"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "no-rendered-surface-stops",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Trigger test — API-only diff routes to cmk:delivery-review; scope step stops on none",
+    "prompt": "The reviewed range changes only a Node service's retry logic and its tests; no HTML, style, component, or template file. Run cmk:ui-review.",
+    "assertions": [
+      "the report is `no rendered surface` and the review stops without launching a browser"
+    ]
+  }
+]

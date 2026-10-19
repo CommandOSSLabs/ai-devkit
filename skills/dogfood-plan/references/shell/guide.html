@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Dogfood guide</title>
+<style>
+  :root {
+    --bg: #0f1419;
+    --fg: #e7ecf1;
+    --muted: #9aa7b2;
+    --card: #1a222c;
+    --accent: #5b9fd4;
+    --ok: #3d9a6a;
+    --border: #2a3540;
+    --chip-bg: #243040;
+    /* Chip colours are per-scheme on purpose. One palette cannot clear WCAG AA
+       against both a near-black card and a white one — these are tuned so every
+       chip holds >=4.5:1 on its own background at the 0.75rem chip size, which
+       is normal-text size, not large. Verified by a contrast pass, and pinned by
+       tests/test_walk_product_guide_contract.py so a nicer-looking hue cannot quietly
+       drop one below the line. */
+    --happy: #5cbe8a;
+    --edge: #d9b23c;
+    --error: #ef8a8a;
+    --nonbehavior: #a8b4be;
+    --persist: #7fbce8;
+    --visual: #c896dc;
+    --journey: #e8925c;
+    --v-pass: #5cbe8a;
+    --v-fail: #ef8a8a;
+    --v-blocked: #d9b23c;
+    --v-pending: #a8b4be;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f7f8fa;
+      --fg: #1a1f24;
+      --muted: #5c6b76;
+      --card: #ffffff;
+      --accent: #1a6fa8;
+      --ok: #1f7a4c;
+      --border: #d0d7de;
+      --chip-bg: #eef2f6;
+      --happy: #1d6b45;
+      --edge: #6d5406;
+      --error: #a32f2f;
+      --nonbehavior: #55636e;
+      --persist: #1b5f8f;
+      --visual: #72398c;
+      --journey: #8f4515;
+      --v-pass: #1d6b45;
+      --v-fail: #a32f2f;
+      --v-blocked: #6d5406;
+      --v-pending: #55636e;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0 auto;
+    max-width: 44rem;
+    padding: 1.25rem 1rem 3rem;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    line-height: 1.55;
+    color: var(--fg);
+    background: var(--bg);
+  }
+  h1 { font-size: 1.55rem; margin: 0 0 0.35rem; }
+  h2 {
+    font-size: 1.15rem;
+    margin: 2rem 0 0.75rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.3rem;
+  }
+  .muted { color: var(--muted); font-size: 0.95rem; }
+  .intro { margin: 0.75rem 0 1rem; white-space: pre-wrap; }
+  .progress {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.65rem 0.9rem;
+    margin: 1rem 0 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+  }
+  .progress strong { color: var(--ok); }
+  .case {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.9rem 1rem;
+    margin: 0.75rem 0;
+  }
+  .case.done { opacity: 0.72; border-color: var(--ok); }
+  .case-head {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+  }
+  .case-head label {
+    display: flex;
+    gap: 0.55rem;
+    align-items: flex-start;
+    flex: 1;
+    cursor: pointer;
+  }
+  .case-head input { margin-top: 0.3rem; }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.5rem;
+    margin: 0.45rem 0 0.55rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .chip {
+    display: inline-block;
+    padding: 0.1rem 0.45rem;
+    border-radius: 999px;
+    background: var(--chip-bg);
+    color: var(--fg);
+    font-size: 0.75rem;
+    text-transform: lowercase;
+  }
+  .chip.happy { color: var(--happy); }
+  .chip.edge { color: var(--edge); }
+  .chip.error { color: var(--error); }
+  .chip.nonbehavior { color: var(--nonbehavior); }
+  .chip.persist { color: var(--persist); }
+  .chip.visual { color: var(--visual); }
+  .chip.journey { color: var(--journey); }
+  /* The verdict always prints its own word, so colour is reinforcement and
+     never the only carrier of the state. */
+  .verdict { font-weight: 600; }
+  .verdict.pass { color: var(--v-pass); }
+  .verdict.fail { color: var(--v-fail); }
+  .verdict.blocked { color: var(--v-blocked); }
+  .verdict.pending { color: var(--v-pending); }
+  .ticked { color: var(--muted); font-style: italic; }
+  .banner {
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--edge);
+    border-radius: 6px;
+    padding: 0.55rem 0.8rem;
+    margin: 0.9rem 0 0;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  .case-head input:focus-visible,
+  #reset:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .try, .expect, .setup, .backend {
+    margin: 0.35rem 0;
+    font-size: 0.95rem;
+  }
+  .try strong, .expect strong, .setup strong, .backend strong {
+    color: var(--muted);
+    font-weight: 600;
+  }
+  pre.block {
+    margin: 0.25rem 0 0;
+    white-space: pre-wrap;
+    font-family: inherit;
+    font-size: 0.95rem;
+  }
+  .agent-note {
+    margin-top: 2rem;
+    padding: 0.75rem 1rem;
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+    font-size: 0.88rem;
+  }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.88em; }
+</style>
+</head>
+<body>
+  <header>
+    <h1 id="title">Dogfood guide</h1>
+    <p class="muted" id="origin-line"></p>
+    <p class="intro muted" id="intro"></p>
+    <p class="banner" id="snapshot-banner" hidden></p>
+  </header>
+
+  <div class="progress" aria-live="polite">
+    <span>Progress: <strong id="done-count">0</strong> / <span id="total-count">0</span></span>
+    <button type="button" id="reset" class="muted" style="background:none;border:1px solid var(--border);border-radius:6px;color:var(--muted);padding:0.25rem 0.55rem;cursor:pointer">Reset ticks</button>
+  </div>
+
+  <main id="sections"></main>
+
+  <p class="agent-note">
+    Your tick records that you looked — it never becomes a <code>pass</code>, which
+    needs quoted screen evidence and a server probe. The agent writes verdicts with
+    <code>dogfood mark</code> and never ticks these boxes itself.
+  </p>
+
+<script>
+/* __CASES_JSON__ */
+window.__WALK_PRODUCT__ = window.__WALK_PRODUCT__ || {
+  "version": 1,
+  "feature": "example",
+  "slug": "example",
+  "title": "Dogfood guide",
+  "origin": "",
+  "intro": "",
+  "sections": []
+};
+/* __END_CASES_JSON__ */
+
+(function () {
+  var data = window.__WALK_PRODUCT__;
+  var storageKey = "write-dogfood-ticks:" + (data.slug || data.feature || "guide");
+
+  // Mode is decided by the URL this page was loaded from. Under file:// the
+  // page is entirely self-contained: the verdicts baked in at render time are
+  // all it has, and it says so rather than implying it is live.
+  var LIVE = location.protocol === "http:" || location.protocol === "https:";
+
+  if (!LIVE) {
+    var banner = document.getElementById("snapshot-banner");
+    banner.textContent =
+      "Verdicts below are the snapshot taken when this page was rendered" +
+      (data.rendered_at ? " (" + data.rendered_at + ")" : "") +
+      " — not live. Re-run `dogfood render` to refresh, or `dogfood serve` " +
+      "to follow the run as it happens.";
+    banner.hidden = false;
+  }
+
+  document.getElementById("title").textContent = data.title || "Dogfood guide";
+  document.title = data.title || "Dogfood guide";
+  var originEl = document.getElementById("origin-line");
+  if (data.origin) {
+    originEl.innerHTML = "Origin: <code>" + escapeHtml(data.origin) + "</code>";
+  } else {
+    originEl.textContent = "";
+  }
+  document.getElementById("intro").textContent = data.intro || "";
+
+  var root = document.getElementById("sections");
+  var allCases = [];
+  (data.sections || []).forEach(function (section) {
+    var h2 = document.createElement("h2");
+    h2.textContent = section.name || "Cases";
+    root.appendChild(h2);
+    (section.cases || []).forEach(function (c) {
+      allCases.push(c);
+      root.appendChild(renderCase(c));
+    });
+  });
+
+  document.getElementById("total-count").textContent = String(allCases.length);
+
+  var lastRev = data.rev;
+  var ticks = LIVE ? {} : loadTicks();
+  allCases.forEach(function (c) {
+    if (LIVE && c.human && c.human.checked) ticks[c.id] = true;
+    var input = document.querySelector('input[data-case="' + cssEscape(c.id) + '"]');
+    if (input && ticks[c.id]) {
+      input.checked = true;
+      input.closest(".case").classList.add("done");
+    }
+  });
+  updateProgress();
+
+  if (LIVE) startLive();
+
+  root.addEventListener("change", function (ev) {
+    var t = ev.target;
+    if (!t || t.tagName !== "INPUT" || t.type !== "checkbox") return;
+    var id = t.getAttribute("data-case");
+    ticks[id] = !!t.checked;
+    t.closest(".case").classList.toggle("done", !!t.checked);
+    if (LIVE) {
+      // Served: the tick belongs in the run file where the agent can see it.
+      postTick(id, !!t.checked);
+    } else {
+      // file://: nothing to post to, so it stays a local nicety.
+      saveTicks(ticks);
+    }
+    updateProgress();
+  });
+
+  document.getElementById("reset").addEventListener("click", function () {
+    ticks = {};
+    saveTicks(ticks);
+    root.querySelectorAll('input[type="checkbox"]').forEach(function (input) {
+      input.checked = false;
+      input.closest(".case").classList.remove("done");
+    });
+    updateProgress();
+  });
+
+  function renderCase(c) {
+    var div = document.createElement("div");
+    div.className = "case";
+    div.setAttribute("data-case", c.id || "");
+    div.setAttribute("data-req", c.req || "");
+    div.setAttribute("data-kind", c.kind || "");
+    div.setAttribute("data-backend", c.backend || "");
+    div.setAttribute("data-setup", c.setup || "");
+
+    var kind = (c.kind || "happy").toLowerCase();
+    var run = c.run || {};
+    var human = c.human || {};
+    var verdict = (run.verdict || "pending").toLowerCase();
+    div.setAttribute("data-verdict", verdict);
+    div.innerHTML =
+      '<div class="case-head">' +
+        '<label>' +
+          '<input type="checkbox" data-case="' + escapeAttr(c.id) + '"/>' +
+          '<span><strong>' + escapeHtml(c.title || c.id) + '</strong></span>' +
+        '</label>' +
+      '</div>' +
+      '<div class="meta">' +
+        '<span class="chip ' + escapeAttr(kind) + '">' + escapeHtml(kind) + '</span>' +
+        '<span class="chip verdict ' + escapeAttr(verdict) + '">' + escapeHtml(verdict) + '</span>' +
+        (human.checked ? '<span class="ticked">checked by hand</span>' : '') +
+        '<span>' + escapeHtml(c.req || "") + '</span>' +
+        '<span>' + escapeHtml(c.id || "") + '</span>' +
+      '</div>' +
+      '<div class="setup"><strong>Setup:</strong><pre class="block">' + escapeHtml(c.setup || "") + '</pre></div>' +
+      '<div class="try"><strong>Try:</strong><pre class="block">' + escapeHtml(c.try || "") + '</pre></div>' +
+      '<div class="expect"><strong>Expect:</strong><pre class="block">' + escapeHtml(c.expect || "") + '</pre></div>' +
+      '<div class="backend"><strong>Backend:</strong><pre class="block">' + escapeHtml(c.backend || "") + '</pre></div>';
+    return div;
+  }
+
+  function updateProgress() {
+    var n = Object.keys(ticks).filter(function (k) { return ticks[k]; }).length;
+    document.getElementById("done-count").textContent = String(n);
+  }
+
+  function applyVerdict(id, verdict, checked) {
+    var el = root.querySelector('.case[data-case="' + cssEscape(id) + '"]');
+    if (!el) return;
+    el.setAttribute("data-verdict", verdict);
+    var badge = el.querySelector(".verdict");
+    if (badge) {
+      badge.className = "chip verdict " + verdict;
+      badge.textContent = verdict;
+    }
+    var ticked = el.querySelector(".ticked");
+    if (checked && !ticked) {
+      ticked = document.createElement("span");
+      ticked.className = "ticked";
+      ticked.textContent = "checked by hand";
+      el.querySelector(".meta").appendChild(ticked);
+    } else if (!checked && ticked) {
+      ticked.remove();
+    }
+  }
+
+  function postTick(id, checked) {
+    fetch("/human/" + encodeURIComponent(id), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ checked: checked, base_rev: lastRev })
+    })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (state) { if (state) render(state); })
+      .catch(function () { /* the run file is the record; a lost tick is not fatal */ });
+  }
+
+  function render(state) {
+    lastRev = state.rev;
+    Object.keys(state.cases).forEach(function (id) {
+      var entry = state.cases[id];
+      applyVerdict(id, entry.verdict, entry.human && entry.human.checked);
+      ticks[id] = !!(entry.human && entry.human.checked);
+      var input = root.querySelector('input[data-case="' + cssEscape(id) + '"]');
+      if (input) {
+        input.checked = ticks[id];
+        input.closest(".case").classList.toggle("done", ticks[id]);
+      }
+    });
+    updateProgress();
+  }
+
+  function startLive() {
+    function poll() {
+      fetch("/state")
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (state) {
+          // Repaint only when the document actually moved.
+          if (state && state.rev !== lastRev) render(state);
+        })
+        .catch(function () { /* server stopped; the page stays readable */ });
+    }
+    poll();
+    setInterval(poll, 1000);
+  }
+
+  function loadTicks() {
+    try {
+      return JSON.parse(localStorage.getItem(storageKey) || "{}") || {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function saveTicks(obj) {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(obj));
+    } catch (e) { /* ignore quota */ }
+  }
+
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function escapeAttr(s) {
+    return escapeHtml(s).replace(/'/g, "&#39;");
+  }
+
+  function cssEscape(s) {
+    return String(s).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+  }
+})();
+</script>
+</body>
+</html>

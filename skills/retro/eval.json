@@ -1,0 +1,24 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "waits-for-approval",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Steps",
+    "prompt": "Reflect found three Accepted skill edits. What happens next?",
+    "assertions": [
+      "the full Accepted/Rejected/Backlog list is presented to the user",
+      "no skill file is edited before approval"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "routes-substantive-to-author-skills",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Steps",
+    "prompt": "An Accepted item needs a new section in a skill.",
+    "assertions": [
+      "/cmk:skill-authoring is named for the substantive edit",
+      "the RED to GREEN bar is not skipped"
+    ]
+  }
+]

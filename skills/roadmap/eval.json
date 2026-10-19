@@ -1,0 +1,48 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "road-n-is-a-slot",
+    "kind": "contract",
+    "derived_from": "SKILL.md § ROAD-N is a slot, not a feature",
+    "prompt": "The roadmap has ROAD-3 'search'. The user asks to drop search and put sharing there instead.",
+    "assertions": [
+      "ROAD-N is treated as a stable slot rather than renumbered to follow the feature",
+      "existing bindings to that ID are not silently repointed"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "approval-gate-before-writing",
+    "kind": "contract",
+    "derived_from": "SKILL.md § The approval gate",
+    "prompt": "You have drafted a six-milestone roadmap.",
+    "assertions": [
+      "the roadmap is presented and approved before it is written as the committed plan",
+      "approval is obtained rather than assumed from silence"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "order-is-after-field",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 2026-10-14 — `After:` item order and rule S8",
+    "prompt": "Record that ROAD-6 goes first, ROAD-7 and ROAD-8 run in parallel after ROAD-6, and ROAD-10 needs only ROAD-3 from the previous milestone.",
+    "assertions": [
+      "every member of the touched milestone carries an `After:` field between its slug and `Surfaces:`",
+      "After values are only `none`, ROAD-N or MILE-N IDs, with no prose",
+      "the parallel items share the same After value instead of being ordered by list position"
+    ]
+  },
+  {
+    "eval_name": "notion-draft-lists-its-tickets",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 2026-10-19 — Notion draft page",
+    "prompt": "Next milestone after MILE-2: vessel owners get a monthly statement in December. Put it in Notion as a draft so Quang can sign it off.",
+    "assertions": [
+      "the page is created in the Drafts data source named in docs/agents/issue-tracker.md",
+      "the page carries a `## Tickets on sign-off` section with one line per ticket publishing would create",
+      "Status reads Draft and Signed off by is empty"
+    ],
+    "eval_id": 4
+  }
+]

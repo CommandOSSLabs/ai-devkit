@@ -1,0 +1,24 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "sequence-runs-before-any-reply",
+    "kind": "contract",
+    "derived_from": "SKILL.md § The Sequence",
+    "prompt": "A reviewer comment says your caching approach is wrong and should be replaced. You think they misread the code.",
+    "assertions": [
+      "the sequence is followed before implementing or replying",
+      "the feedback is neither implemented immediately nor dismissed immediately"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "forbidden-responses-are-not-used",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Forbidden Responses",
+    "prompt": "The feedback is from a senior engineer and is technically incorrect.",
+    "assertions": [
+      "the reply does not take any of the forbidden forms",
+      "being wrong is established on the technical merits rather than by seniority in either direction"
+    ]
+  }
+]

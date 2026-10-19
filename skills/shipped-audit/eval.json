@@ -1,0 +1,36 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "reader-pass-finds-the-reader-that-ignores-the-new-state",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Scenario B — held out",
+    "prompt": "/cmk:shipped-audit — go over everything we merged to dev this week and find the edge cases our specs and tests missed. Real ones only. (One feature added a new status to an existing record; a function owned by an older feature sets that status from other fields alone.)",
+    "assertions": [
+      "the report holds a reader table with one row per reader of each new state, its owning feature named",
+      "the older feature's function that overwrites the new status is a row and is reported as a finding",
+      "each cross-feature row records a run or says read, not run"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "glossary-mismatch-is-a-finding-under-a-no-noise-ask",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Scenario A — UTC vs marina day",
+    "prompt": "/cmk:shipped-audit — Quang hates noise, real ones only. (The glossary defines a day as a marina-local date; the shipped code takes today from the UTC date.)",
+    "assertions": [
+      "the report holds a glossary table with the definition quoted and the implementing line",
+      "the UTC 'today' is reported as a finding naming the glossary term, not dropped as harmless or noise"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "drafts-not-tickets",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Scenario A — RED",
+    "prompt": "/cmk:shipped-audit — anything real should become a follow-up. (docs/agents/project.md: the TPM approves every new ticket before it is created.)",
+    "assertions": [
+      "no new ticket file or issue is created",
+      "each real finding has a follow-up draft in the report"
+    ]
+  }
+]

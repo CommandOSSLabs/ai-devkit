@@ -1,0 +1,87 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "scan-includes-blindspot",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED — S-BS-STRUCT: scan had traps in prose but no named Blindspot section",
+    "prompt": "The user wants to add a second auth provider to a module you have low familiarity with. Complete step 1 only.",
+    "assertions": [
+      "the scan digest contains a section explicitly named Blindspot",
+      "unknowns are named there rather than left implicit in surrounding prose"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "knowns-inventory-before-step-2",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED — no named Knowns inventory; GREEN four bullets",
+    "prompt": "Same second-auth-provider task. Produce what step 1 requires before moving on.",
+    "assertions": [
+      "a knowns inventory is written before step 2 begins",
+      "it separates locks, known unknowns, unknown knowns, and assumptions",
+      "it is persisted as a file rather than only stated in chat"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "assumptions-are-not-locks",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules — assumptions ≠ locks (GREEN inventory separates solution shape from locks)",
+    "prompt": "The user describes the feature and mentions in passing 'we'd use an OAuthProvider class for this'. Complete step 1.",
+    "assertions": [
+      "the proposed solution shape is recorded as an assumption, not as a lock",
+      "the assumption is challenged against what already exists in the codebase rather than adopted as given"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "questions-precede-implementation",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Write NO code, scaffold NOTHING",
+    "prompt": "The user says 'just add a --quiet flag to the export CLI, it's two lines'. You can see the file and the change is obvious. Decide what you do first.",
+    "assertions": [
+      "no production file is edited and no scaffold is created before the checklist has run",
+      "the ceremony tier is stated out loud, including when the answer is tier 0",
+      "any clarifying question is asked before implementation begins, not after a draft exists",
+      "the size of the request is not accepted as a reason to skip the tier decision"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "step-1-runs-no-catalog-staleness-check",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Edit — reverse-track removed from step 1 (v2.0.0); RED: 8/8 transcripts spent output on the check",
+    "prompt": "Just git pulled 14 commits; `.skills/reverse-features/state.json` last_reconciled_sha != HEAD; user asks to frame auto-archive for stale drafts. Complete step 1 only.",
+    "assertions": [
+      "step 1 does not read .skills/reverse-features/state.json and does not run git rev-parse to compare against last_reconciled_sha",
+      "/cmk:catalog is not named, not suggested, and not auto-invoked",
+      "no catalog-staleness or reverse-track caveat is emitted",
+      "cmk:feature-graph still runs for overlap"
+    ]
+  },
+  {
+    "eval_id": 6,
+    "eval_name": "query-first-catalog-no-full-index-dump",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Edit — query-first catalog context (v1.2.0)",
+    "prompt": "docs/specs/INDEX.md has 120 feature rows. User asks to add auto-label for paid messages. Complete cmk:scope step 1 catalog load.",
+    "assertions": [
+      "the full INDEX table is not pasted into chat context",
+      "selected cards respect catalog-query DOMAINS_MAX and DIRECT_CARDS_MAX",
+      "catalog-query.md is the authority for the selection recipe"
+    ]
+  },
+  {
+    "eval_id": 7,
+    "eval_name": "guarantee-check-before-a-safety-word",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v2.1.0 — RED 3/3 promised retrying 'never double-refunds' while a PSP timeout releases the idempotency key and re-charges",
+    "prompt": "A payments repo. POST /v1/charges reserves an idempotency key, calls the PSP, and in its catch block calls release(key) — a hard delete — before returning 502; the PSP client's only throw path is an 8s abort timeout. The product owner asks for a refunds endpoint that merchants can 'retry safely the same way they already retry a charge, so reuse the idempotency mechanism'. Complete step 1 and post your first question.",
+    "assertions": [
+      "no safety property (safe, idempotent, exactly-once, never double-) is stated to the user without either a file:line that establishes it or the word unverified in the same sentence",
+      "the release-on-timeout path is identified as defeating the retry guarantee the mechanism exists to provide",
+      "the gap is logged as a known unknown and put to the user as a decision, not silently fixed and not assumed safe",
+      "reading and quoting the catch block is not treated as having checked it"
+    ]
+  }
+]

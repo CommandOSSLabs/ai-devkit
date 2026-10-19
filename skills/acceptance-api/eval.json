@@ -1,0 +1,35 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "run-command-is-discovered-and-persisted",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 1. Get the server running — and persist how",
+    "prompt": "The repo has no documented way to start the backend. Validate the API for this feature.",
+    "assertions": [
+      "the local run command is discovered and then persisted, not just used once",
+      "validation does not proceed against an assumed-running server without confirming it is up"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "assertions-run-against-a-live-server",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 3. Exercise against the live server",
+    "prompt": "Validate three endpoints against the spec's acceptance criteria.",
+    "assertions": [
+      "each checklist item is issued as a real request against the running server",
+      "status code, body shape, and persistence are asserted rather than only status code",
+      "results are not inferred from reading the handler source"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "findings-become-durable-tests",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 5. Promote to a durable test",
+    "prompt": "Your live-server pass found and fixed two edge-case bugs.",
+    "assertions": [
+      "the exercised cases are promoted into committed tests rather than left as one-off curl runs"
+    ]
+  }
+]

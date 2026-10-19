@@ -1,0 +1,72 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "decisions-are-taken-one-at-a-time",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 2. Decide, one section at a time",
+    "prompt": "Configure this repo for the skill set.",
+    "assertions": [
+      "the setup state is read before anything is proposed",
+      "sections are decided one at a time rather than as one bulk questionnaire",
+      "the resulting choices are recorded in the repo rather than only in chat"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "gitignore-worktrees-not-isolate-workspace",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 4. Write",
+    "prompt": "Finish setup and write the files.",
+    "assertions": [
+      ".worktrees/ is ensured in .gitignore",
+      ".isolate-workspace/ is not added as a second isolation gitignore pattern"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "cold-start-drive-recipe-on-runnable-surface",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v1.8.0 — cold-start drive recipe: plainsetup left Run locally blank and wrote no verify.md",
+    "prompt": "Configure this notes app (package.json has a vite dev script). User confirmed tracker local, npm test, skip extras. They did not mention clicking.",
+    "assertions": [
+      "Decision M is offered (Yes when a runnable surface exists, Skip for a library with no process)",
+      "on Yes, docs/agents/verify.md exists with Launch, Doctor, Drive, Evidence, Cleanup, and Features",
+      "project.md Run locally rows for existing surfaces are filled, not left blank",
+      "a stored feature's proof includes reload or re-open, not only a final screen"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "webbridge-bootstrap-when-missing",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 6. Prove the configuration actually works — GATE",
+    "prompt": "Finish setup. This machine has no kimi-webbridge binary.",
+    "assertions": [
+      "the official OS bootstrap runs before the prove commands",
+      "an existing binary is started rather than downloaded again",
+      "a disconnected browser extension is named as a store install and does not block the rest of setup"
+    ]
+  },
+  {
+    "eval_name": "notion-binding-needs-signoff-member",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 2026-10-19 — Draft surface follow-up",
+    "prompt": "/cmk:repo-config — roadmap drafts go to Notion for Quang to sign off. My Notion is connected. (Every connected Notion server reaches a workspace Quang is not a member of.)",
+    "assertions": [
+      "Draft surface is written as `repo` and no Notion database is bound",
+      "the reply names the workspace each Notion server reaches and the /mcp Re-authenticate step"
+    ],
+    "eval_id": 5
+  },
+  {
+    "eval_name": "notion-binding-in-template-fields",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 2026-10-19 — Draft surface follow-up",
+    "prompt": "/cmk:repo-config — roadmap drafts go to Notion for Quang to sign off. My Notion is connected.",
+    "assertions": [
+      "docs/agents/issue-tracker.md gains a Draft surface row reading `notion`",
+      "its `### Notion draft surface` block names the drafts data source by `collection://` ID, the workspace, the server, and the Sign-off line"
+    ],
+    "eval_id": 6
+  }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "waiting-on-you-from-the-script",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 2026-10-19 — 1.0.0",
+    "prompt": "/cmk:board — What's waiting on me this morning?",
+    "assertions": [
+      "scripts/board.py runs before any line of the report",
+      "the open PR's parked decision is quoted verbatim",
+      "the untriaged ticket and the needs-info question both appear under Waiting on you",
+      "a ready ticket with no approved spec appears under Board and repo disagree",
+      "nothing is written to the tracker"
+    ]
+  }
+]

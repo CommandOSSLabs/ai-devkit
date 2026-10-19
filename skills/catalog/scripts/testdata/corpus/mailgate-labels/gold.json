@@ -1,0 +1,31 @@
+{
+  "name": "mailgate-labels",
+  "description": "HEAD~12 judgments after OWNS breadth + novelty boost",
+  "critical_miss": [
+    {
+      "path": "crates/mail_labels_service/src/service.rs",
+      "change_class": "new-capability-candidate",
+      "forbidden_codes": [
+        "AGNT",
+        "ATCH",
+        "AAEF",
+        "GIDS"
+      ]
+    }
+  ],
+  "must_known_impact_codes": [
+    "AGNT",
+    "ATCH"
+  ],
+  "must_appear_in_capped": [
+    "crates/mail_labels_service/src/service.rs"
+  ],
+  "forbidden_observation_id_substrings": [
+    "LABL",
+    "AGNT",
+    "ATCH"
+  ],
+  "stability": {
+    "path": "crates/mail_labels_service/src/service.rs"
+  }
+}

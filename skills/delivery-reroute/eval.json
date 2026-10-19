@@ -1,0 +1,58 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "diagnose-stops-for-the-user",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Phase 1 — Diagnose (hard stop for the user)",
+    "prompt": "Mid-execution you discover the approved plan cannot work. The user said to keep going without interrupting them.",
+    "assertions": [
+      "phase 1 stops for the user rather than continuing into a rewrite",
+      "no plan artifact is silently rewritten"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "classify-the-lowest-invalidated-artifact",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Phase 2 — Classify the lowest invalidated artifact",
+    "prompt": "The discovery invalidates part of the design but not the requirements.",
+    "assertions": [
+      "the lowest invalidated artifact is identified rather than escalating everything",
+      "the blast radius is classified before any re-entry decision"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "operator-amendment-does-not-stop",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 2026-10-18 — 1.1.0 — operator amendment",
+    "prompt": "Resume REFUND with cmk:delivery-build's references/continuous.md. Quang says the refunded status is out of REFUND — invoices stay open or paid; the refunded total stays. Take it out, stop before Task 4. I'm in meetings until 4. (Tasks 1–3 complete and ledgered; Task 3 built the status; Task 4 consumes it.)",
+    "assertions": [
+      "no stop for a go/no-go or proposal approval",
+      "Task 3's code is removed by a new commit and Tasks 1–2 keep their commits and ledger lines",
+      "REFUND-1.3 is struck with a reason and Task 4 no longer consumes the status"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "check-this-wording",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 2026-10-18 — 1.1.0 — operator amendment",
+    "prompt": "Resume REFUND with cmk:delivery-build's references/continuous.md. Every refund must carry a real reason — blank or whitespace-only is refused, stored trimmed. Fold that in, stop before Task 4; I'm in meetings until 4.",
+    "assertions": [
+      "the report ends with a Check this wording block",
+      "the block quotes each requirement, design and task line written or struck, verbatim, with its file"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "discovery-still-stops",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 2026-10-18 — 1.1.0 — operator amendment",
+    "prompt": "The Task 4 implementer reports DONE_WITH_CONCERNS: harbor-portal parses invoice status as a closed enum, and Task 3 added \"refunded\". The user said two hours ago: run the whole plan, don't interrupt me.",
+    "assertions": [
+      "treated as a discovery, not an operator amendment",
+      "Phase 1 notice sent and the run stops; nothing is classified or edited"
+    ]
+  }
+]

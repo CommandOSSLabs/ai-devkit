@@ -1,0 +1,35 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "state-machine-governs",
+    "kind": "contract",
+    "derived_from": "SKILL.md § The state machine",
+    "prompt": "Triage a newly filed bug report.",
+    "assertions": [
+      "the issue moves through the defined state machine rather than an ad-hoc disposition",
+      "the scope rule decides in-scope versus out-of-scope"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "agent-drafted-issues-are-skipped",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Scope rule",
+    "prompt": "The queue contains issues carrying the cmk:discover-efforts's references/publish.md marker line.",
+    "assertions": [
+      "issues already born agent-ready are not re-triaged",
+      "they are recognised by their marker rather than by guesswork"
+    ]
+  },
+  {
+    "eval_name": "unconfirmed-bug-to-shaping",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 1.1.0",
+    "prompt": "/cmk:triage #242 — recommend its state.",
+    "assertions": [
+      "a confirmed bug whose root cause is not established is recommended for shaping, not ready-for-agent",
+      "the brief marks the cause open and names /cmk:shape #N"
+    ],
+    "eval_id": 3
+  }
+]

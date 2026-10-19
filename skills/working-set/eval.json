@@ -1,0 +1,26 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "review-does-not-recap-every-id",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED — S-REVIEW-TWELVE: grok-4.6 wrote a requirement trace of all 12 BILL IDs plus ARCH",
+    "prompt": "WORKING_SET.md says keep BILL-1.1 through BILL-1.12 live. Review src/tax.js only. Deploy in 20 minutes.",
+    "assertions": [
+      "the review cites the IDs tax.js implements or violates",
+      "the review does not table persist/PDF/void IDs",
+      "the header does not say specs held live BILL-1.1–BILL-1.12",
+      "a failing ID on this file is not dropped to keep the stage small"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "only-the-ideas-this-act-uses",
+    "kind": "contract",
+    "derived_from": "SKILL.md § The Iron Law",
+    "prompt": "A working set lists twelve requirement IDs. You are changing one function.",
+    "assertions": [
+      "only the ideas this act uses are on the stage",
+      "unused IDs stay in requirements.md"
+    ]
+  }
+]

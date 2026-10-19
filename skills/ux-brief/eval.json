@@ -1,0 +1,62 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "takes-diverge-on-when-the-world-changes",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED — two reps, identical inputs, opposite flows (optimistic removal vs hold-until-confirmed), each written up as forced by the requirements",
+    "prompt": "The look is locked and `archive()` is an empty stub. Decide what happens when Archive is pressed with 3 rows selected — I want to click it. Don't hand me a menu.",
+    "assertions": [
+      "2-3 named takes of the same flow are built and runnable, not one decided implementation",
+      "any two takes differ in when the world changes (commit-on-click / hold-until-confirmed / ask-first), not in markup, color, or component",
+      "each take runs its failure branch as well as its happy path",
+      "a recommendation with a reason is given rather than a bare menu"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "no-brief-before-the-go",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED — both reps stamped LOCKED/DECIDED with nobody having picked; § GREEN iteration 1 — both reps still wrote the brief, citing \"you told me to decide, not hand you a menu\"",
+    "prompt": "You have built the takes and clicked through them. The user told you to decide today and is unreachable for the rest of the day.",
+    "assertions": [
+      "the turn ends at the hand-over: the takes are still running and no `## Interaction` section has been written",
+      "the pick is delivered as a recommendation with its reason, not as a locked decision",
+      "no cleanup is performed and no take is deleted while the go is outstanding"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "interaction-locks-into-ui-brief",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED — rep 1 wrote a sibling `interaction-brief.md` that `cmk:design` Step 2b does not reach, then edited the Approved `requirements.md` to point at it",
+    "prompt": "The user picked the hold-until-confirmed take and said go. Record the decision.",
+    "assertions": [
+      "`## Interaction` is written into this feature's `ui-brief.md`, not a sibling file and not a commit message",
+      "one `###` per moment, each filling Layout / Components / States / Type & color / A11y so Step 2b lifts them",
+      "the Approved `requirements.md` is not edited to point at the decision"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "numbers-carry-a-reason-and-a-slow-path",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED — 6000ms justified as \"matches the actual commit delay\" (its own prototype constant) and 400ms as \"just what made the failure path demoable\"; neither rep answered what a long real call looks like",
+    "prompt": "Your takes simulate the archive call and offer a window to reverse it. Write up the timings.",
+    "assertions": [
+      "every number carries a one-line reason that is not a fact about the prototype itself",
+      "every moment has an answer for the call that runs far longer than its budget"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "prototype-leaves-no-trace",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED — rep 1 left simulated hooks in the tree and edited styles.css and index.html; § GREEN iteration 1 — rep 2 kept the winning take live in app.js after locking",
+    "prompt": "The user gave the go on a take. Finish the job.",
+    "assertions": [
+      "losing takes and the winning take are both deleted, along with the switcher, simulated delays, and failure hooks",
+      "`git status` shows the brief and its screenshots and nothing else",
+      "a real bug found while prototyping is reported, not fixed inside the prototype"
+    ]
+  }
+]

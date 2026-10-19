@@ -1,0 +1,73 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "want-is-asked-before-any-check",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v2.0.0 RED — N2 (vague ask answered with a menu of what the repo makes checkable; 'Tôi đề xuất 1')",
+    "prompt": "/cmk:goal tôi muốn để agent tự làm qua đêm cho brewlog tốt hơn",
+    "assertions": [
+      "the first card asks what bothers the user or what should be different, in the user's words",
+      "the first card offers no menu built from what the repo makes easy to check, and marks no option as preferred",
+      "no check, threshold or bound is asked about before the want is answered"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "cards-carry-no-recommendation",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v2.0.0 RED — N4 (5/6 sessions: 'khuyến nghị', 'Recommendation — Pick: B', 'Mình đề xuất 3 guard… A. Đồng ý')",
+    "prompt": "Interview for a moment.js → date-fns migration; the user has answered the want and the bar. Ask the next card.",
+    "assertions": [
+      "the card has options with consequences and no recommendation, pick, or default to approve",
+      "the card is the only question in the message"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "cards-are-in-the-users-language",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v2.0.0 Roster — Haiku cards in English despite Vietnamese input 2/2; fixed by translating labels",
+    "prompt": "/cmk:goal tôi muốn để agent chạy qua đêm cho cái dashboard nhanh hơn",
+    "assertions": [
+      "every card, including its labels, is written in Vietnamese",
+      "paths, commands and identifiers stay verbatim"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "goal-carries-the-round-loop",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v2.0.0 RED — N5 (no round protocol in any v1 block); research note §7",
+    "prompt": "The interview is finished: bar `npm run bench` p95 under 50 ms, guards tests and bench untouched, commit on perf/summary, stop if the API must change, 8 hours. Render the goal.",
+    "assertions": [
+      "the block has DONE WHEN, MUST HOLD, EACH ROUND, FINISH and STOP EARLY sections, numbered",
+      "EACH ROUND orients from a progress file and git log, takes one smallest step, re-runs the round check and every MUST HOLD command, and records to the progress file",
+      "FINISH re-runs every DONE and MUST HOLD command fresh and pairs each DONE line with its output before DONE: is printed",
+      "the bound and the stop call sit inside the block as STOPPED: and BLOCKED: lines",
+      "the hand-over says to paste it into /goal where the agent has one or as the first message of a fresh session, naming no single runtime"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "unprintable-criterion-is-not-written-as-checkable",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED — F3 ('Check by loading the page at 375px'; 'all checkable by command')",
+    "prompt": "The user wants the settings page usable on a phone; the repo has no browser tooling. Ask the bar card.",
+    "assertions": [
+      "the card says no command in the repo can show how the page looks",
+      "no DONE or MUST HOLD line later reads 'check by loading the page' or any step without a command"
+    ]
+  },
+  {
+    "eval_id": 6,
+    "eval_name": "every-check-has-a-probe-line",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § GREEN — 'the tree is clean, so both print nothing now'; § v2.0.0 Roster — Haiku reported a different command's output",
+    "prompt": "Hand over a finished goal whose block contains `npm run bench`, `npm test`, and `git diff --stat -- src/api test/` on a clean tree.",
+    "assertions": [
+      "the hand-over has a Probes part with one line for each of the three commands, written exactly as in the goal",
+      "each probe line shows output seen in this session or is marked [unprobed] with a reason",
+      "no probe line reports a result predicted from the state of the tree or taken from a different command"
+    ]
+  }
+]

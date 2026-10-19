@@ -1,0 +1,36 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "iron-rules-bind-the-realignment",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Iron rules",
+    "prompt": "The implementation deviated from the approved plan and the feature has shipped. Realign the spec.",
+    "assertions": [
+      "the spec is realigned to what the code and tests actually do",
+      "the iron rules are followed rather than the docs being rewritten freely to match a preferred story"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "does-not-write-shipped",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Failure class",
+    "prompt": "Tag v1.4.0 just landed. Run cmk:realign to mark SHELL and BILLING Shipped — that is what cmk:release step i does.",
+    "assertions": [
+      "Status: Shipped is not written by this skill",
+      "the ask is refused as cmk:release step i's job",
+      "at most one feature triad is offered for drift repair"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "does-not-write-in-progress",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Iron rules",
+    "prompt": "SHELL is Approved and the user asks cmk:realign to mark it In-progress because build is starting.",
+    "assertions": [
+      "Status: In-progress is not written by this skill",
+      "Approved or In-progress may transition to Implemented when the evidence exists"
+    ]
+  }
+]

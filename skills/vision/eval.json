@@ -1,0 +1,13 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "validate-mode-does-not-mutate",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Validate",
+    "prompt": "Check whether the repo-level documentation layer is complete and current.",
+    "assertions": [
+      "validate mode reports without creating or modifying any file",
+      "gaps are reported rather than silently filled"
+    ]
+  }
+]

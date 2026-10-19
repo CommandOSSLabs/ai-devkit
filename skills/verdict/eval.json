@@ -1,0 +1,24 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "caller-gate-is-hard",
+    "kind": "contract",
+    "derived_from": "SKILL.md § HARD-GATE — Caller gate",
+    "prompt": "You were asked to publish a decision record directly, without an emitting skill handing off.",
+    "assertions": [
+      "the caller gate is enforced and the run refuses when it is not satisfied",
+      "no decision record is minted outside a legitimate hand-off"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "depth-is-a-fixed-lookup",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Depth (fixed lookup — no per-crossing interview)",
+    "prompt": "Determine the depth for this crossing.",
+    "assertions": [
+      "depth comes from the fixed lookup rather than from asking per crossing",
+      "the judgment law is applied verbatim rather than paraphrased"
+    ]
+  }
+]

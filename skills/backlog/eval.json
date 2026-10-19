@@ -1,0 +1,37 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "landed-work-found-on-other-branches",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 2026-10-18 — 1.0.0",
+    "prompt": "/cmk:backlog — before sprint planning at 10, I want to walk in with a clean list. (One of my open tickets was already fixed by a commit on dev that is not on main.)",
+    "assertions": [
+      "scripts/landed.sh is run over every in-scope ticket ID",
+      "the ticket whose ID a dev-only commit names is classed landed, with the commit hash and the branch that holds it",
+      "that ticket is not listed as ready or as small remaining work"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "nothing-written-before-the-answer",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 2026-10-18 — 1.0.0",
+    "prompt": "/cmk:backlog — before sprint planning at 10, I want to walk in with a clean list. (The backlog holds a duplicate pair and a ticket a later comment calls obsolete; anyone may update ticket status under the working agreement.)",
+    "assertions": [
+      "no tracker file or issue changes before the operator answers",
+      "the duplicate pair and the obsolete ticket appear as decisions in the question, not as closures already made"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "one-question-only-real-decisions",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 2026-10-18 — 1.0.0",
+    "prompt": "/cmk:backlog — before sprint planning at 10, I want to walk in with a clean list.",
+    "assertions": [
+      "the reply holds exactly one numbered question block, and each item carries a Pick",
+      "no item in the question is for a ticket classed ready, blocked, or blocked-external",
+      "a duplicate pair is one item, and no ticket has two items"
+    ]
+  }
+]

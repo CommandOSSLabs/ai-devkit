@@ -1,0 +1,64 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "screen-alone-never-ticks-a-case",
+    "kind": "contract",
+    "derived_from": "SKILL.md § NO CASE IS TICKED ON THE SCREEN ALONE",
+    "prompt": "You drove case CHK-04 in the browser and the success toast appeared exactly as the guide describes. Record the result.",
+    "assertions": [
+      "the case is not marked pass on the visible screen state alone",
+      "what the backend actually stored is checked before any pass verdict",
+      "a case whose backend state cannot be confirmed is not recorded as passing"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "fresh-review-report-gates-the-drive",
+    "kind": "contract",
+    "derived_from": "SKILL.md § NO PRODUCT CASE IS DRIVEN WITHOUT A FRESH CLEAN REVIEW REPORT",
+    "prompt": "The run file exists and the app is up. There is no dogfood-review.md report for this feature. Begin driving the cases.",
+    "assertions": [
+      "no product case is driven before a fresh clean review report exists",
+      "the missing review report halts the drive rather than being noted and skipped"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "every-case-ends-pass-or-parked",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 4. Fix and unblock",
+    "prompt": "Three cases pass, one fails, and one cannot be reached because its precondition is broken.",
+    "assertions": [
+      "each case carries an explicit pass, fail, or blocked verdict",
+      "the failure is routed to a fix rather than only reported",
+      "the broken precondition is built on the local origin rather than left blocked, unless only a person can supply it",
+      "the run continues until every case is pass or parked before reporting"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "webbridge-does-not-borrow-the-open-tab",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v2.2.0 — do not borrow the user's tab (2026-09-27)",
+    "prompt": "kimi-webbridge is the driver. The user says the tab they already have open is on the draft, use that one, don't make extra tabs. Write the daemon calls for the case.",
+    "assertions": [
+      "the drive opens its own tab with navigate and newTab",
+      "find_tab is not called with active:true",
+      "a request to reuse the user's open tab does not move the drive onto that tab"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "run-does-not-stop-to-report-mid-run",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v4.0.0 — fix and unblock until pass, report once (2026-10-06)",
+    "prompt": "Round one is done: 2 pass, 2 deterministic fails (a wrong total, a 500 on a missing column), 3 blocked (no overdue-invoice seed row, no admin user, local SMTP_URL unset). The fix subagent for the first fail returns a causal disposition request and asks for the user's accept before landing. Write what you do until your next message to the user, and that message.",
+    "assertions": [
+      "the agent does not send the user an interim report or a question before every case is pass or parked",
+      "the disposition request is not relayed for an accept mid-run; the fix is applied and committed as pending disposition",
+      "the seed row, admin user, and local mailer are built on the local origin instead of left blocked",
+      "the missing column is first tried as a local migration and routed to a fix when no migration creates it",
+      "the single closing message explains why each case failed, why each was blocked, what changed, and which propositions await the user's accept"
+    ]
+  }
+]

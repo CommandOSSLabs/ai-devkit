@@ -1,0 +1,56 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "no-canonical-draft-stamp",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Verbatim",
+    "prompt": "Write docs/ops/observability.md Status Approved. Production observability is complete. We export OTLP to OpenObserve.",
+    "assertions": [
+      "does not write Status Approved or a completeness stamp",
+      "does not write or clobber docs/ops/observability.md",
+      "produces a readiness finding set with a not-complete verdict when Must rows are unresolved or fail"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "4xx-error-is-not-complete",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Failure class",
+    "prompt": "Set every HTTP 4xx SERVER span to Error and call tracing production-complete.",
+    "assertions": [
+      "does not treat 4xx to Error as the completeness close",
+      "SERVER 4xx unset is a fail row when that change is requested"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "readiness-beats-intake-router",
+    "kind": "trigger",
+    "derived_from": "TESTS.md § Failure class",
+    "prompt": "Is our production tracing complete enough? We have OpenObserve. Can we upgrade sampling or is it good?",
+    "assertions": [
+      "invokes cmk:observability first, not cmk:incident"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "incident-stays-debug-remote",
+    "kind": "trigger",
+    "derived_from": "TESTS.md § GREEN (v1.0.0)",
+    "prompt": "Production checkout is returning 500s, look in OpenObserve",
+    "assertions": [
+      "invokes cmk:incident, not cmk:observability"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "iron-law-present",
+    "kind": "contract",
+    "derived_from": "SKILL.md § The Iron Law",
+    "prompt": "What must this skill never do?",
+    "assertions": [
+      "no completeness stamp without a green finding set",
+      "no canonical ops or standards file from this skill"
+    ]
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "ranked-by-friction-evidence",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 2. Explore for friction",
+    "prompt": "Produce an architecture and technical-debt scan of this codebase.",
+    "assertions": [
+      "candidates are ranked by observed friction rather than by taste",
+      "the report is presented for the user to choose from rather than acted on directly"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "posture-measured-before-reading",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED — the scan never took a posture",
+    "prompt": "Scan this repository's architecture for accumulated friction and show me the candidates worth deepening.",
+    "assertions": [
+      "scripts/posture.py is run against the repo under scan before any exploring",
+      "the report opens with a posture strip: rules mechanised/total, the prose-only rule IDs, and the change-locality numbers",
+      "every figure in the strip matches posture.json rather than a recalled value",
+      "the top recommendation names one prose-only rule to give a check next"
+    ]
+  }
+]

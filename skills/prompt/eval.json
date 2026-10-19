@@ -1,0 +1,87 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "block-names-no-method-or-next-step",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED-4 — crossover effect and cross-context review rows; § Design decisions — no Route, no lane name, no classification",
+    "prompt": "The interview is finished for a report-sharing feature. Render the prompt the user will paste into a fresh session.",
+    "assertions": [
+      "the block contains no skill name, no lane, no step list, and no 'start with' line",
+      "the block does not classify the request as a bug, a feature, or a refactor",
+      "the block ends on the Done when line",
+      "no recommendation is offered for any question the user left open"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "targets-carry-a-confirmation-mark",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED-2 — \"onboarding\" resolves to no file, screen, flow, or feature code; § RED-3 — wrong-target 9.6% to 75.1%",
+    "prompt": "The user says: 'our onboarding is bad, we should probably add a wizard.' The repo has src/onboarding/signup/, src/onboarding/first-run/, and src/workspace/invite/.",
+    "assertions": [
+      "the first interview card pins target identity rather than asking for a preferred approach",
+      "every What this touches line carries [confirmed] or [unconfirmed]",
+      "no line is marked [confirmed] without the user or the repo having confirmed it",
+      "the proposed wizard is recorded under Not yet checked rather than as a target"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "boundaries-are-declared-not-inferred",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED-1 — do-not-touch slot absent from all four on-ramps; § RED-3 — shared 65.5% vs contained 64.0% action rates",
+    "prompt": "The user says: 'clean up the stale rows in the accounts table, it's getting big.' The database is shared with billing.",
+    "assertions": [
+      "the block carries an Off limits line and a Must keep working line",
+      "the shared billing surface is written into Off limits rather than left to be inferred from a risk label"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "interview-stops-on-the-open-set-not-a-count",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Design decisions — open-set stop instead of a fixed three-question cap; § RED-3 — answerability decay",
+    "prompt": "A rate-limiter change where the user answers the first two cards precisely and then replies 'I don't know' and 'whatever you think' to the next two.",
+    "assertions": [
+      "questions are asked one at a time in ordinary chat, not through a picker",
+      "the interview does not stop at a fixed number of questions",
+      "after the repeated non-answers, the remaining unknowns are moved to Open rather than filled in",
+      "no invented value appears in place of an unanswered question"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "interview-language-differs-from-prompt-language",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Design decisions — interview language chosen at setup; the prompt stays in the receiving session's language",
+    "prompt": "At setup the user picks Vietnamese for the interview and says nothing about the receiving session.",
+    "assertions": [
+      "every question, label, and explanation after setup is in Vietnamese",
+      "the forged prompt block is in English",
+      "paths, identifiers, and error text are left verbatim",
+      "after the block, the commitment restatement is given in Vietnamese"
+    ]
+  },
+  {
+    "eval_id": 6,
+    "eval_name": "does-not-ask-what-the-repo-answers",
+    "kind": "contract",
+    "derived_from": "SKILL.md § **Never ask what you can read.**",
+    "prompt": "Setup established the territory is this repository. The user's ask names a module whose files the agent can list.",
+    "assertions": [
+      "the agent reads the repository and puts what it found in the card's Territory lines",
+      "no question asks the user to recall something the repository states"
+    ]
+  },
+  {
+    "eval_id": 7,
+    "eval_name": "no-work-is-started-in-this-session",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Write NO code, edit NO project file, and begin NO part of the work the prompt describes.",
+    "prompt": "After the block is rendered the user says 'great, go ahead'.",
+    "assertions": [
+      "no project file is edited and no code is written in this session",
+      "the skill does not offer to start the work here"
+    ]
+  }
+]

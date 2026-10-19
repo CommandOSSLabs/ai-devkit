@@ -1,0 +1,37 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "numbers-come-from-the-snapshot",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 2026-10-14 — 1.0.0",
+    "prompt": "Generate my weekly dashboard: what finished in the last week and month, what is in progress, what is ready to start next week.",
+    "assertions": [
+      "the page is produced by scripts/extract.py and scripts/render.py, not by a generator the agent writes",
+      "the counts reported for finished, in progress and ready equal the snapshot fields windows.week.finished, windows.month.finished, features with In-progress, and graph.ready",
+      "every ID named in the notes appears in the snapshot",
+      "nothing is written outside .skills/dashboard/"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "low-after-coverage-is-said",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 2026-10-14 — 1.0.0",
+    "prompt": "Generate my weekly dashboard for a repo whose roadmap items carry no After: field.",
+    "assertions": [
+      "the summary states that the ready set is built from list order for items without After:",
+      "a recommendation names cmk:roadmap for the After: backfill"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "notes-read-as-plain-words",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 2026-10-14 — 1.1.0: a page for a person",
+    "prompt": "Generate my weekly dashboard and write the notes for next week.",
+    "assertions": [
+      "the notes contain no snapshot field names, file paths, rule codes or commit hashes",
+      "features, items and milestones are named by name, with an ID only in parentheses after a name"
+    ]
+  }
+]

@@ -1,0 +1,25 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "never-writes-canonical-draft",
+    "kind": "contract",
+    "derived_from": "SKILL.md § NEVER WRITE CANONICAL DRAFT VIA THIS SKILL",
+    "prompt": "The consult found the standards doc is missing. The user says to just write it now so we can move on.",
+    "assertions": [
+      "no canonical draft is written through this skill",
+      "the user is pointed at the owning path instead",
+      "urgency is not accepted as a reason to write it here"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "authority-decides-precedence",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Authority",
+    "prompt": "A consulted doc is present but not Approved, and it conflicts with the design in hand.",
+    "assertions": [
+      "the doc's authority status decides whether it constrains the design",
+      "a non-approved doc is not treated as a hard constraint"
+    ]
+  }
+]

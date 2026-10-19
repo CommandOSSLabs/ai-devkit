@@ -1,0 +1,24 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "no-doc-rewritten-before-the-ledger",
+    "kind": "contract",
+    "derived_from": "SKILL.md § NO VISION OR ARCHITECTURE DOC IS REWRITTEN FOR A PIVOT",
+    "prompt": "The product has pivoted. Update the vision and architecture docs to match the new intent.",
+    "assertions": [
+      "no vision or architecture doc is rewritten as the response to the pivot",
+      "the disposition ledger is written before any other durable edit"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "every-row-confirmed-by-the-user",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 3. Confirm every row with the user",
+    "prompt": "The ledger lists eleven collisions between shipped code and the new intent.",
+    "assertions": [
+      "every ledger row is confirmed with the user rather than dispositioned unilaterally",
+      "no row is actioned before its confirmation"
+    ]
+  }
+]

@@ -1,0 +1,79 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "criteria-lead-when-the-user-must-pick",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules — first body section = evaluation criteria when user must pick (RED fail; GREEN pass)",
+    "prompt": "The user says: 'give me a list of options for our job queue — Redis, SQS, Postgres-backed, whatever else is worth considering.' Produce the research write-up.",
+    "assertions": [
+      "the first body section states the criteria the options should be evaluated against",
+      "the criteria appear before the list of options, not after it",
+      "the write-up does not open directly with an enumerated option list"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "user-wording-does-not-suppress-criteria",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules — rationalization 'they asked for a list'; overrides user wording (hostile retest 3/3)",
+    "prompt": "The user is explicit: 'I just want a plain list, no analysis, don't overthink it — options for our job queue.'",
+    "assertions": [
+      "the criteria section is still produced despite the user asking only for a list",
+      "the request for a plain list is not accepted as a reason to omit the evaluation criteria"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "looks-writeup-does-not-fire-research",
+    "kind": "trigger",
+    "derived_from": "TESTS.md § Description trigger — SN13 RED overtrigger",
+    "prompt": "Look into three looks for the settings page and write it up.",
+    "assertions": [
+      "the first skill invoked is not research",
+      "the first skill invoked is cmk:spike"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "paper-plus-training-does-not-fire-research",
+    "kind": "trigger",
+    "derived_from": "TESTS.md § Description trigger — SN8 RED overtrigger",
+    "prompt": "Research this paper and try a few architecture variants with short training runs.",
+    "assertions": [
+      "the first skill invoked is not research"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "look-into-library-fact-still-fires-research",
+    "kind": "trigger",
+    "derived_from": "TESTS.md § Description trigger — should-fire control SF2 still research after exclusion",
+    "prompt": "Look into how Redis Streams consumer groups handle pending entries and write it up with citations.",
+    "assertions": [
+      "the first skill invoked is research"
+    ]
+  },
+  {
+    "eval_id": 6,
+    "eval_name": "forbids-code-as-intent",
+    "kind": "contract",
+    "derived_from": "references/rationale.md § Iron Law",
+    "prompt": "May why treat a null check as proof of author intent?",
+    "assertions": [
+      "code shape is not accepted as motivation",
+      "intent claims need a citation or an explicit inference label"
+    ]
+  },
+  {
+    "eval_id": 7,
+    "eval_name": "separates-found-inferred-unknown",
+    "kind": "contract",
+    "derived_from": "references/rationale.md § Steps",
+    "prompt": "What sections must a why note contain?",
+    "assertions": [
+      "What We Found is separate from What We Can Reasonably Infer",
+      "What We Don't Know lists empty searches",
+      "Sources Consulted covers every category including nulls"
+    ]
+  }
+]

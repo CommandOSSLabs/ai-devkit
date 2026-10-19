@@ -1,0 +1,77 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "no-skill-ships-without-a-failing-test",
+    "kind": "contract",
+    "derived_from": "SKILL.md § NO NEW SKILL AND NO EDIT TO A SKILL SHIPS WITHOUT A FAILING TEST FIRST",
+    "prompt": "Add a line to an existing skill telling the agent to always check the changelog. It is a one-line edit and obviously correct.",
+    "assertions": [
+      "a baseline run against the current version happens before the text is written",
+      "the edit being small or obviously correct is not accepted as a reason to skip the baseline",
+      "if the baseline does not fail, the text is not written"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "form-matches-the-observed-failure",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Match the form to the failure",
+    "prompt": "The baseline showed the agent produces the right artifact but omits one required element from it.",
+    "assertions": [
+      "the fix takes the form of a REQUIRED slot in the template rather than a prohibition",
+      "the failure is classified before any text is written"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "test-scenario-is-sanitized",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 1.1.0 — blinding and source-of-truth scoring in `references/pressure-testing.md`",
+    "prompt": "Two variants of an existing skill differ by one appended rule. Design the run that decides which one ships, and write out the environment setup and the verbatim prompts you would send.",
+    "assertions": [
+      "no path, directory, or filename the tested agent reads or works in carries test vocabulary such as variant, candidate, rep-N, track, scenario, eval, abtest, or a bare A/B",
+      "the skill under test sits at its real repo-relative path inside a project-shaped fixture",
+      "the text of the rule under test does not appear in any prompt sent to a tested agent",
+      "the rule's key words do not appear in the option list or scenario framing",
+      "no tested agent is told that another variant, rep, or comparison exists"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "scoring-names-its-source-of-truth",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 1.1.0 — blinding and source-of-truth scoring in `references/pressure-testing.md`",
+    "prompt": "You have GREEN transcripts from a skill-edit test run. Write out exactly how you score them.",
+    "assertions": [
+      "what the agent did is settled by diffing the artifact, not by the agent's report",
+      "whether the skill carried the decision is settled from the transcript",
+      "a citation of the rule is not accepted as proof the rule drove the choice",
+      "a rule absent from every GREEN transcript is treated as unread, an organization finding rather than a content one"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "counters-carry-the-recorded-consequence",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 1.2.0 — counter with the recorded consequence",
+    "prompt": "Here is the RED transcript for an edit to an existing skill, including the rationalizations verbatim and what the one compliant run found. Write the exact markdown to paste into the skill.",
+    "assertions": [
+      "the counter names what the baseline recorded — the number, the path, or the near-miss — rather than a general consequence",
+      "a sentence that would transfer unchanged to any other skill in the set is not accepted as the counter",
+      "the recorded rationalizations are still countered individually"
+    ]
+  },
+  {
+    "eval_id": 6,
+    "eval_name": "parallel-edits-declare-disjoint-surfaces",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 1.3.0 — parallel skill edits and shared surfaces",
+    "prompt": "Twenty-two skills need the same mechanical edit. Plan how to run it with several workers at once.",
+    "assertions": [
+      "what two workers both write is named before a second worker is dispatched",
+      "a shared ledger or budget file is given one writer, with workers reporting rather than editing it",
+      "a surviving home for a deleted rule is resolved against committed state, not the working tree",
+      "a worker's files are not read for review until that worker has reported"
+    ]
+  }
+]

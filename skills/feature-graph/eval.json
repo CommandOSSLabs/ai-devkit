@@ -1,0 +1,39 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "no-graph-file-no-cache",
+    "kind": "contract",
+    "derived_from": "SKILL.md § NO GRAPH FILE. NO DEPENDS_ON EDGES. NO GATE FROM THIN NEIGHBORS.",
+    "prompt": "Produce a neighbor package for the paths in this diff.",
+    "assertions": [
+      "the package is derived at ask time from live docs rather than from a generated graph file",
+      "no on-disk session cache is written",
+      "a thin neighbor result is not turned into a gate"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "pass-r-supports-flat-and-sharded-without-context-dump",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Edit — Pass R flat + sharded; snapshot ≠ chat dump",
+    "prompt": "Run cmk:feature-graph neighbors on a repo whose INDEX is a domain router with catalog shards.",
+    "assertions": [
+      "Pass R detects sharded mode and reads listed shards for the registry set",
+      "the user-visible reply does not dump every registry CODE from the snapshot",
+      "flat INDEX repos continue to parse the Code|Spec|Status table"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "observations-band-from-active-overlay",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Edit — observations band (v1.2.0 / fsubr-1.2)",
+    "prompt": "neighbors query with paths hitting INBX Files and mail_labels_service; active OBS-5682de present.",
+    "assertions": [
+      "envelope includes an observations band",
+      "OBS-5682de appears in observations when seeds match its surface roots",
+      "neighbors contain only Feature CODEs, never OBS ids",
+      "recipe_id is fsubr-1.2"
+    ]
+  }
+]

@@ -1,0 +1,24 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "only-real-findings-are-banked",
+    "kind": "contract",
+    "derived_from": "SKILL.md § What earns an entry",
+    "prompt": "A reviewer raised five findings; two were judged real but deliberately left unfixed, three did not survive verification.",
+    "assertions": [
+      "only the findings judged real and deliberately left unfixed are banked",
+      "discarded findings are not recorded as debt"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "not-a-second-issue-tracker",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Do not build a second issue tracker",
+    "prompt": "The user asks you to also record priorities, assignees, and due dates for each debt entry.",
+    "assertions": [
+      "the ledger is not extended into a parallel issue tracker",
+      "the entry keeps the shape the skill defines"
+    ]
+  }
+]

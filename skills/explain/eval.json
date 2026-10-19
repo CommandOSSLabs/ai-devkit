@@ -1,0 +1,83 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "first-reply-is-the-answer-not-setup",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED — 2026-10-06 (C: four setup questions in English, zero code read; B: preamble about INDEX/CODE/.gitignore before content)",
+    "prompt": "A new developer writes, in Vietnamese: 'Help me understand the refunds feature in this repo end to end, I just joined.' The repo has no docs/specs/INDEX.md and no .gitignore.",
+    "assertions": [
+      "the first reply explains the feature from code the agent opened in that turn",
+      "the reply asks no setup question about language, level, goals, pace, or format",
+      "the reply is written in Vietnamese"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "multi-file-subject-gets-the-page",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED — 2026-10-06 (A and B: chat-only prose, no file, no diagram, for a feature spanning six files)",
+    "prompt": "Same refunds request; the traced path crosses http.py, refunds.py, events.py, worker.py, gateway.py, and notify.py.",
+    "assertions": [
+      "one self-contained HTML file is written at .skills/understand/<slug>.html",
+      "the page has, in order, In short, Map, Walk one example, Surprises, Check yourself (in the user's language)",
+      "the Map is inline SVG with file:line labels, not ASCII",
+      "the page loads no remote script, stylesheet, or font"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "chat-is-gist-path-question-in-users-language",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § GREEN round 1 — v1.0.0 draft (G2: English chat of ~25 sentences to a Vietnamese user; G3: page in English under Vietnamese chat)",
+    "prompt": "Same refunds request in Vietnamese; the page has been written.",
+    "assertions": [
+      "the chat answer is the gist in at most 5 sentences, then the page path, then exactly one question",
+      "the surprises list is on the page, not repeated in chat",
+      "chat and page headings, buttons, and questions are all in Vietnamese"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "function-question-traces-the-function-not-the-flow",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § GREEN round 1 — v1.0.0 draft (G3: 'how does gateway.refund work' traced from the HTTP route down)",
+    "prompt": "The developer asks: 'how does gateway.refund work?'",
+    "assertions": [
+      "the trace covers the function body, what it calls, and its direct callers",
+      "the trace does not start at the HTTP route of the surrounding feature"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "no-self-graded-understanding-no-sibling-routing",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED — 2026-10-06 (B: marked the learner 'demonstrated' with no answer from them; ended by routing to three other skills)",
+    "prompt": "Same refunds request; the agent has delivered the explanation.",
+    "assertions": [
+      "the reply ends on one question for the user, not on a list of other skills to run",
+      "nothing records or states that the user has understood before they answer"
+    ]
+  },
+  {
+    "eval_id": 6,
+    "eval_name": "fires-on-how-it-works-not-on-neighbors",
+    "kind": "trigger",
+    "derived_from": "TESTS.md § Trigger test (round 1 miss on 'how does OAuth PKCE work?'; round 2 10/10)",
+    "prompt": "Fresh sessions with: 'how does the checkout flow work end to end?', 'explain src/auth/session.ts', 'how does OAuth PKCE work? we use it in login', 'why did we pick SQLite?', 'what is the Stripe refunds rate limit?', 'the cart total is wrong'.",
+    "assertions": [
+      "understand is loaded for the checkout flow, the file, and PKCE",
+      "why, research, and root-cause are loaded for the SQLite, Stripe, and cart-total messages respectively"
+    ]
+  },
+  {
+    "eval_id": 7,
+    "eval_name": "answer-is-graded-against-the-code",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Say right or wrong in one sentence, cite the `file:line`",
+    "prompt": "The user answers the closing question incorrectly.",
+    "assertions": [
+      "the reply says wrong in one sentence and cites the file:line that settles it",
+      "the correction is one more sentence, and no score or record is kept"
+    ]
+  }
+]

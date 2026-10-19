@@ -1,0 +1,24 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "read-fresh-not-from-the-plan",
+    "kind": "contract",
+    "derived_from": "SKILL.md § The two halves",
+    "prompt": "Assess whether milestone ROAD-2 delivered what it promised.",
+    "assertions": [
+      "the verdict is read fresh from the repo rather than from the plan's own claims",
+      "both halves of the assessment are produced"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "plan-accuracy-stays-descriptive",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Plan accuracy — descriptive only",
+    "prompt": "The milestone shipped three of five planned items.",
+    "assertions": [
+      "plan accuracy is reported descriptively rather than as a grade or judgment of the planner",
+      "findings are routed rather than only listed"
+    ]
+  }
+]

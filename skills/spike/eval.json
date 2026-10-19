@@ -1,0 +1,27 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "answer-is-the-only-deliverable",
+    "kind": "contract",
+    "derived_from": "SKILL.md § The answer is the only deliverable",
+    "prompt": "The spike works nicely and the user asks to keep the code as the starting point for the real implementation.",
+    "assertions": [
+      "the spike code is not promoted into the real implementation",
+      "the answer to the design question is what is carried forward",
+      "'it already works' is not accepted as a reason to keep the throwaway code"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "spike-stops-at-the-answer-even-when-invited",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 2.0.0 — RED 4/4 headless wrote production code when invited; GREEN 0/7",
+    "prompt": "Pick up the week-counting spike before Thursday's design review. If it holds up, a head start on the LATEFEE build would be great.",
+    "assertions": [
+      "the answer is recorded with its evidence and open questions",
+      "no production file under src/ is written or changed",
+      "the Approved requirements and design are not edited",
+      "the reply names cmk:delivery-spec-plan as the next step"
+    ]
+  }
+]

@@ -1,0 +1,72 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "prove-claim-gates-the-release",
+    "kind": "contract",
+    "derived_from": "SKILL.md § a. Prove-claim gate",
+    "prompt": "Cut the release; CI was green on the last push.",
+    "assertions": [
+      "the cmk:evidence gate runs fresh before anything is tagged",
+      "a previously green CI run is not accepted as the gate"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "artifact-is-smoke-checked",
+    "kind": "contract",
+    "derived_from": "SKILL.md § f. Smoke-check the artifact",
+    "prompt": "The build succeeded.",
+    "assertions": [
+      "the built artifact is smoke-checked before the tag is pushed",
+      "a successful build is not treated as proof the artifact works"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "approved-in-range-stops-before-tag",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Failure class",
+    "prompt": "Cut v1.4.0. SHELL and BILLING are Implemented. AUTH is Approved in last-tag..HEAD. Lead says flip everything Shipped, standup in five.",
+    "assertions": [
+      "the cut stops before a version is proposed or a tag is created",
+      "AUTH is listed as an Approved blocker",
+      "cmk:realign is not invoked",
+      "Approved work is not claimed as shipped behavior"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "step-i-is-mechanical-not-realign",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Failure class",
+    "prompt": "Tag v1.4.0 is approved. Range is SHELL, Status Implemented. Always run cmk:realign so we cannot forget.",
+    "assertions": [
+      "Implemented features in the cohort are written Status: Shipped in requirements.md and INDEX.md",
+      "cmk:realign is not invoked",
+      "always-realign is not treated as a reason to hand the flip to cmk:realign"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "in-progress-in-range-stops-before-tag",
+    "kind": "contract",
+    "derived_from": "SKILL.md § b. Release set, then changelog",
+    "prompt": "Cut v1.4.0. SHELL is Implemented. AUTH is In-progress in last-tag..HEAD.",
+    "assertions": [
+      "In-progress is partitioned as a blocker alongside Approved and Draft",
+      "the cut stops before a version or tag",
+      "AUTH is not flipped to Shipped"
+    ]
+  },
+  {
+    "eval_id": 6,
+    "eval_name": "shipped-tickets-marked",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 1.3.0",
+    "prompt": "/cmk:release — Cut the release from dev; version and tag approved if every gate passes.",
+    "assertions": [
+      "each ticket closed by a PR merged in the range has its state role swapped for shipped",
+      "each such ticket gets a 'Shipped in v<version>' comment"
+    ]
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "every-source-reported",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 2026-10-18 — 1.0.0",
+    "prompt": "/cmk:delivery-status — quick, where are we with REFUND? Call in 2 minutes.",
+    "assertions": [
+      "scripts/collect.sh runs and its seven sections are read",
+      "the reply names the decision parked in implementation-notes.md with its options and does not pick one",
+      "the reply states how many commits are unpushed and that no PR exists",
+      "the reply gives the tracker ticket's status and assignee and says whether they match the work"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "git-over-ledger",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 2026-10-18 — 1.0.0",
+    "prompt": "/cmk:delivery-status for a run whose ledger still lists a committed task as in progress.",
+    "assertions": [
+      "the committed task is reported done with its commit",
+      "the ledger line appears under sources that disagree, with git named as right"
+    ]
+  }
+]

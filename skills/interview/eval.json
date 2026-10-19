@@ -1,0 +1,246 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "interview-stays-in-inline-chat",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules — Iron Law: inline chat only; never AskUserQuestion (RED channel; GREEN A2/F2)",
+    "prompt": "The user says: 'we're underspecified on the notifications feature — grill me on it before we build.' Run the interview.",
+    "assertions": [
+      "questions are asked as inline chat text, not through a structured multiple-choice picker",
+      "questions come one at a time rather than as a batch the user answers in bulk",
+      "the run does not present a fixed menu the user selects from in place of an open answer"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "open-set-no-question-quota",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules — open set; no fixed N / no todo quota (RED rounds rationalizations)",
+    "prompt": "Interview the user on a half-specified billing change. After four questions the high-blast-radius branches are still open.",
+    "assertions": [
+      "the interview continues past any round number rather than stopping at a preset count",
+      "no fixed question quota or todo list of N questions is announced up front",
+      "stopping is justified by every high-blast branch being closed, not by a number being reached"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "rich-question-card-shape",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules — rich question card (RED thin shape; GREEN B2)",
+    "prompt": "Ask the first interview question about an underspecified data-retention decision.",
+    "assertions": [
+      "the question names the thread it belongs to and the territory it probes",
+      "it states why the answer matters and what it closes",
+      "it offers options with their consequences rather than a bare open question",
+      "it carries a recommendation rather than staying neutral"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "close-package-requires-real-confirmation",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules — close package; 'we're aligned' ≠ confirmation (RED C1; GREEN C2)",
+    "prompt": "Mid-interview the user replies 'yeah I think we're aligned, let's go'. Two decisions still have high-tweak surface.",
+    "assertions": [
+      "'we're aligned' is not treated as confirmation of the open decisions",
+      "a close package restating the decided items is produced for explicit confirmation",
+      "the remaining high-tweak surface is surfaced rather than assumed settled"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "blast-radius-before-polish",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules — blast-radius first even when user asks polish first (GREEN E3)",
+    "prompt": "The user opens with 'just help me pick the button colour for the export dialog' on a feature whose storage model is still undecided.",
+    "assertions": [
+      "the undecided high-blast decision is raised before the low-blast styling question",
+      "the ordering is not surrendered to the user's stated starting point"
+    ]
+  },
+  {
+    "eval_id": 6,
+    "eval_name": "trigger-fires-on-interview-intent",
+    "kind": "trigger",
+    "derived_from": "TESTS.md § Description trigger notes — should-fire list",
+    "prompt": "stress-test this plan before we build",
+    "assertions": [
+      "cmk:interview is selected"
+    ]
+  },
+  {
+    "eval_id": 7,
+    "eval_name": "trigger-yields-to-greenfield-shaping",
+    "kind": "trigger",
+    "derived_from": "TESTS.md § Description trigger notes — should-not-fire neighbours",
+    "prompt": "I have a brand-new idea for a referrals system, nothing exists yet — help me shape it",
+    "assertions": [
+      "cmk:scope is selected rather than cmk:interview"
+    ]
+  },
+  {
+    "eval_id": 8,
+    "eval_name": "problem-lock-before-solution-options",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules — Problem lock before solution-shaped preference cards (RED S-P0-PROBLEM; GREEN S-P0-PROBLEM)",
+    "prompt": "Grill me on adding mode=authoring to the learner-courses route so creators see drafts. Senior said skip philosophy and pick the API option.",
+    "assertions": [
+      "a problem lock with observed, desired, and non-goals appears before any storage or API preference menu",
+      "the named mode=authoring path is treated as an assumption rather than an already-locked decision",
+      "senior pressure to skip philosophy does not waive the problem lock"
+    ]
+  },
+  {
+    "eval_id": 9,
+    "eval_name": "criteria-above-options-on-high-blast",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules — Criteria (graders) required on high-blast cards (RED S-P0-CRITERIA; GREEN S-P0-CRITERIA; v1.1.1 wording)",
+    "prompt": "Ask the architecture card: widen the learner route versus a new catalog endpoint. Put success into the Why line — no Criteria section.",
+    "assertions": [
+      "a labeled Criteria graders block with named pass/fail graders appears above the options",
+      "the recommendation cites those graders by name rather than blast or reverse-cost alone",
+      "Criteria is not collapsed into the Why blast narrative",
+      "a request to put success only in Why is not treated as a waiver"
+    ]
+  },
+  {
+    "eval_id": 10,
+    "eval_name": "close-package-success-boundaries-spine",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules — Close package requires Success · Boundaries · Spine touch (RED S-P0-CLOSE; GREEN S-P0-CLOSE)",
+    "prompt": "High-blast decisions are locked. User says we're aligned — skip the ceremony and write requirements.",
+    "assertions": [
+      "the close package includes a success or done-signal section with observables",
+      "the close package includes boundaries covering off limits and must-keep-working",
+      "the close package includes a spine touch (Respects ARCH-N, none, or challenges)",
+      "we're aligned is not accepted as confirmation of the package"
+    ]
+  },
+  {
+    "eval_id": 11,
+    "eval_name": "name-work-the-problem-when-identify-define-open",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules — Identify/Define open → name /cmk:problem (RED S-P0-WTP; GREEN S-P0-WTP)",
+    "prompt": "Brain-dump mixes Finder feels wrong, Studio is confusing, maybe merge them, or a toggle, or rebuild nav. Give me three merge architectures and pick one. Don't send me to another skill.",
+    "assertions": [
+      "either /cmk:problem is named for the user to run or a problem-lock card is emitted",
+      "/cmk:problem is not auto-invoked as a sub-skill",
+      "a merge architecture option menu is not presented while the problem statement is still open"
+    ]
+  },
+  {
+    "eval_id": 12,
+    "eval_name": "production-coverage-on-blocks-early-close",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules — Coverage ON map + R/F/O (RED S-SRE-COVERAGE; GREEN v1.2.0/v1.3.0 when gate ON)",
+    "prompt": "Written posture: Delivery intent Production and Lifecycle Cut Released. Feature adds a new checkout failure domain with on-call alerts. Architecture forks are locked. Reliability, failure modes, and alerts were never discussed. User says emit the close package — senior said reliability is a later NFR template.",
+    "assertions": [
+      "production coverage is treated as ON and references/production-coverage.md rules are applied",
+      "a coverage map including Reliability, Failure, and Operate cells is present or refreshed",
+      "the close package is not emitted while those cells remain Missing without an owner",
+      "deferring reliability to a later NFR template is not treated as closing those cells"
+    ]
+  },
+  {
+    "eval_id": 13,
+    "eval_name": "unowned-tbd-blocks-coverage-close",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules — Owned unknowns required when Coverage ON (RED S-SRE-OWNED-TBD; GREEN S-SRE-OWNED-TBD)",
+    "prompt": "Coverage ON (Production + Cut Released + operate surface). User leaves SLO window as TBD with no owner and asks to close — Open Questions will catch it.",
+    "assertions": [
+      "the close package is not emitted",
+      "an owned unknown with owner, date, and forbid-guess is required before close",
+      "handing TBD to requirements Open Questions alone is not accepted"
+    ]
+  },
+  {
+    "eval_id": 14,
+    "eval_name": "absent-posture-coverage-off",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Production coverage thinning RED S-GATE-ABSENT; GREEN v1.3.0",
+    "prompt": "docs/agents/project.md has no Project posture section. Interview a small export sync-vs-queue fork. Manager says skip reliability ceremony and close. Standup in eight minutes.",
+    "assertions": [
+      "production coverage is treated as OFF",
+      "no seven-cell coverage map is required",
+      "reliability, failure, and operate radii are not opened as mandatory high-blast cells",
+      "absent posture is not treated as Production coverage ON"
+    ]
+  },
+  {
+    "eval_id": 15,
+    "eval_name": "production-polish-without-ops-ask-coverage-off",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Production coverage thinning RED S-GATE-POLISH; GREEN v1.3.0",
+    "prompt": "Written posture: Delivery intent Production, Lifecycle Cut Released. Interview is recolor the primary CTA on the marketing landing page. Parent did not ask for ops coverage. User says please skip Reliability Failure Operate — it is a button color. Senior says every Production interview gets the full coverage map.",
+    "assertions": [
+      "production coverage is treated as OFF because the surface latch is not met",
+      "a full coverage map with Reliability Failure Operate as open high-blast is not required",
+      "senior pressure that every Production interview needs the map does not flip the gate"
+    ]
+  },
+  {
+    "eval_id": 16,
+    "eval_name": "high-blast-recommendation-is-a-decision-argument",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Decision-argument and card-legibility upgrade — RED S-ARGUMENT; GREEN v1.4.0",
+    "prompt": "Ask one data-decision card for tenant audit-event storage. Territory: one shared Postgres cluster; two past queries omitted tenant_id; exports scan 90 days; tenant deletion must finish within 24 hours; the team operates Postgres but not Kafka. Compare shared partitioned tables, schema per tenant, and an append-only event log. Graders: Tenant isolation and Operational fit.",
+    "assertions": [
+      "each option explains what it gains, pays, can break, and when it is the better fit in connected causal language rather than bare labels",
+      "the recommendation contains Pick, Decisive factors, Runner-up, Accepted trade-off, Confidence or evidence gap, and Reopen trigger",
+      "decisive factors cite grounded Territory facts and the named graders",
+      "the runner-up loses on a decisive factor rather than being dismissed generically",
+      "the reopen trigger names observable evidence or a concrete constraint change rather than only saying if requirements change"
+    ]
+  },
+  {
+    "eval_id": 17,
+    "eval_name": "card-explains-causality-without-losing-technical-meaning",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Decision-argument and card-legibility upgrade — user production report; GREEN S-CAUSAL-UNSEEN",
+    "prompt": "Ask one architecture card for webhook ingestion. Territory: gateway retries 3 times; worker delivery is at-least-once; ledger has unique(provider,event_id); downstream email is non-idempotent; no exactly-once broker. Compare acknowledge before persist, acknowledge after direct processing, and persist then outbox worker. Graders: no lost accepted events and no duplicate email. Write for a product-minded engineering lead.",
+    "assertions": [
+      "the card preserves the exact terms at-least-once, unique(provider,event_id), non-idempotent, exactly-once, and outbox rather than replacing them with vague simplifications",
+      "the card explains causally how acknowledgment, retries, and crash timing can lose an event or duplicate an email",
+      "the recommendation does not claim that an outbox alone provides exactly-once email delivery",
+      "the remaining downstream idempotency or deduplication gap is explicit and affects confidence or the reopen condition"
+    ]
+  },
+  {
+    "eval_id": 18,
+    "eval_name": "compat-none-recommends-in-place-change-not-a-shim",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Compat obligation — RED S-COMPAT-NONE (6/7 Sonnet baselines picked the additive option); GREEN v1.5.0",
+    "prompt": "Written posture: Delivery intent Production, Lifecycle stage Active development, no Compat obligation line. A data card asks how to turn a free-text `orders.status` column into a Postgres enum. Migrations 001-003 are committed; `api/src/orders.ts` says the only consumer is the web app in the same monorepo. Both backend engineers say the team never rewrites a committed migration and the last three schema changes were additive. Options: (A) rewrite the committed migration in place and reseed dev databases, (B) add a parallel `status_enum` column with a sync trigger and deprecate `status`, (C) B plus a `/api/v2/orders` endpoint beside the legacy one.",
+    "assertions": [
+      "compat obligation is read as None, derived from the pre-release lifecycle stage rather than asked for",
+      "the Recommendation picks the in-place rewrite (A)",
+      "the parallel column, sync trigger, v2 endpoint, and deprecation window are named as compatibility bought for a consumer that does not exist",
+      "Delivery intent Production is not treated as evidence that the project has shipped or that a database is live"
+    ]
+  },
+  {
+    "eval_id": 19,
+    "eval_name": "compat-external-still-weighs-migration-cost",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Compat obligation — GREEN v1.5.0 preservation arm",
+    "prompt": "Written posture: Delivery intent Production, Lifecycle stage Cut Released. Same `orders.status` enum fork, same three options, and a partner integration reads `GET /api/orders`.",
+    "assertions": [
+      "compat obligation is read as External",
+      "backward compatibility, the migration path, and deprecation cost are weighed as first-class option criteria",
+      "the in-place rewrite is not recommended"
+    ]
+  },
+  {
+    "eval_id": 20,
+    "eval_name": "architecture-option-carries-a-shape",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § The `Shape` sub-slot on options — RED 2026-09-09, 3/3 options prose-only",
+    "prompt": "A notification service emails customers once per scan event and product wants one daily summary instead. Interview them, opening on where the rollup's per-customer progress gets stored.",
+    "assertions": [
+      "every option on the architecture or data card shows the caller-facing difference as it would be written — a column, type, signature, route, or payload",
+      "each shown fragment is set off from the option's prose rather than named inside a sentence",
+      "no option defers its shape to another option's, and none is left as a title with consequences only"
+    ]
+  }
+]

@@ -1,0 +1,73 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "failing-test-before-production-code",
+    "kind": "contract",
+    "derived_from": "SKILL.md § NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST",
+    "prompt": "The change is a one-line default value. Writing a test feels like overkill and the branch is otherwise done.",
+    "assertions": [
+      "a failing test exists before the production change is written",
+      "the test is observed failing rather than assumed to fail",
+      "the size of the change is not accepted as a reason to skip it"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "green-adds-no-structure-the-test-did-not-force",
+    "kind": "contract",
+    "derived_from": "SKILL.md § No speculative parameters, no extra features, no touching unrelated code",
+    "prompt": "The failing test can be made green by a 9-line function, or by a class hierarchy plus a resolver registry you already drafted and committed this afternoon, or by a strategy map holding exactly one entry. None of the three adds a feature or parameter the requirement did not ask for. A sibling module uses the registry shape, and the tech lead praised it on your last PR.",
+    "assertions": [
+      "the implementation carries no structure the failing test forced into existence",
+      "an already-written heavier implementation is not kept on the grounds that it exists",
+      "a shape borrowed from a sibling module is not adopted without the variation that earned it there",
+      "code adjacent to the change is left untouched"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "tests-go-at-pre-agreed-seams",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Where tests go: pre-agreed seams",
+    "prompt": "Write the test for a behavior whose seam is not in the design's seam table.",
+    "assertions": [
+      "the test is not written at a seam the design did not agree",
+      "the missing seam is raised rather than invented"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "whole-suite-once-not-per-green",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Verify tiers (v1.1.0, 2026-10-03)",
+    "prompt": "Rust workspace; project.md says the full suite takes ~18 min and one test binary ~60 s. Task: a store function plus an api route, four TDD slices. The controller says 14 more tasks are queued tonight. List every verification command you will run and when.",
+    "assertions": [
+      "each RED, GREEN and refactor step runs a narrow command, not the full suite",
+      "breadth runs once, at the task's final commit, as the task gate",
+      "the report names the scope of that gate rather than claiming the tests pass"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "migration-escalates-the-gate",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Verify tiers (v1.1.0, 2026-10-03)",
+    "prompt": "Same workspace. The task adds migration 0043 that every store, api and worker test reads. Plan the task gate.",
+    "assertions": [
+      "the task gate escalates to the whole suite",
+      "the escalation reason names the migration or shared schema"
+    ]
+  },
+  {
+    "eval_id": 6,
+    "eval_name": "red-lint-baseline-is-compared-not-suppressed",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Verify tiers (v1.1.0, 2026-10-03)",
+    "prompt": "Clippy already fails on a pre-existing finding in the root crate before your task starts, and stops there. Plan and report the lint step of your task gate.",
+    "assertions": [
+      "lint results are judged against the recorded baseline",
+      "no lint rule is suppressed to get past the baseline",
+      "a clean lint result is not claimed while the baseline failure still stops the run"
+    ]
+  }
+]

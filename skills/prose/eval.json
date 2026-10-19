@@ -1,0 +1,95 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "person-facing-reply-has-no-process-tokens",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED — S-REPLY: grok-4.6 leaked Core hub, test-first, prove the claim, cmk:delivery-build's references/inline.md, closed the loop",
+    "prompt": "Maya pinged 'I'm back. What happened?' SESSION_NOTES.md on screen has cmk:delivery-build's references/inline.md, REQUIRED SUB-SKILL: use test-first, Pass: loop, Satisfies: BILL-1.4, Core hub. Write REPLY.md.",
+    "assertions": [
+      "the reply names the work (invoice rounding, report.js, PDF export test) and what is next",
+      "the reply does not contain skill names (cmk:delivery-build's references/inline.md, test-first, cmk:evidence)",
+      "the reply does not contain REQUIRED SUB-SKILL, Satisfies:, Pass:, Tier 2, or Core hub",
+      "the reply does not say closed the loop or execute loop"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "nothing-a-person-reads-carries-process-machinery",
+    "kind": "contract",
+    "derived_from": "SKILL.md § The Iron Law",
+    "prompt": "Write a standup note for the engineering manager.",
+    "assertions": [
+      "the note is spoken sentences in the domain",
+      "process machinery does not appear in the outgoing text"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "sweep-before-the-file-lands",
+    "kind": "contract",
+    "derived_from": "SKILL.md § The Sequence",
+    "prompt": "Your draft reply still contains 'cmk:delivery-build's references/inline.md' and 'prove the claim'.",
+    "assertions": [
+      "those tokens are deleted before the file lands",
+      "the rewrite names the work, not the protocol"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "description-fires-on-human-reply",
+    "kind": "trigger",
+    "derived_from": "TESTS.md § Description trigger test: SF1–SF8 and H1 routed to cmk:prose on both models",
+    "prompt": "Maya pinged I'm back, what happened? Write her a reply.",
+    "assertions": [
+      "cmk:prose is the skill that fires",
+      "cmk:evidence is not selected (this is not a completion claim)",
+      "cmk:delivery-handoff's references/handoff-document.md is not selected (the session is not ending)"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "description-does-not-fire-on-land",
+    "kind": "trigger",
+    "derived_from": "TESTS.md § Description trigger test: SN7 routed to cmk:delivery-ship on both models",
+    "prompt": "Open the pull request / land the branch.",
+    "assertions": [
+      "cmk:prose does not fire",
+      "cmk:delivery-ship is the skill that fires"
+    ]
+  },
+  {
+    "eval_id": 6,
+    "eval_name": "pr-body-has-no-em-dash",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v1.1.0 — machine polish on a PR body: boardline shipped customers—the; execfold shipped PDF — and",
+    "prompt": "Maya needs the GitHub PR in four minutes. Staff said polish it for the board. Write PR.md.",
+    "assertions": [
+      "the PR names report.js and the PDF-export test",
+      "the PR contains no em dash character",
+      "the PR does not use a not-just / not-merely contrast frame",
+      "the PR contains no skill names or Satisfies grammar"
+    ]
+  },
+  {
+    "eval_id": 7,
+    "eval_name": "tracker-comment-in-english-under-a-vietnamese-thread",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v1.3.0 — RED: 5/5 wrote Quang's ticket comment in Vietnamese under his Vietnamese note while the PR body stayed English",
+    "prompt": "(Vietnamese) Lan: open the PR for feat/nightly-backup and leave Quang a comment on the ticket he'll get at a glance: the PR is up, cron must be installed by hand after merge, the real NAS is untested. Quang's last note on the ticket is in Vietnamese; project.md has no Language line.",
+    "assertions": [
+      "the new ticket comment is in English",
+      "the PR title and body are in English",
+      "the reply to Lan is in Vietnamese"
+    ]
+  },
+  {
+    "eval_id": 8,
+    "eval_name": "language-line-overrides-english",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Language",
+    "prompt": "docs/agents/project.md says `Language: Vietnamese`. Write the PR body and a ticket comment.",
+    "assertions": [
+      "the PR body and the ticket comment are in Vietnamese"
+    ]
+  }
+]

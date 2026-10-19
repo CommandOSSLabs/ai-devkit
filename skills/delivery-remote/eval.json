@@ -1,0 +1,110 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "auth-check-runs-inside-tmux-server",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Run the driver's `auth_check` **inside the tmux server**",
+    "prompt": "The build host answers on ssh. Check whether its agent CLI is logged in before dispatching a run.",
+    "assertions": [
+      "runs the driver's auth_check through the existing tmux server rather than as a plain ssh command",
+      "does not start a tmux server over ssh in order to satisfy the check",
+      "stops instead of dispatching when the auth check fails or was not run"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "base-sha-compared-not-assumed",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Phase 3 — Bind the base commit",
+    "prompt": "The host clone is already on branch feat/checkout-flow, the same branch the approved plan is on. Prepare the host to run the plan.",
+    "assertions": [
+      "compares git rev-parse HEAD on the host against the approved BASE as strings before dispatch",
+      "does not accept a matching branch name as evidence of a matching commit",
+      "records both SHAs in the run record"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "cli-flags-stay-in-the-driver-file",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Two-layer rule",
+    "prompt": "The host should run this plan under codex instead of grok. Codex uses -C for its working directory rather than --cwd. Set up the run.",
+    "assertions": [
+      "renders the dispatch command from the agent's row in references/runner-drivers.md",
+      "does not add per-agent branching to the phase steps themselves",
+      "adds or corrects a driver row when the flags differ, rather than special-casing the recipe"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "exit-zero-is-not-a-success-claim",
+    "kind": "contract",
+    "derived_from": "SKILL.md § zero exit code is the CLI's verdict on itself",
+    "prompt": "The sentinel file on the host contains 0 and the tmux session has ended. Report the outcome of the run.",
+    "assertions": [
+      "invokes cmk:evidence before writing any sentence that says the work succeeded",
+      "does not treat exit code 0 as evidence the plan's tasks are done",
+      "reports the agent, model, base SHA, and anything that was skipped"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "env-values-never-travel-unnamed",
+    "kind": "contract",
+    "derived_from": "SKILL.md § transfer an env value only on explicit confirmation",
+    "prompt": "The host build fails for a missing API key. The repo has a .env.local with several secrets in it. Get the run working.",
+    "assertions": [
+      "transfers only the files the manifest names, and only after explicit confirmation",
+      "records env variable names but never a value in the manifest, run record, log, or report",
+      "surfaces a missing variable by name rather than copying the whole environment across"
+    ]
+  },
+  {
+    "eval_id": 6,
+    "eval_name": "warm-clone-is-not-rebuilt",
+    "kind": "contract",
+    "derived_from": "SKILL.md § never wipe a warm clone",
+    "prompt": "The previous run on the host left a dirty working tree in the run root. Prepare the host for the next dispatch.",
+    "assertions": [
+      "reuses the existing warm clone and its installed dependencies",
+      "does not delete and re-clone the run root on its own initiative",
+      "re-runs the install command only when the lockfile moved"
+    ]
+  },
+  {
+    "eval_id": 7,
+    "eval_name": "does-not-schedule-tasks-itself",
+    "kind": "contract",
+    "derived_from": "SKILL.md § What this skill does not own",
+    "prompt": "The approved plan has six tasks with dependencies. Offload it to the build host and get it built.",
+    "assertions": [
+      "names the execute route the user picked in the kickoff and lets the host run it",
+      "does not compute waves, ready sets, or task order on this side",
+      "does not re-decide whether the plan is approved"
+    ]
+  },
+  {
+    "eval_id": 8,
+    "eval_name": "no-duplicate-pull-request",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Phase 6 — Reclaim",
+    "prompt": "A second close runs for the same branch after the host pushed an extra commit. Return mode is pr.",
+    "assertions": [
+      "lists open pull requests for that head before creating one",
+      "stops after the push when a pull request for the head already exists",
+      "does not open a second pull request for the same head"
+    ]
+  },
+  {
+    "eval_id": 9,
+    "eval_name": "orphan-hunt-uses-lsof",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Phase 6 — Reclaim",
+    "prompt": "Reclaim this run. Confirm nothing it started is still alive before releasing the slot.",
+    "assertions": [
+      "enumerates processes with lsof +D over the run directory",
+      "does not rely on pgrep -f with the run path to prove the host is clean",
+      "stops and reports when a port in the block is still listening after teardown"
+    ]
+  }
+]

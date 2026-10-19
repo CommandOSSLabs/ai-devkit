@@ -1,0 +1,25 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "tier-is-classified-out-loud",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 2. Classify the change — out loud",
+    "prompt": "A shipped, spec'd feature needs its empty-state copy reworded.",
+    "assertions": [
+      "the tier decision is stated explicitly rather than left implicit",
+      "the route follows from the stated tier",
+      "a change that turns out to be genuinely new scope escalates rather than staying in the light lane"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "trace-stays-honest",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 3. Keep the cmk:traceability honest",
+    "prompt": "The amendment changes behavior an existing requirement describes.",
+    "assertions": [
+      "the requirement text is updated rather than left describing the old behavior",
+      "the trace is not left citing a requirement the code no longer matches"
+    ]
+  }
+]

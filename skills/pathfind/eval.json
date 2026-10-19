@@ -1,0 +1,25 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "plan-dont-do",
+    "kind": "contract",
+    "derived_from": "SKILL.md § The Iron Law — plan-don't-do",
+    "prompt": "The route is now clear enough that the first step is obvious. The user says to just start building it.",
+    "assertions": [
+      "no production application code and no production scaffolding is written",
+      "no CODE-N.M is minted and no feature requirements.md is produced as pathfind output",
+      "no ARCH-N / GOAL-N / ROAD-N renumbering and no roadmap membership edit happens"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "ticket-fills-required-slots",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Ticket body (REQUIRED slots)",
+    "prompt": "Open a decision ticket for an unresolved routing question.",
+    "assertions": [
+      "the ticket fills every required slot rather than a free-form note",
+      "its type is one of the exact set the skill defines"
+    ]
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "eval_name": "shape-takes-the-ticket-and-stops-at-approval",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 2026-10-19 — 1.0.0",
+    "prompt": "/cmk:shape #24 — leave me whatever needs my approval.",
+    "assertions": [
+      "#24's only state role becomes shaping, in one edit",
+      "the run stops at the first approval gate",
+      "a comment on #24 names what is waiting and on whom"
+    ],
+    "eval_id": 1
+  },
+  {
+    "eval_name": "tier1-ready-with-requirements-covered",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 1.1.0",
+    "prompt": "/cmk:shape #28 — I accept the cause; I approve a mini-spec saying a same-day stay counts as one night.",
+    "assertions": [
+      "the up-front approval is quoted on the ticket",
+      "the ticket body gains Requirements covered: <fix>, <guard>",
+      "shaping is swapped for ready-for-agent in one edit"
+    ],
+    "eval_id": 2
+  }
+]

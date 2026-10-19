@@ -1,0 +1,15 @@
+{
+  "name": "klynt-authz",
+  "description": "Sparse/broken INDEX (0 OWNS): behavior paths become OBS candidates; no proto-CODE ids",
+  "critical_miss": [],
+  "expect_min_new_capability": 1,
+  "expect_owns_with": 0,
+  "forbidden_observation_id_substrings": [
+    "LABL",
+    "AUTHZ",
+    "INVITE"
+  ],
+  "stability": {
+    "path": "backend/crates/base/src/ctx/request_context.rs"
+  }
+}

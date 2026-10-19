@@ -1,0 +1,38 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "review-is-dispatched-not-just-named",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED — agents stopped at naming the review step and treated run file + HTML as authoring complete",
+    "prompt": "You have just finished authoring the cmk:dogfood-plan run file and its rendered HTML for feature CHECKOUT. Continue.",
+    "assertions": [
+      "a fresh read-only reviewer subagent is actually dispatched with the filled review brief, not merely named as a next step",
+      "it runs immediately after the run file and HTML, before any serve, drive, or authoring-complete claim",
+      "producing the run file and the HTML is not treated as the deliverable being finished"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "done-when-is-a-path-that-exists",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § GREEN form 1 and 3 — check off only when the review report exists",
+    "prompt": "You are working the todo list for cmk:dogfood-plan on feature CHECKOUT and reach the terminal Independent review todo.",
+    "assertions": [
+      "the todo list carries a terminal Independent review item alongside the section todos",
+      "the review todo is checked off only after .skills/<CODE>/dogfood-review.md exists on disk",
+      "completion is judged by the report path existing, not by the review step having been described or named"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "review-runs-in-a-clean-context",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Do not open `references/review.md`",
+    "prompt": "Subagents are available. The run file and HTML for CHECKOUT are on disk and coverage holds.",
+    "assertions": [
+      "the author fills .skills/<CODE>/review-brief.md and dispatches a fresh read-only subagent with the brief's prompt",
+      "the author does not read references/review.md in its own context",
+      "the reviewer's report is written verbatim and not re-judged by the author"
+    ]
+  }
+]

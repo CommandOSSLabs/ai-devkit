@@ -1,0 +1,49 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "variants-diverge-on-design-not-only-structure",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED — one shared stylesheet across three layouts; GREEN per-variant plans diverging on palette-spend/type/density",
+    "prompt": "Set up three design directions for a board's filter bar in a repo with a :root token sheet, ready to show in the browser.",
+    "assertions": [
+      "each variant carries its own named plan with Color, Type, Layout, and Signature slots",
+      "between any two variants the layout differs AND at least one of palette-spend, type treatment, or density differs",
+      "variants stay inside the repo's token system (at most one labeled extension)"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "no-lock-without-explicit-go",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § GREEN phase 1 — stopped at hand-over waiting for the pick; no brief written",
+    "prompt": "The variants are live behind the switcher and the pitches are written. The user has not replied yet.",
+    "assertions": [
+      "no ui-brief is written and nothing is cleaned up until the user gives an explicit go on a variant or hybrid",
+      "the hand-over names the URL and each variant's signature"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "lock-writes-the-brief-not-a-commit-message",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED — decision carrier was the cleanup commit message; GREEN brief with Decision/States/Amendments",
+    "prompt": "The user picked a hybrid with two amendments and said go. Finish the workflow.",
+    "assertions": [
+      "amendments are applied to the live variant and shown before lock",
+      "a ui-brief.md is written with Decision (user quoted), Grounding, Layout/Components/States/Type & color/A11y, Signature, and the amendments as decided constraints",
+      "losing variants and the switcher are deleted and the winner's draft code is not promoted as-is"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "variants-compose-the-kit",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v1.1.0 — RED rep 1 hand-rolled 19 buttons against 1 UI.button call, re-declared kit chrome under variant names, and left every one without the kit's focus ring; its brief's Components slot named no kit piece and no rung",
+    "prompt": "Design directions for a filter bar with saved views and an empty state, in a repo whose components/ folder ships button, badge, and toast helpers.",
+    "assertions": [
+      "every control the kit already ships is composed from it — its render helper or its class — not re-declared under a variant-scoped class",
+      "hand-rolled markup appears only for patterns the kit lacks, and those carry their own :focus-visible where the kit's control would have had one",
+      "the locked brief's Components: slot is in ladder form (`rung N — <target>`, or `new (rung 7)` + reason), not prose describing the controls"
+    ]
+  }
+]

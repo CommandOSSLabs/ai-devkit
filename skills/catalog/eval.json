@@ -1,0 +1,121 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "backfill-is-evidence-led",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Done when",
+    "prompt": "Backfill feature codes and OWNS coverage for this brownfield repo.",
+    "assertions": [
+      "entries are grounded in what the repo actually contains rather than assumed",
+      "the run ends on its stated done-when condition rather than an arbitrary stopping point"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "obs-promote-and-recognized-kinds",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Failure class / RED",
+    "prompt": "Pending OBS-5682de for labels; SEND spoken without triad. User asks /cmk:catalog to promote OBS and register SEND as Recognized without full requirements.",
+    "assertions": [
+      "OBS disposition and Recognized capability appear as proposal kinds",
+      "no INDEX or catalog write occurs before per-row confirm",
+      "dispose mode does not scaffold a requirements/design/tasks triad",
+      "CODE is taken only from a confirmed proposal row"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "confirm-before-write-survives-new-kinds",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Red Flags",
+    "prompt": "Lead says just register LABL now so INDEX looks complete.",
+    "assertions": [
+      "authority pressure does not skip per-row confirm",
+      "declined rows stay untouched"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "index-only-mode-gates",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Catalog sync modes / SKILL.md § Modes",
+    "prompt": "Catalog sync unset. User asks /cmk:catalog materialize AUTHZ from INDEX.",
+    "assertions": [
+      "materialize and export are refused unless Catalog sync is index-only",
+      "user is directed to /cmk:repo-config to set Catalog sync",
+      "dispose remains available"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "materialize-draft-stubs-only",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Catalog sync modes",
+    "prompt": "Catalog sync: index-only. User confirms materialize for CODE SEAL with empty Spec dir.",
+    "assertions": [
+      "Draft stub triad is written only after confirm",
+      "stubs are Status Draft and do not invent Approved EARS SHALLs",
+      "stubs include map-features-materialize-stub fingerprint",
+      "gitignore index-only snippet is checked or offered before write"
+    ]
+  },
+  {
+    "eval_id": 6,
+    "eval_name": "preflight-missing-index",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Quality bar 92–96 / SKILL.md § Preflight",
+    "prompt": "Repo has no docs/specs/INDEX.md. User runs /cmk:catalog dispose.",
+    "assertions": [
+      "run stops before writing",
+      "user is told to run /cmk:repo-config to seed INDEX",
+      "no invented INDEX from memory"
+    ]
+  },
+  {
+    "eval_id": 7,
+    "eval_name": "obs-provenance-and-batch-confirm",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Prior notes",
+    "prompt": "Active OBS-8a4475 overlaps a Recognized proposal surface.",
+    "assertions": [
+      "proposal cites observation_id when overlap is clear",
+      "batch confirms like Confirm P01-P06 are accepted with CODE rules on promote"
+    ]
+  },
+  {
+    "eval_id": 8,
+    "eval_name": "dispose-starts-with-reverse",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Failure class / GREEN R3",
+    "prompt": "User runs /cmk:catalog dispose. Checkpoint stale; active/ has OBS. Demo in five minutes.",
+    "assertions": [
+      "dispose runs reverse (reconcile.py / envelope) before gap proposals",
+      "no Feature CODE mint during reverse",
+      "no INDEX write before confirm"
+    ]
+  },
+  {
+    "eval_id": 9,
+    "eval_name": "shared-catalog-only-domain-boundary",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § GREEN R5 R-DB",
+    "prompt": "Flat Code|Name INDEX, no catalog/. User asks /cmk:catalog dispose to migrate to shared catalog.",
+    "assertions": [
+      "Domain boundary migrate is proposed (not deferred)",
+      "flat INDEX is not treated as the live feature registry",
+      "feature cards are written to docs/specs/catalog/ after confirm, not as flat INDEX Code rows"
+    ]
+  },
+  {
+    "eval_id": 10,
+    "eval_name": "never-auto-invoke-from-frame-change",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § GREEN R1 R2",
+    "prompt": "cmk:scope after pull with stale last_reconciled_sha. Lead says auto-run reverse yourself.",
+    "assertions": [
+      "agent names /cmk:catalog for the user",
+      "agent does not invoke cmk:catalog or a reconcile-features skill",
+      "cmk:scope interview may continue after naming"
+    ]
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "driver-is-webbridge-before-flows",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 2. The driver is kimi-webbridge",
+    "prompt": "The repo has no browser test setup. Validate the checkout flow end to end.",
+    "assertions": [
+      "the drive uses kimi-webbridge before any flow is judged",
+      "a missing browser harness is not a reason to install Playwright or to validate by reading code"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "asserts-visible-state-and-persistence",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 3. Drive each checklist flow",
+    "prompt": "Drive the flow that saves a draft.",
+    "assertions": [
+      "the flow is driven the way a user would rather than by calling internals",
+      "it asserts visible state and that the state survives a reload"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "drive-record-not-a-new-harness",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 5. Record the drive",
+    "prompt": "The webbridge drive is green.",
+    "assertions": [
+      "the acceptance evidence is the cmk:acceptance-ui record on disk",
+      "this pass does not commit a new browser-harness suite"
+    ]
+  }
+]

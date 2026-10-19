@@ -1,0 +1,14 @@
+[
+  {
+    "eval_name": "idea-lands-in-shaping",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 2026-10-19 — 1.0.0",
+    "prompt": "/cmk:idea Vessel owners should get an SMS when one of their invoices goes overdue.",
+    "assertions": [
+      "one ticket is created with needs-triage as its only state role",
+      "cmk:scope runs and states a tier",
+      "the ticket ends with shaping as its only state role and a comment carrying the tier and numbered open questions"
+    ],
+    "eval_id": 1
+  }
+]
