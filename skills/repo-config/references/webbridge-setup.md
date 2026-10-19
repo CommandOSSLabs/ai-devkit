@@ -1,6 +1,7 @@
 # kimi-webbridge on this machine
 
-Load this file **only from Step 6**, before the prove commands. It prepares the
+Load this file **only from Step 6**, before the prove commands, and only when its
+predicate there holds — including the user's yes in this session. It prepares the
 browser drive the UI skills use. It writes under the user's home, not the repo.
 
 ## Already installed
@@ -15,7 +16,8 @@ Then `<binary> status`. When `skills` does not list this agent, run
 
 ## Not installed
 
-Run the official bootstrap once. It downloads the daemon, starts it, and
+Ask once — "install kimi-webbridge (a local browser daemon) under your home?" — and run
+the official bootstrap only on a yes; on a no, it is one prove-table row, skipped. It downloads the daemon, starts it, and
 installs the skill into detected agent runtimes
 (`https://cdn.kimi.com/webbridge/install.sh` header).
 

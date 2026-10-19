@@ -29,6 +29,14 @@ as exhaustive for all time.
 │                               #   cmk:agent-instructions and owned afterward
 │                               #   by cmk:rule; verified as part of that
 │                               #   facet's own checks, not cmk:docs's.
+├── docs/agents/                # cmk:repo-config — project.md (posture, team,
+│                               #   default PR base), issue-tracker.md,
+│                               #   triage-labels.md, verify.md. Verify: each
+│                               #   exists; the tracker answers one read-only
+│                               #   call; every role maps to a label or state.
+├── docs/specs/INDEX.md,        # cmk:repo-config — the domain router and the
+│   docs/specs/catalog/         #   first catalog shard. Verify: cmk:traceability
+│                               #   catalog passes are clean.
 ├── .local/                     # cmk:local-stack — gitignored, worktree-local
 │                               #   root for state/scratch, as applicable.
 │                               #   Verify: ignored, worktree-deterministic,

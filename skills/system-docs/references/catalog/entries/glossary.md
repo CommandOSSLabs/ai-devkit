@@ -13,7 +13,7 @@ Always applicable when the project uses this skill-set surface.
 `cmk:glossary` (existing owner). Progressive cmk:system-docs not required.
 
 ## Template
-templates/CONTEXT.md (pack root)
+templates/glossary.md (pack root)
 
 ## Validator
 None — glossary format in `cmk:glossary`

@@ -13,7 +13,7 @@ Always applicable when the project uses this skill-set surface.
 `cmk:vision` (existing owner). Progressive cmk:system-docs not required.
 
 ## Template
-templates/architecture-INDEX.md (pack root)
+templates/system-design.md (pack root)
 
 ## Validator
 None — ARCH-N grammar enforced by cmk:vision + cmk:traceability

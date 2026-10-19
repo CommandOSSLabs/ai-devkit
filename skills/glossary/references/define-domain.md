@@ -17,7 +17,7 @@ Actively build and sharpen the project's glossary while designing. Merely *readi
 
 ## Updating docs/requirements/glossary.md
 
-Update `docs/requirements/glossary.md` **inline, the instant a term is settled** — never batch glossary edits for later; batched terms get forgotten. If no `docs/requirements/glossary.md` exists yet, create it lazily when the first term settles (seed from `references/templates/CONTEXT.md`).
+Update `docs/requirements/glossary.md` **inline, the instant a term is settled** — never batch glossary edits for later; batched terms get forgotten. If no `docs/requirements/glossary.md` exists yet, create it lazily when the first term settles (seed from `references/templates/glossary.md`).
 
 `docs/requirements/glossary.md` holds exactly one kind of entry: a term definition. Decisions go to ADRs; implementation detail and spec fragments go to the specs. Write the entry in the shape `SKILL.md` § Entry shape gives, closing with the competitors it banishes:
 

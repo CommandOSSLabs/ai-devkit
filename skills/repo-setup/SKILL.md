@@ -1,7 +1,7 @@
 ---
 name: cmk:repo-setup
 description: Use when the user asks to "set up this repo", "bootstrap this repo", "update this repo with the devkit", "adopt the devkit", or "check repo setup". Produces one composed bootstrap, adoption, update, or verification pass over a repository against the target contract.
-version: 0.1.1
+version: 1.0.0
 ---
 
 # Repo Setup
@@ -14,7 +14,10 @@ owns each line.
 
 ## Modes
 
-- **init** — empty or new repo: scaffold from templates, facet by facet.
+- **init** — empty directory or new subpackage: read `references/bootstrap.md` first and
+  follow it. Its greenfield gate decides whether init applies at all, its stack card
+  settles what the facets build, and its proof gate — install and verify commands run green,
+  output shown — ends the run.
 - **adopt** — existing repo: assess current structure, map it onto the
   taxonomy below, and propose a migration plan. Never bulldoze — every
   destructive move (a rename, a merge, a deletion) is proposed for approval,
@@ -34,10 +37,11 @@ owns each line.
    mutating anything.
 3. **Run facets**, in dependency order, skipping any that don't apply:
    `project-layout` → `toolchain` → `docs` (`cmk:docs`) → `agent-instructions`
-   → `mcp-config` → `local-stack` → `infra` → `cicd` → `agent-vendors`. Layout
+   → `repo-config` → `mcp-config` → `local-stack` → `infra` → `cicd` → `agent-vendors`. Layout
    and toolchain come first because every later facet's files land inside the
    layout they establish; docs and agent-instructions come before the facets
-   that point into `docs/rules/`; local-stack, infra, and cicd come near the
+   that point into `docs/rules/`; `repo-config` follows them because it adds its
+   `## Agent skills` block to the `CLAUDE.md` agent-instructions wrote; local-stack, infra, and cicd come near the
    end because they're the most likely to be skipped entirely; `agent-vendors`
    runs last because it vendors the finished skill set. `sync` isn't part of
    this chain — it runs on demand thereafter, once a baseline is recorded at
@@ -52,6 +56,7 @@ owns each line.
 | `cmk:toolchain` | Explicit tool-role assignment, checked-in runtime version pins, single-root workspace config, gitignore baseline. |
 | `cmk:docs` | The `docs/` taxonomy itself: per-directory navigation READMEs and baseline templates. |
 | `cmk:agent-instructions` | Thin `CLAUDE.md` (symlinked as `AGENTS.md`) plus the seeded `docs/rules/common/` topic files it points into. |
+| `cmk:repo-config` | `docs/agents/` (posture, team, tracker, labels, verify and release commands), the spec catalog seeds, the `## Agent skills` block in `CLAUDE.md`. |
 | `cmk:mcp-config` | Checked-in, per-vendor MCP server configuration with secrets kept out of the repo. |
 | `cmk:local-stack` | Worktree-isolated local dev stack(s): identity/coherence and the interactive/headless runners. |
 | `cmk:infra` | Isolated IaC packages under `infra/`, first-class environments. |
@@ -67,16 +72,6 @@ assess step decides applicability from evidence (does anything in the repo
 already deploy, run a service, or need a local topology) and the plan records,
 per skipped facet, *why* it was skipped — never a silent omission.
 
-## Superpowers relationship
-
-If the general-purpose "superpowers" skill collection is installed in the
-target repo, hand work off to it at natural boundaries: spec writing to its
-brainstorming/planning skills, implementation to its test-driven-development
-skill, and completion to its verification skill. This setup never requires
-superpowers — when it isn't installed, run the same modes and workflow
-directly and skip the handoff; recommend installing it as a one-line note in
-the plan, not a precondition.
-
 ## Verify
 
 Report-only — never mutate:
@@ -91,3 +86,5 @@ Report-only — never mutate:
   paired deploy workflow.
 - Every facet judged not-applicable during assess still has its skip reason
   recorded, so a later run doesn't have to re-derive it.
+- After `init`, the bootstrap proof gate held: one install command and one verify command
+  run green from the repo root, with the output shown.

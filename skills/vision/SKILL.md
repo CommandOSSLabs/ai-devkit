@@ -61,13 +61,13 @@ slot — fill it or write `None`.
    discarded with the ephemeral digest. *Done when: every scan candidate has been
 ratified or discarded, and every REQUIRED slot of the vision, spine and
 guidelines has an answer or an explicit `None`.*
-3. **Write the vision.** Fill `references/templates/product-vision.md` → `docs/requirements/vision.md`.
+3. **Write the vision.** Fill `references/templates/vision.md` → `docs/requirements/vision.md`.
    Every goal in `## Goals` gets a bold `**GOAL-N**` ID, flat and repo-wide, assigned as
    you write — a roadmap milestone cites those IDs, and an unIDed goal cannot be cited or
    dispositioned. Scan-derived candidates are subject to the ratification rule in step 2.
    *Done when: the file exists, every slot filled or `None`, and every
    goal carries a unique `**GOAL-N**`.*
-4. **Write the spine.** Fill `references/templates/architecture-INDEX.md` → `docs/design/system.md`.
+4. **Write the spine.** Fill `references/templates/system-design.md` → `docs/design/system.md`.
    Each invariant is a bold `**ARCH-N**` ID plus one imperative rule; keep the set small.
    Split into per-domain `docs/design/<domain>.md` files only for a large project.
    Scan-derived candidates are subject to the ratification rule in step 2.

@@ -1,5 +1,7 @@
 <!-- Ported from jdk `bootstrap-repo` 1.2.0 (ADR 0001). -->
-# Scaffold a Project
+# Init mode — scaffold a greenfield repo to a proven baseline
+
+Loaded from `SKILL.md` § Modes for `init`.
 
 Bootstrap a greenfield repository to a verified baseline: a skeleton where every quality tool is wired and demonstrably working, so the first feature starts from green.
 
@@ -7,7 +9,7 @@ Do not skip ahead to feature code. The deliverable is the harness, proven by one
 
 ## Track progress
 
-Create a todo for each step below (0–4) and complete them in order, checking each off only when its **Done when** is met. Step 0 is a gate: if it stops you (not greenfield), abandon the list and redirect. Otherwise the failure this guards against is a skipped step — the baseline never verified, or the `cmk:repo-config` hand-off forgotten.
+Create a todo for each step below (0–4) and complete them in order, checking each off only when its **Done when** is met. Step 0 is a gate: if it stops you (not greenfield), abandon the list and redirect. Otherwise the failure this guards against is a skipped step — the baseline never verified, or `cmk:repo-config` left out of the chain.
 
 ## 0. Confirm the target is greenfield — GATE
 
@@ -31,7 +33,7 @@ Scaffolding writes a project root (git repo, root manifest, root README, root CI
 
 **When you must stop, redirect — do not improvise a menu:**
 
-- If the user wants to **use this skill set in the existing repo** (configure tracker, verify commands, docs) → that is `cmk:repo-config`, not scaffolding. Tell them to run it.
+- If the user wants to **use this skill set in the existing repo** → that is this skill's `adopt` mode (or `/cmk:repo-config` alone for just the agent config: tracker, verify commands, labels). Switch to it.
 - If the user wants a **new package inside this repo** → confirm the new subdirectory path, then re-run this gate against that subdirectory (it should land in the Subpackage row).
 - If they landed here by mistake → stop and let them reconsider.
 
@@ -55,31 +57,31 @@ Look up facts yourself (what tools the user has installed, what the parent repo 
 
 **Done when:** every decision above is explicitly confirmed and restated in one summary block — including the resolved target path — that the user approves.
 
-## 2. Scaffold
+## 2. Scaffold — what the facets do not own
 
-Build the skeleton with the confirmed choices, at the resolved target. In **subpackage mode** (`inside-existing-repo = true`), skip the steps marked *(root only)* — the parent repo already owns them — and inherit the parent's shared config instead of creating competing copies.
+The facet chain in `SKILL.md` builds most of the tree: `cmk:project-layout` the directories,
+`cmk:toolchain` git, `.gitignore` and runtime pins, `cmk:cicd` the CI workflow, `cmk:docs`
+the docs taxonomy, `cmk:repo-config` the docs seeds and `docs/agents/`. This step adds the
+harness no facet owns, at the resolved target. In **subpackage mode**
+(`inside-existing-repo = true`), skip the items marked *(root only)* and inherit the parent's
+shared config instead of creating competing copies.
 
-1. **Git** *(root only)* — `git init` if the directory is not already a repo; write a sensible `.gitignore` for the stack. In subpackage mode, do not init and do not touch the root `.gitignore`; add a package-local ignore only if needed.
-2. **Project skeleton** — manifest, source directory, minimal entry point. In subpackage mode, extend the workspace's shared toolchain config (e.g. a `tsconfig` that `extends` the root) and register the package with the workspace.
-3. **Test harness** — install and configure the runner, plus **exactly one passing example test**. Its job is to prove the wiring (imports resolve, runner finds files, assertions execute), not to test real behavior.
-4. **Formatter + linter config** — committed config, with `format`, `lint`, and `typecheck` (where applicable) runnable as single commands. In subpackage mode, inherit root config and add only package-level overrides.
-5. **Pre-commit hook** *(root only)* — on every commit: format staged files, then lint, typecheck, and test. Use the stack's idiomatic hook mechanism. In subpackage mode, integrate with the parent repo's existing hook (scoped to the package) rather than installing a competing root hook.
-6. **CI stub** *(root only)* — one workflow that runs the same verify commands on push and pull request. In subpackage mode, append a package-filtered job to the existing CI rather than authoring a new pipeline.
-7. **README skeleton** — project name, one-paragraph description placeholder, and the install and verify commands. Place it at the target (in subpackage mode: `<target>/README.md`, never the repo root).
-8. **Docs seeds** — `docs/requirements/glossary.md` (from the skill set's `references/templates/CONTEXT.md`),
-   `docs/specs/INDEX.md` (domain router from `references/templates/specs-INDEX.md`),
-   `docs/specs/catalog/app.md` (from `references/templates/specs-catalog-domain.md`, domain
-   `App`), and an empty `docs/decisions/` directory, all relative to the target. Resolve
-   pack seeds in this order,. **Optional project-docs layer:**
-   offer it once (a greenfield, multi-feature project benefits; a small one can
-   skip and add it later via `/cmk:vision`). If the user opts in, also seed
-   `docs/requirements/vision.md`, `docs/design/system.md`, and
-   `docs/requirements/guidelines.md` from `references/templates/product-vision.md`,
-   `references/templates/architecture-INDEX.md`, and `references/templates/product-guidelines.md`. If
-   declined, seed none of these — the cmk:repo-config handoff can still
-   enable the layer.
+1. **Project skeleton** — manifest, source directory, minimal entry point. In subpackage
+   mode, extend the workspace's shared toolchain config and register the package with the
+   workspace.
+2. **Test harness** — install and configure the runner, plus **exactly one passing example
+   test**. Its job is to prove the wiring (imports resolve, runner finds files, assertions
+   execute), not to test real behavior.
+3. **Formatter + linter config** — committed config, with `format`, `lint`, and `typecheck`
+   (where applicable) runnable as single commands. In subpackage mode, inherit root config.
+4. **Pre-commit hook** *(root only)* — on every commit: format staged files, then lint,
+   typecheck, and test, with the stack's idiomatic hook mechanism. In subpackage mode,
+   integrate with the parent repo's existing hook rather than installing a competing one.
+5. **README skeleton** — project name, a one-paragraph description placeholder, and the
+   install and verify commands, at the target.
 
-**Done when:** every applicable item exists and is committed (or staged, per the user's Step 1 choice).
+**Done when:** every applicable item exists and is committed (or staged, per the user's
+Step 1 choice).
 
 ## 3. Verify the baseline
 
@@ -89,8 +91,10 @@ A scaffold that hands off with a failing or unproven check is not done. Fix or r
 
 **Done when:** every verify command passes, and you have shown the user the passing output.
 
-## 4. Hand off
+## 4. Hand back to the facet chain
 
-Tell the user the scaffold is complete and that the next step is to run `cmk:repo-config` to write the agent-facing config (`docs/agents/*.md` — verify commands, tracker, labels, release steps). Do not write `docs/agents/` yourself; that wizard owns it.
+Return to `SKILL.md`'s facet chain; `cmk:repo-config` runs in it after
+`cmk:agent-instructions` and writes `docs/agents/` (verify commands, tracker, labels,
+release steps). Do not write `docs/agents/` from here.
 
 **Completion criterion for the whole skill:** from the repo root, one command installs dependencies and one command runs the target's verify suite green — state both commands explicitly in your final summary (in subpackage mode, scope the verify command to the new package).

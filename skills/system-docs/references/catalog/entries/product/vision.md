@@ -13,7 +13,7 @@ Always applicable when the project uses this skill-set surface.
 `cmk:vision` (existing owner). Progressive cmk:system-docs not required.
 
 ## Template
-templates/product-vision.md (pack root)
+templates/vision.md (pack root)
 
 ## Validator
 None — non-template-mediated spine of vision slots enforced by cmk:vision

@@ -100,5 +100,4 @@ Report-only — never mutate:
 - Every conditional pointer in `CLAUDE.md` resolves to a file that exists.
 - The `.local/tmp/` scratch line is present in `CLAUDE.md`.
 - If `CLAUDE.md` points at `docs/guides/on-ramps.md`, that file exists (Init/
-  Update may seed it from the kit's `docs/guides/on-ramps.md`; Verify only
-  reports).
+  Update seed it from `references/on-ramps.md`; Verify only reports).

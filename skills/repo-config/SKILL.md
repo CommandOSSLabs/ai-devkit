@@ -24,7 +24,7 @@ This step does one thing: determine whether the repo is already configured for t
 - `docs/agents/project.md`, `docs/agents/issue-tracker.md`, `docs/agents/triage-labels.md`, `docs/agents/verify.md` — present and filled in, or missing?
 - `## Team` section inside `docs/agents/project.md` — present and filled, or a gap?
 - An `## Agent skills` section in `CLAUDE.md` / `AGENTS.md` (note which of the two files exists)
-- Seed files the skill set expects: `docs/specs/INDEX.md` (domain router) + `docs/specs/catalog/<domain>.md`, a glossary (`docs/requirements/glossary.md` or `CONTEXT-MAP.md`)
+- Seed files the skill set expects: `docs/specs/INDEX.md` (domain router) + `docs/specs/catalog/<domain>.md`, a glossary (`docs/requirements/glossary.md`, or one per area)
 - `.skills/` and `.worktrees/` present in `.gitignore`
 
 Then branch on what you found:
@@ -68,7 +68,7 @@ Explainer: the `cmk:release` skill executes an ordered list of project-specific 
 
 ### F. Docs layout
 
-Explainer: spec and discovery skills read `docs/specs/`, `docs/decisions/`, and the domain glossary; they need to know the shape. Confirm specs at `docs/specs/`, ADRs at `docs/decisions/` (create the directories if missing), and glossary layout — **single-context** (one root `docs/requirements/glossary.md` — most repos) or **multi-context** (a root `CONTEXT-MAP.md` pointing at per-context `docs/requirements/glossary.md` files — typically monorepos). **Done when:** layout is confirmed.
+Explainer: spec and discovery skills read `docs/specs/`, `docs/decisions/`, and the domain glossary; they need to know the shape. Confirm specs at `docs/specs/`, ADRs at `docs/decisions/` (create the directories if missing), and glossary layout — **single-context** (one root `docs/requirements/glossary.md` — most repos) or **multi-area** (one `docs/requirements/<area>/glossary.md` per bounded area, linked from `docs/requirements/README.md` — typically monorepos). **Done when:** layout is confirmed.
 
 ### G. Project posture
 
@@ -142,12 +142,12 @@ Let them edit. **Done when:** the user approves the drafts.
 1. Write `docs/agents/project.md`, `docs/agents/issue-tracker.md`, and `docs/agents/triage-labels.md`, seeded from `references/templates/agents/project.md`, `references/templates/agents/issue-tracker.md`, and `references/templates/agents/triage-labels.md`. In the issue-tracker file keep only the chosen tracker's operations section, record the PR-surface answer, and fill **Publish unit**, **Program sync**, **Program write role**, **Draft surface** (with its `### Notion draft surface` block when `notion`), and **Close linkage** from Decision A (defaults: `feature` / `local` / `ic` / `repo` / tracker-native close syntax). A repo already configured gains the rows it lacks from the template.
 2. If `docs/specs/INDEX.md` is missing, create it from `references/templates/specs-INDEX.md` **and** seed `docs/specs/catalog/app.md` from `references/templates/specs-catalog-domain.md` (replace `<Domain>` with `App`). If INDEX exists but is a flat Code table, name `/cmk:catalog` Domain boundary migrate — do not invent shards silently.
 
-3. If the glossary is missing, create `docs/requirements/glossary.md` from `references/templates/CONTEXT.md` (or a `CONTEXT-MAP.md` for multi-context, per the user's answer).
+3. If the glossary is missing, create `docs/requirements/glossary.md` from `references/templates/glossary.md` (or, for a product with several bounded areas, one `docs/requirements/<area>/glossary.md` per area, per the user's answer — `cmk:glossary` § Placement).
 4. Fill the **Project posture** section of `docs/agents/project.md` with the confirmed delivery intent and lifecycle stage (decision G), replacing the template placeholders. Write a `- **Compat obligation:** \`<value>\`` line only when decision G confirmed an override; when it left the derivation standing, delete the placeholder line so the derivation applies. (Additive: if the section already carries real values, update only what the user changed.) If decision L confirmed **index-only** or **full-triad**, set `- **Catalog sync:** \`<value>\`` in the same section (additive). If L left unset, write no Catalog sync line.
 5. Fill **`## Team`** from the confirmed Decision H content (roster, ownership notes, optional band override), merging into the template shape from `references/templates/agents/project.md`. Replace only the Team section's confirmed fields; do not clobber other sections. If the user deferred Team, leave the section as template placeholders or omit until a fill-the-gaps run.
-6. **If the project-docs layer was opted in (decision I):** seed `docs/requirements/vision.md`, `docs/design/system.md`, and `docs/requirements/guidelines.md` from `references/templates/product-vision.md`, `references/templates/architecture-INDEX.md`, and `references/templates/product-guidelines.md` (additive, per the rule above). If migrating, move the existing engineering rules into `docs/requirements/guidelines.md` and leave a pointer in `docs/agents/project.md`. If the layer was declined, skip this — write none of these files.
+6. **If the project-docs layer was opted in (decision I):** seed `docs/requirements/vision.md`, `docs/design/system.md`, and `docs/requirements/guidelines.md` from `references/templates/vision.md`, `references/templates/system-design.md`, and `references/templates/guidelines.md` (additive, per the rule above). If migrating, move the existing engineering rules into `docs/requirements/guidelines.md` and leave a pointer in `docs/agents/project.md`. If the layer was declined, skip this — write none of these files.
 7. Add the `## Agent skills` block. It lives in exactly **one** canonical file; any second file is a thin pointer, never a copy of the block.
-   - **Neither `CLAUDE.md` nor `AGENTS.md` exists** (the default): make `AGENTS.md` canonical (it holds the block) and write a short `CLAUDE.md` whose entire body points at `AGENTS.md` — so Claude Code finds instructions by its native filename without duplicating them. Do not ask which to create; this pattern serves both.
+   - **Neither `CLAUDE.md` nor `AGENTS.md` exists** (the default): REQUIRED SUB-SKILL: use `cmk:agent-instructions` — it writes `CLAUDE.md` as the canonical file with `AGENTS.md` symlinked to it — then put the block in `CLAUDE.md`. Do not ask which to create; the symlink serves every vendor.
    - **Only one exists:** that file is canonical — add or update the block in it. If it is `AGENTS.md` and Claude Code is a target, also add the `CLAUDE.md` pointer. If it is `CLAUDE.md`, leave it canonical — do not demote it to a pointer or create a competing `AGENTS.md`.
    - **Both exist:** put the block in whichever already carries real agent instructions; make the other a pointer only if it is not already substantive. Never place the block in both.
    - If an `## Agent skills` section already exists in the canonical file, update it in place — never append a duplicate, never touch surrounding sections.
@@ -156,7 +156,7 @@ Let them edit. **Done when:** the user approves the drafts.
 
 The block (include the project-docs bullet only if decision I was Yes) is seeded verbatim from `references/templates/agent-skills-block.md`.
 
-8. Ensure the local working dirs are git-ignored: the skills' scratch artifacts — the continuous build's ledger and briefs (`cmk:delivery-build`), and the scan/review digests the spec skills write — live under `.skills/`, and isolated workspaces under `.worktrees/` (the same parent `cmk:worktree` uses); neither belongs in version control. Idempotently, for each pattern: `grep -qxF '.skills/' .gitignore 2>/dev/null || printf '.skills/\n' >> .gitignore` (same for `.worktrees/`), then stage `.gitignore`. Do not add a `.isolate-workspace/` line — that was the old parallel parent. Leave an existing `.isolate-workspace/` ignore in place (additive). (A line-presence check, not `git check-ignore` — a trailing-slash pattern only matches an *existing* directory, so `check-ignore` would re-append before the dir exists.)
+8. Ensure the local working dirs are git-ignored: the skills' scratch artifacts — the continuous build's ledger and briefs (`cmk:delivery-build`), and the scan/review digests the spec skills write — live under `.skills/`, and isolated workspaces under `.worktrees/` (the same parent `cmk:worktree` uses); neither belongs in version control. Idempotently, for each pattern: `grep -qxF '.skills/' .gitignore 2>/dev/null || printf '.skills/\n' >> .gitignore` (same for `.worktrees/`), then stage `.gitignore`. (A line-presence check, not `git check-ignore` — a trailing-slash pattern only matches an *existing* directory, so `check-ignore` would re-append before the dir exists.)
 9. If decision J (Default PR base) was confirmed, add `- **Default PR base:** \`<branch>\`` to the **Project posture** section of `docs/agents/project.md`, under the additive rule above — merge in, never clobber a value the user already set. If the user declined decision J, write nothing: leave the field absent so `cmk:delivery-ship` asks per invocation.
 10. Follow the write step in `references/remote-environments.md` for decision K.
 11. Follow the write step in `references/catalog-sync-choice.md` for decision L (index-only gitignore append).
@@ -173,7 +173,7 @@ The block (include the project-docs bullet only if decision I was Yes) is seeded
 
 ## 6. Prove the configuration actually works — GATE
 
-Confirmed-with-the-user is not the same as works-in-this-project. Commands were pre-filled from what you detected; a wrong manifest path, a missing script, or a tool that is not installed will surface as a mid-task failure in `cmk:tdd`, `cmk:evidence`, or `cmk:release` weeks from now. Prove them now, while you own the context. This is the discipline of the `cmk:evidence` skill applied to the config you just wrote: run the command, read the output, believe the output — not the config. **Browser drive.** Before those commands, read `references/webbridge-setup.md` and follow it exactly.
+Confirmed-with-the-user is not the same as works-in-this-project. Commands were pre-filled from what you detected; a wrong manifest path, a missing script, or a tool that is not installed will surface as a mid-task failure in `cmk:tdd`, `cmk:evidence`, or `cmk:release` weeks from now. Prove them now, while you own the context. This is the discipline of the `cmk:evidence` skill applied to the config you just wrote: run the command, read the output, believe the output — not the config. **Browser drive.** WHEN `docs/agents/verify.md` drives a browser, or the UI or acceptance pack is installed, and the user said yes to setting up the browser drive in this session: before those commands, read `references/webbridge-setup.md` and follow it exactly. It starts or installs a daemon under the user's home, so without that yes, skip it and say so in the prove table. In a setup run where nobody asked for it, one baseline run started `~/.kimi-webbridge` on the user's machine.
 
 Run each configured verify command fresh and classify the result. The distinction that matters is **wiring vs content**:
 
@@ -191,7 +191,7 @@ Be cost-aware — do not run the whole suite to prove wiring:
 
 Report a small table: each command → wired? → passed / failed / pre-existing.
 
-**Done when:** every configured command is proven **wired** (no wiring failures remain), the traceability check runs clean, the configured tracker answers a read-only call, Decision M is proven or skipped, the webbridge check in `references/webbridge-setup.md` ran, and any content failures are listed for the user.
+**Done when:** every configured command is proven **wired** (no wiring failures remain), the traceability check runs clean, the configured tracker answers a read-only call, Decision M is proven or skipped, the webbridge check in `references/webbridge-setup.md` ran or was skipped by its predicate, and any content failures are listed for the user.
 
 ## 7. Finish
 

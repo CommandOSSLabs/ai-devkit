@@ -211,3 +211,21 @@ wrong workspace wrote `repo` 1/1.
 proposes `status:<role>` for them. This is structural: the RED and GREEN that need the
 roles are in `cmk:delivery-build`'s `references/common.md` 2.13.0 (claim) and `cmk:delivery-ship` 4.5.0 (in review), and both
 ran on a board that maps them. Design: `docs/design/2026-10-19-closed-workflow.md`.
+
+
+## Merge into cmk (ADR 0001 P4, 2026-10-19)
+
+- **Canonical instruction file.** cmk's convention wins (ADR 0001: layout is this kit's):
+  `CLAUDE.md` canonical, `AGENTS.md` a symlink, written by `cmk:agent-instructions`; with neither
+  file present this skill now hands to it instead of making `AGENTS.md` canonical.
+- **Glossary.** Multi-area repos get `docs/requirements/<area>/glossary.md` per area
+  (`cmk:glossary` § Placement), not a `CONTEXT-MAP.md`. Templates renamed to cmk names.
+- **Browser drive opt-in.** RED (two `cmk:repo-setup` runs, skill-tester sonnet, nobody asked for a
+  browser drive): both ran `~/.kimi-webbridge/bin/kimi-webbridge start` and `status` on the user's
+  machine; with no binary present the reference would have run `curl … | bash`. Now Step 6 loads
+  `references/webbridge-setup.md` only with a browser drive or the UI/acceptance pack **and** the
+  user's yes this session, and the installer asks first. GREEN (skill-tester-haiku, Step 6 re-run on
+  the adopted repo): browser drive skipped with its reason, no command touched the home directory,
+  every configured command proven wired.
+- **Agent skills block** names the five workflow commands, `cmk:delivery-build`, and which lines
+  need a pack.
