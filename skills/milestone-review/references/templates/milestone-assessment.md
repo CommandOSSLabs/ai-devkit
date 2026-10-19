@@ -43,7 +43,7 @@ Every heading below is a REQUIRED slot — fill it or write `None`.
 **Goal coverage:** &lt;GOAL-N advanced — evidence&gt; | &lt;GOAL-N Unresolved — verdict withheld&gt;
 **Deferrals:** &lt;ROAD-N slug → MILE-N (YYYY-MM-DD, reason) — honest | no destination&gt;
 **Plan accuracy:** &lt;+N added · N moved out · N deferred · N days&gt;
-**Findings:** &lt;finding&gt; → &lt;amend | cmk:delivery-reroute | cmk:roadmap | cmk:glossary's references/define-domain.md | /cmk:discover-efforts&gt;
+**Findings:** &lt;finding&gt; → &lt;amend | cmk:delivery-reroute | cmk:roadmap | cmk:adr | /cmk:discover-efforts&gt;
 **Rationale:** &lt;the reasoning behind the verdict, so a later reader can check it&gt;
 
 ### Human disposition

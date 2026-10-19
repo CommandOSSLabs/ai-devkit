@@ -98,12 +98,12 @@ On proposal approval, route to the matching re-entry. Invoke each as a REQUIRED 
 
 ## Thin-router exit — delegate, reconcile, record, resume
 
-`cmk:delivery-reroute` **never** rewrites requirements, design, plan, tasks, or cmk:traceability metadata itself. All spec-content generation delegates to the `write-*` skills; all triad reconciliation delegates to `cmk:realign`.
+`cmk:delivery-reroute` **never** rewrites requirements, design, plan, tasks, or traceability metadata itself. All spec-content generation delegates to the `write-*` skills; all triad reconciliation delegates to `cmk:realign`.
 
 After the re-entry skill's approval gate passes:
 
 1. **Reconcile.** WHEN the re-entry changed already-approved artifacts or their trace links, REQUIRED SUB-SKILL: use `cmk:realign` to realign `Status` and the traceability — it owns the strikethrough-with-reason retirement and the INDEX update; `cmk:delivery-reroute` does not reimplement any of it.
-2. **Record.** WHEN the final approved change carries an **architectural consequence**, record it as an ADR via REQUIRED SUB-SKILL: use `cmk:glossary`'s `references/define-domain.md`. Design-level rewinds usually qualify; Requirements or Vision rewinds only when architecturally weighty. **Task-local and Plan-level never** get an ADR. **Never** persist an ADR for a proposal the user did not approve.
+2. **Record.** WHEN the final approved change carries an **architectural consequence**, record it as an ADR via REQUIRED SUB-SKILL: use `cmk:adr`. Design-level rewinds usually qualify; Requirements or Vision rewinds only when architecturally weighty. **Task-local and Plan-level never** get an ADR. **Never** persist an ADR for a proposal the user did not approve.
 3. **Resume.** Return control to `cmk:delivery-build`'s `references/continuous.md`, which resumes **automatically** against the corrected plan off its own ledger — no manual restart. For a **Task-local** rewind, `.skills/<CODE>/progress.md` is untouched. For a **Plan / Design / Requirements** rewind that rewrote `tasks.md`, **re-baseline the ledger** first: keep the entries whose committed work survives the rewrite, drop the entries the rewrite superseded, so `cmk:delivery-build`'s `references/continuous.md` resumes after the last *still-valid* completed task rather than a stale task number. The ledger is git-ignored scratch, so this touches no spec artifact.
 
 **Done when:** reconciliation has run if artifacts changed, an ADR exists only if warranted and approved, and `cmk:delivery-build`'s `references/continuous.md` is resuming against a ledger that matches the (possibly rewritten) `tasks.md`.

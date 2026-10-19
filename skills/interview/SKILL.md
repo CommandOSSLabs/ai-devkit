@@ -109,7 +109,7 @@ When the open set has no remaining high-blast judgment call — and **before** r
 7–10. **Coverage final · Owned unknowns · Accepted risks · Operability touch** — REQUIRED when Coverage ON; recipes only in `references/production-coverage.md`. Omit when OFF.
 11. **Explicit confirmation** — is this the shared picture? Only an affirmative on **this package** counts.
 
-Slots 4–6 always required. Slots 7–10 required only when Coverage ON. Not confirmation: "any other questions?", "we're aligned, skip the table", "just go write requirements", "reliability is a later NFR", senior pressure to skip ceremony, or silence. If they correct a row, edit and re-confirm. If confirmation opens a new high-blast fork or a Missing cell, return to cards. **Do not enact anything** — no production code, no scaffolding, no plan execution — until that confirmation lands. (Glossary/`docs/requirements/glossary.md` updates via `cmk:glossary`'s `references/define-domain.md` as a passive side effect are allowed when a term settles mid-interview.)
+Slots 4–6 always required. Slots 7–10 required only when Coverage ON. Not confirmation: "any other questions?", "we're aligned, skip the table", "just go write requirements", "reliability is a later NFR", senior pressure to skip ceremony, or silence. If they correct a row, edit and re-confirm. If confirmation opens a new high-blast fork or a Missing cell, return to cards. **Do not enact anything** — no production code, no scaffolding, no plan execution — until that confirmation lands. (Glossary/`docs/requirements/glossary.md` updates via `cmk:glossary` as a passive side effect are allowed when a term settles mid-interview.)
 
 ## Rationalizations
 

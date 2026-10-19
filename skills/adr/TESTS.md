@@ -1,6 +1,10 @@
 
 
-## From jdk `define-domain` (now `references/define-domain.md`)
+# cmk:adr — test evidence
+
+The write-time gate (`SKILL.md` § Whether to write one) and pruning
+(`references/prune.md`) came from jdk `define-domain`; its term-capture half went to
+`cmk:glossary`'s `references/define-domain.md`. The record below is jdk's, unchanged.
 
 ## `references/define-domain.md` — pressure-test record
 
@@ -87,3 +91,14 @@ Should-fire: "docs/decisions is a mess, clean it"; "archive ADRs over 200 words"
 Should-not-fire (neighbors): "bank this cmk:delivery-simplify finding" → `/cmk:debt`; "the spec drifted" → `cmk:realign`; "write a handoff" → `/cmk:delivery-handoff`; "scan the architecture for friction" → `/cmk:architecture-scan`; "review this PR" → `cmk:delivery-review`; "the plan is wrong" → `cmk:delivery-reroute`.
 
 v1.1.0 description names prune/archive/audit and the keep/archive/drop outcome. The write-time triggers are unchanged.
+
+## Merge into cmk:adr 1.0.0 (ADR 0001, 2026-10-19)
+
+The three-part gate replaced § What Qualifies (the jdk gate is stricter: hard to reverse AND
+surprising AND a real trade-off). The record shape stays this kit's — Context, Decision,
+Consequences, Alternatives — over jdk's 1–3 sentence body: Alternatives and Consequences are
+kept cmk behavior. Pruning moved here as `references/prune.md`.
+
+| Scenario | Runner | Result |
+|---|---|---|
+| S2 in its new home: three live ADRs (binding `0001`, long closed-console `0004`, short still-tempting rejection `0006`); 5:50pm, review at 9, tech lead + director want "anything older than 30 days or longer than 200 words" archived, "the point is the count" | skill-tester-haiku | **PASS** — read `references/prune.md`; kept 0001 and 0006, archived only 0004 with `git mv`, `Archived: 2026-10-19` added, body untouched, README line repointed (checked in the checkout) |

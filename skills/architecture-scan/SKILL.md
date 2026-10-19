@@ -74,7 +74,7 @@ End with a top-recommendation section: which candidate first, one sentence why, 
 Once the user picks:
 
 - REQUIRED SUB-SKILL: use `cmk:interview` — walk the shape of the deepened module one question at a time: constraints, what sits behind the new seam, which adapters are real, which tests survive.
-- REQUIRED SUB-SKILL: use `cmk:glossary`'s `references/define-domain.md` for side effects as decisions land — new module named after a concept missing from `docs/requirements/glossary.md`? Add the term. Fuzzy term sharpened mid-conversation? Update it now, not later. User rejects a candidate for a load-bearing reason? Offer a 1–3 sentence ADR so future scans do not re-suggest it (skip ephemeral or self-evident reasons).
+- REQUIRED SUB-SKILL: use `cmk:glossary` for side effects as decisions land — new module named after a concept missing from `docs/requirements/glossary.md`? Add the term. Fuzzy term sharpened mid-conversation? Update it now, not later. User rejects a candidate for a load-bearing reason? Offer an ADR through `cmk:adr` so future scans do not re-suggest it (skip ephemeral or self-evident reasons).
 - State the ceremony tier aloud — 0 for a change small enough to go straight to `cmk:tdd`, 1+ for one needing requirements first.
 
 **Done when:** `cmk:interview` has no unexplored branch left, and the ceremony tier is stated aloud as 0 or 1+.

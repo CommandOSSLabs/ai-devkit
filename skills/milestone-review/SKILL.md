@@ -109,7 +109,7 @@ Every finding gets exactly one destination — this skill keeps no action-item l
 | a small in-scope change to a shipped feature | `cmk:amend` |
 | an approved plan invalidated mid-flight | `cmk:delivery-reroute` |
 | milestone intent that turned out wrong | `cmk:roadmap` |
-| a hard-to-reverse architecture decision | `cmk:glossary`'s `references/define-domain.md` |
+| a hard-to-reverse architecture decision | `cmk:adr` |
 | tracker work | name `/cmk:discover-efforts` for the user to run |
 
 `cmk:verdict` is **not** a destination: its caller set is closed to `cmk:delivery-ship` and `cmk:release`, and a milestone assessment is neither.

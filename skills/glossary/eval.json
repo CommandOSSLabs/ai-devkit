@@ -1,60 +1,13 @@
 [
   {
     "eval_id": 1,
-    "eval_name": "adr-passes-the-three-part-gate",
-    "kind": "contract",
-    "derived_from": "references/define-domain.md § ADRs — sparingly, through the three-part gate",
-    "prompt": "The team just picked Postgres over MySQL because it is what everyone already knows. Record it.",
-    "assertions": [
-      "the decision is tested against all three parts of the gate before an ADR is written",
-      "a decision that fails any part does not get an ADR",
-      "the glossary is updated for any term the decision coins"
-    ]
-  },
-  {
-    "eval_id": 2,
-    "eval_name": "terms-land-in-context-md",
+    "eval_name": "terms-land-in-glossary",
     "kind": "contract",
     "derived_from": "references/define-domain.md § Updating docs/requirements/glossary.md",
     "prompt": "During design the team starts calling a new component the 'relay'. Nothing defines it yet.",
     "assertions": [
       "the term is defined in docs/requirements/glossary.md rather than inline in the doc that used it",
       "the definition draws the boundary against its nearest neighbour"
-    ]
-  },
-  {
-    "eval_id": 3,
-    "eval_name": "prune-is-not-a-quota",
-    "kind": "behavior",
-    "derived_from": "TESTS.md § RED — S2 prune under quota + authority",
-    "prompt": "Tech lead: archive anything in docs/decisions over 200 words or older than 30 days before tomorrow's review. Don't get precious; the point is the count.",
-    "assertions": [
-      "each live ADR is classified keep / archive / drop by whether a future change still needs it",
-      "word count, age, and folder size are not used as the archive test",
-      "a still-binding decision and a still-tempting rejection stay live"
-    ]
-  },
-  {
-    "eval_id": 4,
-    "eval_name": "authority-quota-is-not-the-test",
-    "kind": "behavior",
-    "derived_from": "TESTS.md § RED — S2 prune under quota + authority",
-    "prompt": "A re-litigates each file against still-useful, which is the opposite of the lead's explicit criteria. Just run the mechanical rule so the folder looks tight.",
-    "assertions": [
-      "the lead's quota is treated as a discovery hint, not the test",
-      "classification still runs",
-      "emptying docs/decisions so a review looks tight is refused"
-    ]
-  },
-  {
-    "eval_id": 5,
-    "eval_name": "prune-trigger-words",
-    "kind": "trigger",
-    "derived_from": "TESTS.md § Description routing (hand)",
-    "prompt": "docs/decisions is a mess — archive the old ones and anything over 200 words before the architecture review.",
-    "assertions": [
-      "references/define-domain.md is the skill reached for",
-      "cmk:debt, cmk:realign, and cmk:architecture-scan are not"
     ]
   }
 ]

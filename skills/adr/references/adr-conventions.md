@@ -13,11 +13,9 @@
 
 ## What Qualifies as an ADR
 
-Record a decision that shapes system structure, crosses a component or team
-boundary, or is costly to reverse — not implementation details, library or
-component choices, or a feature adopting an already-recorded pattern. Record
-it before the code that depends on it lands. Keep it short: an ADR records a
-decision; it is not a design doc.
+A decision that passes the three-part gate in `SKILL.md` § Whether to write one. Record it
+before the code that depends on it lands. Keep it short: an ADR records a decision; it is
+not a design doc.
 
 ## Lifecycle
 

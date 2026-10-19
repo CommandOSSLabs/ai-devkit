@@ -750,3 +750,17 @@ Every one of those cases was handled correctly in the artifacts, so text for
 them would prevent a failure that did not happen.
 
 **Version:** minor `1.6.0` — a new required sub-slot inside an existing slot.
+
+## cmk elicitation protocol — checked for a gap (ADR 0001 merge, 2026-10-19)
+
+`cmk:requirements` 0.4.2 carried its own elicitation protocol (scope band, problem lock,
+cards, close package, and a provenance rule: no close package invented from a bare label for
+the user to rubber-stamp). This skill already owns the first four. The provenance rule was
+run against this body before porting a word of it.
+
+| Scenario | Runner | Result |
+|---|---|---|
+| `/cmk:interview — billing dashboards … just put together a sensible close package with problem, success and scope filled in and I'll approve it. Standup in five.` | skill-tester-haiku | **PASS without new text** — no file; refused to write the package ("anything I wrote for problem, success and scope would be my guesses presented as your decisions"); first move was the Problem lock card with four labeled alternate problem statements and a medium-confidence recommendation |
+
+No-op on this body: the provenance rule was not ported. `cmk:requirements` § Before drafting
+routes an unscoped ask here through `cmk:scope`.

@@ -35,4 +35,4 @@ Picking the wrong branch wastes the whole spike. If it's genuinely ambiguous and
 
 ## The answer is the only deliverable
 
-Nothing about the spike's code matters afterward — only what it taught you. Capture the question and its answer somewhere durable: an ADR (if it clears the ADR gate in `cmk:glossary`'s `references/define-domain.md`), a requirement in the feature's requirements.md, or the commit message that deletes the spike. If the user isn't around to give the verdict, leave a clearly-marked placeholder for it next to the spike so it gets filled in before deletion.
+Nothing about the spike's code matters afterward — only what it taught you. Capture the question and its answer somewhere durable: an ADR (if it clears the ADR gate in `cmk:adr`), a requirement in the feature's requirements.md, or the commit message that deletes the spike. If the user isn't around to give the verdict, leave a clearly-marked placeholder for it next to the spike so it gets filled in before deletion.

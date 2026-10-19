@@ -47,7 +47,7 @@ HITL session. Valid resolution is never "implemented feature X in production."
 
 | Type | Mode | Resolve with |
 |---|---|---|
-| `clarify` | HITL | REQUIRED SUB-SKILL: use `cmk:interview` (nested; + `cmk:glossary`'s `references/define-domain.md` passive) |
+| `clarify` | HITL | REQUIRED SUB-SKILL: use `cmk:interview` (nested; + `cmk:glossary` passive) |
 | `cmk:research` | AFK | REQUIRED SUB-SKILL: use `cmk:research` (prefer subagent) |
 | `prototype` | HITL | REQUIRED SUB-SKILL: use `cmk:spike` only; link throwaway artifact |
 | `task` | HITL/AFK | Work that **only unblocks a decision** (access, sample data, signup) |

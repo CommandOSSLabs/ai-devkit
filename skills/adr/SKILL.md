@@ -1,7 +1,7 @@
 ---
 name: cmk:adr
-description: Use when the user asks to "record this decision", "we decided to use X over Y", "document why we chose this approach", "record an ADR", "update ADR-0003", or needs to create or update architecture decision records for system-level technical choices like choosing a database, communication protocol, or infrastructure pattern.
-version: 0.3.2
+description: Use when the user asks to "record this decision", "we decided to use X over Y", "document why we chose this approach", "record an ADR", "update ADR-0003", "this ADR is obsolete", "prune / archive / clean docs/decisions", or another skill reaches a decision that may need one — produces an architecture decision record in docs/decisions/ that passes the three-part gate, or a keep/archive/drop classification of the existing records.
+version: 1.0.0
 ---
 
 # ADR
@@ -11,6 +11,20 @@ Create or update architecture decision records for system-level technical choice
 ## References
 
 Read `references/adr-conventions.md` for placement and lifecycle rules and `references/adr-template.md` for the record shape.
+
+## Whether to write one
+
+Offer an ADR only when **all three** hold:
+
+1. **Hard to reverse** — changing course later carries real cost.
+2. **Surprising without context** — a future reader would ask "why on earth this way?"
+3. **A real trade-off** — genuine alternatives existed and one was chosen for specific reasons.
+
+Any one missing → no ADR. A 200 ms debounce on the search box trades responsiveness against
+request volume and would surprise a reader, yet flipping it later is a one-line change: it
+fails "hard to reverse". Record it in the code, not an ADR. If a new decision contradicts an
+existing ADR, flag the conflict to the user and resolve it explicitly by superseding the old
+record (§ Iterate).
 
 ## Workflow: Create
 
@@ -28,6 +42,11 @@ Read `references/adr-conventions.md` for placement and lifecycle rules and `refe
 3. A decision that *evolves without changing direction* updates in place: refine consequences, note what shifted and why. Move `Proposed` → `Accepted` when the team agrees.
 4. A decision that *changes direction* is a new ADR under its own number; the supersession mechanics — forward links, partial supersession, never deleting or rewriting the old record — follow `references/adr-conventions.md` § Lifecycle.
 5. Refresh the index one-liners for every record the change touched.
+
+## Pruning
+
+WHEN asked to prune, audit, archive, or tidy `docs/decisions/`, read `references/prune.md`
+and follow it exactly — every live record is classified keep, archive, or drop.
 
 ## Output
 

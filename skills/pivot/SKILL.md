@@ -97,7 +97,7 @@ Fill every candidate row. Disposition is one of:
 | **Deprecate** | keep temporarily; needs an end date and a migration path |
 | **Freeze** | no further investment; do not delete |
 | **Carve out** | move to another repo or product |
-| **Accept debt** | known contradiction; keep living with it (ADR required later via `cmk:glossary`'s `references/define-domain.md`) |
+| **Accept debt** | known contradiction; keep living with it (ADR required later via `cmk:adr`) |
 | **Unknown** | not enough evidence → stop that row; name `cmk:research` or `cmk:spike` |
 
 Each row also records **entrenchment** in one line: shipped to users? public API? data
@@ -132,7 +132,7 @@ Only after step 3:
 
 1. Name **`/cmk:vision`** (update mode) for the user — that skill owns
    `vision.md` / `architecture/` writes, goal/ARCH ID immutability (strikethrough, never
-   renumber), and ADRs via `cmk:glossary`'s `references/define-domain.md`.
+   renumber), and ADRs via `cmk:adr`.
 2. For each **Retire** / **Deprecate** / **Adapt** row, name the next unit of work
    (feature branch, mini-spec, or tracker item). Do not silently delete shipped code
    inside this skill; the ledger is the decision record, not the deletion.

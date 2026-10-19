@@ -10,13 +10,13 @@ Existing Hybrid 1A standing surface for `glossary` (pre-system-docs skill owners
 Always applicable when the project uses this skill-set surface.
 
 ## Mediated writer
-`cmk:glossary`'s `references/define-domain.md` (existing owner). Progressive cmk:system-docs not required.
+`cmk:glossary` (existing owner). Progressive cmk:system-docs not required.
 
 ## Template
 templates/CONTEXT.md (pack root)
 
 ## Validator
-None — glossary format in cmk:glossary's references/define-domain.md
+None — glossary format in `cmk:glossary`
 
 ## Evidence sources
 Existing skill procedures and pack templates.

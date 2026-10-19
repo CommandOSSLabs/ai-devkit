@@ -1,7 +1,7 @@
 ---
 name: cmk:glossary
 description: Use when the user asks to "create a glossary", "add a term to the glossary", "what do we call this", "define our vocabulary", "lock the terminology" — and proactively, in any conversation or SDLC phase, whenever a new system/component/actor/state gets named, one word is carrying two meanings, two words are carrying one, or a doc, ticket, or identifier drifts from the established vocabulary.
-version: 0.1.1
+version: 1.0.0
 ---
 
 # Glossary
@@ -17,6 +17,13 @@ The glossary is not a standalone phase — it is a concern that runs through eve
 - A doc, identifier, or ticket drifts from an established glossary term.
 
 When a hooked skill's workflow reaches its glossary step (`cmk:requirements`, `cmk:design`, `cmk:adr`, `cmk:delivery-spec-plan`) or the triggers above surface a gap, run the Iterate workflow inline — add or sharpen the term as part of the change at hand, not as a deferred follow-up. If no glossary exists yet, propose creating one before locking new vocabulary.
+
+## During design conversations
+
+WHILE a conversation scopes, designs, or interviews (standalone, or under `cmk:scope` /
+`cmk:interview`), read `references/define-domain.md` and follow it: challenge terms against
+the glossary, sharpen fuzzy ones, stress-test boundaries with edge cases, check the code
+agrees, and record each settled term the moment it settles.
 
 ## Placement
 

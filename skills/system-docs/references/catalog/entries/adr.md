@@ -10,10 +10,10 @@ Existing Hybrid 1A standing surface for `adr` (pre-system-docs skill owners).
 Always applicable when the project uses this skill-set surface.
 
 ## Mediated writer
-`cmk:glossary`'s `references/define-domain.md` (existing owner). Progressive cmk:system-docs not required.
+`cmk:adr` (existing owner). Progressive cmk:system-docs not required.
 
 ## Template
-None — ADR three-part gate in cmk:glossary's references/define-domain.md
+None — ADR three-part gate in `cmk:adr`
 
 ## Validator
 None — directory of ADRs

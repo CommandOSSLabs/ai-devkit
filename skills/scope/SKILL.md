@@ -112,8 +112,8 @@ which glossary terms apply, which features share the surface (or none) —
 Stay on this checklist. Apply the `cmk:interview` **protocol** for the
 single question channel. Do not invent a thinner interview.
 
-REQUIRED SUB-SKILL: use `cmk:interview`. Keep `cmk:glossary`'s `references/define-domain.md` as a passive
-side effect (REQUIRED SUB-SKILL: use `cmk:glossary`'s `references/define-domain.md`).
+REQUIRED SUB-SKILL: use `cmk:interview`. Keep `cmk:glossary` as a passive
+side effect (REQUIRED SUB-SKILL: use `cmk:glossary`).
 
 Provisional tier 0? Mark the nested interview **brief / tier-0** so coverage
 stays OFF. Confirm problem, one constraint, and must-keep-working, then step 5

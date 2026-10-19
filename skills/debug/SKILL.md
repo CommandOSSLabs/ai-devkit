@@ -52,7 +52,7 @@ Run the loop; watch it go red with the failure the user described (a nearby diff
 
 Shrink the repro one cut at a time (inputs, config, callers, steps), re-running after each cut, until **every remaining element is load-bearing** — removing any one turns it green. A minimal repro shrinks the hypothesis space and becomes the regression test.
 
-For multi-component systems (CI → build → deploy, API → service → DB): instrument each boundary — log what enters and exits every layer — and run once to see WHERE it breaks, before touching any fix. When the error surfaces deep in a call chain, cmk:traceability the bad value backward through its callers to the ORIGINAL trigger. Never fix only where the error appears; that is treating the symptom.
+For multi-component systems (CI → build → deploy, API → service → DB): instrument each boundary — log what enters and exits every layer — and run once to see WHERE it breaks, before touching any fix. When the error surfaces deep in a call chain, trace the bad value backward through its callers to the ORIGINAL trigger. Never fix only where the error appears; that is treating the symptom.
 
 **Retrieval is not the red-capable loop.** During Phases 1–2, do **not** use
 `cmk:feature-graph` / retrieval as the feedback signal. The red-capable command alone

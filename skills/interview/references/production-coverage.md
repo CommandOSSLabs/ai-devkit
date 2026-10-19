@@ -60,7 +60,7 @@ REQUIRED when this file is loaded:
 
 7. **Coverage final** — status per cell (no Missing without owner).
 8. **Owned unknowns** — undecided TBD as topic · **owner** · **date** ·
-   **forbid-guess** (`cấm đoán`: do not invent the answer). Or `none`. Unowned
+   **forbid-guess** (do not invent the answer). Or `none`. Unowned
    TBD blocks close. Not the same as Accepted risks.
 9. **Accepted risks** — decided keep-the-risk · why tolerable vs CUJ/SLO ·
    **signer**. Or `none`. Deferred number/policy → Owned unknown, not Accepted
