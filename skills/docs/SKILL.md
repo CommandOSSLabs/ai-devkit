@@ -1,7 +1,7 @@
 ---
 name: cmk:docs
 description: Use when the user asks to "set up docs", "initialize docs", "docs scaffold", "check if our docs structure is current", "update the docs structure", "check docs connectedness", or needs to bootstrap, update, or verify the /docs directory structure with navigation READMEs and document templates.
-version: 0.3.1
+version: 0.4.0
 ---
 
 # Docs
@@ -24,7 +24,7 @@ Read `references/scaffold-manifest.md` for the complete file manifest and exact 
 
 **Update** — Re-sync after devkit changes. Create newly added files, compare each `README.md` against the manifest and report divergences, add new templates without overwriting customized ones. Confirm with user before modifying existing files.
 
-**Verify** — Dry-run. Report gaps and divergences without creating or modifying anything. Connectedness check: report canonical docs (in `decisions/`, `requirements/`, `design/`) with no inbound links from any other doc (orphans), and links pointing at missing files (dangling).
+**Verify** — Dry-run. Report gaps and divergences without creating or modifying anything. Connectedness check: report canonical docs (in `decisions/`, `requirements/`, `design/`) with no inbound links from any other doc (orphans), and links pointing at missing files (dangling). A spec folder under `specs/` counts as linked when the catalog names it.
 
 ## Workflow
 
@@ -32,13 +32,13 @@ Read `references/scaffold-manifest.md` for the complete file manifest and exact 
 2. Scan target repository for existing `/docs` structure.
 3. Compare against `references/scaffold-manifest.md`.
 4. Execute based on mode (init → create missing; update → create missing + offer fixes; verify → report only).
-5. Create directories before contents, in order: `docs/`, `templates/`, `decisions/`, `requirements/`, `design/`, `rules/`, `rules/common/`, `guides/`, `runbooks/`, `reports/`, `research/`, `knowledge/`, `ai/`.
-6. For each directory, create `README.md`.
+5. Create directories before contents, in order: `docs/`, `templates/`, `decisions/`, `requirements/`, `design/`, `specs/`, `agents/`, `rules/`, `rules/common/`, `guides/`, `runbooks/`, `reports/`, `research/`, `knowledge/`, `ai/`.
+6. For each directory, create `README.md` — except `specs/`: its index is `specs/INDEX.md`, seeded by `cmk:repo-config`. When it is missing, report it and name `/cmk:repo-config`.
 7. Report: created, skipped, diverged, updated.
 
 ## Output
 
-- Every directory has exactly one `README.md`
+- Every directory has exactly one `README.md` (`specs/` has `INDEX.md` instead)
 - `docs/README.md` → per-directory README chain is intact
 - Each README is a concise navigation index over its children, not a content dump
 - Templates directory contains all baseline templates

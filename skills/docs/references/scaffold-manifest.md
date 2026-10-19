@@ -16,6 +16,7 @@ when to read it — not a mirror of the content.
 - [docs/decisions/README.md](#docsdecisionsreadmemd)
 - [docs/requirements/README.md](#docsrequirementsreadmemd)
 - [docs/design/README.md](#docsdesignreadmemd)
+- [docs/agents/README.md](#docsagentsreadmemd)
 - [docs/rules/README.md](#docsrulesreadmemd)
 - [docs/rules/common/README.md](#docsrulescommonreadmemd)
 - [docs/guides/README.md](#docsguidesreadmemd)
@@ -43,7 +44,9 @@ docs/
 ├── README.md        # this navigation map
 ├── decisions/       # Architecture Decision Records
 ├── requirements/    # product/project requirements
-├── design/          # distilled system and feature design
+├── design/          # distilled system and track design
+├── specs/           # one folder per feature: requirements, design, tasks
+├── agents/          # agent configuration (written by cmk:repo-config)
 ├── rules/           # engineering standards
 ├── guides/          # how-to / integration guides
 ├── runbooks/        # operational procedures
@@ -58,6 +61,7 @@ docs/
 
 - **Any task:** [`ai/`](./ai/) — find the right source files for a topic.
 - **New feature or scope change:** [`requirements/`](./requirements/) — what we're building and why.
+- **Building or changing a feature:** [`specs/INDEX.md`](./specs/INDEX.md) — the feature catalog; each feature's requirements, design and tasks.
 - **Architecture or implementation:** [`design/`](./design/) — how a subsystem works; check [`decisions/`](./decisions/) for constraints.
 - **Writing code:** [`rules/`](./rules/) — the standards for the area you're touching.
 - **Operating the system:** [`runbooks/`](./runbooks/).
@@ -76,7 +80,12 @@ docs/
   get distilled into `design/` or `runbooks/`.
 - `decisions/` entries are named `NNNN-<slug>.md`; numbers are monotonic and
   never reused.
-- Every directory has exactly one `README.md`: a map of what lives there and
+- `specs/` holds one `YYYY-MM-DD-<feature>/` folder per feature with
+  `requirements.md`, `design.md` and `tasks.md`. Their `Status:` lines are the
+  document's lifecycle (Draft, Approved, …), not delivery progress — the one
+  status a canonical doc carries. `specs/INDEX.md` routes to the catalog.
+- Every directory has exactly one `README.md` (`specs/` uses `INDEX.md`, and
+  feature folders need none): a map of what lives there and
   when to read it — not a mirror of the content.
 - Engineers can add more files or folders as needed. This structure is a
   baseline, not a restriction.
@@ -397,8 +406,8 @@ context and consequences that make them reviewable later.
 ## Conventions
 
 - Name entries `NNNN-<slug>.md`; numbers are monotonic and never reused.
-- Record a decision that shapes system structure, crosses a component
-  boundary, or is costly to reverse — before the code that depends on it.
+- Record a decision only when it is hard to reverse, surprising without
+  context, and a real trade-off — before the code that depends on it.
   Implementation details and library picks are not decisions; they belong in
   [`../design/`](../design/) or the change itself.
 - Start from [`../templates/adr.md`](../templates/adr.md).
@@ -475,6 +484,25 @@ shaped that way.
 
 Before implementing or changing a subsystem — and read
 [`../decisions/`](../decisions/) for the constraints it must honor.
+````
+
+---
+
+## docs/agents/README.md
+
+**Path:** `docs/agents/README.md`
+
+````markdown
+# Agent configuration
+
+Per-repo settings the skills read: the project's posture and working
+agreements, the issue tracker and its states, triage labels, and the commands
+that verify a change. Written and updated by `cmk:repo-config`; edit through
+it so every file stays in the shape the skills parse.
+
+## When to read
+
+Before an agent claims, builds, or ships a ticket in this repo.
 ````
 
 ---
