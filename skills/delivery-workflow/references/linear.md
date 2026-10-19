@@ -6,13 +6,11 @@ alongside this one.
 
 ## Issue states
 
-Linear's state machine maps onto the tracking contract's readiness
-vocabulary: work sits in **Backlog** or **Todo** before it starts, moves to
-**In Progress** once active work begins, moves to **In Review** when the PR
-is ready (`references/pr-traceability.md`), and reaches **Done** only once
-every acceptance criterion is disposed
-(`references/acceptance-criteria.md`). Move an issue to Done only after
-acceptance is verified — merging alone does not do it.
+The closed workflow's roles map onto Linear's workflow states (and onto labels where Linear
+has no state) through `docs/agents/triage-labels.md` — see `references/closed-workflow.md`
+§ On Linear. Read the mapping; never assume a state name. A ticket reaches its Done state
+only once every acceptance criterion is disposed (`references/acceptance-criteria.md`) —
+the PR's `Closes` line and the merge do that after `cmk:delivery-ship` checked them off.
 
 ## The Diff is Linear's synced review surface
 

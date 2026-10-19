@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-workflow
-description: Use when the user asks to "start tracked work", "reconcile the tracker", "check if this is ready to ship", "keep the issue useful", "check acceptance criteria", "scope band", "docs-ready", or "are we ready to implement" — or needs the tracking contract every other delivery skill operates inside. Owns scope-band docs bars and readiness vocabulary (`execution-ready`, `ship-ready`, `docs-ready`).
-version: 0.3.2
+description: Use when the user asks to "start tracked work", "reconcile the tracker", "check if this is ready to ship", "keep the issue useful", "check acceptance criteria", "scope band", "docs-ready", "which state is this ticket in", or "are we ready to implement" — or needs the tracking contract every other delivery skill operates inside. Owns the closed workflow's ticket states, scope-band docs bars and readiness vocabulary (`execution-ready`, `ship-ready`, `docs-ready`).
+version: 1.0.0
 ---
 
 # Delivery Workflow
@@ -21,6 +21,14 @@ model. A binding never changes phase order, gates, evidence, or acceptance.
 
 Discovering or auditing an uncertain body of work before the issue set is
 known? Use `cmk:discover-efforts`.
+
+## The closed workflow
+
+Every ticket is in exactly one state — Inbox, Shaping, Ready, Building, In review, Done,
+Shipped, Needs input, Human-only, or Won't do — and each move belongs to one command or the
+person. The person owns three gates: approve, answer, merge. Before moving a ticket, read
+`references/closed-workflow.md`: who may make each move, and how the roles map to this
+repo's labels or Linear states through `docs/agents/triage-labels.md`.
 
 ## Reconcile continuously
 
@@ -66,7 +74,8 @@ Use these definitions consistently on every affected issue and relation:
   the implement docs gate, and the one-execution-engine rule.
 - **Docs-ready** — the docs bar for the stated scope band in
   `references/scope-band.md` is met (or an explicit exemption with owner is
-  on the issue). Docs-ready is required before retained implement work.
+  on the issue). Docs-ready is required before retained implement work, and
+  a ticket in Ready is docs-ready for its band.
 - **Execution-ready** — the pinned handoff commit has implementation,
   automated tests and coverage, the applicable review depth, and finding
   disposition recorded. It does not require final cumulative review, human
@@ -85,9 +94,10 @@ credit:
    estimate, dependencies, and timing are sufficient to work safely —
    improve missing context rather than forcing a fixed template.
 4. Meet **docs-ready** for that band — read `references/scope-band.md`. If
-   unmet, REQUIRED SUB-SKILL: use `cmk:requirements` (or record an explicit
-   exemption with owner on the issue) before implement.
-5. Move the issue to its in-progress state when active work begins.
+   unmet: a `feature` goes to Shaping (`/cmk:shape` is the person's command); a
+   `patch` gets its mini-spec through REQUIRED SUB-SKILL: use `cmk:requirements`
+   (or an explicit exemption with owner on the issue) before implement.
+5. Move the issue to Building when active work begins.
 6. Use the tracker's suggested branch name, if it generates one; otherwise
    the repo's documented branch convention (always carrying the issue ID).
 
@@ -135,7 +145,7 @@ Using Linear as your tracker? Read `references/linear.md`.
 | Trusting only auto-linking | Keep the issue ID in the branch and the PR body |
 | Treating the template as a form | Use any clear structure that serves the same review goals |
 | Claiming tests passed without proof | Include reproducible automation and its passing result |
-| Skipping requirements for a feature because "we're behind" | State `feature`, run `cmk:requirements` (or record a dated exemption with owner); do not open implement while docs-ready is false |
+| Skipping requirements for a feature because "we're behind" | State `feature` and move it to Shaping (or record a dated exemption with owner); do not open implement while docs-ready is false |
 | Running two implement orchestrators on one change | One execution engine per change — see `references/scope-band.md` |
 
 ## Rationalizations
@@ -143,5 +153,5 @@ Using Linear as your tracker? Read `references/linear.md`.
 | Thought | Reality |
 |---|---|
 | "Eng lead said skip the requirements doc — just implement" | Authority does not flip docs-ready. Record the pressure on the issue and still meet the band's bar or an explicit exemption. |
-| "Tracker AC is enough for a multi-slice feature" | Issue AC is necessary; `feature` band still needs `docs/requirements/` (or exemption). |
+| "Tracker AC is enough for a multi-slice feature" | Issue AC is necessary; `feature` band still needs its approved triad (or exemption). |
 | "We're behind — size it later" | State the band at start. Skipping the sizing step is not speed. |

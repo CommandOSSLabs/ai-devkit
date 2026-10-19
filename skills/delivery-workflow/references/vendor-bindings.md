@@ -36,10 +36,10 @@ How to enter an isolated worktree for delegated or stacked work, and the
 repository fallback — the repo's local-stack init and coherence scripts
 (see `cmk:local-stack`) — when native isolation is unavailable.
 
-For phase-3 wave tasks, record which of the wave protocol's protections
-(`cmk:delivery-pipeline`'s `references/worktree-wave-execution.md`) this
+For continuous build wave tasks, record which of the wave protocol's protections
+(`cmk:delivery-build`'s `references/wave-joins.md`) this
 runtime enforces versus which remain the controller's responsibility —
-snapshot before dispatch, build-dir override, cache seeding, retention on
+lane worktrees, build-dir override, cache seeding, retention on
 failure, thrash detection — and whether any native worktree convenience
 satisfies the contract (pinned wave base, named task branch, retention on
 failure, cache seeding). A mechanism that picks its own base or
