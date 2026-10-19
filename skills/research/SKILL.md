@@ -1,6 +1,6 @@
 ---
 name: cmk:research
-description: Use when a design, planning, or implementation question turns on external facts — how a library or API actually behaves, what a standard, spec, or RFC says, platform limits, version differences — rather than opinion, or when the user asks to look into or investigate such a fact and write it up with citations. Do not use when "looks" means visual or UI variants or screen mockups — that is cmk:spike, not a cited note; or for investigating a paper plus experimental variants, training runs, or candidate ranking.
+description: Use when asking why code or a design exists this way — design rationale, rejected alternatives, regression history, where a threshold came from — or when a question turns on external facts: how a library or API actually behaves, what a standard, spec, or RFC says, platform limits, version differences; produces a cited, confidence-graded note. Not for how the runtime flows (cmk:explain) or for visual or UI variants (cmk:spike).
 version: 1.2.0
 ---
 
@@ -12,14 +12,14 @@ Prefer dispatching a background subagent so the main conversation keeps moving; 
 
 WHEN the question is **why this codebase was designed this way** (rationale,
 rejected alternatives, incident-driven shape) rather than an external library
-or RFC fact → REQUIRED SUB-SKILL: use `references/rationale.md`. Do not answer design archaeology
+or RFC fact → read `references/rationale.md` and follow it. Do not answer design archaeology
 from code shape alone.
 
 ## Primary sources only
 
 Answer from the source that *owns* the fact: official documentation, the library's actual source code, published specs and RFCs, first-party APIs and changelogs. Tutorials, blog posts, and aggregated summaries are leads, not evidence — when one makes a claim, chase the claim back to the primary source and cite that. If a claim cannot be traced to an owning source, report it as unverified, not as fact.
 
-**For library, framework, and API facts, reach for the Context7 MCP first when it is available.** Your training knowledge has a cutoff and drifts stale — a version bumped, an API renamed, a method deprecated since. Context7 serves current, version-specific documentation straight from the source, so you answer from today's stable cmk:release instead of recollection. Resolve the library, pull the docs for the version the project already pins (read the lockfile) — or the latest stable when the question is *which* library to adopt — and cite them like any other primary source. Fall back to fetching the official docs or source directly when Context7 is not installed or does not cover the library. Never state a version number or API shape from memory when a live source is one call away.
+**For library, framework, and API facts, reach for the Context7 MCP first when it is available.** Your training knowledge has a cutoff and drifts stale — a version bumped, an API renamed, a method deprecated since. Context7 serves current, version-specific documentation straight from the source, so you answer from today's stable release instead of recollection. Resolve the library, pull the docs for the version the project already pins (read the lockfile) — or the latest stable when the question is *which* library to adopt — and cite them like any other primary source. Fall back to fetching the official docs or source directly when Context7 is not installed or does not cover the library. Never state a version number or API shape from memory when a live source is one call away.
 
 ## Output contract
 

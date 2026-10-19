@@ -136,3 +136,18 @@ user OVERRIDE.
 **What shipped.** Model-invocable `references/rationale.md`: evidence-before-narrative, category
 coverage map, investigator ≠ synthesizer, epistemics tiers in
 `references/epistemics.md`. No RED failure — OVERRIDE gate in SKILL.md.
+
+
+## Description routing after the cmk rename (2026-10-19)
+
+Harness: `skill-fixtures/bin/trigger.py` — fresh `claude -p`, all 93 skills installed, read-only
+tools, the first Skill call (or Read of a SKILL.md) is the route. Baseline: the same prompt
+against the jdk set (77 skills, jdk names).
+
+| Prompt (sonnet) | jdk | cmk as converted | shipped description |
+|---|---|---|---|
+| "Why did we choose integer cents in the first place? Dig up the reasoning." | `why` 5/5 | **1/5** | 5/5 |
+| "Find out the current best practice for signing webhook payloads … with sources." | `research` 1/1 | 4/5 | 5/5 |
+
+jdk `why` merged in as `references/rationale.md`; the converted description never named the why
+question. The shipped one leads with it.

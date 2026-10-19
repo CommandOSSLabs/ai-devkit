@@ -1,6 +1,6 @@
 ---
 name: cmk:design
-description: Use when approved requirements need their technical design, or the user asks "how should we build this", "draft the system design", "update the architecture" — produces a feature's design.md (or docs/design/system.md / a track doc) spelling out HOW the requirements get built, with Satisfies traces, reuse, seams for testing and, at system level, a Security section. After cmk:requirements, before cmk:delivery-spec-plan.
+description: Use when approved requirements need their technical design — the design.md / architecture doc spelling out HOW the requirements get built — or when the whole system or one track needs its architecture doc in docs/design/. After cmk:requirements, before cmk:delivery-spec-plan.
 version: 1.0.0
 ---
 

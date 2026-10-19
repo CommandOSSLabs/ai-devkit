@@ -1,6 +1,6 @@
 ---
 name: cmk:requirements
-description: Use when scoped work needs its requirements written or updated — "draft the requirements", "write the acceptance criteria", "draft a PRD", "update docs/requirements/…", SHALL CONTINUE TO guards — producing the user stories and EARS or RFC 2119 acceptance criteria in a feature's requirements.md (or a product area's doc) that every later task, test and commit cites by ID. After cmk:scope, before any design or code.
+description: Use when discovery is complete and a tier-1 or tier-2 change needs its requirements written — the user stories and EARS acceptance criteria in requirements.md that every later task, test, and commit cites by ID — or when a product area's docs/requirements/<topic>.md needs its requirements updated. After cmk:scope, before any design or code.
 version: 1.0.0
 ---
 

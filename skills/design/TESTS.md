@@ -329,3 +329,21 @@ track / feature levels that never silently contradict each other, the tree READM
 neutrality, the mandatory system-level Security section, upstream and downstream checks.
 Not ported: the feature-level `docs/design/<topic>.md` workflow (features use the triad) and
 the ADR constraint check as separate text (D2 no-op).
+
+
+## Description routing after the cmk rename (2026-10-19)
+
+Harness: `skill-fixtures/bin/trigger.py` — fresh `claude -p`, all 93 skills installed, read-only
+tools, the first Skill call (or Read of a SKILL.md) is the route. Baseline: the same prompt
+against the jdk set (77 skills, jdk names).
+
+| Prompt | jdk `design-solution` | merged cmk description | shipped description |
+|---|---|---|---|
+| "I've read the SMS reminder requirements … approved … Mark them Approved and write the design." (sonnet ×5) | 5/5 | **1/5** | 5/5 |
+| "We've never written down how the ledger service as a whole is built. Draft the system architecture doc." (sonnet ×5) | 0/1 (fired define-system-doc) | 1/1 | 5/5 |
+
+The long merged description (trigger phrases plus the outcome list) lost the approved-requirements
+route; the jdk sentence with one clause for system/track docs holds both. haiku routes this
+natural-language step 1/5 (jdk 0/5): on haiku the user types `/cmk:design`.
+
+Chain (`prompts/p2-chain1.txt` → `p2-chain2s.txt`, all skills, headless): `/cmk:scope` → `cmk:requirements` → `/cmk:design` on haiku and sonnet: triad requirements (18 / 19 IDs, catalog card) and a design.md with every ID in a `Satisfies:` line and a seams table; `cmk:feature-graph` and the review subagent ran. Sonnet's review found REMIND-5.1 could not hold once LATEFEE and REFUND land, corrected it and left requirements Draft for re-approval (upstream sync-back).

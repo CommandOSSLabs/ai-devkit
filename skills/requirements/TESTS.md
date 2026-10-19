@@ -192,3 +192,17 @@ Should-not-fire: "start work on TICKET-123" → delivery-intake; "how should we 
 - Description trimmed (less workflow summary; kept outcome noun + neighbor disambiguation).
 - Micro-test docs-ready gate (grok-4.5): `COMPLIANT_ACTION_TAKEN: yes`; softer wording would not help skip.
 - Micro-test description routing (grok-4.5): Q save-as-requirements→A; TICKET start→intake; how to build→design; close package→A; verify before claiming→ship (correct non-fire on A–C).
+
+
+## Description routing after the cmk rename (2026-10-19)
+
+Harness: `skill-fixtures/bin/trigger.py` — fresh `claude -p`, all 93 skills installed, read-only
+tools, the first Skill call (or Read of a SKILL.md) is the route. Baseline: the same prompt
+against the jdk set (77 skills, jdk names).
+
+| Prompt (sonnet ×5) | jdk-only description | merged description | shipped description |
+|---|---|---|---|
+| "Scoping for the late-fee SMS is approved, tier 2. Write the requirements …" | 5/5 | 5/5 | 5/5 |
+| "Update docs/requirements/invoicing.md — stays over 30 nights get invoiced monthly." | 0/5 | 0/5 | 5/5 |
+
+Shipped: the jdk sentence plus "or when a product area's docs/requirements/<topic>.md needs its requirements updated".

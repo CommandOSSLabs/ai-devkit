@@ -202,3 +202,16 @@ These rows of *When the subject is…* have no GREEN rep under `cmk:explain`:
 - the quiz row.
 
 Run a shape rep on each before treating it as proven.
+
+
+## Description routing after the cmk rename (2026-10-19)
+
+Harness: `skill-fixtures/bin/trigger.py` — fresh `claude -p`, all 93 skills installed, read-only
+tools, the first Skill call (or Read of a SKILL.md) is the route. Baseline: the same prompt
+against the jdk set (77 skills, jdk names).
+
+| Prompt (sonnet) | jdk `understand` | converted | shipped |
+|---|---|---|---|
+| "I've never read the invoicing code. Walk me through how an invoice goes from booking to paid …" | 1/1 | 0/1 | 5/5 |
+
+The converted description still named jdk `why`; it now points at `cmk:research`.
