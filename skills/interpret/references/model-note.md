@@ -14,8 +14,7 @@ name it `foundation-cards.md`, `docs/requirements/glossary.md`, or anything unde
 names belong to `cmk:glossary`'s `references/define-domain.md`.
 
 **What it is not.** `/cmk:explain` explains how a feature or the system works, with
-no pick; `/cmk:problem` closes a
-problem tree; `/cmk:pathfind` maps multi-session decisions; `/cmk:debt` tracks
+no pick; `/cmk:debt` tracks
 technical debt. If that is what the user wants, name the skill and stop.
 
 It is also not a decision record the product must obey. The locks in it are copies

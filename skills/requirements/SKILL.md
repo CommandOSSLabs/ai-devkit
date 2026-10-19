@@ -1,7 +1,7 @@
 ---
 name: cmk:requirements
 description: Use when discovery is complete and a tier-1 or tier-2 change needs its requirements written — the user stories and EARS acceptance criteria in requirements.md that every later task, test, and commit cites by ID — or when a product area's docs/requirements/<topic>.md needs its requirements updated. After cmk:scope, before any design or code.
-version: 1.0.1
+version: 1.0.2
 ---
 # Requirements
 

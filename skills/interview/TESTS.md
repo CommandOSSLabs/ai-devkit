@@ -764,3 +764,10 @@ run against this body before porting a word of it.
 
 No-op on this body: the provenance rule was not ported. `cmk:requirements` § Before drafting
 routes an unscoped ask here through `cmk:scope`.
+
+## 1.7.2 — `/cmk:problem` retired (2026-10-19)
+
+Takes jdk `clarify-decisions` 1.7.1 (`e2b5c4e`): `work-the-problem` left the Engineer Pack,
+and with it `cmk:problem`. **Problem lock** no longer forks: an open Identify/Define always
+gets the problem-lock card with 2–4 alternate problem statements, never a solution menu. The
+S-P0-WTP GREEN above already accepted the card as a pass; eval 11 now asserts the card alone.

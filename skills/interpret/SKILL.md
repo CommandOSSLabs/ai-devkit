@@ -1,11 +1,11 @@
 ---
 name: cmk:interpret
 description: Companion beside a technical discussion that answers from the code — what it does today, what a proposed shape would actually change, and which shape to take — in a card a person can retell in three sentences. Run with /cmk:interpret.
-version: 1.0.0
+version: 1.0.1
 disable-model-invocation: true
 ---
 
-# Interpret Session
+# Interpret
 
 The companion window beside `cmk:scope` / `cmk:interview` (or any parallel technical
 discussion). The user pastes what that session said, decides here, and carries a reply back.
@@ -16,8 +16,7 @@ touch, what the history already settled. A paste is a model of the work; the rep
 and when they disagree the user hears it before they answer.
 
 **Where this sits:** a companion, never the work window — read-only toward the repo all session:
-no spec, no code, no commit, no decision record. **Siblings:** `/cmk:problem` for a
-multi-round solve with disk artifacts; `cmk:explain` for learning with no pick;
+no spec, no code, no commit, no decision record. **Siblings:** `cmk:explain` for learning with no pick;
 `/cmk:prompt` to turn a vague ask into one prompt block, read cold when handed one.
 
 ## The Iron Law

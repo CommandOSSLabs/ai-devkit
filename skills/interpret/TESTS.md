@@ -1575,3 +1575,9 @@ rationalization. No further wording edit.
 ## Smoke after the merge (2026-10-19)
 
 skill-tester-haiku, a Vietnamese operator pasting another window's proposal ("store the late fee nightly via cron"): explanations in Vietnamese, identifiers verbatim; a card grounded in `design.md` Decision 1, `recordPayment` and `store.ts`'s version rule; it said the proposal does not breach ADR 0001 but contradicts LATEFEE-1.3/2.1/3.1; no carry-back written until the person picks (`0`). **PASS**.
+
+## 1.0.1 — jdk `interpret-session` 3.1.2 (2026-10-19)
+
+Takes jdk `e2b5c4e`: the siblings line and the model note no longer name `/cmk:problem` or
+`/cmk:pathfind`, which left the kit with their jdk sources. No behavior change beyond the
+names offered; heading now `Interpret`.

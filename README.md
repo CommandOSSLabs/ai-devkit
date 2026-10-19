@@ -63,7 +63,7 @@ This devkit solves that by using structured documentation as the shared state. T
 
 ## Skills
 
-93 skills: a core set every vendored repo gets, and opt-in packs. Per-family maps with every skill's package, references and scripts: [`docs/ai/skills/`](./docs/ai/skills/README.md).
+91 skills: a core set every vendored repo gets, and opt-in packs. Per-family maps with every skill's package, references and scripts: [`docs/ai/skills/`](./docs/ai/skills/README.md).
 
 | Family | Core skills |
 |---|---|
@@ -83,7 +83,7 @@ This devkit solves that by using structured documentation as the shared state. T
 | quality | `cmk:debt`, `cmk:architecture-scan`, `cmk:pivot`, `cmk:shipped-audit` |
 | project | `cmk:vision`, `cmk:system-docs` |
 | maintainers | `cmk:skill-authoring`, `cmk:retro` |
-| extras | `cmk:prompt`, `cmk:goal`, `cmk:problem`, `cmk:pathfind` |
+| extras | `cmk:prompt`, `cmk:goal` |
 
 `cmk:agent-vendors` vendors core plus the packs you name; `cmk:sync` keeps them current with upstream.
 

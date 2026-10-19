@@ -11,8 +11,6 @@
     "discovery/interpret-session":   {"cmk": "interpret",        "type": "replace", "tier": "core",            "family": "session"},
     "discovery/forge-prompt":        {"cmk": "prompt",           "type": "new",     "tier": "pack:extras",     "family": "session"},
     "discovery/forge-goal":          {"cmk": "goal",             "type": "new",     "tier": "pack:extras",     "family": "session"},
-    "discovery/work-the-problem":    {"cmk": "problem",          "type": "new",     "tier": "pack:extras",     "family": "session"},
-    "discovery/pathfind":            {"cmk": "pathfind",         "type": "new",     "tier": "pack:extras",     "family": "session"},
 
     "spec/specify-behavior":         {"cmk": "requirements",     "type": "replace", "tier": "core",            "family": "docs"},
     "spec/design-solution":          {"cmk": "design",           "type": "replace", "tier": "core",            "family": "docs"},

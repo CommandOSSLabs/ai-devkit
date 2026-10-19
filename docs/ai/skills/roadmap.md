@@ -28,7 +28,7 @@ Generates a weekly progress dashboard (one HTML page) of what finished, what is 
 
 ## cmk:roadmap-status
 
-user-invoked (`/cmk:roadmap-status`) · pack `roadmap` · v1.3.0
+user-invoked (`/cmk:roadmap-status`) · pack `roadmap` · v1.3.1
 
 Reports where a multi-milestone plan actually stands and what to do next, derived fresh from the roadmap, the specs, and git — never from a stored status file. Run it with /cmk:roadmap-status.
 

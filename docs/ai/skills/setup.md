@@ -66,13 +66,13 @@ Use when the user asks to "set up the repo structure", "organize the monorepo", 
 
 ## cmk:repo-config
 
-model-invoked · core · v2.0.1
+model-invoked · core · v2.0.2
 
 Use when this repo's agent config needs writing or fixing — "configure the tracker", "set up the labels", "which commands verify this repo", "set up docs/agents", or as cmk:repo-setup's facet — producing docs/agents/ (posture, team, tracker, triage labels, verify and release commands), the spec catalog seeds, and the Agent skills block, each command proven wired.
 
 - **Where:** `skills/repo-config/SKILL.md`
 - **References:** `references/build-host.md`, `references/catalog-sync-choice.md`, `references/issue-tracker-followups.md`, `references/optional-offers.md`, `references/project-docs-layer.md`, `references/remote-environments.md`, `references/team-inference.md`, `references/templates/agent-skills-block.md`, `references/templates/agents/issue-tracker.md`, `references/templates/agents/project.md`, `references/templates/agents/triage-labels.md`, `references/templates/agents/verify.md`, `references/templates/claude-md-pointer.md`, `references/templates/glossary.md`, `references/templates/guidelines.md`, `references/templates/specs-INDEX.md`, `references/templates/specs-catalog-domain.md`, `references/templates/system-design.md`, `references/templates/vision.md`, `references/triage-label-mapping.md`, `references/verify-control.md`, `references/webbridge-setup.md`
-- **Cites:** `cmk:acceptance`, `cmk:acceptance-api`, `cmk:acceptance-ui`, `cmk:agent-instructions`, `cmk:board`, `cmk:catalog`, `cmk:debug`, `cmk:delivery-build`, `cmk:delivery-handoff`, `cmk:delivery-remote`, `cmk:delivery-review`, `cmk:delivery-ship`, `cmk:delivery-spec-plan`, `cmk:design`, `cmk:discover-efforts`, `cmk:dogfood-plan`, `cmk:evidence`, `cmk:feature-graph`, `cmk:glossary`, `cmk:go`, `cmk:goal`, `cmk:idea`, `cmk:incident`, `cmk:interpret`, `cmk:interview`, `cmk:observability`, `cmk:pathfind`, `cmk:problem`, `cmk:prompt`, `cmk:release`, `cmk:repo-setup`, `cmk:requirements`, `cmk:research`, `cmk:roadmap`, `cmk:roadmap-status`, `cmk:scope`, `cmk:shape`, `cmk:tdd`, `cmk:traceability`, `cmk:triage`, `cmk:verdict`, `cmk:vision`, `cmk:worktree`
+- **Cites:** `cmk:acceptance`, `cmk:acceptance-api`, `cmk:acceptance-ui`, `cmk:agent-instructions`, `cmk:board`, `cmk:catalog`, `cmk:debug`, `cmk:delivery-build`, `cmk:delivery-handoff`, `cmk:delivery-remote`, `cmk:delivery-review`, `cmk:delivery-ship`, `cmk:delivery-spec-plan`, `cmk:design`, `cmk:discover-efforts`, `cmk:dogfood-plan`, `cmk:evidence`, `cmk:feature-graph`, `cmk:glossary`, `cmk:go`, `cmk:goal`, `cmk:idea`, `cmk:incident`, `cmk:interpret`, `cmk:interview`, `cmk:observability`, `cmk:prompt`, `cmk:release`, `cmk:repo-setup`, `cmk:requirements`, `cmk:research`, `cmk:roadmap`, `cmk:roadmap-status`, `cmk:scope`, `cmk:shape`, `cmk:tdd`, `cmk:traceability`, `cmk:triage`, `cmk:verdict`, `cmk:vision`, `cmk:worktree`
 - **Evidence:** `TESTS.md`, `eval.json`
 
 ## cmk:repo-setup

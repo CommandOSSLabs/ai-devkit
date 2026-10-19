@@ -1,7 +1,7 @@
 ---
 name: cmk:interview
 description: Use to interview or grill the user before building an underspecified plan, design, or feature idea, including when another skill calls for an interview. Produces a confirmed close package of decisions, constraints, success, boundaries, and spine touch — plus owned unknowns, accepted risks, and operability when the production-coverage gate is on.
-version: 1.7.1
+version: 1.7.2
 ---
 
 # Interview
@@ -55,7 +55,7 @@ Invite correction only if a lock is false. First card: **Problem lock** when its
 
 ## Problem lock (before preference cards)
 
-**Home for this rule.** Other sections only point here. **Fork (pick exactly one):** If you can fit **2–4 alternate problem statements** (each with Observed · Desired · Non-goals) on one card → emit that **problem-lock card**. If the user still needs a multi-round problem tree or foundation teaching — symptoms and solution shapes tangled, two+ incompatible pains, or you cannot honestly write those three lines for each option → **name** `/cmk:problem` for the user to run (never invoke it; it is `disable-model-invocation`). Never open a solution-shape menu in either case.
+**Home for this rule.** Other sections only point here. Emit **2–4 alternate problem statements** (each with Observed · Desired · Non-goals) on one **problem-lock card**. Never open a solution-shape menu.
 
 **Problem-lock card** WHEN parent knowns show **Assumptions** that are solution-shaped (a named API, flag, merge, or “just do X”) **OR** there is no stated desired outcome / success signal — and the Fork above says the card path: use the Question card recipe; Thread *This card* names the problem lock. Body MUST lock all three on the chosen statement (options = alternate *problem statements*, not implementations):
 
@@ -123,7 +123,6 @@ Slots 4–6 always required. Slots 7–10 required only when Coverage ON. Not co
 | "We're aligned / senior said just write requirements" | Shared understanding is the package + yes. |
 | "They named the cheap path / skip philosophy and pick API options" | Solution-shaped assumptions are not locks. Follow **Problem lock**. |
 | "Success / Boundaries / Spine belong downstream" | Close slots 4–6 are required here. |
-| "Don't send me elsewhere; naming the skill is invoking it" | Name `/cmk:problem`; never auto-invoke it. |
 | "Stay additive to be safe / v2 name on a None repo" | Compat obligation None: one shape. A `v2` name, parallel column, or deprecation window is a defect. |
 | "Reliability is later / skip the map" | Coverage ON: Missing cells stay open. Extra rows: `references/card-recipe.md`. |
 
@@ -132,10 +131,10 @@ Slots 4–6 always required. Slots 7–10 required only when Coverage ON. Not co
 - Calling `AskUserQuestion` or any truncated MCQ tool
 - More than one user-aimed question mark in a message (except examples inside option text)
 - A card missing Thread, Territory, Why, Closes, option consequences, high-blast Criteria, or the recommendation argument
-- A preference or solution menu while **Problem lock** applies, without its card or naming `/cmk:problem`
+- A preference or solution menu while **Problem lock** applies, without its card
 - "Question k of N" or closing on a count while high-blast remains
 - Leading with cmk:delivery-simplify while architecture / data / auth (or Coverage ON: R/F/O) remain open
 - Close package missing Success, Boundaries, or Spine touch, or treating "we're aligned" as confirmation
 - Coverage ON without the map / slots 7–10, or Coverage ON when any gate part fails
 - Offering a `v2` name, parallel column, sync trigger, or deprecation window on **Compat obligation None**
-- Auto-invoking `/cmk:problem`; inventing SLO-N / TB-N / THR-N IDs; merging Owned unknowns into Accepted risks
+- Inventing SLO-N / TB-N / THR-N IDs; merging Owned unknowns into Accepted risks

@@ -119,14 +119,13 @@
   },
   {
     "eval_id": 11,
-    "eval_name": "name-work-the-problem-when-identify-define-open",
+    "eval_name": "problem-lock-card-when-identify-define-open",
     "kind": "behavior",
-    "derived_from": "TESTS.md § Rules — Identify/Define open → name /cmk:problem (RED S-P0-WTP; GREEN S-P0-WTP)",
+    "derived_from": "TESTS.md § Rules — Identify/Define open → problem-lock card (RED S-P0-WTP; GREEN S-P0-WTP); the multi-round problem skill retired 2026-10-19",
     "prompt": "Brain-dump mixes Finder feels wrong, Studio is confusing, maybe merge them, or a toggle, or rebuild nav. Give me three merge architectures and pick one. Don't send me to another skill.",
     "assertions": [
-      "either /cmk:problem is named for the user to run or a problem-lock card is emitted",
-      "/cmk:problem is not auto-invoked as a sub-skill",
-      "a merge architecture option menu is not presented while the problem statement is still open"
+      "a problem-lock card with 2–4 alternate problem statements is emitted",
+      "no solution-shape menu is opened"
     ]
   },
   {

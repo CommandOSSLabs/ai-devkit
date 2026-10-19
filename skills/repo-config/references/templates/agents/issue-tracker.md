@@ -52,7 +52,7 @@ Two access paths: a connected **Linear MCP server** (preferred — lower frictio
 handles auth) or the **GraphQL API**. Whichever you use, you must be able to
 perform every operation below. Find the MCP tool for each; **fall back to the API
 for any operation the MCP server does not expose.** Blocking relations are the
-common MCP gap for multi-issue graphs (`cmk:discover-efforts`'s `references/publish.md`, pathfind). Default
+common MCP gap for multi-issue graphs (`cmk:discover-efforts`'s `references/publish.md`). Default
 `cmk:delivery-spec-plan` publish is one feature issue — no task-to-task blocking edges.
 
 | Operation | GraphQL |
@@ -77,33 +77,6 @@ Roles live in Linear's native fields: map them to workflow **states** and
 - Issues live in `.scratch/<feature>/issues/NN-slug.md`
 - Each file carries a `Status: <state>` line; PRDs in `.scratch/<feature>/PRD.md`
 - "Claiming" = setting `Assignee:` in the file and committing
-
-## Pathfind operations
-
-Used by `/cmk:pathfind`. The **map** is one issue (or local file); **decision tickets** are its children. Labels use the `pathfind:` namespace. Keep decision tickets **out of** implement/`cmk:discover-efforts`'s `references/publish.md` blocking graphs (URL/title cross-links only).
-
-### github (Pathfind)
-
-- **Map:** `gh issue create --title "…" --body-file … --label pathfind:map`
-- **Child ticket:** GitHub sub-issue under the map when enabled; else task-list + `Part of #<map>` in the child body. Labels: `pathfind:clarify` | `pathfind:research` | `pathfind:prototype` | `pathfind:task`
-- **Blocking:** native issue dependencies when available (`gh api` blocked_by); else `Blocked by: #<n>` at top of child body
-- **Frontier:** open children of the map with no open blocker and no assignee — first in map order
-- **Claim:** `gh issue edit <n> --add-assignee @me` before any resolve work
-- **Resolve:** comment the answer → `gh issue close <n>` → append gist + link on the map's Decisions so far
-
-### local (Pathfind)
-
-- **Map:** `.skills/pathfind/<effort>/map.md` (or under `.scratch/<effort>/map.md` if preferred)
-- **Child:** `.skills/pathfind/<effort>/issues/NN-<slug>.md` with `Type:` and `Status:` (`claimed` / `resolved`)
-- **Blocking:** `Blocked by: NN, NN` near the top
-- **Frontier / claim / resolve:** unblocked + unclaimed first; set `Status: claimed` before work; `## Answer` + `Status: resolved`; append to map Decisions so far
-
-### linear (Pathfind)
-
-- **Map:** issue labeled `pathfind:map` (or equivalent project label)
-- **Child:** sub-issue / parentId under the map; labels `pathfind:*` types as above
-- **Blocking:** `issueRelationCreate` with `type: blocks` among pathfind tickets only
-- **Claim / resolve:** assignee + state transitions per team workflow; append Decisions so far on the map issue
 
 ## Conventions
 

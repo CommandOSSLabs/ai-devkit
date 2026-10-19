@@ -72,9 +72,7 @@ What changed for a repo upgrading from ai-devkit 1.x to 2.0.0, and why: [ADR 000
 | `cmk:interview` | `clarify-decisions` | core |
 | `cmk:milestone-review` | `assess-milestone` | pack `roadmap` |
 | `cmk:observability` | `assess-observability` | pack `ops` |
-| `cmk:pathfind` | `pathfind` | pack `extras` |
 | `cmk:pivot` | `assess-pivot-impact` | pack `quality` |
-| `cmk:problem` | `work-the-problem` | pack `extras` |
 | `cmk:progress-chart` | `chart-progress` | pack `roadmap` |
 | `cmk:prompt` | `forge-prompt` | pack `extras` |
 | `cmk:prose` | `speak-outer` | core |
@@ -103,6 +101,12 @@ What changed for a repo upgrading from ai-devkit 1.x to 2.0.0, and why: [ADR 000
 | `cmk:visualize` | `craft-page` | core |
 | `cmk:working-set` | `hold-stage` | core |
 | `cmk:worktree` | `isolate-workspace` | core |
+
+## Engineer Pack skills not carried over
+
+`pathfind` and `work-the-problem` left the Engineer Pack on 2026-10-19 (jdk `e2b5c4e`), so
+2.0 has no `cmk:pathfind` or `cmk:problem`. A problem that needs framing gets the problem-lock
+card of `cmk:interview`.
 
 ## Removed dependencies
 

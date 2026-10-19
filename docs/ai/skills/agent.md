@@ -17,10 +17,10 @@ Use when the user asks to "set up CLAUDE.md", "set up AGENTS.md", "agent instruc
 
 ## cmk:agent-vendors
 
-model-invoked · core · v0.3.0
+model-invoked · core · v0.3.1
 
 Use when the user asks to "vendor the kit's skills into this repo", "set up agent adapters", "add a coding-agent vendor", "wire skills for Claude Code / Codex / OpenCode / Grok Build / Cursor", or whenever a repo needs one canonical skill set discoverable by multiple coding agents.
 
 - **Where:** `skills/agent-vendors/SKILL.md`
 - **References:** `references/adapter-template.md`, `references/packs.md`, `references/sync-check-ci.md`, `references/vendored-layout.md`
-- **Cites:** `cmk:acceptance`, `cmk:acceptance-api`, `cmk:acceptance-ui`, `cmk:architecture-scan`, `cmk:debt`, `cmk:delivery-remote`, `cmk:delivery-workflow`, `cmk:dogfood-plan`, `cmk:dogfood-run`, `cmk:goal`, `cmk:incident`, `cmk:milestone-review`, `cmk:observability`, `cmk:pathfind`, `cmk:pivot`, `cmk:problem`, `cmk:progress-chart`, `cmk:prompt`, `cmk:retro`, `cmk:roadmap`, `cmk:roadmap-status`, `cmk:shipped-audit`, `cmk:skill-authoring`, `cmk:sync`, `cmk:system-docs`, `cmk:ui-brief`, `cmk:ui-review`, `cmk:ux-brief`, `cmk:vision`
+- **Cites:** `cmk:acceptance`, `cmk:acceptance-api`, `cmk:acceptance-ui`, `cmk:architecture-scan`, `cmk:debt`, `cmk:delivery-remote`, `cmk:delivery-workflow`, `cmk:dogfood-plan`, `cmk:dogfood-run`, `cmk:goal`, `cmk:incident`, `cmk:milestone-review`, `cmk:observability`, `cmk:pivot`, `cmk:progress-chart`, `cmk:prompt`, `cmk:retro`, `cmk:roadmap`, `cmk:roadmap-status`, `cmk:shipped-audit`, `cmk:skill-authoring`, `cmk:sync`, `cmk:system-docs`, `cmk:ui-brief`, `cmk:ui-review`, `cmk:ux-brief`, `cmk:vision`

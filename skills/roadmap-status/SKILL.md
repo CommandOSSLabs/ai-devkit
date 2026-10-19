@@ -1,7 +1,7 @@
 ---
 name: cmk:roadmap-status
 description: Reports where a multi-milestone plan actually stands and what to do next, derived fresh from the roadmap, the specs, and git — never from a stored status file. Run it with /cmk:roadmap-status.
-version: 1.3.0
+version: 1.3.1
 disable-model-invocation: true
 ---
 

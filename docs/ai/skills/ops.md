@@ -6,7 +6,7 @@
 
 ## cmk:delivery-remote
 
-model-invoked · pack `ops` · v1.1.1
+model-invoked · pack `ops` · v1.1.2
 
 Use when an approved tasks.md should run somewhere other than this machine — offload the build to a remote host, build server, or second machine over ssh, unattended, under whichever agent CLI that host runs (grok, codex, claude, cursor-agent, kimi, gemini, qwen, opencode). Produces the finished run's branch back on this machine and a close report naming the agent and the base commit it built. Wraps the execute route the user already picked — cmk:delivery-build's references/continuous.md, cmk:delivery-build's references/story-unit.md, or cmk:delivery-build's references/inline.md — and never replaces it.
 

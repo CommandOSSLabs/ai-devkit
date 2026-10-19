@@ -23,7 +23,6 @@ Examples: `.skills/SPAY/`, `.skills/WEBPAR/`, `.skills/SKNS/`.
 
 | Root | Contents |
 |---|---|
-| `.skills/pathfind/<effort-slug>/` | Multi-session decision maps / knowns packages |
 | `.skills/research/` | Dated research notes (`<date>-<topic>.md`) |
 | `.skills/decisions/` | Boundary decision records (`DEC-*.md`, adoption) |
 | `.skills/pr-packages/<stable-id>/` | **Retired.** `cmk:delivery-ship` no longer writes this tree. Leave existing dirs; do not author new ones. |
@@ -82,7 +81,7 @@ was used for that work:
 | **Forbidden writes** | Do **not** create new loose `progress.md`, `task-N-*.md`, `review-*.diff`, `implementation-notes.md`, knowns/scan/acceptance files at the **bare** `.skills/` root |
 | **Auto-migrate** | **MUST NOT** auto-migrate or bulk-move a consumer repo's historical `.skills/` tree. Cleanup is human-initiated (`rm -rf .skills/<CODE>` or manual moves) |
 
-Shared roots (pathfind, research, decisions) may still be written at their shared locations. Do not write new `.skills/pr-packages/` trees.
+Shared roots (research, decisions) may still be written at their shared locations. Do not write new `.skills/pr-packages/` trees.
 
 ## Two features, two ledgers
 

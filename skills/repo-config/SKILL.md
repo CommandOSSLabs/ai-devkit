@@ -1,7 +1,7 @@
 ---
 name: cmk:repo-config
 description: Use when this repo's agent config needs writing or fixing — "configure the tracker", "set up the labels", "which commands verify this repo", "set up docs/agents", or as cmk:repo-setup's facet — producing docs/agents/ (posture, team, tracker, triage labels, verify and release commands), the spec catalog seeds, and the Agent skills block, each command proven wired.
-version: 2.0.1
+version: 2.0.2
 ---
 
 # Repo Config

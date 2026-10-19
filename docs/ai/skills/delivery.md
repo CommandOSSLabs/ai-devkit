@@ -28,7 +28,7 @@ Shows the whole board by state, starting with everything waiting on you, and eve
 
 ## cmk:delivery-build
 
-model-invoked · core · v1.0.0
+model-invoked · core · v1.0.1
 
 Use when an approved tasks.md (or a patch's mini-spec) must be built — the commits, per-task Standards and Spec review verdicts, ledger lines and close receipt, test-first, run as continuous waves of subagents, human-gated story units, or inline without subagents.
 

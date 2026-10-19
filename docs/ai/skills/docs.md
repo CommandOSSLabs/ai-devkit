@@ -102,13 +102,13 @@ Use when the user asks to "create a glossary", "add a term to the glossary", "wh
 
 ## cmk:interview
 
-model-invoked · core · v1.7.1
+model-invoked · core · v1.7.2
 
 Use to interview or grill the user before building an underspecified plan, design, or feature idea, including when another skill calls for an interview. Produces a confirmed close package of decisions, constraints, success, boundaries, and spine touch — plus owned unknowns, accepted risks, and operability when the production-coverage gate is on.
 
 - **Where:** `skills/interview/SKILL.md`
 - **References:** `references/card-recipe.md`, `references/example.md`, `references/feature-retrieval.md`, `references/production-coverage.md`
-- **Cites:** `cmk:delivery-simplify`, `cmk:feature-graph`, `cmk:glossary`, `cmk:observability`, `cmk:problem`, `cmk:research`, `cmk:spike`
+- **Cites:** `cmk:delivery-simplify`, `cmk:feature-graph`, `cmk:glossary`, `cmk:observability`, `cmk:research`, `cmk:spike`
 - **Evidence:** `TESTS.md`, `eval.json`
 
 ## cmk:learn
@@ -133,7 +133,7 @@ Use when a feature's spec has drifted from reality — requirements changed mid-
 
 ## cmk:requirements
 
-model-invoked · core · v1.0.1
+model-invoked · core · v1.0.2
 
 Use when discovery is complete and a tier-1 or tier-2 change needs its requirements written — the user stories and EARS acceptance criteria in requirements.md that every later task, test, and commit cites by ID — or when a product area's docs/requirements/<topic>.md needs its requirements updated. After cmk:scope, before any design or code.
 
@@ -165,7 +165,7 @@ Use when the user asks to "add a rule that...", "make this a standard", "promote
 
 ## cmk:scope
 
-model-invoked · core · v2.2.1
+model-invoked · core · v2.2.2
 
 Use at the very start of the idea-to-ship chain — when the user wants to add, build, or change a feature, behavior, or component, or to start a new project, and the asked-for behavior has no spec yet. Produces an agreed shape and a spoken ceremony tier. Triggers on "let's add…", "can we build…", "I'm thinking about…", "we should support…" before implementation has begun.
 

@@ -15,7 +15,7 @@ takes a pack when its work needs it, not by default.
 | `quality` | `cmk:debt`, `cmk:architecture-scan`, `cmk:pivot`, `cmk:shipped-audit` | The team tracks debt and audits what shipped |
 | `project` | `cmk:vision`, `cmk:system-docs` | The repo keeps product vision and system docs |
 | `maintainers` | `cmk:skill-authoring`, `cmk:retro` | The repo writes or tunes its own skills |
-| `extras` | `cmk:prompt`, `cmk:goal`, `cmk:problem`, `cmk:pathfind` | Operators want the prompt, goal and problem-framing tools |
+| `extras` | `cmk:prompt`, `cmk:goal` | Operators want the prompt and goal tools |
 
 Every other skill under the kit's `skills/` is **core**.
 

@@ -1,7 +1,7 @@
 ---
 name: cmk:agent-vendors
 description: Use when the user asks to "vendor the kit's skills into this repo", "set up agent adapters", "add a coding-agent vendor", "wire skills for Claude Code / Codex / OpenCode / Grok Build / Cursor", or whenever a repo needs one canonical skill set discoverable by multiple coding agents.
-version: 0.3.0
+version: 0.3.1
 ---
 
 # Agent Vendors

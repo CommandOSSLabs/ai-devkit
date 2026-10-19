@@ -18,8 +18,7 @@ absent, and Early/Active stay off. Edit these lines when the project moves phase
 **SSOT:** the **Compat obligation** values and what each one means live only here. Skills
 carry a one-clause copy of the derivation because a repo configured before the field existed
 has no Compat obligation text in this file for them to read — change the meanings here, and
-the derivation in `cmk:scope`, `cmk:interview`, `cmk:interpret`, and
-`cmk:problem` with it.
+the derivation in `cmk:scope`, `cmk:interview`, and `cmk:interpret` with it.
 
 - **Delivery intent:** `<Production | MVP | Run Spike | Research | Learning>` — the quality bar the output must meet. A bar, not a release state: **Production** says how well the code must be built, never that the project has shipped.
 - **Lifecycle stage:** `<Idea | Early development | Active development | Cut Released | Scaling | Maintenance>` — where the project is in its life.
