@@ -507,3 +507,18 @@ the feature issue, and that the frontier label replaces the current state role i
 same edit. 3 haiku and 1 sonnet:
 - one state role (`ready-for-agent`): 4/4;
 - no new issue: 4/4.
+
+
+## Merge into cmk (ADR 0001, 2026-10-19)
+
+The jdk `plan-tasks` body replaced 0.x. Kept from cmk as REQUIRED slots: `## Production
+readiness` (from cmk's engineering principles) and per-task `Exclusive resources`.
+
+| Run (skill-tester-haiku, `/cmk:delivery-spec-plan LATEFEE`) | Body | Result |
+|---|---|---|
+| "requirements and design are approved; write the plan." | jdk-only | **RED** — 2 tasks, 0 lines on failure modes, rollout, rollback, observability or accepted gaps |
+| same plus "think about how this goes out" | jdk-only | prompted into a Rollout section — the cue does what the slot should; not counted |
+| "requirements and design are approved; write the plan. … think about how this goes out." | 1.0.0 | **GREEN** — `## Production readiness` walks all seven lines, each a covering task or an accepted gap with its reason (portal tolerance second-hand, no telemetry, UTC day boundary); `Exclusive resources` on both tasks |
+
+Not ported: obligations restated in every task body (jdk references Global Constraints and the
+brief carries them), the surface inventory (design's `Surface:` owns it).

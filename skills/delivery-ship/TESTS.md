@@ -674,3 +674,7 @@ The jdk `land-branch` body replaced 0.x. Stacked-PR flow moved here from deliver
 
 Fixed: `owner-notice.py` second argument optional; `references/prepare.md` says what a patch
 with no `tasks.md` passes. Decision-boundary rows are keyed `delivery-ship:<action>`.
+
+GREEN (1.0.0, skill-tester-haiku, same clean branch): all three criteria ticked `[x]` on #28
+with a comment naming the proof per criterion (the new test, the driven API for old and new
+invoices, the five response fields), then `Closes #28`.
