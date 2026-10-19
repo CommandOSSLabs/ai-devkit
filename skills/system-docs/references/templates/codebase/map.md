@@ -4,7 +4,7 @@ Status: Approved
 Date: <YYYY-MM-DD>
 
 <!--
-Consumer artifact at docs/codebase/map.md.
+Consumer artifact at docs/design/codebase/map.md.
 Structural validator: references/validators/codebase/map.md
 Factual placement accuracy is human-confirmed evidence, not the structural validator.
 -->

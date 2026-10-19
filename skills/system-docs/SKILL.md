@@ -36,7 +36,7 @@ If the entry is not First-class or has no authorable template, stop and say so �
   proposal.md
 ```
 
-Entry-key path mirroring: `codebase/map` → `.skills/system-docs/codebase/map/`.
+Entry-key path mirroring: `codebase/map` → `.skills/system-docs/design/codebase/map/`.
 
 | File | Holds |
 |---|---|

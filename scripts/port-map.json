@@ -97,12 +97,12 @@
     ["docs/architecture/INDEX.md",    "docs/design/system.md"],
     ["docs/architecture/",            "docs/design/"],
     ["docs/architecture",             "docs/design"],
+    ["docs/codebase/",                "docs/design/codebase/"],
     ["docs/standards/",               "docs/rules/common/"]
   ],
   "flag_patterns": {
     "multi-context glossary (map to docs/requirements/<area>/glossary.md by hand)": "CONTEXT-MAP\\.md",
     "jdk repo doc, absent in consumer repos": "docs/(guide|design/20\\d\\d-)",
-    "jdk codebase layer (overlaps cmk docs/ai/)": "docs/codebase/",
     "Claude-only plugin root": "CLAUDE_PLUGIN_ROOT",
     "person or fixture name in skill text": "\\b(Quang|Minh|Lan|klynt|Klynt|brewlog|harbor-ledger)\\b",
     "Vietnamese gloss": "cấm đoán",

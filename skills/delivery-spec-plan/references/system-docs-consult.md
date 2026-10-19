@@ -7,10 +7,10 @@ hard-constraint precedence, no-op, once-per-entry suggest, never auto-invoke).
 
 | Entry | Path | Use when Approved |
 |---|---|---|
-| `codebase/map` | `docs/codebase/map.md` | Layout and placement rules |
-| `codebase/modules` | `docs/codebase/modules.md` | Module boundary placement |
-| `codebase/ownership` | `docs/codebase/ownership.md` | Ownership notes (advisory, not authz) |
-| `codebase/dependencies` | `docs/codebase/dependencies.md` | Forbidden dependency directions |
+| `codebase/map` | `docs/design/codebase/map.md` | Layout and placement rules |
+| `codebase/modules` | `docs/design/codebase/modules.md` | Module boundary placement |
+| `codebase/ownership` | `docs/design/codebase/ownership.md` | Ownership notes (advisory, not authz) |
+| `codebase/dependencies` | `docs/design/codebase/dependencies.md` | Forbidden dependency directions |
 | `standards/INDEX` / `testing` / `errors-logging` | `docs/rules/common/…` | Global Constraints house rules (prefer standards over guidelines) |
 
 **When Approved:** align the plan **within** hard constraints from consult-recipe;

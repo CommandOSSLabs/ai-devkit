@@ -4,7 +4,7 @@
 Allowed/forbidden dependency directions. Complements Codebase Map; not the feature registry or architecture spine.
 
 ## Canonical consumer path
-`docs/codebase/dependencies.md`
+`docs/design/codebase/dependencies.md`
 
 ## Applicability
 Use when the repository has multi-module structure, ownership notes, or dependency direction rules agents should respect.
@@ -22,7 +22,7 @@ Use when the repository has multi-module structure, ownership notes, or dependen
 Repository tree; package manifests; CODEOWNERS if present; human confirmation for ownership claims.
 
 ## Authority predicate
-- **Absent:** no file at `docs/codebase/dependencies.md`
+- **Absent:** no file at `docs/design/codebase/dependencies.md`
 - **Non-authoritative:** file exists but `Status` is not `Approved`, or structural validator fails
 - **Approved:** `Status: Approved` and structural validator returns pass
 

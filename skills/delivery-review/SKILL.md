@@ -79,7 +79,7 @@ When `docs/design/` exists, REQUIRED SUB-SKILL: use `references/invariants.md` o
 standing nav docs. **Load**, when `cmk:system-docs` is installed: `cmk:system-docs`'s
 `references/consult-recipe.md`.
 
-**Paths:** `docs/ai/` (`cmk:codebase-docs`), or `docs/codebase/modules.md`, `ownership.md`, `dependencies.md`.
+**Paths:** `docs/ai/` (`cmk:codebase-docs`), or `docs/design/codebase/modules.md`, `ownership.md`, `dependencies.md`.
 
 **When Approved:** advisory Spec/Standards context only — flag conflicts with documented
 boundaries/ownership/deps as advisory findings (not a hard merge gate by themselves).

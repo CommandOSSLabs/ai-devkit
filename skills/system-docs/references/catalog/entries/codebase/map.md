@@ -1,10 +1,10 @@
 # Entry: `codebase/map`
 
 ## Purpose and boundary
-Codebase Map: placement and top-level layout guidance for where new code belongs. Not the architecture invariant spine and not the feature registry (`docs/specs/INDEX.md`).
+Codebase Map: placement and top-level layout guidance for where new code belongs. Not the architecture invariant spine and not the feature registry (`docs/specs/INDEX.md`). Not the AI navigation map either (`docs/ai/`, `cmk:codebase-docs`): that one says where things are; this one says where new things must go.
 
 ## Canonical consumer path
-`docs/codebase/map.md`
+`docs/design/codebase/map.md`
 
 ## Applicability
 Use when planning or placing production code paths and the repository benefits from standing placement rules.
@@ -22,7 +22,7 @@ Use when planning or placing production code paths and the repository benefits f
 Repository tree listing; existing path conventions; human confirmation for ownership claims.
 
 ## Authority predicate
-- **Absent:** no file at `docs/codebase/map.md`
+- **Absent:** no file at `docs/design/codebase/map.md`
 - **Non-authoritative:** file exists but `Status` is not `Approved`, or structural validator fails
 - **Approved:** `Status: Approved` and structural validator returns pass
 

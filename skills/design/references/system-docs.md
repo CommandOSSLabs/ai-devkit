@@ -10,7 +10,7 @@ this table and the rules below it are the whole recipe.
 | Sets reliability targets | `docs/ops/reliability.md` | optional `Reliability:` SLO only |
 | Touches API/UI/a11y/security-coding/instrumentation | matching `docs/rules/common/<name>.md` | design constraints prose |
 | Needs system/data/integrations/runtime shape | `docs/design/{system,data,integrations,runtime}.md` | narrative; spine ARCH-N stays `Respects:` only |
-| Names cross-module structure | `docs/ai/` (`cmk:codebase-docs`) or `docs/codebase/{modules,ownership,dependencies}.md` | Locality / Reuse guidance |
+| Names cross-module structure | `docs/ai/` (`cmk:codebase-docs`) or `docs/design/codebase/{modules,ownership,dependencies}.md` | Locality / Reuse guidance |
 
 Do not invent TB/THR/CMP/SLO numbers without bold definitions in Approved docs. Shape docs
 never redefine ARCH-N. Suggest `/cmk:system-docs <entry-key>` only when that skill is installed and the gap is material.
