@@ -35,5 +35,16 @@
       "neighbors contain only Feature CODEs, never OBS ids",
       "recipe_id is fsubr-1.2"
     ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "person-asks-blast-radius",
+    "kind": "trigger",
+    "derived_from": "TESTS.md § 1.4.0",
+    "prompt": "Fresh sessions with: 'Which features and specs does invoiceView touch, and what's its blast radius?', 'If I change how money amounts are rounded, which features and requirement IDs are affected?', 'How does invoiceView work end to end?', 'Why did we decide invoices are immutable once issued?'",
+    "assertions": [
+      "cmk:feature-graph is loaded for the blast-radius and affected-IDs questions",
+      "cmk:feature-graph is not loaded for the how-it-works and why-we-decided questions"
+    ]
   }
 ]

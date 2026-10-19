@@ -1,7 +1,7 @@
 ---
 name: cmk:feature-graph
-description: Use when cmk:scope, cmk:delivery-review, cmk:interview, cmk:design, cmk:delivery-spec-plan, cmk:debug, or another skill needs feature neighbors, cluster, blast radius, overlap, reuse-miss, or a multi-hop feature subgraph — produces an advisory envelope (schema 1.1 neighbors, observations band, OWNS coverage, seeds). Not reverse-track indexing (/cmk:catalog dispose) and not confirm-then-write catalog backfill (/cmk:catalog).
-version: 1.3.1
+description: Use when someone asks which features, specs or requirement IDs a change, file, symbol or term touches — its blast radius, neighbor features, overlap with work that already exists, or a feature cluster — and whenever cmk:scope, cmk:design, cmk:delivery-spec-plan, cmk:delivery-review, cmk:interview or cmk:debug needs that subgraph. Produces an advisory feature-graph envelope (neighbors, cluster, blast radius, OWNS coverage) from docs/specs. Not reverse-track indexing (/cmk:catalog dispose) and not confirm-then-write catalog backfill (/cmk:catalog).
+version: 1.4.0
 ---
 
 # Feature Graph
