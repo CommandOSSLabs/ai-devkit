@@ -18,7 +18,7 @@ FIND THE WANT BEFORE THE CHECK.
 EVERY DONE LINE IS SETTLED BY OUTPUT THE RUN PRINTS.
 ```
 
-Two halves, two recorded failures. Skip the first and the goal chases what the repo makes easy to check: asked to make brewlog "better", two unskilled runs offered lint, README and path traversal, one recommended lint — the user wanted the settings page usable on a phone. Skip the second and the run never ends, or ends on its own say-so: Claude Code's `/goal` judge "doesn't run commands or read files independently", and a goal that "renders correctly at 375px" in a repo with no browser is a line nobody can settle.
+Two halves, two recorded failures. Skip the first and the goal chases what the repo makes easy to check: asked to make a small web app "better", two unskilled runs offered lint, README and path traversal, one recommended lint — the user wanted the settings page usable on a phone. Skip the second and the run never ends, or ends on its own say-so: Claude Code's `/goal` judge "doesn't run commands or read files independently", and a goal that "renders correctly at 375px" in a repo with no browser is a line nobody can settle.
 
 <HARD-GATE>
 Edit NO file and start NO part of the goal's work. You read, you ask, you run checks that change nothing. The work belongs to the run.

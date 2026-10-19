@@ -44,7 +44,7 @@ unless **every Must row is `pass`**. `pass` requires a proving **read**
 ## Must
 | Row | Result | Evidence | Tracked change |
 |---|---|---|---|
-| Identity `service.name` not `unknown_service*` | pass/fail/unresolved | <read> | <none \| frame-change/amend-feature> |
+| Identity `service.name` not `unknown_service*` | pass/fail/unresolved | <read> | <none \| cmk:scope/cmk:amend> |
 | `service.version` deploy-correlatable | | | |
 | `deployment.environment.name` set | | | |
 | W3C `traceparent` across hops | | | |

@@ -55,7 +55,7 @@ no feature citation. **Do not** judge semantic conformance. Same docs-only rule.
 **Retired:** **E2** (code-side ID presence for Implemented/Shipped) is not
 emitted. Do not reintroduce a finding that greps the codebase for IDs.
 
-Errors mean the cmk:traceability is broken. Warnings mean the cmk:traceability is incomplete but not
+Errors mean the traceability is broken. Warnings mean the traceability is incomplete but not
 wrong. `cmk:evidence`/`cmk:release` treat any error as a failing gate; warnings are reported,
 not fatal, unless the caller says otherwise.
 

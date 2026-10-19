@@ -29,7 +29,7 @@ simple it looks.
 | Thought | Reality |
 |---|---|
 | "This is a one-liner, designing it is overhead" | Deciding it is tier 0 IS the design step. Say so and move on. |
-| "I'll sketch a little code to clarify my thinking" | That is a cmk:spike. REQUIRED SUB-SKILL: use `cmk:spike` so it is throwaway by contract. |
+| "I'll sketch a little code to clarify my thinking" | That is a spike. REQUIRED SUB-SKILL: use `cmk:spike` so it is throwaway by contract. |
 | "Scaffolding isn't really implementation" | A repo skeleton is a stack decision. It is implementation. |
 | "The other sub-features aren't in scope, so Out-of-Scope" | Out-of-Scope records a rejection. Work you intend later is deferred via `cmk:roadmap`. |
 | "I'll just invoke /cmk:catalog myself" | `/cmk:catalog` is user-invoked — name it only. |
@@ -163,4 +163,4 @@ every sub-feature exists as a `ROAD-N` and you have named which one goes first.
 - **Tier 0:** state the tier, then REQUIRED SUB-SKILL: use `cmk:tdd`.
 
 **Done when:** `cmk:requirements` has been invoked (tier ≥1) or the tier-0
-cmk:delivery-handoff's references/handoff-document.md is stated.
+handoff is stated.

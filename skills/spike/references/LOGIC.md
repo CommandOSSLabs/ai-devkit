@@ -1,4 +1,4 @@
-# Logic cmk:spike
+# Logic spike
 
 An interactive terminal app that lets the user drive a state model by hand. Right when the question is about business rules, state transitions, data shape, or an API's feel — things that read fine on paper and only break when pushed through awkward cases. If the question is about appearance, wrong branch: see [references/UI.md](references/UI.md).
 
@@ -6,7 +6,7 @@ An interactive terminal app that lets the user drive a state model by hand. Righ
 
 ### 1. Write the question down
 
-Before any code: one paragraph at the top of the cmk:spike (comment or adjacent README) stating the model under test and the question it must answer. A logic cmk:spike aimed at the wrong question is pure waste, and the written question is what the verdict gets checked against later.
+Before any code: one paragraph at the top of the spike (comment or adjacent README) stating the model under test and the question it must answer. A logic spike aimed at the wrong question is pure waste, and the written question is what the verdict gets checked against later.
 
 ### 2. Use the host project's stack
 
@@ -21,7 +21,7 @@ The part that answers the question lives behind a small pure interface — no I/
 - **A handful of pure functions** over a plain data type — when there's no ambient state, just transformations.
 - **A module owning internal state** behind a clear method surface — when the logic genuinely holds ongoing state.
 
-**Direction of dependency is absolute: the TUI imports the logic module; nothing flows the other way.** The logic module is the only part of the cmk:spike that may outlive it — once validated, it can be lifted into real code while the TUI shell is deleted.
+**Direction of dependency is absolute: the TUI imports the logic module; nothing flows the other way.** The logic module is the only part of the spike that may outlive it — once validated, it can be lifted into real code while the TUI shell is deleted.
 
 ### 4. Build the smallest TUI that exposes the state
 
@@ -34,7 +34,7 @@ Loop: initialize in-memory state → render → read one keystroke → dispatch 
 
 ### 5. One command
 
-Wire it into the project's existing task runner so the user launches it by name, never by path. No runner? Put the exact command on the first line of the cmk:spike's README.
+Wire it into the project's existing task runner so the user launches it by name, never by path. No runner? Put the exact command on the first line of the spike's README.
 
 ### 6. Hand it over, then listen
 
@@ -46,8 +46,8 @@ Per SKILL.md: the answer — not the code — goes into an ADR, a requirement, o
 
 ## Anti-patterns
 
-- **Tests on a cmk:spike.** If it needs tests, it has stopped being a cmk:spike.
+- **Tests on a spike.** If it needs tests, it has stopped being a spike.
 - **Wiring to a real database.** In-memory only, unless persistence *is* the question.
-- **Generalizing.** No "we might need X later." One question, one cmk:spike.
+- **Generalizing.** No "we might need X later." One question, one spike.
 - **Terminal code leaking into the logic module.** The moment the reducer knows about escape codes or prompts, it's no longer portable — and portability is the only value it has.
 - **Shipping the TUI shell.** The shell is for hand-driving in a terminal. Only the validated logic module may graduate.

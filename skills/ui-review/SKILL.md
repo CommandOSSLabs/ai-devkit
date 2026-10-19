@@ -63,7 +63,7 @@ each viewport with `cdp` `Emulation.setDeviceMetricsOverride` before
 `screenshot`: 1440×900, 768×900, and 375×900 (`deviceScaleFactor` 1, `mobile`
 false). A shot of the window's current size is not one of those three. Do not
 use Playwright. Screenshots land under
-`.skills/<CODE>/cmk:ui-review/` (no CODE → `.skills/inspect-ui/<branch>/`); the
+`.skills/<CODE>/ui-review/` (no CODE → `.skills/ui-review/<branch>/`); the
 working tree stays untouched.
 
 - **Viewports — 1440×900, 768, 375.** At each: screenshot, and check

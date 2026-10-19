@@ -109,7 +109,7 @@ I am stopped. I will not start the next unit until you unlock.
 
 - **continue** (after looking) → next unit only; mode stays story-unit
 - **stop stopping** / **just run it all** → I write Execution-mode: continuous
-  into tasks.md first, then hand remaining work to build-in-waves (chat-only is
+  into tasks.md first, then hand remaining work to `references/continuous.md` (chat-only is
   not a mode change)
 ```
 

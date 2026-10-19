@@ -1,6 +1,6 @@
 # Failure routing
 
-WHEN a driven case is `fail` — read from `run-dogfood/SKILL.md` § 4. A
+WHEN a driven case is `fail` — read from `SKILL.md` § 4. A
 `blocked` case goes to `references/unblock.md` instead.
 
 Re-drive the failed case once from a clean setup, then classify by observation.

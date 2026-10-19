@@ -8,7 +8,7 @@ Read the tracker operations from `docs/agents/issue-tracker.md` and the label st
 Every issue you publish starts its body with this exact line:
 
 ```
-> *This issue was drafted by AI with `references/publish.md`.*
+> *This issue was drafted by AI with `cmk:discover-efforts`.*
 ```
 
 That line is also the marker `cmk:triage` reads to skip these issues — they are born agent-ready, so re-triaging them would stack a weaker spec on a real one.
@@ -82,7 +82,7 @@ Work the **frontier**: publish any slice whose blockers are already published, a
 
 # <NN> — <Title>
 
-> *This issue was drafted by AI with `references/publish.md`.*
+> *This issue was drafted by AI with `cmk:discover-efforts`.*
 
 **What to build:** the end-to-end behavior this slice makes work, from the user's perspective — not a layer-by-layer implementation list.
 
@@ -97,7 +97,7 @@ Work the **frontier**: publish any slice whose blockers are already published, a
 
 <issue-template>
 
-> *This issue was drafted by AI with `references/publish.md`.*
+> *This issue was drafted by AI with `cmk:discover-efforts`.*
 
 ## What to build
 
@@ -118,7 +118,7 @@ The source issue's identifier, if this was filed from an existing issue — othe
 
 </issue-template>
 
-In either form, describe **behavior and interfaces, never file paths or line numbers** — they go stale. Exception: if a cmk:spike produced a snippet that pins a decision more precisely than prose (a state machine, reducer, schema, or type shape), inline the decision-rich part and note it came from a cmk:spike. When the work is covered by an existing spec, cite the requirement IDs (`CODE-N.M`) in the relevant criteria so the trace stays intact.
+In either form, describe **behavior and interfaces, never file paths or line numbers** — they go stale. Exception: if a spike produced a snippet that pins a decision more precisely than prose (a state machine, reducer, schema, or type shape), inline the decision-rich part and note it came from a spike. When the work is covered by an existing spec, cite the requirement IDs (`CODE-N.M`) in the relevant criteria so the trace stays intact.
 
 ## Exit
 

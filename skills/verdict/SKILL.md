@@ -42,7 +42,7 @@ Accept inline only:
 
 - Verdict: `merge` \| `pr` \| `discard` \| `block` \| `release-approve` \| `release-reject`
 - Boundary type, ceremony tier, predicate facts the emitter already has
-- Durable citations (`commit`, `tag name@object-id`, PR/CI/cut-release refs)
+- Durable citations (`commit`, `tag name@object-id`, PR/CI/release refs)
 - Promotion substance (ephemeral content rewritten as text)
 
 ## Depth (fixed lookup — no per-crossing interview)

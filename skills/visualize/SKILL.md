@@ -1,6 +1,6 @@
 ---
 name: cmk:visualize
-description: Use before the first line of markup for any HTML a human will look at — a cmk:dogfood-plan test guide, a report, a dashboard, a landing page, a published artifact, a standalone .html handoff. Also when a primary figure, structure sketch, architecture diagram, sequence, or flowchart must be drawn inside that page or packet. Produces a written design plan (palette, type pairing, layout concept) and a page derived from it — and when a figure is warranted, a named figure job plus inline SVG from the diagram recipe — theme-aware, self-contained, specific to its subject instead of templated. Also when a page's colors, typography, dark mode, spacing, or visual treatment need deciding, or when a page has come out looking generic.
+description: Use before the first line of markup for any HTML a human will look at — a dogfood test guide, a report, a dashboard, a landing page, a published artifact, a standalone .html handoff. Also when a primary figure, structure sketch, architecture diagram, sequence, or flowchart must be drawn inside that page or packet. Produces a written design plan (palette, type pairing, layout concept) and a page derived from it — and when a figure is warranted, a named figure job plus inline SVG from the diagram recipe — theme-aware, self-contained, specific to its subject instead of templated. Also when a page's colors, typography, dark mode, spacing, or visual treatment need deciding, or when a page has come out looking generic.
 version: 1.1.4
 ---
 

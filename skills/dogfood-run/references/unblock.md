@@ -1,7 +1,7 @@
 # Unblocking
 
 WHEN a case is `blocked`, or a shared precondition (login, app down, seed)
-blocks several — read from `run-dogfood/SKILL.md` § 4.
+blocks several — read from `SKILL.md` § 4.
 
 Build the missing precondition yourself on the local origin. A case stays
 `blocked` only for the human-only list at the bottom. Clear a shared blocker

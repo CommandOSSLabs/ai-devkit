@@ -4,7 +4,7 @@ WHEN a `Committed → Closed` transition has just passed the closure `<HARD-GATE
 `SKILL.md`'s Update section, follow this exactly.
 
 Then write into `Closed:` the SHA **read from the assessment file**, verbatim — not the one
-the cmk:delivery-handoff's references/handoff-document.md carried. Where the two ever diverge, the file is the record and the cmk:delivery-handoff's references/handoff-document.md is
+the handoff carried. Where the two ever diverge, the file is the record and the handoff is
 hearsay. That marker is how a later reader resolves what shipped in the milestone.
 
 Never re-run the assessment, and never append a block to the assessment file: this skill

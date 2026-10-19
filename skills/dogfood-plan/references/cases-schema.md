@@ -1,6 +1,6 @@
 # Run file schema (v2)
 
-Load when authoring or validating a cmk:dogfood-plan run file. One JSON file per run holds
+Load when authoring or validating a dogfood run file. One JSON file per run holds
 the authored cases **and** the verdicts, so what the agent records is what the
 person reads.
 
@@ -88,7 +88,7 @@ never advances `dogfood next`, and no flag makes it evidence — see
 Every subcommand takes the one run file.
 
 ```bash
-DF="python3 skills/acceptance/write-dogfood/scripts/dogfood"
+DF="python3 <skill-root>/scripts/dogfood"
 RUN=.skills/<CODE>/dogfood.json
 
 $DF list   $RUN

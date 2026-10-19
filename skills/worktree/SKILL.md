@@ -31,14 +31,12 @@ Done when: you know which of the three cases you are in, and you have consent if
 1. An explicit user instruction — always wins
 2. An existing `.worktrees/` at the repo root
 3. An existing `worktrees/` (if both exist, `.worktrees/` wins)
-4. An existing `.isolate-workspace/` (legacy — reuse it; do not mint a second parent)
-5. An existing `isolate-workspace/` (legacy)
-6. None of the above → create `.worktrees/`
+4. None of the above → create `.worktrees/`
 
 Bind the chosen directory to `$DIR` and use it in every command below — the priority list above is real only if the commands honor it:
 
 ```bash
-DIR=.worktrees   # or DIR=worktrees / a legacy isolate-workspace dir if that existing dir was selected above
+DIR=.worktrees   # or DIR=worktrees if that existing dir was selected above
 ```
 
 Before creating anything inside a project-local directory, you MUST confirm it is git-ignored. Leave the entry as an uncommitted working-tree change — git honors it immediately, and committing `.gitignore` here would write a commit to the user's **current** branch, the exact thing this skill promises not to touch:

@@ -76,7 +76,7 @@ Build the skeleton with the confirmed choices, at the resolved target. In **subp
    `docs/requirements/vision.md`, `docs/design/system.md`, and
    `docs/requirements/guidelines.md` from `references/templates/product-vision.md`,
    `references/templates/architecture-INDEX.md`, and `references/templates/product-guidelines.md`. If
-   declined, seed none of these — the cmk:repo-config cmk:delivery-handoff's references/handoff-document.md can still
+   declined, seed none of these — the cmk:repo-config handoff can still
    enable the layer.
 
 **Done when:** every applicable item exists and is committed (or staged, per the user's Step 1 choice).

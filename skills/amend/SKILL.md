@@ -28,7 +28,7 @@ The honest test for the escalation: **does the existing spec's intent already co
 
 **Done when:** the tier is stated out loud and the case is chosen.
 
-## 3. Keep the cmk:traceability honest
+## 3. Keep the traceability honest
 
 After the change lands through `cmk:tdd`, its new or changed requirement carries its ID into the test tag and the commit trailer like any other. If you edited `requirements.md`, `design.md`, or `tasks.md`, REQUIRED SUB-SKILL: use `cmk:realign` to realign `Status:` and the trace. Otherwise REQUIRED SUB-SKILL: use `cmk:traceability` directly and read its finding set. The check stays clean, or the change is not done.
 

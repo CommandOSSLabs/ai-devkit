@@ -19,7 +19,7 @@ status. `.skills/` is typically git-ignored — local to the working copy.
 ## Layout
 
 ```text
-.skills/work-the-problem/<slug>/
+.skills/problem/<slug>/
   session.md
   problem-tree.md
   foundation-cards.md
@@ -45,7 +45,7 @@ If files are missing mid-session: reconstruct from chat once, write disk, then c
 ```markdown
 # Session — <slug>
 
-- schema: work-the-problem/v1
+- schema: problem/v1
 - companion_language: <en|…>
 - learner_familiarity: new | partial | strong
 - project_posture: <delivery + lifecycle or unknown>
@@ -53,7 +53,7 @@ If files are missing mid-session: reconstruct from chat once, write disk, then c
 - success_test: <one line>
 - started: <ISO date or session date>
 - status: active | carry-back-ready | closed
-- main_window: frame-change | clarify-decisions | other | unknown
+- main_window: scope | interview | other | unknown
 
 ## Standing notes
 - <optional bullets>
@@ -153,7 +153,7 @@ Fill only at terminal carry-back.
 ## Why (dominant reason)
 <text>
 
-## Locks / constraints for clarify-decisions
+## Locks / constraints for cmk:interview
 - …
 
 ## Residual open / deferred
@@ -165,7 +165,7 @@ Fill only at terminal carry-back.
 ## What would flip this
 - …
 
-## Suggested next step in frame-change
+## Suggested next step in cmk:scope
 - …
 
 ## Suggested repo changes (optional, non-binding)

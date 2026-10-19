@@ -8,7 +8,7 @@ disable-model-invocation: true
 # Assess Pivot Impact
 
 When the product's **intent** changes and the **shipped world** no longer matches, this
-skill owns the cmk:delivery-handoff's references/handoff-document.md from "we decided to pivot" to "every live commitment has a
+skill owns the handoff from "we decided to pivot" to "every live commitment has a
 fate." It does not rewrite the vision layer. It produces the ledger that makes a
 rewrite honest.
 

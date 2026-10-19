@@ -199,7 +199,7 @@ cleaned up.
 
 Write `.skills/<CODE>/scan.md (or `.skills/_pending-<slug>/scan.md` before CODE)`. `<slug>` matches the ephemeral-artifact naming
 convention already used elsewhere in this skill set (e.g. `.skills/<CODE>/scan.md (or `.skills/_pending-<slug>/scan.md` before CODE)`
-as cited in `design-solution/SKILL.md`) — a short, kebab-case name for this scan
+as cited in `cmk:design`) — a short, kebab-case name for this scan
 run.
 
 **Header** — the four metrics from the passes above, plain and first:

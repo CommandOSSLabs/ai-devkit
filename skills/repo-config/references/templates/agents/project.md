@@ -71,7 +71,7 @@ Suggested roles (freeform allowed): Tech Lead, Backend Engineer, Frontend Engine
 |---|---|
 | **Solo** | Lean multi-person ritual language; no invented peer reviewers/assignees; agent-as-pair; full gates |
 | **Small** | Design-review checkpoints; ownership boundaries via optional freeform notes; name people when roster has names |
-| **Multi** | CODEOWNERS-aware review language when ownership notes exist; explicit review responsibilities as prose; write-handoff/docs emphasis |
+| **Multi** | CODEOWNERS-aware review language when ownership notes exist; explicit review responsibilities as prose; handoff/docs emphasis |
 | **(no band)** | Team absent, or empty roster with blank override — pre-feature default; do not invent a team; do not hard-fail |
 
 ## Decision boundaries
@@ -143,7 +143,7 @@ Or: `None — not deployed`
 ## release steps
 
 <Ordered list of project-specific release steps (build commands, bundling,
-signing), consumed by the cut-cut-release skill.>
+signing), consumed by the `cmk:release` skill.>
 
 ## Paths
 

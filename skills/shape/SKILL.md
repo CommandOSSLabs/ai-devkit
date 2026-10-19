@@ -31,12 +31,12 @@ each gate that only the operator may pass. The states are the roles in `docs/age
      into the ticket body and swap `shaping` for `ready-for-agent`. `/cmk:go` reads that line
      to recognise a tier-1 fix.
 
-   In three baseline runs, Lan had approved #28's fix up front. One kept it in Shaping. One
+   In three baseline runs, the operator had approved #28's fix up front. One kept it in Shaping. One
    made it Ready but wrote no `Requirements covered:`, so `/cmk:go` would have sent it back. One
    left the mini-spec as Draft and waited.
 
 At every stop, comment on the ticket what is waiting and on whom: "requirements.md
-drafted, waiting for Lan's approval". `/cmk:board` then shows the ticket under Shaping with
+drafted, waiting for the operator's approval". `/cmk:board` then shows the ticket under Shaping with
 that line.
 
 End with what was written, what waits on the operator, and the next command: `/cmk:shape #N`

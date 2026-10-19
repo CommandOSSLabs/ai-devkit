@@ -47,10 +47,10 @@ reach the tracker.
      workspace each server reached, and that the project's own workspace needs a sign-in:
      `/mcp`, then the server, then **Re-authenticate**, choosing that workspace.
 
-  Why step 3 is there: one test made Klynt Labs the only workspace either server could reach.
-  All six setups then bound harbor-ledger to Klynt's "Ledger / Roadmap drafts", another
-  company's database. Two of them saw that Quang was not a member of that workspace, and
-  still wrote him in as the sign-off person.
+  Why step 3 is there: one test made another company's workspace the only one either server could
+  reach. All six setups then bound the repo to that company's "Roadmap drafts" database.
+  Two of them saw that the sign-off person was not a member of that workspace, and still
+  wrote them in as the sign-off person.
 
 `cmk:roadmap` and `cmk:roadmap-status` read only the **Draft surface** row and that
 block in `docs/agents/issue-tracker.md`. They never read a Notion binding written anywhere

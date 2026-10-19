@@ -16,7 +16,7 @@ user issues an **explicit terminal reject**. Yes → REQUIRED SUB-SKILL: use
 `cmk:verdict` with verdict `release-reject`, `Boundary-Type: release`, durable
 evidence inline; leave the repo un-released. No / silence / "fix later" → **no**
 decision record (mechanical stop alone is not a terminal verdict). The same
-`release-reject` cmk:delivery-handoff's references/handoff-document.md applies if the user rejects at version or tag approval.
+`release-reject` handoff applies if the user rejects at version or tag approval.
 Stop-rule discipline is unchanged: no partial releases.
 
 Read the repo's commands from `docs/agents/project.md` (verify commands, release steps, smoke command). If it is missing, say so, suggest `cmk:repo-config`, and ask the user for the commands before proceeding.
@@ -77,7 +77,7 @@ Reason from the changelog in semver terms: removed/changed public behavior → m
 
 Write the approved version into the project's version files (manifest, lockfile if the ecosystem requires it, any hardcoded version constants) and prepend the changelog entry to the changelog file (create `CHANGELOG.md` if the repo has none). Commit these together.
 
-**Done when:** the cmk:release commit exists and `git status` is clean.
+**Done when:** the release commit exists and `git status` is clean.
 
 ## e. Build
 
@@ -99,18 +99,18 @@ Exercise the built artifact, not the source tree: run the project's smoke comman
 
 ## g. Tag and push
 
-Only after explicit user approval (this approval **is** the successful terminal verdict for the cmk:release):
+Only after explicit user approval (this approval **is** the successful terminal verdict for the release):
 
-1. REQUIRED SUB-SKILL: use `cmk:verdict` with verdict `release-approve`, `Boundary-Type: release`, Accountable depth inputs, and evidence lines folding version / build / smoke / tag approvals (one record for the whole cmk:release — never separate records per intermediate approval). Publish **before** creating the tag.
+1. REQUIRED SUB-SKILL: use `cmk:verdict` with verdict `release-approve`, `Boundary-Type: release`, Accountable depth inputs, and evidence lines folding version / build / smoke / tag approvals (one record for the whole release — never separate records per intermediate approval). Publish **before** creating the tag.
 2. On publication failure: do **not** create or push the tag; report the verdict was not enacted.
-3. On success: create the tag (`git tag <version>`), push the cmk:release commit and tag, then append to the record envelope:
+3. On success: create the tag (`git tag <version>`), push the release commit and tag, then append to the record envelope:
    `Execution-Outcome: tag <ref-name>@<object-id> pushed <UTC>`.
 
-**Done when:** the tag exists on the remote and the cmk:release decision record cites it (or the cmk:release was explicitly rejected/stopped without a tag).
+**Done when:** the tag exists on the remote and the release decision record cites it (or the release was explicitly rejected/stopped without a tag).
 
 ## h. Draft release notes
 
-Turn the changelog entry into release notes in the tracker's format (for example `gh cmk:release create --draft`, or a notes file for manual publishing). Keep the requirement-grouped structure. Leave the cmk:release as a draft for the user unless they ask you to publish.
+Turn the changelog entry into release notes in the tracker's format (for example `gh cmk:release create --draft`, or a notes file for manual publishing). Keep the requirement-grouped structure. Leave the release as a draft for the user unless they ask you to publish.
 
 **Done when:** the draft notes exist and their URL or path has been stated to the user.
 

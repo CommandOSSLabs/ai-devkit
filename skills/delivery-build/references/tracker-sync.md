@@ -18,7 +18,7 @@ the plan was published as.
 - **None resolved:** ask whether this build should sync, and take a short list of IDs. No
   answer, or no → empty ticket set; continue.
 
-Three baseline builds of #23 ran with Lan naming it in her request. All three left it
+Three baseline builds of #23 ran with the operator naming it in the request. All three left it
 `ready-for-agent` and unassigned through the build and the PR, so the board offered a
 ticket that was being built as free to take. One run explained: "Tracker sync: declined,
 so the ticket set is empty."

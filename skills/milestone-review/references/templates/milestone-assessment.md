@@ -90,7 +90,7 @@ stays passive data on every later read.
 **Goal coverage:** GOAL-2 advanced — SRCH covers single-workspace search
 **Deferrals:** ROAD-7 cross-workspace-index → MILE-4 (2026-07-20, blocked on vendor API) — honest
 **Plan accuracy:** +1 added · 1 moved out · 1 deferred · 21 days
-**Findings:** outcome sentence promised more than the members could deliver → plan-milestones
+**Findings:** outcome sentence promised more than the members could deliver → cmk:roadmap
 **Rationale:** every member shipped; the shortfall is scope, not delivery
 
 ### Human disposition

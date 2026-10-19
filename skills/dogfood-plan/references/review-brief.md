@@ -16,7 +16,7 @@ reviewer's recipe, not yours.
 | **requirements.md** | `docs/specs/<feature>/requirements.md` or `—` |
 | **design.md** / **tasks.md** | paths or `—` |
 | **Product surfaces to open** | concrete paths from design/tasks or the app layout — routes, pages, components |
-| **Skill root** | this skill's install path (in this monorepo: `skills/acceptance/write-dogfood`) |
+| **Skill root** | this skill's install path (in this kit's repo: `skills/dogfood-plan`) |
 
 ## Dispatch prompt
 

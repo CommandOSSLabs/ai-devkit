@@ -8,7 +8,7 @@ do not load this file and do not invent a coverage map.
 - [Coverage map](#coverage-map)
 - [Radii and order](#radii-and-order)
 - [Close slots 7–10](#close-slots-7-10)
-- [Operate → cmk:observability](#operate--assess-observability)
+- [Operate → observability](#operate--observability)
 
 ## Coverage map
 
@@ -71,7 +71,7 @@ REQUIRED when this file is loaded:
 
 Not “later NFR” ceremony. Worked close shape: `references/example.md`.
 
-## Operate → cmk:observability
+## Operate → observability
 
 Telemetry/tracing readiness gap → REQUIRED SUB-SKILL: use `cmk:observability`,
 **then** one `operate` card on the finding. Rollback/page/toil alone → `operate`

@@ -23,7 +23,7 @@ Probe ladder (strongest first): the UI's own request/response → read-back thro
 
 ## CLI (required for progress)
 
-Resolve the cmk:dogfood-plan skill root (`skills/acceptance/write-dogfood` in this monorepo, else the installed package path). Every subcommand takes the **one** run file — cases and verdicts live in it together:
+Resolve the `cmk:dogfood-plan` skill root (`skills/dogfood-plan` in this kit's repo, else the installed package path). Every subcommand takes the **one** run file — cases and verdicts live in it together:
 
 ```bash
 DF="python3 <skill-root>/scripts/dogfood"
@@ -46,7 +46,7 @@ Confirm the target origin **before the first product click**:
 
 - Default: local dev from `docs/agents/project.md` (`## Run locally (dev)`); start the app if it is down.
 - Non-local origin (staging, production, shared QA): **stop** and get an explicit in-thread yes naming that origin — "whatever is fastest", a demo deadline, or an already-open tab is **not** consent.
-- Drive a **dedicated product tab** — never the user's own tab, and never the cmk:dogfood-plan HTML itself.
+- Drive a **dedicated product tab** — never the user's own tab, and never the dogfood HTML itself.
 - Avoid controls that raise native `alert` / `confirm` (they freeze many browser bridges); `references/unblock.md` covers a case that requires one.
 - Fixes land as commits on the checked-out branch. If that branch is `main`/`master`, ask once here, before the drive, or move to a branch first (`cmk:worktree`). The drive never stops later to ask.
 
@@ -89,7 +89,7 @@ Run this algorithm **before §3** (before the first product click / drive loop).
 
 ```
 REPORT = .skills/<CODE>/dogfood-review.md
-IF missing REPORT → STOP (write-dogfood §5 independent review)
+IF missing REPORT → STOP (`cmk:dogfood-plan` §5 independent review)
 Parse REPORT: run_file, cases_fingerprint, open findings
 IF run_file path ≠ this RUN (normalized) → STOP
 IF sha256(authored cases of RUN) ≠ cases_fingerprint → STOP (stale; re-review)
@@ -197,14 +197,14 @@ When every case is `pass` or parked:
 
 ## Red Flags
 
-- Opening the cmk:dogfood-plan HTML in a browser to tick checkboxes during the run
+- Opening the dogfood HTML in a browser to tick checkboxes during the run
 - Copying a `human` tick into `verdict`, or citing one as evidence
 - Ending a run without asking about a server this run started
 - Marking `pass` with `server` empty on a create/update/delete/persist case
 - Spot-checking a subset while claiming the guide is done
 - Driving a non-local origin without an explicit yes naming that origin
 - `find_tab` with `active:true` on a product drive
-- Patching product on a cmk:dogfood-plan fail without `cmk:debug` when the fail is deterministic
+- Patching product on a dogfood fail without `cmk:debug` when the fail is deterministic
 - Claiming completion from memory after compaction instead of reading the run file
 - Driving product cases with a missing, stale, or open-findings review report and no named override
 - Treating bare “just go” or severity=Minor as a gate pass

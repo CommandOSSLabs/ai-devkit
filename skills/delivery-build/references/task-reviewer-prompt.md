@@ -108,14 +108,14 @@ Subagent (general-purpose):
     Cite the requirement ID on every spec finding. If an ID cannot be
     verified from this diff alone (it lives in unchanged code or spans
     tasks), do not widen your search — flag it back to the controller as a
-    "cannot prove-claim from diff" item, alongside your verdict on everything you
+    "cannot prove from diff" item, alongside your verdict on everything you
     could verify.
 
     ## Verdict 2: Code Quality
 
     - Correctness: error handling, edge cases, separation of concerns, DRY
       without premature abstraction
-    - Tests: do they prove-claim real behavior rather than mock behavior? Are
+    - Tests: do they prove real behavior rather than mock behavior? Are
       this task's edge cases covered? (IDs need not appear in test source —
       Spec findings still cite IDs from the brief.)
     - Structure: does the change follow the plan's File Structure? One
@@ -145,7 +145,7 @@ Subagent (general-purpose):
 
     ### Spec Compliance
     COMPLIANT or ISSUES FOUND — per requirement ID, with file:line
-    Cannot prove-claim from diff: [IDs + what the controller should check]
+    Cannot prove from diff: [IDs + what the controller should check]
 
     ### Strengths
     [specific, honest]

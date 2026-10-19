@@ -1,4 +1,4 @@
-<!-- map-features-materialize-stub: v1 -->
+<!-- catalog-materialize-stub: v1 -->
 # Design — <Feature title>
 
 **Feature code:** <CODE>

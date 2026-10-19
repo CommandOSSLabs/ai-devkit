@@ -55,7 +55,7 @@ Every entry fills every slot. A slot with no answer gets `Unknown` — never omi
 ```markdown
 ### **DEBT-7** `src/report-builder.ts` — buildMonthlyReport nests four levels deep on `opts: any`
 
-- **Found:** 2026-08-10 · polish-diff on `feat/csv-export`
+- **Found:** 2026-08-10 · cmk:delivery-simplify on `feat/csv-export`
 - **Cost:** every new report option adds another branch; the tax rule is duplicated
   between the paid and pending arms, so a rate change must find both
 - **Deferred because:** outside the pinned diff; restructuring it is its own change

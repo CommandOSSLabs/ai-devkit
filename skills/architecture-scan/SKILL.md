@@ -63,7 +63,7 @@ One card per candidate:
 
 End with a top-recommendation section: which candidate first, one sentence why, and which single prose-only rule to give a check next — the cheapest way the posture moves before the next scan. Then ask the user which candidate they want to pursue.
 
-**Do not propose concrete interfaces yet** — the report names directions, not designs. Interface shape belongs to the cmk:interview step, with the user in the loop.
+**Do not propose concrete interfaces yet** — the report names directions, not designs. Interface shape belongs to the interview step, with the user in the loop.
 
 **ADR conflicts:** a candidate that contradicts an existing ADR is included only when its evidence carries a `Strong` confidence badge; below that it is dropped, not listed. An included one is marked with the ADR reference and why the decision deserves revisiting. Do not list every refactor an ADR forbids.
 

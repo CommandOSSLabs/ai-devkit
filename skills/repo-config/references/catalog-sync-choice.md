@@ -16,4 +16,4 @@ Recommend **unset** unless the user asks for catalog-only sync. Never force `ind
 
 ## Write step (Step 4, item 11)
 
-**If decision L is `index-only`:** append the catalog-sync gitignore block from this skill's `references/templates/gitignore-index-only.snippet` (pack twin also under `skills/track/map-features/templates/`) **only when** those lines are not already present. Show the user the snippet and warn: do not `git add -f` triad dirs. If L is unset or `full-triad`, do **not** add specs ignore rules.
+**If decision L is `index-only`:** append the catalog-sync gitignore block from this skill's `references/templates/gitignore-index-only.snippet` (`cmk:catalog` ships the same snippet) **only when** those lines are not already present. Show the user the snippet and warn: do not `git add -f` triad dirs. If L is unset or `full-triad`, do **not** add specs ignore rules.

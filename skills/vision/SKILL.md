@@ -79,7 +79,7 @@ guidelines has an answer or an explicit `None`.*
    progressive authoring (First-class templates live under that skill). Do **not**
    auto-invoke it. You may also draft those files here if the user insists on one
    interview — then use the structural templates/validators under
-   `skills/project/define-system-doc/` and set `Status: Approved` only when validators pass.
+   `cmk:system-docs` and set `Status: Approved` only when validators pass.
    Domain files never redefine ARCH-N; vision remains the product north star.
 5. **Write engineering standards (not a parallel SSOT).** Prefer First-class
    `docs/rules/common/` via naming `/cmk:system-docs standards/INDEX|testing|errors-logging`

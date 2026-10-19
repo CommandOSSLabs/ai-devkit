@@ -73,7 +73,7 @@ The proposal is **ephemeral**: it lives in the conversation for the go/no-go and
 
 Every rewind must be driven by **newly discovered evidence** — not a second look at the same fact. Before classifying, read `.skills/<CODE>/corrections.md` (ephemeral, git-ignored scratch, parallel to `.skills/<CODE>/progress.md`, scoped to the in-flight plan). It carries one line per acted-on correction: an **evidence fingerprint**, the **chosen level**, and the **outcome**.
 
-IF the current divergence would re-classify the **same already-acted-on evidence to the same lowest invalidated artifact**, with no new evidence, do **NOT** re-enter that level again. Escalate to the user instead — this breaks the `build-in-waves → cmk:delivery-reroute → write-* → cmk:realign → build-in-waves` loop before it spins. A genuinely new discovery is not blocked by this: record its fingerprint, its level, and its outcome as a new ledger line, and classify normally.
+IF the current divergence would re-classify the **same already-acted-on evidence to the same lowest invalidated artifact**, with no new evidence, do **NOT** re-enter that level again. Escalate to the user instead — this breaks the `cmk:delivery-build → cmk:delivery-reroute → write-* → cmk:realign → cmk:delivery-build` loop before it spins. A genuinely new discovery is not blocked by this: record its fingerprint, its level, and its outcome as a new ledger line, and classify normally.
 
 **Done when:** the ledger has been read before classifying, and either escalation fired (repeat, no new evidence) or a new line was recorded (genuinely new evidence).
 
@@ -102,7 +102,7 @@ On proposal approval, route to the matching re-entry. Invoke each as a REQUIRED 
 
 After the re-entry skill's approval gate passes:
 
-1. **Reconcile.** WHEN the re-entry changed already-approved artifacts or their trace links, REQUIRED SUB-SKILL: use `cmk:realign` to realign `Status` and the cmk:traceability — it owns the strikethrough-with-reason retirement and the INDEX update; `cmk:delivery-reroute` does not reimplement any of it.
+1. **Reconcile.** WHEN the re-entry changed already-approved artifacts or their trace links, REQUIRED SUB-SKILL: use `cmk:realign` to realign `Status` and the traceability — it owns the strikethrough-with-reason retirement and the INDEX update; `cmk:delivery-reroute` does not reimplement any of it.
 2. **Record.** WHEN the final approved change carries an **architectural consequence**, record it as an ADR via REQUIRED SUB-SKILL: use `cmk:glossary`'s `references/define-domain.md`. Design-level rewinds usually qualify; Requirements or Vision rewinds only when architecturally weighty. **Task-local and Plan-level never** get an ADR. **Never** persist an ADR for a proposal the user did not approve.
 3. **Resume.** Return control to `cmk:delivery-build`'s `references/continuous.md`, which resumes **automatically** against the corrected plan off its own ledger — no manual restart. For a **Task-local** rewind, `.skills/<CODE>/progress.md` is untouched. For a **Plan / Design / Requirements** rewind that rewrote `tasks.md`, **re-baseline the ledger** first: keep the entries whose committed work survives the rewrite, drop the entries the rewrite superseded, so `cmk:delivery-build`'s `references/continuous.md` resumes after the last *still-valid* completed task rather than a stale task number. The ledger is git-ignored scratch, so this touches no spec artifact.
 

@@ -165,7 +165,7 @@ screen or visual surface — not only changes within existing ones.
 A branch that adds only library code nothing runs yet gets no walk: Product-Walk is
 `not-required` and its unit tests are the acceptance. Four formatting helpers with no
 caller left one baseline close unfinished. The run reported "a walk cannot drive pure
-functions" and stopped to wait for Lan, who was at the Port Authority until 5.
+functions" and stopped to wait for the operator, who was out until 5.
 
 ## Red flags — never
 

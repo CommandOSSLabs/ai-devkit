@@ -2,8 +2,8 @@
 
 **Applicability:** the idea touches users, success criteria, or product principles.
 
-**Paths:** `docs/requirements/personas.md`, `metrics.md`, `principles.md` (validators under
-`skills/project/define-system-doc/validators/product/`). Vision remains
+**Paths:** `docs/requirements/personas.md`, `metrics.md`, `principles.md` (validators in
+`cmk:system-docs`'s `references/validators/product/`). Vision remains
 `docs/requirements/vision.md` (cmk:vision).
 
 **Consult:** follow `cmk:system-docs`'s `references/consult-recipe.md` (authority,

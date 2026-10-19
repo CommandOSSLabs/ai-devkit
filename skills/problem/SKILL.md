@@ -59,7 +59,7 @@ Ask in English until companion language is chosen. Numbered list or `AskUserQues
 Then **initialize disk** (REQUIRED) per `references/artifacts.md`:
 
 ```text
-.skills/work-the-problem/<slug>/
+.skills/problem/<slug>/
   session.md
   problem-tree.md
   foundation-cards.md
@@ -151,7 +151,7 @@ Suggested repo improvements → **suggestions only** in leaf-log / carry-back.
 
 On any turn that changes tree, foundation, or leaf status:
 
-1. Update `.skills/work-the-problem/<slug>/` per `references/artifacts.md`
+1. Update `.skills/problem/<slug>/` per `references/artifacts.md`
 2. Echo:
 
 ```text
@@ -186,7 +186,7 @@ transport-adoption): see `references/artifacts.md`. Human carry proves
 Carry-back handed over with tree consistent on disk — **or** session ends with
 residuals named, digest delivered, and disk updated.
 
-Only session artifacts under `.skills/work-the-problem/` and notes via `cmk:research`
+Only session artifacts under `.skills/problem/` and notes via `cmk:research`
 are writable. No commits, tracked docs, ADRs, specs, or `Status: Approved`.
 
 ## Rationalizations and red flags

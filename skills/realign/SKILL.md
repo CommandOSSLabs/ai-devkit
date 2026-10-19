@@ -1,6 +1,6 @@
 ---
 name: cmk:realign
-description: Use when a feature's spec has drifted from reality — requirements changed mid-implementation, the implementation deviated from the approved plan, the feature just shipped, the specs have gone stale or out of sync, or the cmk:traceability check is failing — and the requirements/design/tasks triad needs realigning back to what the code and tests actually do.
+description: Use when a feature's spec has drifted from reality — requirements changed mid-implementation, the implementation deviated from the approved plan, the feature just shipped, the specs have gone stale or out of sync, or the traceability check is failing — and the requirements/design/tasks triad needs realigning back to what the code and tests actually do.
 version: 1.2.0
 ---
 
@@ -20,7 +20,7 @@ Work one feature at a time. Identify the spec directory first (from the user, th
 
 ## Steps
 
-**a. Baseline.** Run the cmk:traceability check (REQUIRED SUB-SKILL: use `cmk:traceability`) and capture the finding set — this is the "before" picture.
+**a. Baseline.** Run the traceability check (REQUIRED SUB-SKILL: use `cmk:traceability`) and capture the finding set — this is the "before" picture.
 
 **b. Requirements ↔ tasks.** Compare `requirements.md` against `tasks.md`:
 
@@ -46,10 +46,10 @@ out of scope for this step (docs-only spine).
 Apply `Draft → Approved` or `Approved`/`In-progress` → `Implemented` when that
 evidence exists: update the `Status:` line in `requirements.md` and the
 feature's row in `docs/specs/INDEX.md`. If evidence is partial, say exactly
-what is missing instead of transitioning. A mid-cut-release ask to "mark the
+what is missing instead of transitioning. A mid-release ask to "mark the
 shipped features Shipped" is `cmk:release` step i, not this skill — refuse
 the stamp, offer one-feature triad repair if there is drift.
 
-**f. After picture.** Re-run the cmk:traceability check and print both finding sets side by side — errors and warnings resolved, anything remaining, and what you changed to get there. Confirm `docs/specs/INDEX.md` reflects every spec's current `Status:` line, staged into this same commit.
+**f. After picture.** Re-run the traceability check and print both finding sets side by side — errors and warnings resolved, anything remaining, and what you changed to get there. Confirm `docs/specs/INDEX.md` reflects every spec's current `Status:` line, staged into this same commit.
 
 **Done when:** the after-report is no worse than the before-report on errors, every flagged item has either an edit or an explicit user decision pending, and INDEX.md agrees with every spec's `Status:` line.

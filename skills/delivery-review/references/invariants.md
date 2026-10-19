@@ -40,7 +40,7 @@ Every verdict carries a one-line rationale naming the invariant and the concrete
 ## Output
 
 ```
-inspect-invariants (3 citations, spine: docs/design/system.md)
+invariants (3 citations, spine: docs/design/system.md)
   violates ARCH-2  design.md §Cross-module sync calls the persistence module directly (invariant: only via the event bus)
   respects ARCH-4  every write goes through the migration guard
   unclear  ARCH-5  can't tell from the design whether the cache is invalidated on write

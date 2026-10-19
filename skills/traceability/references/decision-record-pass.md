@@ -9,7 +9,7 @@ When `.skills/decisions/` exists, run the shipped validator (path relative to th
 skill set install, beside `cmk:verdict`):
 
 ```bash
-sh cmk:verdict`'s `references/validate-records.sh --mode=audit-trace
+sh <cmk:verdict skill root>/references/validate-records.sh --mode=audit-trace
 ```
 
 Merge its diagnostic lines into the report **verbatim**. Exit code 1 → treat as
@@ -20,5 +20,5 @@ Do not reinterpret validator findings. **Crossing-without-record:** the validato
 does not emit an automated finding for “a production crossing lacks a record,”
 because it cannot tell skill-mediated verdicts from direct human action or
 external contribution. If an agent or human notes such an absence, treat it as a
-**warning-level concern only — never an error and never a cut-release/prove-claim gate
+**warning-level concern only — never an error and never a release/evidence gate
 fail**. Do not reinterpret validator lines; the opening finding table still applies.

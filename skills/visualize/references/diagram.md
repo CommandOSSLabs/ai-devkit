@@ -1,6 +1,6 @@
 # Diagram recipes
 
-Load this file WHEN a primary figure is warranted — a cmk:architecture-scan
+Load this file WHEN a primary figure is warranted — an architecture scan
 structure sketch or an `cmk:explain` Map figure. Page restyle may be skipped; this file still loads.
 
 - [Name the job](#name-the-job)

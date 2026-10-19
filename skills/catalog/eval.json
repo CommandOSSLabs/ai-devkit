@@ -55,7 +55,7 @@
     "assertions": [
       "Draft stub triad is written only after confirm",
       "stubs are Status Draft and do not invent Approved EARS SHALLs",
-      "stubs include map-features-materialize-stub fingerprint",
+      "stubs include catalog-materialize-stub fingerprint",
       "gitignore index-only snippet is checked or offered before write"
     ]
   },

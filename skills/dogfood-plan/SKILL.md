@@ -102,8 +102,8 @@ is running and every not-yet-visible behavior has an observation method.*
      -o .skills/<CODE>/dogfood.html
    ```
 
-   Resolve `<skill-root>` to this skill's install path (in this monorepo:
-   `skills/acceptance/write-dogfood`). The shell is `references/shell/guide.html` — theme-aware
+   Resolve `<skill-root>` to this skill's install path (in this kit's repo:
+   `skills/dogfood-plan`). The shell is `references/shell/guide.html` — theme-aware
    CSS/JS, kind chips, verdict badges, and `data-*` attributes. The rendered page
    carries the verdicts as of render time and says so, so it is correct on a
    double-click with nothing running.

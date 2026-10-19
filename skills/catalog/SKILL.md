@@ -67,7 +67,7 @@ observation json when needed). Propose **only** these kinds:
 | Missing Feature code | `Feature code:` line in requirements |
 | Empty ROAD bind | Shard Roadmap cell → live `ROAD-N` only (never mint) |
 | OWNS gap | `tasks.md` Files Create/Modify/Test line |
-| DEPENDS_ON candidate | Reuse prose only — never a cmk:feature-graph edge |
+| DEPENDS_ON candidate | Reuse prose only — never a feature-graph edge |
 | Recognized capability | Compact catalog card in a **shard** (Spec may be `—`); **no triad** |
 | OBS disposition | promote / absorb / dismiss + tombstone; promote writes Recognized shard card |
 
@@ -97,7 +97,7 @@ For each CODE, resolve Spec dir under `docs/specs/`:
 
 - Missing → propose Draft stubs from `references/templates/triad-stub/requirements.md`,
   `references/templates/triad-stub/design.md`, `references/templates/triad-stub/tasks.md`
-- Files without `<!-- map-features-materialize-stub: v1 -->` → **refuse clobber**
+- Files without `<!-- catalog-materialize-stub: v1 -->` → **refuse clobber**
 - Stub-fingerprinted only → may refresh on confirm
 
 Stubs: Status Draft, CODE + title from shard card, no invented Approved EARS. After

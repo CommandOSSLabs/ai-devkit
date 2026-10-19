@@ -100,8 +100,8 @@ test -f .skills/<CODE>/progress.md && grep -nE '^Task ' .skills/<CODE>/progress.
 that row's page. In the output, give each such row a `draft` line: its title, its
 `Status`, and the sign-off role's newest comment, quoted verbatim. Quote `no comment`
 when there is none. That comment is what stands between the draft and its sign-off.
-Six of seven runs fetched only the table and told Lan "The only thing holding it is
-Quang's review". Quang's comment on MILE-2 asked: "Drop that phrase or split refunds out,
+Six of seven runs fetched only the table and told the operator "The only thing holding it is
+the TPM's review". The TPM's comment on MILE-2 asked: "Drop that phrase or split refunds out,
 then I'll sign."
 
 ## The rules
@@ -157,11 +157,11 @@ Row 8 is where the milestone leaves this skill's hands, per the `<NON-NEGOTIABLE
 Counts, then findings, then the one next action:
 
 ```
-refresh-roadmap-status: 3 milestones · 7 items · 5 bound · 2 unspecced · 5 goals · 1 dispositioned
+roadmap-status: 3 milestones · 7 items · 5 bound · 2 unspecced · 5 goals · 1 dispositioned
   ERROR R10 SRCH status mismatch — INDEX says Approved, requirements.md says Implemented
   info  R7  ROAD-6 payments-webhook is unspecced
-  draft MILE-4 Search — In review — Quang: "Split ranking out, then I'll sign."
-  NEXT  withheld — R10 must be resolved first (realign-spec realigns a drifted Status)
+  draft MILE-4 Search — In review — TPM: "Split ranking out, then I'll sign."
+  NEXT  withheld — R10 must be resolved first (cmk:realign realigns a drifted Status)
 ```
 
 Exact wording is not contractual; the finding set and the selected action are.

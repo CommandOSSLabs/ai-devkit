@@ -1,6 +1,6 @@
 ---
 name: cmk:roadmap
-description: Use when a project's milestones need planning, sequencing, replanning, or ANY edit to an existing roadmap — produces or revises docs/roadmap/INDEX.md, the milestone intent registry carrying stable MILE-N and ROAD-N IDs that later feature specs bind to. Triggers on "plan the milestones", "build a roadmap", "what order should we build this in", "break this project into milestones", a cmk:scope that decomposed work into independent sub-features, and equally on any edit to a roadmap that already exists — "update the roadmap", "drop this item", "we're not doing X anymore", "reorder the milestones", "move sharing ahead of search", "reword this outcome", "commit to the next milestone", "this milestone shipped", "draft the next milestone in Notion for sign-off", or any request touching docs/roadmap/INDEX.md or a roadmap draft awaiting the TPM's sign-off. Not for one feature's requirements (cmk:requirements), and not for reporting where the plan currently stands (cmk:roadmap-status).
+description: Use when a project's milestones need planning, sequencing, replanning, or ANY edit to an existing roadmap — produces or revises docs/roadmap/INDEX.md, the milestone intent registry carrying stable MILE-N and ROAD-N IDs that later feature specs bind to. Triggers on "plan the milestones", "build a roadmap", "what order should we build this in", "break this project into milestones", a `cmk:scope` run that decomposed work into independent sub-features, and equally on any edit to a roadmap that already exists — "update the roadmap", "drop this item", "we're not doing X anymore", "reorder the milestones", "move sharing ahead of search", "reword this outcome", "commit to the next milestone", "this milestone shipped", "draft the next milestone in Notion for sign-off", or any request touching docs/roadmap/INDEX.md or a roadmap draft awaiting the TPM's sign-off. Not for one feature's requirements (cmk:requirements), and not for reporting where the plan currently stands (cmk:roadmap-status).
 version: 1.3.0
 ---
 
@@ -93,16 +93,16 @@ Refuse a `Committed → Closed` transition that arrives without an assessment ha
 `/cmk:milestone-review` for the user to run. This holds in every repo, including one that has
 never run that skill.
 
-Given a cmk:delivery-handoff's references/handoff-document.md — a `MILE-N`, an assessment ordinal, an effective verdict, and a candidate
+Given a handoff — a `MILE-N`, an assessment ordinal, an effective verdict, and a candidate
 closing revision SHA — **re-derive every value by reading**
-`docs/roadmap/assessments/<MILE-N>.md` at that ordinal. The cmk:delivery-handoff's references/handoff-document.md's values are claims to
+`docs/roadmap/assessments/<MILE-N>.md` at that ordinal. The handoff's values are claims to
 check, never facts to trust. Verify all five:
 
 1. the block names the same `MILE-N`;
 2. the referenced ordinal exists;
-3. its `Candidate closing revision` equals the cmk:delivery-handoff's references/handoff-document.md's SHA;
+3. its `Candidate closing revision` equals the handoff's SHA;
 4. its current `Human disposition` is **terminal** (`Accepted` or `Overridden`);
-5. its effective verdict and `Close decision` match what the cmk:delivery-handoff's references/handoff-document.md asserts.
+5. its effective verdict and `Close decision` match what the handoff asserts.
 
 Any mismatch → refuse the close and report which value disagreed. Validate against `A1`–`A7`
 in `references/templates/milestone-assessment.md` first; an unparseable assessment cannot authorise

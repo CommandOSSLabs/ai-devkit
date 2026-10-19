@@ -24,8 +24,8 @@ reads the milestone and signs it off.
    *Done when: the section lists every ticket, and nothing publishes that it does not name.*
 
 Why the list is REQUIRED: in seven baseline drafts, none named a ticket. The working
-agreement had Quang approve every new ticket. Then he signed off MILE-2 in Notion, and
+agreement had the TPM approve every new ticket. Then the TPM signed off MILE-2 in Notion, and
 three of five publishing runs still refused to create its tickets, because "The sign-off
-is on the milestone. It doesn't cover the individual tickets." Minh's team had nothing to
+is on the milestone. It doesn't cover the individual tickets." The team had nothing to
 start on Monday. When the signed page listed its tickets, five of five runs created
 exactly that list.

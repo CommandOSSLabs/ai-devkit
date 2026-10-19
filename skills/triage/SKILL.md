@@ -67,7 +67,7 @@ One file per **concept**, kebab-case (`plugin-system.md`), never one per issue �
 
 ## Direct state changes
 
-When the user names an issue and its target state ("move #42 to ready-for-agent"), that is a decision, not a triage request — it skips the investigate/prove-claim/recommend pipeline (steps 1–3), but not the guardrails:
+When the user names an issue and its target state ("move #42 to ready-for-agent"), that is a decision, not a triage request — it skips the investigate/prove/recommend pipeline (steps 1–3), but not the guardrails:
 
 1. State back exactly what the change is — the label edits, any comment, whether it closes — and get the user's go-ahead before touching the tracker.
 2. For a jump straight to `ready-for-agent`, offer to write the brief from [references/agent-brief-template.md](references/agent-brief-template.md); an unbriefed agent-ready issue is a trap for the next agent.

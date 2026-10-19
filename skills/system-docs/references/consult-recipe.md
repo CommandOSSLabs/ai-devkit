@@ -14,7 +14,7 @@ Unless the entry package defines a different **authority predicate**:
 | **Non-authoritative** | File present but `Status` ≠ `Approved`, or structural validator fails (includes external Draft) |
 | **Approved** | `Status: Approved` **and** structural validator pass |
 
-Validators live under `skills/project/define-system-doc/validators/<domain>/`.
+Validators live under `references/validators/<domain>/`.
 Directory entries (e.g. `docs/decisions/`) use the entry package predicate, not a single Status header.
 
 ## Hard constraints outrank system docs

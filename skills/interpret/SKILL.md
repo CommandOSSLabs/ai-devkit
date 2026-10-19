@@ -139,7 +139,7 @@ Stop and re-read the Iron Law if you:
 - Skip setup because they said "just go" or named a posture in passing
 - Search for `docs/agents/project.md` or invent one
 - Produce a carry-back before they decided
-- Cite `research`, `frame-change`, `specify-behavior`, or any skill not in this kit
+- Cite a skill not in this kit
 - Force a native Translate block when companion language is English
 
 ## Read-only posture
