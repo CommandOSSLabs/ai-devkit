@@ -229,3 +229,5 @@ ran on a board that maps them. Design: `docs/design/2026-10-19-closed-workflow.m
   every configured command proven wired.
 - **Agent skills block** names the five workflow commands, `cmk:delivery-build`, and which lines
   need a pack.
+
+- **Model-invocable** (2.0.0): `cmk:repo-setup` runs this skill as a facet, and a user-invoked skill cannot be run by another; the description now routes. Sonnet ×5 each: "we moved our tickets to Linear, update the tracker config…" → repo-config 5/5; "adopt the devkit…" → repo-setup 5/5; "our CLAUDE.md has grown to 400 lines…" → agent-instructions 5/5.
