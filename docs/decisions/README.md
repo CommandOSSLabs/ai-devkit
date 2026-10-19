@@ -18,6 +18,12 @@ context and consequences that make them reviewable later.
 - Update an entry in place while the decision holds; when the choice itself
   changes, add a new entry that supersedes it.
 
+## Index
+
+- [0001](./0001-jdk-engine-cmk-shape.md) — The kit takes the Engineer Pack's behavior in
+  cmk's shape: hybrid docs layout (spec triad plus cmk paths), autonomy by scope band,
+  core plus packs, size by ratchet, self-contained packages.
+
 ## When to read
 
 Before proposing an architecture change — to find the constraint you are about
