@@ -50,6 +50,10 @@ retired = [".windsurf/skills/"]   # roots that must not reappear
   integrations). `cmk:agent-vendors` verify reports any listed root that
   reappears; omit the table entirely when the repo has retired nothing.
 
+- `packs.installed` — optional; the opt-in packs this repo vendored (`cmk:agent-vendors`'s
+  `references/packs.md`). Absent means core only. Sync proposes new upstream skills only
+  from core and these packs.
+
 ## Naming mapping
 
 Upstream directory `skills/<name>/`, vendored directory

@@ -32,6 +32,8 @@ a memory of how things used to work.
   files are exempt.
 - `REQUIRED SUB-SKILL` names only model-invocable skills. A user-invoked skill
   (`disable-model-invocation: true`) is named for the person to run.
+- A core skill reaches a pack skill (the Packs table in `skills/agent-vendors/references/packs.md`)
+  only when it is installed, and says what to do without it.
 - A skill file never reaches outside its own package with a relative `../`
   path. Name a target-repo artifact repo-root-relative, and cite another
   skill by its `cmk:` name.

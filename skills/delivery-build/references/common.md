@@ -129,7 +129,7 @@ After the last task (waves / inline) or last unlocked unit (story):
 5. **Product walk — observable conditional.** Evaluate the **walk predicate**
    below. No clause true → do not open the product-walk trio. Any clause true and
    the acceptance pack installed → REQUIRED SUB-SKILL: use `cmk:dogfood-plan` (it owns vet), then **execute what
-   it wrote** — REQUIRED SUB-SKILL: use `cmk:dogfood-run` where the runtime can
+   it wrote** — REQUIRED SUB-SKILL: use `cmk:dogfood-run` (installed with it) where the runtime can
    drive the app, else record the human ticks. Naming the run instead of doing
    it leaves step 6 unable to write green. Any clause true without the pack → name the walk the person
    should do in the close receipt.

@@ -103,6 +103,27 @@ for f in sorted(glob.glob("skills/*/SKILL.md") + glob.glob("skills/*/references/
             if target in user_invoked:
                 fail(f"{f}:{no}: REQUIRED SUB-SKILL names user-invoked cmk:{target}; name it for the person to run instead")
 
+# --- core naming a pack skill ---------------------------------------------------------------
+# Pack membership is the Packs table of cmk:agent-vendors' references/packs.md. A core skill's
+# REQUIRED SUB-SKILL directive to a pack skill dead-ends in a repo without that pack, so the
+# line must make it conditional on the skill being installed.
+packs_file = "skills/agent-vendors/references/packs.md"
+pack_skills = set()
+if os.path.exists(packs_file):
+    in_table = False
+    for line in text(packs_file).splitlines():
+        if line.startswith("## "):
+            in_table = line.strip() == "## Packs"
+        elif in_table and line.startswith("| `"):
+            pack_skills.update(re.findall(r"`cmk:([a-z][a-z0-9-]*)`", line.split("|")[2]))
+for f in sorted(glob.glob("skills/*/SKILL.md") + glob.glob("skills/*/references/**/*.md", recursive=True)):
+    if f.split("/")[1] in pack_skills:
+        continue
+    for no, line in enumerate(text(f).splitlines(), 1):
+        for target in DIRECTIVE.findall(line):
+            if target in pack_skills and "installed" not in line:
+                fail(f"{f}:{no}: core skill requires pack skill cmk:{target}; make it conditional on it being installed")
+
 # --- bundled scripts ------------------------------------------------------------------
 # A script sits in skills/<name>/scripts/. An entry point (a .sh file, or a .py file
 # with a shebang or a __main__ block) is executable and named as scripts/<file> by the

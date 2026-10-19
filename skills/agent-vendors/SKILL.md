@@ -1,7 +1,7 @@
 ---
 name: cmk:agent-vendors
 description: Use when the user asks to "vendor the kit's skills into this repo", "set up agent adapters", "add a coding-agent vendor", "wire skills for Claude Code / Codex / OpenCode / Grok Build / Cursor", or whenever a repo needs one canonical skill set discoverable by multiple coding agents.
-version: 0.2.1
+version: 0.3.0
 ---
 
 # Agent Vendors
@@ -24,6 +24,13 @@ canonical skill; every vendor surface carries mechanics or discovery only.
   `.cursor/rules/<skill-dir>.mdc`).
 - **Generic** — everything else reaches the repo's conventions through the
   root `AGENTS.md → CLAUDE.md` symlink.
+
+## Core and packs
+
+The kit is core plus opt-in packs (roadmap, acceptance, ui, ops, quality, project,
+maintainers, extras). Vendoring, adding or removing skills? Read `references/packs.md` —
+which skills each pack holds, when to propose one, and the `[packs]` table in
+`.agents/skills.lock` that `cmk:sync` reads.
 
 ## Mechanics, never policy
 
@@ -61,6 +68,8 @@ Report-only — never mutate:
   frontmatter byte-identical to the canonical skill and body byte-identical
   to the template.
 - No adapter exists for a canonical skill that no longer exists.
+- The vendored set is core plus exactly the packs in `[packs] installed` (none listed → core
+  only); a pack skill outside it is reported.
 - No vendor root listed under `[vendors] retired` in `.agents/skills.lock`
   exists on disk (skip when no list is present).
 - `AGENTS.md` is a symlink to `CLAUDE.md`, never a copy.
