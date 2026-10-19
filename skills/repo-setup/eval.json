@@ -37,5 +37,27 @@
       "facets with no evidence of ever being applied are reported as gaps, not silently skipped from the report",
       "the report references each facet's own verify checks rather than inventing new ad-hoc criteria"
     ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "greenfield-is-a-hard-gate",
+    "kind": "contract",
+    "derived_from": "references/bootstrap.md § 0. Confirm the target is greenfield — GATE",
+    "prompt": "Bootstrap a repo in a directory that already contains a src/ tree and a package.json.",
+    "assertions": [
+      "the non-empty target halts the run at the gate rather than scaffolding over existing files",
+      "no file is written before the greenfield check passes"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "baseline-is-verified-before-handoff",
+    "kind": "contract",
+    "derived_from": "references/bootstrap.md § 3. Verify the baseline",
+    "prompt": "The scaffold is written.",
+    "assertions": [
+      "the scaffolded baseline is actually run and verified rather than declared working",
+      "hand-off happens only after that verification"
+    ]
   }
 ]

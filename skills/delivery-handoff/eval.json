@@ -1,0 +1,14 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "handoff-stands-alone",
+    "kind": "contract",
+    "derived_from": "references/handoff-document.md § Contents",
+    "prompt": "Write a handoff so a fresh agent can resume this work.",
+    "assertions": [
+      "the document contains everything the successor needs without this conversation",
+      "state that exists only in chat is written down rather than referenced",
+      "it ends on the skill's stated completion criterion"
+    ]
+  }
+]

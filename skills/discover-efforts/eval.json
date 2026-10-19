@@ -1,0 +1,25 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "slices-are-vertical",
+    "kind": "contract",
+    "derived_from": "references/publish.md § 3. Draft vertical slices",
+    "prompt": "Turn this conversation about a referrals feature into tracker issues.",
+    "assertions": [
+      "each slice cuts a complete path through every layer rather than one horizontal layer",
+      "each slice is independently demoable or verifiable",
+      "blocking edges are declared between slices"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "does-not-duplicate-the-triad",
+    "kind": "contract",
+    "derived_from": "references/publish.md § Where this sits",
+    "prompt": "The user already ran the full spec triad and asks you to file the tasks as issues.",
+    "assertions": [
+      "plan tasks are not re-filed here",
+      "the heavier skill that owns that work is named instead"
+    ]
+  }
+]
