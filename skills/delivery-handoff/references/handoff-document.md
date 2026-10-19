@@ -1,7 +1,7 @@
 <!-- Ported from jdk `write-handoff` 1.0.2 (ADR 0001). -->
 # Hand Off
 
-Compact this conversation into a document a fresh agent can resume from. Write it to the **OS temp directory** (`$TMPDIR`, falling back to `/tmp`; `%TEMP%` on Windows), never into the workspace — a references/handoff-document.md is session ephemera, not a project artifact. Name it `handoff-<topic>-<timestamp>.md` and tell the user the absolute path.
+Compact this conversation into a document a fresh agent can resume from. Write it to the **OS temp directory** (`$TMPDIR`, falling back to `/tmp`; `%TEMP%` on Windows), never into the workspace — a handoff document is session ephemera, not a project artifact. Name it `handoff-<topic>-<timestamp>.md` and tell the user the absolute path.
 
 If the user passed an argument to this skill, treat it as what the next session will focus on and orient the whole document around that focus — trim anything the focus makes irrelevant.
 
@@ -18,7 +18,7 @@ If the user passed an argument to this skill, treat it as what the next session 
 
 ## Rules
 
-- **Reference, never duplicate.** Specs, plans, ADRs, issues, commits, diffs — cite them by path, URL, or hash. Copying their content bloats the references/handoff-document.md and forks the truth; the artifact on disk is authoritative.
+- **Reference, never duplicate.** Specs, plans, ADRs, issues, commits, diffs — cite them by path, URL, or hash. Copying their content bloats the handoff and forks the truth; the artifact on disk is authoritative.
 - **Redact secrets.** API keys, tokens, passwords, personal data — replace with a placeholder naming where the real value lives. The doc may become another agent's prompt.
 - **Decisions the user already made are recorded as settled**, with their rationale — the successor must not re-open them or re-ask.
 

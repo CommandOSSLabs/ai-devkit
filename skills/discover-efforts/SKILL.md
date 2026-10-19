@@ -1,7 +1,7 @@
 ---
 name: cmk:discover-efforts
-description: Use when the user asks to "discover the delivery efforts here", "audit this body of work before we file issues", "reconcile these prompts, requirements, designs, or code against the tracker", "figure out what issues we actually need before starting", or hands over an uncertain body of work that needs a reconciled tracker issue set before delivery begins.
-version: 0.1.2
+description: Use when the user asks to "discover the delivery efforts here", "audit this body of work before we file issues", "reconcile these prompts, requirements, designs, or code against the tracker", "figure out what issues we actually need before starting", or hands over an uncertain body of work that needs a reconciled tracker issue set before delivery begins — and when a conversation, spec, or idea must become agent-ready tracker issues ("turn this into issues", "break this into tickets", "file these").
+version: 1.0.0
 ---
 
 # Discover Efforts
@@ -36,6 +36,14 @@ issue graph and an exact-ID handoff; success here never authorizes
 implementation, and the receiving skill runs its own gates. Treat any PR
 review-thread or PR-specific record as a downstream handoff to ordinary
 delivery or review, never an effort-discovery action.
+
+## Turning work into new issues
+
+WHEN a ledger row needs a new issue, or the user asks to turn a conversation, a spec, or an
+idea into tracker issues, read `references/publish.md` and follow it: tracer-bullet
+vertical slices with blocking edges, the drafted-by-AI marker line, and the breakdown put to
+the user — nothing is written to the tracker before they approve it. An approved spec
+triad publishes one feature issue through `cmk:delivery-spec-plan` instead.
 
 ## Classify every source outcome
 

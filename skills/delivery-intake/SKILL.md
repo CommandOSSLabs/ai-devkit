@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-intake
-description: Use when the user asks to "start work on TICKET-123", "pick up this issue", "get the context for this ticket", "intake this issue", or begins any tracked work — and as phase 1 of the cmk:delivery-pipeline skill. Produces a context brief, branch/worktree, stated scope band, and docs-ready check (routing to `cmk:requirements` when the band requires it).
-version: 0.2.2
+description: Use when the user asks to "start work on TICKET-123", "pick up this issue", "get the context for this ticket", "intake this issue", or begins any tracked work — and when cmk:delivery-pipeline sizes a ready ticket that has no spec. Produces a context brief, branch/worktree, stated scope band, and docs-ready check (a feature without its approved triad goes to Shaping; a patch gets its mini-spec).
+version: 1.0.0
 ---
 
 # Delivery Intake
@@ -68,9 +68,10 @@ wrong picture.
 
 **Scope band + docs-ready.** State the band out loud, record it on the issue,
 and check docs-ready per `cmk:delivery-workflow`'s scope-band reference. If
-docs-ready is false, REQUIRED SUB-SKILL: use `cmk:requirements` before phase 3
-(or record an explicit exemption with owner). Do not restate the band table
-here.
+docs-ready is false: a `feature` goes to Shaping (`/cmk:shape` is the person's
+command); a `patch` gets its mini-spec through REQUIRED SUB-SKILL: use
+`cmk:requirements` (tier-1 mode), or an explicit exemption with owner. Do not
+restate the band table here.
 
 **Defect path.** When the issue is unexpected broken behavior (bug, regression,
 incident leftover), capture reproduction and suspected cause on the issue (or
@@ -94,11 +95,12 @@ block on investigation) before planning a fix.
   (see `cmk:local-stack`). Never source another worktree's environment or
   bypass the coherence check.
 
-## 4. Move to the in-progress state and write the context brief
+## 4. Write the context brief
 
-Move the issue to its in-progress state when active work begins. Then
-distill what you learned into a context brief in local scratch — git-ignored,
-never committed:
+Do not move the ticket's state here: the build claims it (Building plus assignee)
+through `cmk:delivery-build`'s `references/tracker-sync.md` when it starts. Distill
+what you learned into a context brief in `.skills/<CODE>/` (or
+`.skills/_adhoc/<ticket>/` with no feature code) — git-ignored, never committed:
 
 ```
 # TICKET-123 context brief

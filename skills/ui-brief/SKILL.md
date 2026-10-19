@@ -41,7 +41,7 @@ rendered subtree swaps on a `?variant=` param, so every direction is judged
 against real header, real data, real density. Floating switcher bottom-center
 — prev arrow, `key — name` label, next arrow, wrap-around, arrow-key cycling
 (not while an input has focus), styled to obviously not belong to any design
-under evaluation, hidden in production builds. No app yet → a `draft-ui/`
+under evaluation, hidden in production builds. No app yet → a `ui-drafts/`
 folder of standalone real-HTML pages sharing one token sheet, switched by the
 same bar on a hash param, served statically. Real content throughout, never
 lorem. Variants stay read-only — stub any mutation.

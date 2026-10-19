@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-handoff
 description: Use when the user asks for "a handoff prompt", "a prompt for codex/grok/claude", "something I can paste into another agent", or wants to continue tracked work in a different tool — and at any phase boundary of the cmk:delivery-pipeline skill when the operator prefers a different agent for the next phase.
-version: 0.2.2
+version: 0.3.0
 ---
 
 # Delivery Handoff
@@ -54,8 +54,8 @@ changes phase order, gates, evidence, or acceptance.
   A feature-base stacked pull request stays draft until the code host
   retargets it to a canonical base and repository automation, where a
   repo runs it, replays only the child's commits and verifies exact
-  parent lineage — see `cmk:delivery-pipeline`'s
-  `references/stacked-pr-flow.md`. Neither the sending nor the receiving
+  parent lineage — see
+  `cmk:delivery-ship`'s `references/stacked-pr-flow.md`. Neither the sending nor the receiving
   agent performs that transition by hand.
 
 ## Prompt structure
@@ -70,7 +70,7 @@ freely; completeness matters, sections don't):
    PR base), the verify-before-touching commands, and the same-worktree
    rule. For clusters: the issue → worktree/branch/base table plus where
    the orchestration plan lives and which wave is active. For a handoff
-   mid-way through a phase-3 wave, additionally enumerate every live task
+   mid-way through a continuous build wave (`cmk:delivery-build`), additionally enumerate every live task
    worktree — path, task branch, and wave-base SHA from the ledger's wave
    manifest, plus each task's join status (pending / integrated /
    escalated) reconstructed from the ledger's join and escalation records —
@@ -87,6 +87,14 @@ freely; completeness matters, sections don't):
    recorded rationale locations (the receiver must not silently relitigate
    them — reopening one requires updating its record); open items in
    play.
+   - **Tried and rejected** — every approach attempted or considered and
+     dropped, each with why. Usually the most valuable part: it saves the
+     receiver from re-walking dead ends.
+   - **Deviations** — when `.skills/<CODE>/implementation-notes.md` exists,
+     its path, one line per logged deviation, and how many change the map.
+   The rules for these two and for a handoff written as a file rather than
+   a prompt (temp-dir path, redaction, the skeptic's completion read):
+   `references/handoff-document.md`.
 5. **Operating rules** — autonomous (no questions to the operator), the
    continuous-ledger principle (reconcile every material fact and state
    change, not only decisions and deferrals), and any run-mode constraints
