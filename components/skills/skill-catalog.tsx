@@ -496,7 +496,7 @@ export function SkillCatalog({
           />
         );
 
-        // Category headings are the default organisation: at 34 skills across
+        // Category headings are the default organisation: at 90-odd skills across
         // nine groups, category is the first useful cut, and a flat
         // alphabetical wall makes the reader do that grouping themselves.
         if (grouped) {

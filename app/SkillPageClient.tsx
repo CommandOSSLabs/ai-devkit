@@ -1034,7 +1034,7 @@ function DiffDemo() {
           </div>
           <div className="lg:col-start-8 lg:col-span-5">
             <p className="glass-text-secondary text-[15px] leading-[1.6] text-[var(--text-secondary)]">
-              Phase 3b runs by default, before review — four angles only: Reuse, Simplification, Efficiency, Altitude. No new features, no behavior changes.
+              It runs on every build before review — four angles only: Reuse, Simplification, Efficiency, Altitude. No new features, no behavior changes, and only findings on a teammate's branch.
             </p>
             <div className="glass-text-secondary mt-2 font-mono text-[13px] text-[var(--text-tertiary)]">
               06.0 Quality →

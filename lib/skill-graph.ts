@@ -45,7 +45,7 @@ export type SkillGraph = {
 // descriptions ("phase 4 of cmk:delivery-pipeline") and in body prose alike,
 // so the whole file is scanned rather than just one field. A file's own name
 // is excluded — every SKILL.md opens by declaring `name: cmk:<self>`, which
-// would otherwise give all 34 skills a self-loop.
+// would otherwise give every skill a self-loop.
 const HANDLE = /cmk:([a-z0-9-]+)/g;
 
 function readSkillDirs(root: string) {
