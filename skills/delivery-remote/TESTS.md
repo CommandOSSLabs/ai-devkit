@@ -338,3 +338,10 @@ run's backend and frontend ports were not yet listening. Their remote reads are
 the same three primitives the verified commands use (`tmux has-session`, the
 sentinel file, `ssh -L`), which is a reason to expect them to work, not evidence
 that they do.
+
+
+## Description routing after the cmk rename (2026-10-19)
+
+`skill-fixtures/bin/trigger.py` (claude.ai session auth), all 93 skills installed, sonnet; baseline the jdk set.
+
+- rem1: 1/1 (jdk 1/1)

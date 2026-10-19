@@ -200,3 +200,14 @@ who owns the portal?" loaded no skill (haiku 1/1, sonnet 1/1).
   `INDEX.md`: 7/7.
 
 Not covered: a milestone with no ROAD member, and a page Quang edits after he has signed it.
+
+
+## Description routing after the cmk rename (2026-10-19)
+
+`skill-fixtures/bin/trigger.py` (claude.ai session auth), all 93 skills installed, sonnet; baseline the jdk set.
+
+| Prompt | jdk `plan-milestones` | converted | shipped |
+|---|---|---|---|
+| "Break the next quarter into milestones — refunds, late fees, statements, the portal export. What order, and what goes in each?" (×5) | 5/5 | **0/5** | 5/5 |
+
+Same description text; the noun name lost the route. The shipped one opens on the user's verbs.

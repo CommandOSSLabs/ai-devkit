@@ -16,3 +16,10 @@ recorded for the implementer render check in `cmk:delivery-build`'s `references/
 the durable artifact is `.skills/<CODE>/cmk:acceptance-ui.md` rather than a new suite.
 A product defect still gets its regression through `cmk:debug` / `cmk:tdd`
 in the repo's existing tests.
+
+
+## Description routing after the cmk rename (2026-10-19)
+
+`skill-fixtures/bin/trigger.py` (claude.ai session auth), all 93 skills installed, sonnet; baseline the jdk set.
+
+- accui1: 1/1 (jdk 0/1)

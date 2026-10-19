@@ -132,3 +132,10 @@ REQUIRED slots; refused A/C.
 **Naming note (2026-08-25):** the intake router `solve-problem` was removed. Nothing model-invocable
 replaced it — the user-run `/cmk:prompt` forges an ask into a prompt but routes nothing. The
 transcript rows above record what the models chose at the time and are left unedited.
+
+
+## Description routing after the cmk rename (2026-10-19)
+
+`skill-fixtures/bin/trigger.py` (claude.ai session auth), all 93 skills installed, sonnet; baseline the jdk set.
+
+- inc1: 1/1 (jdk 1/1)

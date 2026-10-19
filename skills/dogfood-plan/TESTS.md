@@ -159,3 +159,10 @@ CLI smoke after the rename: `--help`, `init`, `list`, `render`, `status`, and
 
 Not re-run: the fix loop (`references/review-fix-loop.md`) and the inline
 `AUTHORING CLOSED` path — both moved over with their wording intact.
+
+
+## Description routing after the cmk rename (2026-10-19)
+
+`skill-fixtures/bin/trigger.py` (claude.ai session auth), all 93 skills installed, sonnet; baseline the jdk set.
+
+- dfplan1: 1/1 (jdk 1/1)

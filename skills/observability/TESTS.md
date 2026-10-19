@@ -62,3 +62,10 @@ in After the set (not the Iron Law). WHEN scoring Must rows, load
 **Naming note (2026-08-25):** `solve-problem` was removed and nothing model-invocable replaced it.
 The RED rows above are left unedited as recorded observations; `eval.json`'s live assertion no
 longer names it.
+
+
+## Description routing after the cmk rename (2026-10-19)
+
+`skill-fixtures/bin/trigger.py` (claude.ai session auth), all 93 skills installed, sonnet; baseline the jdk set.
+
+- obs1: 1/1 (jdk 1/1)

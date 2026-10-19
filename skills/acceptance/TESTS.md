@@ -19,3 +19,10 @@ persist check. IF missing, continue from **Run locally** and **name**
 `docs/agents/verify.md` for Launch/Doctor; third action mapped the
 create-note persist-reload check. Did not invent a start command from
 memory.
+
+
+## Description routing after the cmk rename (2026-10-19)
+
+`skill-fixtures/bin/trigger.py` (claude.ai session auth), all 93 skills installed, sonnet; baseline the jdk set.
+
+- acc1 "LATEFEE is built. Before we call it accepted, drive it through the running service…": 1/1 (jdk fired validate-api)

@@ -134,3 +134,10 @@ landed on the right neighbor. Two close calls, both resolved by the explicit
 `Not for what a surface looks like (cmk:ui-brief)` carve-out, which is therefore
 load-bearing: "make the mockup's buttons do something" and "feel two versions of
 the save flow and pick one".
+
+
+## Description routing after the cmk rename (2026-10-19)
+
+`skill-fixtures/bin/trigger.py` (claude.ai session auth), all 93 skills installed, sonnet; baseline the jdk set.
+
+- uxb1 "Work out the user flow for an owner disputing a late fee": 0/1 (jdk 0/1) — inherited

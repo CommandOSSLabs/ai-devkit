@@ -124,3 +124,10 @@ for `app.js` and `index.html`, variants and switcher deleted, brief plus one
 screenshot surviving. The same run flagged that its own chips had been drafted
 without the kit's focus treatment — the red flag this version adds, caught by
 the agent against itself.
+
+
+## Description routing after the cmk rename (2026-10-19)
+
+`skill-fixtures/bin/trigger.py` (claude.ai session auth), all 93 skills installed, sonnet; baseline the jdk set.
+
+- uib1 "Mock up three different layouts…": 5/5 (jdk 5/5)

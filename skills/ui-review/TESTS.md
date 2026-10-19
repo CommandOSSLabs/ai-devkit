@@ -84,3 +84,14 @@ the signed-in session. The three sizes stay. They are set with
 Playwright is not a camera. A same-day control of v2.0.0 on a login-walled
 admin page already refused Playwright and kept 1440 / 768 / 375; this edit
 closes the public-page hole the wording still left open.
+
+
+## Description routing after the cmk rename (2026-10-19)
+
+`skill-fixtures/bin/trigger.py` (claude.ai session auth), all 93 skills installed, sonnet; baseline the jdk set.
+
+| Prompt | jdk `inspect-ui` | cmk |
+|---|---|---|
+| "Review the layout and styling changes on the statement page branch for visual problems before merge." (×5) | 1/5 | 0/5 (0/5 with a front-loaded variant) |
+
+Weak on both kits when no such branch exists in the checkout; the skill's main entry is `cmk:delivery-review`'s UI lane. Not a regression; description unchanged.

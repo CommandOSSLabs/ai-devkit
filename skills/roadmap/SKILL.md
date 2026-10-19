@@ -1,6 +1,6 @@
 ---
 name: cmk:roadmap
-description: Use when a project's milestones need planning, sequencing, replanning, or ANY edit to an existing roadmap — produces or revises docs/roadmap/INDEX.md, the milestone intent registry carrying stable MILE-N and ROAD-N IDs that later feature specs bind to. Triggers on "plan the milestones", "build a roadmap", "what order should we build this in", "break this project into milestones", a `cmk:scope` run that decomposed work into independent sub-features, and equally on any edit to a roadmap that already exists — "update the roadmap", "drop this item", "we're not doing X anymore", "reorder the milestones", "move sharing ahead of search", "reword this outcome", "commit to the next milestone", "this milestone shipped", "draft the next milestone in Notion for sign-off", or any request touching docs/roadmap/INDEX.md or a roadmap draft awaiting the TPM's sign-off. Not for one feature's requirements (cmk:requirements), and not for reporting where the plan currently stands (cmk:roadmap-status).
+description: Use when the user asks to plan, break down, sequence, or reorder milestones — a quarter's or a project's work into milestones, what order to build things in — or to edit an existing roadmap (drop, reorder, reword, commit to, or ship a milestone; draft the next one in Notion for sign-off); produces or revises docs/roadmap/INDEX.md, the registry of stable MILE-N and ROAD-N IDs feature specs bind to. Not for one feature's requirements (cmk:requirements) or for where the plan stands now (cmk:roadmap-status).
 version: 1.3.0
 ---
 
