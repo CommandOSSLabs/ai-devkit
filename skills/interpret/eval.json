@@ -1,59 +1,433 @@
 [
   {
     "eval_id": 1,
-    "eval_name": "no-manufactured-choice-on-procedural-paste",
-    "kind": "behavior",
-    "derived_from": "TESTS.md § S1 — no live choice",
-    "prompt": "The other window asks whether to write the requirements now. The interview is enough; retry count stays an Open Point. A lead said a thinking partner always maps the alternatives.",
-    "assertions": [
-      "the response is two or three tight paragraphs, not an alternatives table or trade-off matrix",
-      "no menu of write-now / interview-more / spike-first / wait is invented"
-    ]
-  },
-  {
-    "eval_id": 2,
-    "eval_name": "named-pick-on-a-real-choice",
-    "kind": "behavior",
-    "derived_from": "TESTS.md § S2 — real choice",
-    "prompt": "The other window lists three genuinely different product options and asks which to lock. A PM said not to bias them.",
-    "assertions": [
-      "one option is named as the pick",
-      "the response does not end on both-are-reasonable-it's-your-call"
-    ]
-  },
-  {
-    "eval_id": 3,
-    "eval_name": "setup-asks-posture-never-invents-project-md",
-    "kind": "behavior",
-    "derived_from": "TESTS.md § S5 — setup asks posture",
-    "prompt": "First message of a companion session. The user says this is an MVP and to just go, then pastes a procedural question.",
-    "assertions": [
-      "setup questions are asked before the paste is analyzed",
-      "docs/agents/project.md is not searched for or invented",
-      "MVP is not adopted silently from the side remark"
-    ]
-  },
-  {
-    "eval_id": 4,
     "eval_name": "english-is-a-first-class-companion-language",
     "kind": "behavior",
-    "derived_from": "TESTS.md § Rules — English is first-class",
+    "derived_from": "TESTS.md § Rules — English is first-class companion language (RED S-WP-EN-COMPANION)",
     "prompt": "The user's working language and companion language are both English. Start a companion session beside a technical skill.",
     "assertions": [
-      "the session runs with English as the companion language",
+      "the session runs normally with English as the companion language",
       "no other language is introduced on the assumption that a companion session requires one"
     ]
   },
   {
-    "eval_id": 5,
-    "eval_name": "approval-freezes-ids-when-status-leaves-draft",
+    "eval_id": 2,
+    "eval_name": "restate-not-translate-when-both-english",
     "kind": "behavior",
-    "derived_from": "TESTS.md § Rules — cmk approval freeze",
-    "prompt": "The other window presents a draft requirements.md for sign-off to active.",
+    "derived_from": "TESTS.md § Rules — Restate not Translate when EN+EN",
+    "prompt": "Same English-and-English session. The technical skill has just produced a dense design decision. Run the understanding pass.",
     "assertions": [
-      "the response states that criterion IDs become immutable when status leaves draft",
-      "a wrong ID is retired by strikethrough rather than renumbered",
-      "only the feature's design doc is named as the artifact that cites them"
+      "the understanding pass restates the decision in plainer terms rather than translating it",
+      "no translation step is performed between two identical languages"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "round-trip-never-invents-a-language",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules — round-trip always; never invent unrequested L1",
+    "prompt": "The user answers the companion question in their own words. Carry the decision back to the technical skill.",
+    "assertions": [
+      "the decision is carried back to the technical skill rather than ending in the companion session",
+      "no language the user did not ask for is introduced into the exchange"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "lock-reply-speaks-as-the-user-in-lock-weigh-open-slots",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Field evidence 2026-08-18 — 17-bullet locks approved with one word; bookkeeping leaked into transport",
+    "prompt": "The user settles a direction with one word after a long analysis turn, giving no reason. Write the carry-back reply, which locks the decision plus a dozen constraints the analysis proposed.",
+    "assertions": [
+      "the reply separates Lock (what the approval freezes) from Weigh (constraints the other session tests, not locked) and Still open",
+      "the reply reads as the user's own answer: no authorship labels, no rationale bookkeeping such as 'not supplied', no instruction telling the other window what to do next",
+      "the round-trip commitment below the block names the highest-blast bullets specifically rather than summarizing the block generically"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "confidence-carries-its-check-and-versus-is-a-diff",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Field evidence 2026-08-18 — uniform 'high' with no named check; amendments buried in prose",
+    "prompt": "A pasted card puts a live choice on the table and the stance agrees with the other session's recommendation while correcting two of its claims. Write the stance block.",
+    "assertions": [
+      "the How-sure line names the check that earned the confidence level, or states the stakes are too small to matter",
+      "the Versus line is an Agree / Amend / Reject diff with each correction listed one line per item"
+    ]
+  },
+  {
+    "eval_id": 6,
+    "eval_name": "external-concepts-get-a-model-and-a-walk",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Field evidence 2026-08-18 — second finding: opaque depth on external-standard cards",
+    "prompt": "A pasted card asks the user to choose a telemetry join key. The analysis turns on two external concepts (trace/span structure, exemplars) that appear nowhere in the paste or the repo. Write the deep analysis behind the stance.",
+    "assertions": [
+      "each external concept gets a minimal model (sketch or analogy) before any argument built on it",
+      "the analysis includes one real-shaped artifact such as a sample log line or a two-node trace sketch",
+      "verified facts end with an explicit consequence for the live choice rather than a bare citation"
+    ]
+  },
+  {
+    "eval_id": 7,
+    "eval_name": "live-choice-stance-exposes-runner-up-and-accepted-cost",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Decision argument + cumulative knowledge map — RED S-STANCE-ARGUMENT; GREEN v1.4.0",
+    "prompt": "Companion language Vietnamese. The other session recommends optimistic locking with a version column for an MVP with five internal editors. There are no conflict metrics, the API has no 409 retry UX, and the database supports SELECT FOR UPDATE. Write the live-choice stance.",
+    "assertions": [
+      "the stance contains the pick, why it wins now, strongest runner-up, cost accepted, calibrated confidence, concrete flip condition, and Agree Amend Reject diff",
+      "the runner-up loses on the decisive mechanism or criterion rather than being dismissed generically",
+      "the accepted cost names a downside that ships with the pick rather than a generic risk list",
+      "runner-up and accepted cost are visible in the skimmable stance instead of being deferred only to deep analysis",
+      "user-facing stance labels are in the chosen companion language"
+    ]
+  },
+  {
+    "eval_id": 8,
+    "eval_name": "live-choice-opens-on-fork-and-lean",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v3.1.0 RED — a v3.0.0 card the user could not scan; fork and lean must be the first eight lines",
+    "prompt": "Companion language Vietnamese. Standup in two minutes. The other session recommends envelope-style compatibility (option C) for per-learner mini-app state across template versions, versus an opaque blob, a fully typed platform schema, or shared class-wide state. Write the live-choice companion response. The user has not settled.",
+    "assertions": [
+      "the card's first two headings are the fork in one sentence and the lean in one sentence, the lean marked not locked, with nothing above them but the session map and the how-to-read note",
+      "a connected graph of parts the question stands on appears after those lines, with where the picture stops, and one system diagram of that graph not of the options",
+      "one named-actor walk of 4–8 lines goes through that graph today versus the lean",
+      "the full pick names the shape and the repo fact, and a fence names what this card does not decide",
+      "### 1. Today, Architect's read, and the seven stance slots do not appear on this turn",
+      "no paste-back reply is emitted before the user settles"
+    ]
+  },
+  {
+    "eval_id": 9,
+    "eval_name": "live-choice-pressure-test-after-stance",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v3.0.0 — pressure-test moves to hop 1; unused on turn 1 in the field session",
+    "prompt": "The previous companion turn was a live-choice on envelope-style state and ended on a Go deeper menu whose line 1 was Deeper. The user replies: 1",
+    "assertions": [
+      "the hop is the technical overview — what the code does today, and the three-criterion comparison in ordinary sentences — not a re-render of turn 1",
+      "Depth, Locality and Invariant are not printed as headings; what each one means is said in the companion language",
+      "two to four pressure-test questions may close the hop and attack the pick rather than asking which direction the user wants",
+      "the questions are not a numbered menu of shapes",
+      "no carry-back is written"
+    ]
+  },
+  {
+    "eval_id": 10,
+    "eval_name": "no-choice-omits-live-choice-comprehension-card",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Comprehension then stance — GREEN S-NO-CHOICE preservation; also RED S-NO-CHOICE control pass",
+    "prompt": "Companion language Vietnamese. The other session pasted: 'Sounds good — want me to write the requirements for that now?'",
+    "assertions": [
+      "the response is two or three short paragraphs naming what the question is really asking",
+      "there is no seven-slot stance, option-delta table, pressure-test list, or decision-boundary block",
+      "no architecture options are invented to fill a template"
+    ]
+  },
+  {
+    "eval_id": 11,
+    "eval_name": "stance-reads-compat-obligation-not-delivery-intent",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Compat obligation — RED S-COMPAT-NONE (3/3 Sonnet baselines picked the additive option); GREEN v1.6.0",
+    "prompt": "Project posture read from the repo: Delivery intent Production, Lifecycle stage Active development, no Compat obligation line. The other session pasted a data card on turning a free-text `orders.status` column into an enum, recommending option B — a parallel column with a sync trigger and a deprecation window — because 'additive migrations are the safe default for a Production project'. Option A rewrites the committed migration in place; the repo's only consumer is the web app in the same monorepo.",
+    "assertions": [
+      "compat obligation is read as None, derived from the pre-release lifecycle stage",
+      "the stance picks the in-place rewrite over the parallel-column option",
+      "the Versus slot amends or rejects the other session's 'Production means additive' reasoning",
+      "Production delivery intent is not read as evidence that a database is live or that migrations have run for real"
+    ]
+  },
+  {
+    "eval_id": 12,
+    "eval_name": "answer-corrects-the-paste-against-the-code",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v3.0.0 — corrections that move the pick live on the lock strip of turn 1",
+    "prompt": "A companion paste proposes two shapes for a retry policy and states the service retries three times with a fixed one-second delay. The repo's dispatch module sets MAX_ATTEMPTS = 5 with exponential backoff. Respond to the paste.",
+    "assertions": [
+      "the lock strip or the one-run names the paste's retry claim as wrong and cites the file where MAX_ATTEMPTS lives",
+      "that correction appears on turn 1, before any Go deeper hop",
+      "the pick is given after the correction is available to the reader"
+    ]
+  },
+  {
+    "eval_id": 13,
+    "eval_name": "shapes-compare-on-the-same-lines",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v2.0.0 RED — three turns built three different comparison tables; v3.0.0 — table leaves turn 1 for hop 1",
+    "prompt": "A paste puts two storage shapes for a new per-customer setting on the table. Give the companion response.",
+    "assertions": [
+      "the pick is justified by a named guarantee the code makes today, not by dimensions invented for this fork",
+      "Architect's read is not rendered as a Depth / Locality / Invariant table on this turn",
+      "I'd pick names one shape"
+    ]
+  },
+  {
+    "eval_id": 14,
+    "eval_name": "carry-back-asks-for-no-rationale",
+    "kind": "contract",
+    "derived_from": "SKILL.md § When the user settles the direction — the one-objection rule, and no rationale billed before the reply",
+    "prompt": "After the analysis the user replies only: 'go with B, write the reply.' Produce what comes next.",
+    "assertions": [
+      "the carry-back message is written without first asking the user to justify the choice",
+      "no placeholder recording that a rationale was or was not supplied appears anywhere in the output",
+      "the message speaks as the user and does not mention the companion session"
+    ]
+  },
+  {
+    "eval_id": 15,
+    "eval_name": "what-changes-shows-the-code",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v2.1.0 RED — no diagram; v3.0.0 — neighborhood diagram on turn 1, code on hop 2",
+    "prompt": "A paste puts two storage shapes for a configurable retry budget on the table. Give the companion response for a repo whose dispatch loop reads two module constants.",
+    "assertions": [
+      "a diagram of the system around the decision appears on turn 1, not a picture of the options",
+      "each node carries a fact (limit, count, or ordering), not only a name",
+      "code fragments of the change are not required on this turn"
+    ]
+  },
+  {
+    "eval_id": 16,
+    "eval_name": "own-shape-gets-its-own-column",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v2.1.0 RED — better shape delivered as a modifier; v3.0.0 — named choice on turn 1",
+    "prompt": "The paste offers exactly two shapes. The repo's history records a constraint that neither of them satisfies. Give the companion response.",
+    "assertions": [
+      "the shape the repo points at is put on the table as its own named choice, not as a rider on one of the paste's options",
+      "I'd pick names which shape wins, and a proposed shape that loses is said to lose"
+    ]
+  },
+  {
+    "eval_id": 17,
+    "eval_name": "derived-shapes-travel-as-unverified",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v2.2.0 RED — three carry-backs marked nothing unverified; one locked an invented Promise.all rewrite of the drain loop",
+    "prompt": "The companion recommended a shape it invented, including a numeric ceiling it derived rather than measured. The user says: go with it, write the reply. Produce the carry-back.",
+    "assertions": [
+      "the Lock slot carries only what the user decided, not a design this session derived",
+      "anything the session invented and never ran is named as unverified, with the thing to check said plainly",
+      "the request to check it is written in the user's own voice, naming no companion session"
+    ]
+  },
+  {
+    "eval_id": 18,
+    "eval_name": "live-choice-ends-on-go-deeper-menu",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v3.0.0 — two hops then 0; retired Walk/Challenge/Stress menu",
+    "prompt": "Live-choice paste on a retry-policy fork with a shared sequential drain loop. Companion language Vietnamese. Write the companion turn. The user has not settled.",
+    "assertions": [
+      "the turn ends with a two-hop Go deeper menu — the system in more detail, then the file-by-file walk — then 0 writes the carry-back below a separator",
+      "every label and the menu header are in the companion language, and no label is Deeper, Lowest, Gist, Fence, Lock strip, Hop or Carry-back",
+      "each hop label names a concrete target from this turn",
+      "no menu line asks the user to pick a shape, and Walk / Challenge / Stress / Verify is not the template"
+    ]
+  },
+  {
+    "eval_id": 19,
+    "eval_name": "pick-one-re-explains-then-opens-questions",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v3.0.0 — hop 1 is Deeper, not Explain",
+    "prompt": "The previous companion turn ended on a Go deeper menu whose line 1 was Deeper. The user replies: 1",
+    "assertions": [
+      "the hop is the technical overview of the whole graph in sentences, with a middle-grain diagram of the same system",
+      "turn 1 is not re-rendered and no carry-back is written",
+      "the user is not asked to explain or prove their understanding",
+      "the turn ends with the menu again; hop 1 may drop"
+    ]
+  },
+  {
+    "eval_id": 20,
+    "eval_name": "no-live-choice-turn-has-no-menu",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v2.13.0 GREEN round 1 regression — a requirements-now question grew a full menu; REFACTOR 2/2",
+    "prompt": "The other session pasted: 'Sounds good, B with the ceiling it is. Want me to write the requirements for that now?'",
+    "assertions": [
+      "the reply is a few tight paragraphs and ends on the answer or the one thing to settle",
+      "no Go deeper menu appears"
+    ]
+  },
+  {
+    "eval_id": 21,
+    "eval_name": "pick-zero-without-shape-takes-the-stance",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v2.13.0 RED 1/1 and GREEN 1/1 — the stance's pick was used without asking again",
+    "prompt": "The previous companion turn's stance picked B with a ceiling and ended on the Go deeper menu. The user replies: 0",
+    "assertions": [
+      "the carry-back is written on this turn for the stance's pick",
+      "the user is not asked which shape they chose",
+      "no menu follows the carry-back"
+    ]
+  },
+  {
+    "eval_id": 22,
+    "eval_name": "pick-one-gives-the-card-plainly-with-ranked-reasons",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v3.0.0 — turn 1 already spent the card; pick 1 is Deeper",
+    "prompt": "The previous companion turn ended on a Go deeper menu whose line 1 was Deeper. The user replies: 1",
+    "assertions": [
+      "the reply is hop 1 (the system in more detail), not a restatement of the fork and the lean",
+      "the four blocks as a turn-1 template are not re-rendered and no carry-back is written",
+      "the turn ends with the menu again"
+    ]
+  },
+  {
+    "eval_id": 23,
+    "eval_name": "first-answer-opens-on-the-session-map",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v2.14.0 RED — 0/2 first turns said what the session was about; both opened on an analogy or on Today",
+    "prompt": "First message after setup: a live-choice paste on a retry-policy fork. Write the companion turn.",
+    "assertions": [
+      "the turn opens on a What this session is about map before the gist, the neighborhood graph, Today, any analogy, or any drawing",
+      "the map names the problem, what the session will settle, what is in hand, and what is not yet known with whether the choice turns on it",
+      "the map carries no stance and does not argue the correction the card or Today makes",
+      "a later paste on the same problem does not get a second map"
+    ]
+  },
+  {
+    "eval_id": 24,
+    "eval_name": "sign-off-checks-every-ledger-slot",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v2.15.0 RED — Lock reversals caught 4/4 unprompted; unverified 0/2, Open questions (none) 0/1, never-raised scope in tasks 0/1",
+    "prompt": "Earlier carry-back locked per-endpoint policy, deliver() enforcing the ceiling, and a 422 on over-ceiling values; weighed a hold-time bound; left drain decoupling open; marked the ceiling value 5 unverified. The user now says requirements.md is written, its req-review fixes applied, and asks whether to approve.",
+    "assertions": [
+      "the companion reads requirements.md and .skills/<CODE>/req-review.md from disk rather than relying on the message",
+      "a Lock reversed by an applied review fix is named as a reversal, not accepted as a correction",
+      "a weighed item turned into a criterion, a closed open question (including Open questions: none), and scope nobody decided are each named",
+      "the unverified ceiling value appearing as settled is named with the check it needs",
+      "a Ledger lists every Lock, Weigh, Still-open and Unverified line of the carry-backs, kept ones included, each with kept / bent / reversed / closed / dropped",
+      "the reply opens on a one-line verdict and a one-line statement of what approval freezes, then ranked findings each ending on the change to ask for",
+      "no four blocks and no Go deeper menu"
+    ]
+  },
+  {
+    "eval_id": 25,
+    "eval_name": "sign-off-checks-the-code-and-its-readers",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v2.15.0 RED — a design making a field required on a customer-called endpoint was argued safe under External posture; a false context line was passed over",
+    "prompt": "The user says design.md is written, design-review fixes applied, and asks whether to approve. The design makes max_attempts required on POST /endpoints; posture is External; the requirements context still says 3 retries at a fixed 1s.",
+    "assertions": [
+      "the required field is named as breaking existing callers under the External posture",
+      "a prose claim about today that the code contradicts is named with file:line, even outside a criterion"
+    ]
+  },
+  {
+    "eval_id": 26,
+    "eval_name": "bare-number-answers-the-menu-not-the-paste",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v2.16.0 RED — a bare 1 was read as the paste's Option 1 and a carry-back went out unasked; GREEN 1/1",
+    "prompt": "The paste offered Option 1 and Option 2. The previous companion turn ended on a Go deeper menu whose line 1 was Deeper. The user replies: 1",
+    "assertions": [
+      "the reply is hop 1 (Deeper), not a decision for the paste's Option 1",
+      "no carry-back is written"
+    ]
+  },
+  {
+    "eval_id": 27,
+    "eval_name": "scope-round-menu-offers-overview-and-challenge",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v2.16.0 RED — 0/2 scope-round menus offered an overview or a challenge to the framing, both offered a code walk and a pre-mortem; GREEN 2/2",
+    "prompt": "Later in the session, after per-endpoint retry policy was locked, the other window asks whether to fold a customer's maintenance-window request into this feature or open a separate feature. Write the companion turn.",
+    "assertions": [
+      "the Go deeper menu is two hops — the system in more detail, then the file-by-file walk — then 0, not Walk / Challenge / Stress",
+      "0 writes the carry-back below a separator, labelled in the companion language"
+    ]
+  },
+  {
+    "eval_id": 28,
+    "eval_name": "user-written-message-ends-without-menu",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v2.16.0 RED — 2/4 user-written messages (a question, a challenge) ended on a Go deeper menu; GREEN 0/4",
+    "prompt": "After a live-choice turn that ended on a Go deeper menu, the user writes: I don't really get the drain part — explain it simpler.",
+    "assertions": [
+      "the question is answered in the thread",
+      "no Go deeper menu appears"
+    ]
+  },
+  {
+    "eval_id": 29,
+    "eval_name": "argued-mechanism-drops-explain",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v2.16.0 RED — 2/2 menus after the user argued the mechanism still offered Explain; GREEN 0/2",
+    "prompt": "The user has just argued that the retry ceiling is obsolete once delivery runs concurrently. The other window now pastes a live choice on how to bound worker concurrency. Write the companion turn.",
+    "assertions": [
+      "the Go deeper menu has no Explain line and is two hops then 0"
+    ]
+  },
+  {
+    "eval_id": 30,
+    "eval_name": "live-choice-card-is-retellable-without-a-hop",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v3.0.0 RED — v2.17 still rendered four blocks on turn 1; user wanted gist, graph, one run",
+    "prompt": "Companion language Vietnamese. A pasted card asks whether stored payload size is a platform constant, a per-version manifest quota, or a per-instance creator quota. The other session recommends the constant. Write the live-choice companion turn. The user has not settled.",
+    "assertions": [
+      "the card opens on one sentence naming the fork, then one sentence naming the lean and the repo fact behind it, marked not locked, before the picture, the walk or the full pick",
+      "a connected graph of 4–7 parts appears, with where the picture stops, and one system diagram of that graph",
+      "one named-actor walk of 4–8 lines goes through the graph today versus the lean",
+      "Today, Architect's read, and the seven stance slots do not appear on this turn",
+      "a fence names what this card does not decide",
+      "no carry-back is written"
+    ]
+  },
+  {
+    "eval_id": 31,
+    "eval_name": "live-choice-menu-spend-the-card-and-number-carry-back-zero",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v3.0.0 RED — resumed session copied Explain again / Walk it / Impact / Verify / 5; two-hop menu replaces kinds",
+    "prompt": "A live-choice turn on a costly-to-reverse storage fork has just been written. The previous agent in this thread numbered carry-back as 5 and labelled the menu Explain again, Walk it, Impact, Verify. Write this turn's Go deeper menu.",
+    "assertions": [
+      "carry-back is numbered 0 and sits below a separator, not as line 5",
+      "the menu is exactly two hops — the system in more detail, then the file-by-file walk — then 0",
+      "the labels are not Explain again / Walk it / Impact / Verify, not Walk / Challenge / Stress / Verify, and not the internal names Deeper / Lowest"
+    ]
+  },
+  {
+    "eval_id": 32,
+    "eval_name": "card-headings-are-questions-in-the-companion-language",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v3.1.0 RED — internal names rendered as user-facing headings; menu labels left in English while the card was translated",
+    "prompt": "Companion language Vietnamese, drawing ASCII. A live-choice paste asks whether retry policy becomes per-endpoint config, a circuit breaker on the global constants, or per-endpoint policy plus a global drain ceiling. Write the live-choice companion turn. The user has not settled.",
+    "assertions": [
+      "no user-facing heading or menu label is Gist, Lock strip, Fence, Hop, Stance, Invariant, Locality, Depth, Carry-back, One run, Deeper or Lowest",
+      "every heading is a question a reader of the companion language would recognise — what is being chosen, which way I lean, hold this picture, one person walking through it, why not the other one, if you confirm this freezes, what this card does not decide",
+      "the headings are in the companion language, not English, and no English heading is printed beside the translation",
+      "code identifiers, file paths and requirement-style names stay verbatim"
+    ]
+  },
+  {
+    "eval_id": 33,
+    "eval_name": "how-to-read-note-appears-once-per-session",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v3.1.0 RED — the user asked for the card and the pick again more simply, then took no hop; the card never said how to read itself",
+    "prompt": "Two live-choice pastes arrive in the same companion session, one after the other on the same neighborhood. Write both turns.",
+    "assertions": [
+      "the first live-choice carries a four-line how-to-read note before the fork, in the companion language, covering: the first two lines are the fork and the lean, the picture is the system not the options, the pick locks nothing until 0, and what 1 and 2 do",
+      "the note is four lines, not a tutorial",
+      "the second live-choice of the session does not repeat the note and goes straight to the fork"
+    ]
+  },
+  {
+    "eval_id": 34,
+    "eval_name": "paste-corrections-are-facts-not-things-to-confirm",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v3.1.0 RED — corrections filed under the lock strip, mixed in with commitments the user was being asked to approve",
+    "prompt": "A live-choice paste claims the relay retries three times with a fixed one-second delay and calls its options purely additive. The code sets MAX_ATTEMPTS = 5 with exponential backoff, and a commit records the incident that bounded it. Write the live-choice companion turn.",
+    "assertions": [
+      "the paste-vs-repo disagreements appear under their own heading, each one sentence with file:line, presented as facts about the code",
+      "what a 0 would freeze is a separate heading carrying commitments only, not corrections",
+      "a card whose paste matches the repo omits the paste-vs-code heading rather than printing it with 'none' under it",
+      "derived numbers are not filed as verified facts"
+    ]
+  },
+  {
+    "eval_id": 35,
+    "eval_name": "model-note-is-offered-once-and-written-only-on-yes",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v3.1.0 RED — every artifact died with the session; the v1.6.1 knowledge map emitted unasked and the product repo is read-only here",
+    "prompt": "Third live-choice on the same neighborhood in one session. The user then asks for the picture they could hand to a coding session tomorrow.",
+    "assertions": [
+      "no file is written on a live-choice turn",
+      "the note is offered once, and written only after the user says yes",
+      "the path offered is .skills/interpret-session/<slug>/model.md, and nothing is written into the product repo or docs/ unless the user names the path",
+      "the note is not named foundation-cards.md or docs/requirements/glossary.md and is not written as an ADR or a decision record",
+      "the note carries the picture, the locks the user already settled, what is still open, and what the paste got wrong — with file:line on code claims",
+      "/cmk:explain is named when what the user asks for reaches past this session's neighborhood — how a feature or the system works, with no pick — and not appended to an offer that answers the ask as made"
     ]
   }
 ]
