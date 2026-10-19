@@ -22,3 +22,8 @@ ignored `.worktrees/` still got a second ignored path.
 `.gitignore` only when `$DIR` is not already ignored. Reuse a legacy
 `.isolate-workspace/` / `isolate-workspace/` if one is already on disk, so a
 second parent is not created beside it.
+
+
+## Smoke after the cmk rename (2026-10-19)
+
+skill-tester-haiku on harbor-ledger with the GitHub board (`KIT=cmk`, all skills): **PASS** — isolated workspace for #23: `.worktrees/` created and git-ignored, branch from dev, baseline `bun test` 12 pass.

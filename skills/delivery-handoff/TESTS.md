@@ -15,3 +15,8 @@ this skill and no baseline was run for it.
 
 The user dropped `brief-team` as no longer needed. The suggested-skills line no
 longer names it. No behavior change to this skill; no baseline run.
+
+
+## Smoke after the cmk rename (2026-10-19)
+
+skill-tester-haiku on harbor-ledger with the GitHub board (`KIT=cmk`, all skills): **PASS** — REFUND build to another agent: fenced prompt with same-worktree verification, read-first list, **Tried and rejected** (refunds inside invoice records) and deviation D1 with map impact, open store question left open.

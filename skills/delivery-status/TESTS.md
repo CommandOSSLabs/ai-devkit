@@ -59,3 +59,8 @@ hasn't started" while its slot 2 said the uncommitted edit might be Task 4 — a
 contradicts its own slot, not a missing source. h3 guessed the uncommitted edit leaned to
 option (a) (it is (b)'s shape) and marked the guess unconfirmed. Neither recurs in the other
 five; no REFACTOR edit.
+
+
+## Smoke after the cmk rename (2026-10-19)
+
+skill-tester-haiku on harbor-ledger with the GitHub board (`KIT=cmk`, all skills): **PASS** — `/cmk:delivery-status` on #21 (not started): `scripts/collect.sh REFUND` printed all sections; every source agrees nothing has started.

@@ -214,3 +214,8 @@ GREEN run committed the fix as `pending disposition` and carried both
 propositions into the close report's **Awaiting your accept** section. The
 user chose this design (defer, not skip) on 2026-10-06. Root-cause's own evals
 are unaffected: none of them sets up an unattended caller.
+
+
+## Smoke after the cmk rename (2026-10-19)
+
+skill-tester-haiku on harbor-ledger with the GitHub board (`KIT=cmk`, all skills): **PASS** — #28 same-day booking: red repro plus control, `nights()` rejects 0 nights so no invoice exists, causal disposition request, pricing decision left to the person, nothing fixed.

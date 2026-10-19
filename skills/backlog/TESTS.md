@@ -112,3 +112,8 @@ ticket counts as read, a ticket both blocked-external and blocked, which half of
 pair to keep, and that "until it reaches `main`" depends on the repo's flow. All six runs
 resolved each of the four the same way and correctly, so a sentence for any of them would
 fail the no-op test; recorded, not added.
+
+
+## Smoke after the cmk rename (2026-10-19)
+
+skill-tester-haiku on harbor-ledger with the GitHub board (`KIT=cmk`, all skills): **PASS** — `/cmk:backlog`: `scripts/landed.sh` ran from the installed package; 5 tickets in dependency order (#22 blocked by #21), nothing written.

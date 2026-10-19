@@ -105,3 +105,8 @@ was said before this discovery, so it is not a ruling on it."
 Not covered: a Linear or GitHub tracker; an amendment that adds a ticket (governed by the
 working agreement, see `docs/design/2026-10-18-tracker-writes-no-op.md`); unpushed vs pushed
 history (all runs were local). Spend: about 5 USD.
+
+
+## Smoke after the cmk rename (2026-10-19)
+
+skill-tester-haiku on harbor-ledger with the GitHub board (`KIT=cmk`, all skills): **PASS** — REFUND Task 2 vs store.ts's version-bump rule: Phase 1 diagnosis notice (what / where / why / effect, likely lowest level Plan), nothing changed, stopped for go/no-go.

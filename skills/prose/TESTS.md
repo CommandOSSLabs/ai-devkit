@@ -190,3 +190,8 @@ Not written: pointers in `cmk:delivery-ship`, `cmk:delivery-pr` and `cmk:discove
 reached `cmk:prose` on their own (its description now names a ticket comment), and no PR
 body failed in any of 17 runs. Not covered: a repo that sets `Language:`, and a real
 tracker, where the comment is a tracker call rather than a file edit.
+
+
+## Smoke after the cmk rename (2026-10-19)
+
+skill-tester-haiku on harbor-ledger with the GitHub board (`KIT=cmk`, all skills): **PASS** — note to the Port Authority on the late fee: plain words, what changes / what doesn't / what they need to do, the 2026-11-04 window, no invented release date.

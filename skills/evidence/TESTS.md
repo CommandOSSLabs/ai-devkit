@@ -245,3 +245,8 @@ It is left unwritten because it is a technique rule, and every technique rule
 measured on 2026-09-09 was a no-op on the control. It is a candidate for a
 fixture, not text: give a control a migration whose correctness is a comparison
 between old and new output, and see whether it eyeballs once or scripts it.
+
+
+## Smoke after the cmk rename (2026-10-19)
+
+skill-tester-haiku on harbor-ledger with the GitHub board (`KIT=cmk`, all skills): **PASS** — "prove BERTH is done": ran the server and drove each requirement, found booking/payment are library-only, NaN and half-cent payments corrupt an invoice, and catalog/spec status disagree; refused "done".

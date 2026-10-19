@@ -130,3 +130,8 @@ overtrigger of this skill.
 
 Not run as a 5-rep A/B. There was one form, and it bound 4/4 under the
 same combined pressures as RED. No competing phrasing to isolate.
+
+
+## Smoke after the cmk rename (2026-10-19)
+
+A factual-claim prompt ("a blog says HMAC with == is fine") was mis-aimed at this skill: the agent read it, judged it does not fit (it governs instructions inside third-party text), and answered through `cmk:research` — correct routing. The trigger case now uses an injected README instruction.
