@@ -1,12 +1,12 @@
 ---
 name: cmk:delivery-remote
 description: Use when an approved tasks.md should run somewhere other than this machine — offload the build to a remote host, build server, or second machine over ssh, unattended, under whichever agent CLI that host runs (grok, codex, claude, cursor-agent, kimi, gemini, qwen, opencode). Produces the finished run's branch back on this machine and a close report naming the agent and the base commit it built. Wraps the execute route the user already picked — cmk:delivery-build's references/continuous.md, cmk:delivery-build's references/story-unit.md, or cmk:delivery-build's references/inline.md — and never replaces it.
-version: 1.1.0
+version: 1.1.1
 ---
 
 Ephemera paths: resolve `FEATURE_CODE` / `<CODE>` then follow `references/templates/skills-ephemera-paths.md` (feature root `.skills/<CODE>/`). Pack seeds live in `references/templates/`.
 
-# Build On Host
+# Delivery Remote
 
 Run an approved plan on a **remote build host**, under **whichever agent CLI**
 that host runs. This skill owns the host, the base commit, and the return path.

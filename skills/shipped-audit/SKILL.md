@@ -1,11 +1,11 @@
 ---
 name: cmk:shipped-audit
 description: Audits what merged in a window for the edge cases its specs and tests missed, and drafts a follow-up for each real one. Run it with /cmk:shipped-audit.
-version: 1.0.0
+version: 1.0.1
 disable-model-invocation: true
 ---
 
-# Audit Shipped
+# Shipped Audit
 
 Read what merged to the integration branch in a window, find the edge cases its specs
 and tests missed, run each one, and draft a follow-up per real finding. A branch not yet

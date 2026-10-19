@@ -23,7 +23,7 @@ WHEN stating a conclusion from retrieval:
    (`schema_version`, `shared_paths`, `via`, path/term evidence, `owns_coverage`,
    `observations`, advisory banner).
 5. **Never fail a gate** solely because neighbors/cluster are empty or thin
-   (cmk:scope, cmk:delivery-review, cmk:delivery-spec-plan, root-cause RED loop). Soft "thin"
+   (cmk:scope, cmk:delivery-review, cmk:delivery-spec-plan, cmk:debug RED loop). Soft "thin"
    means incomplete OWNS — use the exact `owns_coverage` numbers, not vibes.
 6. If `docs/specs/` is missing or seeds are unusable → explicit **no-op**; do
    not invent neighbors or clusters.

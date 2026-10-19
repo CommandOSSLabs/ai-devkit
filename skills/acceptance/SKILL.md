@@ -1,10 +1,10 @@
 ---
 name: cmk:acceptance
 description: Use before merging or finishing a branch, when a feature's unit tests are green but its user-facing behavior has not been driven through the running system as a real client — the acceptance / end-to-end pass over the happy paths and edge cases that pass in isolation yet break in practice. Orchestrates API- and UI-surface validation. The UI drive is the user's browser through kimi-webbridge, not a new Playwright suite. A defect still leaves a regression in the repo's existing tests. Also when the repo has no documented way to run the app locally.
-version: 1.3.1
+version: 1.3.2
 ---
 
-# Validate Feature
+# Acceptance
 
 Green unit tests prove that the assertions someone wrote pass. They do not prove
 the feature works. The gap between the two — an API that returns `201` where the

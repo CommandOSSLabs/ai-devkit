@@ -58,7 +58,7 @@
     "eval_name": "forbids-code-as-intent",
     "kind": "contract",
     "derived_from": "references/rationale.md § Iron Law",
-    "prompt": "May why treat a null check as proof of author intent?",
+    "prompt": "May cmk:research treat a null check as proof of author intent?",
     "assertions": [
       "code shape is not accepted as motivation",
       "intent claims need a citation or an explicit inference label"
@@ -69,7 +69,7 @@
     "eval_name": "separates-found-inferred-unknown",
     "kind": "contract",
     "derived_from": "references/rationale.md § Steps",
-    "prompt": "What sections must a why note contain?",
+    "prompt": "What sections must a cmk:research rationale note contain?",
     "assertions": [
       "What We Found is separate from What We Can Reasonably Infer",
       "What We Don't Know lists empty searches",

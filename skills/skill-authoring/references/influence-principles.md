@@ -35,7 +35,7 @@ Do not phrase rules to be liked — no flattery, no "great work so far, one smal
 
 | Skill type | Use | Avoid |
 |---|---|---|
-| Gate / discipline (tdd, verify, root-cause) | Authority + commitment + social proof | Warmth, reciprocity, softeners ("consider", "prefer") |
+| Gate / discipline (cmk:tdd, cmk:evidence, cmk:debug) | Authority + commitment + social proof | Warmth, reciprocity, softeners ("consider", "prefer") |
 | Recipe / technique (cmk:delivery-spec-plan, cmk:spike) | Clear contract + moderate authority on the output shape | Heavy absolutes — they crowd out judgment the recipe needs |
 | Convention / reference (tagging formats, file layouts) | Social proof + plain clarity | Any persuasion beyond clarity — reference should read neutral |
 | Collaborative (cmk:interview, cmk:feedback) | Commitment + shared-goal framing ("we both need the honest answer") | Authority and liking — both suppress the honest pushback these skills exist to produce |

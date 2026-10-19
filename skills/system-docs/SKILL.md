@@ -1,11 +1,11 @@
 ---
 name: cmk:system-docs
 description: Authors or updates one Hybrid 1A system-documentation artifact at the catalog's canonical path. Run with /cmk:system-docs <entry-key>.
-version: 1.1.0
+version: 1.1.1
 disable-model-invocation: true
 ---
 
-# Define System Doc
+# System Docs
 
 Author **exactly one** Hybrid 1A catalog entry per invocation. Unfinished work stays
 under `.skills/system-docs/<entry-key>/`. Canonical consumer files are written only after

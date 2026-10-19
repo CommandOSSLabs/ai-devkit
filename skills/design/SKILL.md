@@ -1,8 +1,9 @@
 ---
 name: cmk:design
 description: Use when approved requirements need their technical design — the design.md / architecture doc spelling out HOW the requirements get built — or when the whole system or one track needs its architecture doc in docs/design/. After cmk:requirements, before cmk:delivery-spec-plan.
-version: 1.0.0
+version: 1.0.1
 ---
+# Design
 
 Produce `docs/specs/<YYYY-MM-DD>-<feature>/design.md`: HOW the approved requirements get satisfied. Start from the skill set's `references/templates/design.md`. Every heading in it is a
 REQUIRED slot. The requirements file is your input contract — read it fully first.
@@ -39,8 +40,7 @@ follow `cmk:feature-graph`'s `references/grounded-claims.md` — never invent `R
 from the envelope alone; climb the ladder for real reuse.
 
 Record the decisions locked during discovery as a numbered list. Any decision that is hard to reverse AND surprising without context AND a real
-trade-off also gets an ADR (REQUIRED SUB-SKILL: use `cmk:adr` — it owns the ADR
-gate).
+trade-off also gets an ADR (REQUIRED SUB-SKILL: use `cmk:adr` — it owns the ADR gate).
 
 When a `docs/design/` spine exists, its `**ARCH-N**` invariants are inputs to this design:
 read them and note which this feature relies on (cite them in Step 2). If a decision must

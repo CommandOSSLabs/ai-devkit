@@ -1,10 +1,10 @@
 ---
 name: cmk:incident
-description: Use when a failure is reported on a deployed environment — production, staging, or a remote dev — and the red signal must come from live telemetry or a non-prod replay (OpenObserve, traces, spans, request id, error rate, incident, crash-loop, 500/502) rather than a local debugger. Produces a remote evidence pack and, when impact warrants it, a human-executed containment brief — separate from causal proof. Not for a failing local test or CI job (root-cause). Not for asking whether production tracing is complete enough (cmk:observability).
-version: 1.1.1
+description: Use when a failure is reported on a deployed environment — production, staging, or a remote dev — and the red signal must come from live telemetry or a non-prod replay (OpenObserve, traces, spans, request id, error rate, incident, crash-loop, 500/502) rather than a local debugger. Produces a remote evidence pack and, when impact warrants it, a human-executed containment brief — separate from causal proof. Not for a failing local test or CI job (cmk:debug). Not for asking whether production tracing is complete enough (cmk:observability).
+version: 1.1.2
 ---
 
-# Debug Remote
+# Incident
 
 The remote evidence plane for a deployed failure. Investigation after the
 pack exists is `cmk:debug`. This skill builds the pack and forbids the

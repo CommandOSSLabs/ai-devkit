@@ -1,11 +1,11 @@
 ---
 name: cmk:catalog
 description: Confirm-then-write the shared capability catalog (reverse-track, dispose, export/materialize).
-version: 2.0.0
+version: 2.0.1
 disable-model-invocation: true
 ---
 
-# Map Features
+# Catalog
 
 Confirm-then-write ops for the **shared** capability catalog
 (`docs/specs/INDEX.md` domain router + `docs/specs/catalog/*.md`). Sibling of

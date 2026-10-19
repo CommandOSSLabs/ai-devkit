@@ -1,10 +1,10 @@
 ---
 name: cmk:ui-brief
 description: Use when a screen or feature's look and feel needs deciding with the user before it is specified or built — "what should this look like", "show me a few design directions", "make some variants and let me pick", a UI mockup exploration clicked through in the real browser. Produces 2–5 divergent real-HTML variants behind a floating switcher (embedded in the running app, or standalone pages when no app exists), a review-and-amend loop with the user, and a locked ui-brief.md that cmk:design's UI design section lifts instead of re-deciding. Not for judging an already built diff (cmk:ui-review), logic or state spikes (cmk:spike), or a standalone document page (cmk:visualize).
-version: 1.1.0
+version: 1.1.1
 ---
 
-# Draft UI
+# UI Brief
 
 Deciding a surface's look is a workflow, not a one-shot render: divergent
 directions built as real HTML, reviewed by the user in the browser, amended,

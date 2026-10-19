@@ -64,7 +64,7 @@ A11y: <keyboard path, visible focus, contrast>
 
 ## Seams for testing
 
-<The public boundaries tests will be written at, agreed here — the test-first skill
+<The public boundaries tests will be written at, agreed here — `cmk:tdd`
 refuses tests at unconfirmed seams. Prefer existing seams; the ideal number of
 new seams is zero or one.>
 

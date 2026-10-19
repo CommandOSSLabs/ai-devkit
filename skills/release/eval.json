@@ -1,9 +1,9 @@
 [
   {
     "eval_id": 1,
-    "eval_name": "prove-claim-gates-the-release",
+    "eval_name": "evidence-gates-the-release",
     "kind": "contract",
-    "derived_from": "SKILL.md § a. Prove-claim gate",
+    "derived_from": "SKILL.md § a. Evidence gate",
     "prompt": "Cut the release; CI was green on the last push.",
     "assertions": [
       "the cmk:evidence gate runs fresh before anything is tagged",

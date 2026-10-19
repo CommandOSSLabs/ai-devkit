@@ -1,8 +1,9 @@
 ---
 name: cmk:delivery-spec-plan
 description: Use when a design is approved and the tasks.md implementation plan (vertical-slice tasks with requirement footers and behavior tests) needs writing, after cmk:design and before cmk:delivery-build.
-version: 1.0.0
+version: 1.0.1
 ---
+# Delivery Spec Plan
 
 Produce `docs/specs/<YYYY-MM-DD>-<feature>/tasks.md` from the approved
 requirements and design, from the skill set's `references/templates/tasks.md`. Every task-block slot (**Files**, **Interfaces**,
@@ -123,8 +124,7 @@ If the repo has no tracker (`docs/agents/issue-tracker.md` absent, or
 **Tracker:** empty / none) → **skip** this step (not pending). Otherwise, read
 `references/publish-recipe.md` and follow it exactly: resolve **Publish
 unit**, author the issue body, and record ids under `.skills/<CODE>/`. Default
-and only tracker-visible unit: **one feature issue** per plan, closed by the
-feature PR.
+and only tracker-visible unit: **one feature issue** per plan, closed by the feature PR.
 
 | Thought | Reality |
 |---|---|

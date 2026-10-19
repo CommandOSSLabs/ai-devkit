@@ -1,10 +1,10 @@
 ---
 name: cmk:ux-brief
 description: Use when what a surface *does* is still open — what happens when the button is pressed, whether the row leaves the list at once or after the call returns, undo versus a confirm dialog, what a slow call or a failed one feels like, "make it clickable so I can feel it", prototype the interaction or flow before it gets built. Produces 2–3 runnable takes of the same flow that differ in feel, built on the screen's real components, a pick from the user, and a locked `## Interaction` section inside `ui-brief.md` that `cmk:design` lifts instead of re-deciding. Not for what a surface looks like (cmk:ui-brief), judging an already built diff (cmk:ui-review), a logic or state-model spike (cmk:spike), committed e2e specs (cmk:acceptance-ui), or a human product walk (cmk:dogfood-plan).
-version: 1.0.1
+version: 1.0.2
 ---
 
-# Draft UX
+# UX Brief
 
 Requirements do not imply an interaction. Handed the same Approved
 requirements, the same component kit, and the same locked look, two competent

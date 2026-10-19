@@ -1,10 +1,10 @@
 ---
 name: cmk:prose
 description: Use when writing anything a person will read (a status, a reply, a standup note, a PR body, a ticket comment). Produces outer-register prose with no process machinery.
-version: 1.3.0
+version: 1.3.1
 ---
 
-# Speak Outer
+# Prose
 
 Anything a person reads is the outer register. The switch is total.
 

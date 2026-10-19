@@ -1,10 +1,10 @@
 ---
 name: cmk:delivery-simplify
 description: Use when the user asks to clean up, simplify, refactor, tidy, or polish working code — duplicated logic, a pointless loop, dead code, needless complexity, a helper reimplemented — producing the cleanup applied to the diff with behavior unchanged and the suite still green. Not for bugs or a merge verdict (cmk:delivery-review, cmk:debug).
-version: 1.0.0
+version: 1.0.1
 ---
 
-# Polish Diff
+# Delivery Simplify
 
 Four cleanup agents read the diff from four angles, then you apply what they find. The deliverable is **cleaner code that behaves identically** — not a report, and not a bug fix.
 

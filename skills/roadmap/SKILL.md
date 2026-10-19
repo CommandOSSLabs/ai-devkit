@@ -1,10 +1,10 @@
 ---
 name: cmk:roadmap
 description: Use when the user asks to plan, break down, sequence, or reorder milestones — a quarter's or a project's work into milestones, what order to build things in — or to edit an existing roadmap (drop, reorder, reword, commit to, or ship a milestone; draft the next one in Notion for sign-off); produces or revises docs/roadmap/INDEX.md, the registry of stable MILE-N and ROAD-N IDs feature specs bind to. Not for one feature's requirements (cmk:requirements) or for where the plan stands now (cmk:roadmap-status).
-version: 1.3.0
+version: 1.3.1
 ---
 
-# Plan Milestones
+# Roadmap
 
 Author and maintain `docs/roadmap/INDEX.md` — the program layer between the product vision
 and a single feature's spec: which milestones exist, in what order, holding what work, and

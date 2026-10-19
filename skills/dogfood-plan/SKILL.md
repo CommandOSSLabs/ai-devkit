@@ -1,10 +1,10 @@
 ---
 name: cmk:dogfood-plan
 description: Use when a finished feature needs dogfooding — a hands-on product walk in the real running app covering visuals, feel, and eyeball edge cases — or when an existing dogfood guide needs re-reviewing for missing situations. Produces a checkable dogfood guide (run file + HTML) plus an independent review report from a clean-context reviewer. Not for executing an already-written guide (`cmk:dogfood-run`).
-version: 3.0.0
+version: 3.0.1
 ---
 
-# Write Dogfood
+# Dogfood Plan
 
 A product walk is a human driving the real app through every user-facing
 ability and judging what they see. The deliverable is a **run file**, a

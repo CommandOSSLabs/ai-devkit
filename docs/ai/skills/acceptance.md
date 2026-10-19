@@ -26,7 +26,7 @@ Use to validate a frontend against its spec by driving it in the user's browser 
 
 ## cmk:acceptance
 
-model-invoked · pack `acceptance` · v1.3.1
+model-invoked · pack `acceptance` · v1.3.2
 
 Use before merging or finishing a branch, when a feature's unit tests are green but its user-facing behavior has not been driven through the running system as a real client — the acceptance / end-to-end pass over the happy paths and edge cases that pass in isolation yet break in practice. Orchestrates API- and UI-surface validation. The UI drive is the user's browser through kimi-webbridge, not a new Playwright suite. A defect still leaves a regression in the repo's existing tests. Also when the repo has no documented way to run the app locally.
 
@@ -36,7 +36,7 @@ Use before merging or finishing a branch, when a feature's unit tests are green 
 
 ## cmk:dogfood-plan
 
-model-invoked · pack `acceptance` · v3.0.0
+model-invoked · pack `acceptance` · v3.0.1
 
 Use when a finished feature needs dogfooding — a hands-on product walk in the real running app covering visuals, feel, and eyeball edge cases — or when an existing dogfood guide needs re-reviewing for missing situations. Produces a checkable dogfood guide (run file + HTML) plus an independent review report from a clean-context reviewer. Not for executing an already-written guide (`cmk:dogfood-run`).
 
@@ -48,18 +48,18 @@ Use when a finished feature needs dogfooding — a hands-on product walk in the 
 
 ## cmk:dogfood-run
 
-model-invoked · pack `acceptance` · v4.0.0
+model-invoked · pack `acceptance` · v4.0.1
 
 Use when a guide from cmk:dogfood-plan already exists and its cases must be executed against the running app — agent-driven, screen plus backend evidence. Produces a run file in which every case ends pass or parked, with product defects fixed and blockers cleared inside the same unattended run, and one end-of-run report saying why each case failed or was blocked and what changed. Not for authoring the guide (`cmk:dogfood-plan`) or committed e2e (`cmk:acceptance-ui`).
 
 - **Where:** `skills/dogfood-run/SKILL.md`
 - **References:** `references/failure-routing.md`, `references/serve.md`, `references/unblock.md`
-- **Cites:** `cmk:acceptance-ui`, `cmk:debug`, `cmk:delivery-ship`, `cmk:dogfood-plan`, `cmk:worktree`
+- **Cites:** `cmk:acceptance-ui`, `cmk:debug`, `cmk:delivery-ship`, `cmk:dogfood-plan`, `cmk:tdd`, `cmk:worktree`
 - **Evidence:** `TESTS.md`, `eval.json`
 
 ## cmk:ui-brief
 
-model-invoked · pack `ui` · v1.1.0
+model-invoked · pack `ui` · v1.1.1
 
 Use when a screen or feature's look and feel needs deciding with the user before it is specified or built — "what should this look like", "show me a few design directions", "make some variants and let me pick", a UI mockup exploration clicked through in the real browser. Produces 2–5 divergent real-HTML variants behind a floating switcher (embedded in the running app, or standalone pages when no app exists), a review-and-amend loop with the user, and a locked ui-brief.md that cmk:design's UI design section lifts instead of re-deciding. Not for judging an already built diff (cmk:ui-review), logic or state spikes (cmk:spike), or a standalone document page (cmk:visualize).
 
@@ -69,7 +69,7 @@ Use when a screen or feature's look and feel needs deciding with the user before
 
 ## cmk:ui-review
 
-model-invoked · pack `ui` · v2.1.1
+model-invoked · pack `ui` · v2.1.2
 
 Use when a diff or branch touching browser-rendered surfaces (HTML, CSS/styling, JSX/TSX/Vue/Svelte components, templates) needs its visual and interaction quality judged in the real running app before merge — the live design review invoked by `cmk:delivery-review`'s UI lane, or when the user asks to design-review a change, check how it looks, responsive breakage at mobile widths, focus visibility, contrast, dark mode, or off-token styling. Produces a screenshot-backed UI finding set across desktop/tablet/mobile viewports, interaction and composed states, and design-contract conformance — settling cascade and severity questions by driving the app, never by inference from the diff. Not for asserting spec'd behavior e2e (cmk:acceptance-ui), authoring a human product walk (cmk:dogfood-plan), or styling a standalone page (cmk:visualize).
 
@@ -79,7 +79,7 @@ Use when a diff or branch touching browser-rendered surfaces (HTML, CSS/styling,
 
 ## cmk:ux-brief
 
-model-invoked · pack `ui` · v1.0.1
+model-invoked · pack `ui` · v1.0.2
 
 Use when what a surface *does* is still open — what happens when the button is pressed, whether the row leaves the list at once or after the call returns, undo versus a confirm dialog, what a slow call or a failed one feels like, "make it clickable so I can feel it", prototype the interaction or flow before it gets built. Produces 2–3 runnable takes of the same flow that differ in feel, built on the screen's real components, a pick from the user, and a locked `## Interaction` section inside `ui-brief.md` that `cmk:design` lifts instead of re-deciding. Not for what a surface looks like (cmk:ui-brief), judging an already built diff (cmk:ui-review), a logic or state-model spike (cmk:spike), committed e2e specs (cmk:acceptance-ui), or a human product walk (cmk:dogfood-plan).
 

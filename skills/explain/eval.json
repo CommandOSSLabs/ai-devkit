@@ -65,8 +65,8 @@
     "derived_from": "TESTS.md § Trigger test (round 1 miss on 'how does OAuth PKCE work?'; round 2 10/10)",
     "prompt": "Fresh sessions with: 'how does the checkout flow work end to end?', 'explain src/auth/session.ts', 'how does OAuth PKCE work? we use it in login', 'why did we pick SQLite?', 'what is the Stripe refunds rate limit?', 'the cart total is wrong'.",
     "assertions": [
-      "understand is loaded for the checkout flow, the file, and PKCE",
-      "why, research, and root-cause are loaded for the SQLite, Stripe, and cart-total messages respectively"
+      "cmk:explain is loaded for the checkout flow, the file, and PKCE",
+      "cmk:research is loaded for the SQLite and Stripe messages, and cmk:debug for the cart-total message"
     ]
   },
   {

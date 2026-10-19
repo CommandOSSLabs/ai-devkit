@@ -1,7 +1,7 @@
 ---
 name: cmk:observability
-description: Use when production or staging telemetry may be insufficient — "is tracing complete", upgrade tracing, OpenObserve or OTLP enough, head vs tail sampling, span status, golden signals, log-trace join — and the deliverable is a readiness finding set, not an incident pack. Not for a live 500/trace hunt (cmk:incident). Not for a local failing test (root-cause).
-version: 1.0.1
+description: Use when production or staging telemetry may be insufficient — "is tracing complete", upgrade tracing, OpenObserve or OTLP enough, head vs tail sampling, span status, golden signals, log-trace join — and the deliverable is a readiness finding set, not an incident pack. Not for a live 500/trace hunt (cmk:incident). Not for a local failing test (cmk:debug).
+version: 1.0.2
 ---
 
 # Assess Observability

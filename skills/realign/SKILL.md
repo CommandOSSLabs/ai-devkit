@@ -1,10 +1,10 @@
 ---
 name: cmk:realign
 description: Use when a feature's spec has drifted from reality — requirements changed mid-implementation, the implementation deviated from the approved plan, the feature just shipped, the specs have gone stale or out of sync, or the traceability check is failing — and the requirements/design/tasks triad needs realigning back to what the code and tests actually do.
-version: 1.2.0
+version: 1.2.1
 ---
 
-# Sync a Spec
+# Realign
 
 Realign one feature's spec triad (`docs/specs/<date>-<feature>/{requirements,design,tasks}.md`) with what is actually true — in the code, the tests, and the tasks. Specs that are not resynced after change become fiction, and fiction is worse than no spec.
 

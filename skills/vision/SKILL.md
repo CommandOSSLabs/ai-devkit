@@ -1,11 +1,11 @@
 ---
 name: cmk:vision
 description: Establishes or updates the repo-level documentation layer — docs/requirements/vision.md, docs/design/ invariants, and docs/requirements/guidelines.md. Run it with /establish- project.
-version: 1.1.0
+version: 1.1.1
 disable-model-invocation: true
 ---
 
-# Define Project
+# Vision
 
 Author and maintain the project-documentation layer that sits ABOVE the feature
 workflow — the product north star, and the architecture invariants that keep

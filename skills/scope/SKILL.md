@@ -1,10 +1,10 @@
 ---
 name: cmk:scope
 description: Use at the very start of the idea-to-ship chain — when the user wants to add, build, or change a feature, behavior, or component, or to start a new project, and the asked-for behavior has no spec yet. Produces an agreed shape and a spoken ceremony tier. Triggers on "let's add…", "can we build…", "I'm thinking about…", "we should support…" before implementation has begun.
-version: 2.2.0
+version: 2.2.1
 ---
 
-# Frame Change
+# Scope
 
 Turn a raw idea into an agreed shape through dialogue, not code. Trust product
 judgment once the open set is named; do not script the interview as an itinerary.

@@ -1,7 +1,7 @@
 ---
 name: cmk:pathfind
 description: Chart or advance a multi-session decision map until the route to a destination is clear.
-version: 1.0.2
+version: 1.0.3
 disable-model-invocation: true
 ---
 

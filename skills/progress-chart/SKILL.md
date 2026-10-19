@@ -1,11 +1,11 @@
 ---
 name: cmk:progress-chart
 description: Generates a weekly progress dashboard (one HTML page) of what finished, what is building, what is ready to start, and the roadmap graph. Run it with /cmk:progress-chart.
-version: 1.1.0
+version: 1.1.1
 disable-model-invocation: true
 ---
 
-# Chart Progress
+# Progress Chart
 
 One self-contained HTML page for the end-of-week review: what finished in the last 7 and 30
 days, what is building, what is ready to start next, the roadmap as a dependency graph, each

@@ -1,10 +1,10 @@
 ---
 name: cmk:traceability
 description: Use when checking that requirement IDs agree where they are defined and task-cited in docs/specs, or that the capability catalog INDEX / shards stay intact — the docs-only vertical pass invoked by cmk:evidence, cmk:release, cmk:realign, and cmk:delivery-spec-plan. Produces a traceability finding set (unknown citations, duplicate definitions, approved-but-uncited, Respects / system-ID integrity, duplicate Feature CODEs, OBS-<6hex> in Code cells, missing shard refs). Does not search application source or tests for requirement IDs.
-version: 1.3.1
+version: 1.3.2
 ---
 
-# Audit Trace
+# Traceability
 
 The vertical traceability check. It answers with evidence: **do requirement IDs
 agree across the spec triad (and optional architecture docs), and does the

@@ -1,10 +1,10 @@
 ---
 name: cmk:dogfood-run
 description: Use when a guide from cmk:dogfood-plan already exists and its cases must be executed against the running app — agent-driven, screen plus backend evidence. Produces a run file in which every case ends pass or parked, with product defects fixed and blockers cleared inside the same unattended run, and one end-of-run report saying why each case failed or was blocked and what changed. Not for authoring the guide (`cmk:dogfood-plan`) or committed e2e (`cmk:acceptance-ui`).
-version: 4.0.0
+version: 4.0.1
 ---
 
-# Run Dogfood
+# Dogfood Run
 
 Execute an existing guide from cmk:dogfood-plan against the **product app** in a real browser. Fix what fails and build what blocks until every case passes. The deliverable is the **run file** — every case ID accounted for with quoted screen evidence and, when the case touches server-owned state, a server-side probe that actually ran — plus one report at the end. A chat summary is not the deliverable.
 
@@ -187,8 +187,8 @@ When every case is `pass` or parked:
 | "Report is fine — rev only moved for marks" | Freshness is `run_file` + `cases_fingerprint`, not whole-file `rev`. Recompute fingerprint. |
 | "Only Critical findings block drive" | Every open finding blocks. Severity orders fix only. |
 | "I'll patch the product in this long dogfood thread" | Master marks fail; dispatch a subagent with a red-capable brief. Master re-tests. |
-| "Isolation means skip root-cause / test-first" | Subagent still runs `cmk:debug` (+ test-first). Isolation ≠ free patch. |
-| "Guide-gap miss mid-run — treat as product defect" | Separate loops. Guide wrong / re-enter the review; do not absorb missing-situation findings into root-cause. |
+| "Isolation means skip cmk:debug / cmk:tdd" | Subagent still runs `cmk:debug` (+ `cmk:tdd`). Isolation ≠ free patch. |
+| "Guide-gap miss mid-run — treat as product defect" | Separate loops. Guide wrong / re-enter the review; do not absorb missing-situation findings into `cmk:debug`. |
 | "First pass is done — send an interim report and end my turn" | A round is not the run. Fix, unblock, re-drive. Report once, at §5. |
 | "Seed, users and env are product changes nobody authorised" | Local fixtures are the case's setup. Build them (`references/unblock.md`) and list them under Notable changes. |
 | "The fix waits for the user's accept before it lands" | This run defers disposition to the close report. The fix lands on the branch as `pending disposition` and does not merge before the accept. |

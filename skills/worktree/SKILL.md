@@ -1,10 +1,10 @@
 ---
 name: cmk:worktree
 description: Use when starting feature work, executing a plan, or making any multi-commit change that should not touch the user's current checkout — set up an isolated git worktree before the first file is edited.
-version: 1.1.0
+version: 1.1.1
 ---
 
-# Isolate Workspace
+# Worktree
 
 Give feature work an isolated workspace with a verified-clean starting point. Order of preference: detect isolation that already exists → the harness's native workspace tool → a manual `git worktree` fallback. Never fight the harness.
 

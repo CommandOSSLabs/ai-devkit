@@ -1,10 +1,10 @@
 ---
 name: cmk:delivery-reroute
-description: Use when a mid-execution discovery invalidates an already-approved plan — "the plan is wrong," a re-plan is needed, scope changed mid-flight, or a divergence surfaces during cmk:delivery-build's references/continuous.md or test-first that the current task can't absorb — or when the operator amends a running build — adds a constraint, cuts scope, drops a requirement. Produces a blast-radius classification of the lowest invalidated artifact plus a re-entry decision or change proposal, never a silent rewrite. Not for a post-ship in-scope tweak (cmk:amend), broken code against a still-valid spec (root-cause), or the mechanical reconciliation that runs after the decision (cmk:realign).
-version: 1.1.0
+description: Use when a mid-execution discovery invalidates an already-approved plan — "the plan is wrong," a re-plan is needed, scope changed mid-flight, or a divergence surfaces during cmk:delivery-build's references/continuous.md or test-first that the current task can't absorb — or when the operator amends a running build — adds a constraint, cuts scope, drops a requirement. Produces a blast-radius classification of the lowest invalidated artifact plus a re-entry decision or change proposal, never a silent rewrite. Not for a post-ship in-scope tweak (cmk:amend), broken code against a still-valid spec (cmk:debug), or the mechanical reconciliation that runs after the decision (cmk:realign).
+version: 1.1.1
 ---
 
-# Reroute Plan
+# Delivery Reroute
 
 The mid-flight rewind decision for when a discovery falsifies an approved plan. It is a **thin router**: it decides *which artifact is now false and how far back to rewind*, then delegates, per Thin-router exit below. `cmk:delivery-build`'s `references/continuous.md` hands off here when it hits "the plan itself is wrong" or a circuit breaker whose root cause sits above the current task; a user may also invoke it directly the moment something feels off.
 

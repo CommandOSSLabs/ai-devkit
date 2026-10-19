@@ -1,11 +1,11 @@
 ---
 name: cmk:skill-authoring
 description: Use when creating, authoring, or editing a skill — its SKILL.md, frontmatter, or description — reviewing a skill someone else wrote, deciding whether a skill is ready to ship, or diagnosing why a skill won't trigger.
-version: 1.3.1
+version: 1.3.2
 disable-model-invocation: true
 ---
 
-# Author Skills
+# Skill Authoring
 
 ## Why a skill exists
 

@@ -6,7 +6,7 @@
 
 ## cmk:debug
 
-model-invoked · core · v1.4.0
+model-invoked · core · v1.4.1
 
 Use when anything behaves unexpectedly — a failing test, an error or exception, a crash, a reported bug, wrong output, a performance regression, a flaky CI job — and before proposing or applying any fix. Produces an evidence-backed investigation whose authoritative causal confirmation is a human disposition. Not for a failure that is only on a deployed environment with no pack yet (cmk:incident).
 

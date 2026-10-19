@@ -1,11 +1,11 @@
 ---
 name: cmk:milestone-review
 description: Produces a verdict on whether a milestone delivered what it promised, read fresh from the specs, the tests, and git. Run it with /cmk:milestone-review.
-version: 1.2.1
+version: 1.2.2
 disable-model-invocation: true
 ---
 
-# Assess Milestone
+# Milestone Review
 
 `cmk:roadmap-status` checks whether a milestone's **structure** is sound. This skill judges the other half — did it **deliver what its `Outcome:` sentence promised** — and records that judgment where a reader six months later can still check it.
 

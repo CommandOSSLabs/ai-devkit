@@ -1,10 +1,10 @@
 ---
 name: cmk:ui-review
 description: Use when a diff or branch touching browser-rendered surfaces (HTML, CSS/styling, JSX/TSX/Vue/Svelte components, templates) needs its visual and interaction quality judged in the real running app before merge — the live design review invoked by `cmk:delivery-review`'s UI lane, or when the user asks to design-review a change, check how it looks, responsive breakage at mobile widths, focus visibility, contrast, dark mode, or off-token styling. Produces a screenshot-backed UI finding set across desktop/tablet/mobile viewports, interaction and composed states, and design-contract conformance — settling cascade and severity questions by driving the app, never by inference from the diff. Not for asserting spec'd behavior e2e (cmk:acceptance-ui), authoring a human product walk (cmk:dogfood-plan), or styling a standalone page (cmk:visualize).
-version: 2.1.1
+version: 2.1.2
 ---
 
-# Inspect UI
+# UI Review
 
 The one rule: **a visual claim is settled by rendering, never by inference.**
 A careful read of a style diff produces hypotheses — "these two classes may

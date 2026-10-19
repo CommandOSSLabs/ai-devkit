@@ -1,10 +1,10 @@
 ---
 name: cmk:feature-graph
-description: Use when cmk:scope, cmk:delivery-review, cmk:interview, cmk:design, cmk:delivery-spec-plan, root-cause, or another skill needs feature neighbors, cluster, blast radius, overlap, reuse-miss, or a multi-hop feature subgraph — produces an advisory envelope (schema 1.1 neighbors, observations band, OWNS coverage, seeds). Not reverse-track indexing (/cmk:catalog dispose) and not confirm-then-write catalog backfill (/cmk:catalog).
-version: 1.3.0
+description: Use when cmk:scope, cmk:delivery-review, cmk:interview, cmk:design, cmk:delivery-spec-plan, cmk:debug, or another skill needs feature neighbors, cluster, blast radius, overlap, reuse-miss, or a multi-hop feature subgraph — produces an advisory envelope (schema 1.1 neighbors, observations band, OWNS coverage, seeds). Not reverse-track indexing (/cmk:catalog dispose) and not confirm-then-write catalog backfill (/cmk:catalog).
+version: 1.3.1
 ---
 
-# Load Feature Subgraph
+# Feature Graph
 
 Ask-time horizontal neighbor derivation. Sibling of `cmk:traceability`: fixed passes
 in `references/passes.md`, set operations, same inputs → same edge/seed set.

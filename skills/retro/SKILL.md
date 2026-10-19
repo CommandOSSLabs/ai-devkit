@@ -1,11 +1,11 @@
 ---
 name: cmk:retro
 description: Mine the active session for durable process lessons and propose concrete skill edits — wait for approval before changing any skill.
-version: 1.0.0
+version: 1.0.1
 disable-model-invocation: true
 ---
 
-# Reflect
+# Retro
 
 Turn a finished hard session into skill-set improvements. Do not auto-apply.
 

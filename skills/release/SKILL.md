@@ -1,7 +1,7 @@
 ---
 name: cmk:release
 description: Cuts a release for work already merged to the release branch — version bump, tag, changelog, release notes, and Implemented specs in range marked Shipped. Run it with /cmk:release.
-version: 1.3.0
+version: 1.3.1
 disable-model-invocation: true
 ---
 
@@ -21,7 +21,7 @@ Stop-rule discipline is unchanged: no partial releases.
 
 Read the repo's commands from `docs/agents/project.md` (verify commands, release steps, smoke command). If it is missing, say so, suggest `cmk:repo-config`, and ask the user for the commands before proceeding.
 
-## a. Prove-claim gate
+## a. Evidence gate
 
 Run every verify command in order — typecheck, lint, unit, e2e — plus the docs-only
 cmk:traceability check (REQUIRED SUB-SKILL: use `cmk:traceability`). All must pass fresh,

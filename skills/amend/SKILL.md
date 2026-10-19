@@ -1,7 +1,7 @@
 ---
 name: cmk:amend
-description: Use when an already-shipped, spec'd feature needs a small in-scope change — a recolor, a copy edit, a tweak, or a follow-on. Produces a tier decision and a light-lane route. Not for new features (cmk:scope), broken behavior (root-cause), or a drifted spec (cmk:realign).
-version: 1.0.1
+description: Use when an already-shipped, spec'd feature needs a small in-scope change — a recolor, a copy edit, a tweak, or a follow-on. Produces a tier decision and a light-lane route. Not for new features (cmk:scope), broken behavior (cmk:debug), or a drifted spec (cmk:realign).
+version: 1.0.2
 ---
 
 # Amend Feature

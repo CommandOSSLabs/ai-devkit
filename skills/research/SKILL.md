@@ -1,7 +1,7 @@
 ---
 name: cmk:research
 description: Use when asking why code or a design exists this way — design rationale, rejected alternatives, regression history, where a threshold came from — or when a question turns on external facts: how a library or API actually behaves, what a standard, spec, or RFC says, platform limits, version differences; produces a cited, confidence-graded note. Not for how the runtime flows (cmk:explain) or for visual or UI variants (cmk:spike).
-version: 1.2.0
+version: 1.2.1
 ---
 
 # Research

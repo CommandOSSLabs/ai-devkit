@@ -1,10 +1,10 @@
 ---
 name: cmk:interview
 description: Use to interview or grill the user before building an underspecified plan, design, or feature idea, including when another skill calls for an interview. Produces a confirmed close package of decisions, constraints, success, boundaries, and spine touch — plus owned unknowns, accepted risks, and operability when the production-coverage gate is on.
-version: 1.7.0
+version: 1.7.1
 ---
 
-# Clarify Decisions
+# Interview
 
 This is a reusable **interview protocol**, not a pipeline stage. Nested under a parent, stay in its conversation and checklist; standalone, own the interview until shared understanding. Follow **Todos** for checklist ownership. Name and decide every silent assumption that could create debt or a wrong architecture. Leading words: **open set**, **territory**, **card**, **problem lock**, **criteria**, **coverage map**, **close package**. The map (prompts, plans, knowns) is not the territory (codebase, runtime, users, history).
 

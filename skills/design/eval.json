@@ -82,7 +82,7 @@
     "prompt": "Write the design for CACHE. I have never read this cache subsystem. Skip orientation.",
     "assertions": [
       "the first message names /cmk:explain for the user to run",
-      "the agent does not run understand itself",
+      "the agent does not run cmk:explain itself",
       "a scan digest is not treated as a substitute for that walk"
     ]
   },

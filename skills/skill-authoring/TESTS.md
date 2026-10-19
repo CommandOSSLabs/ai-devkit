@@ -317,3 +317,25 @@ branch that survived because nobody owned removing it, that is the baseline this
 rule was missing, and the question is worth re-asking with it in hand.
 
 **All nineteen candidates are now measured: 8 shipped, 11 dropped, 0 open.**
+
+## 1.3.2 — a user-invoked description still moved routing (2026-10-19)
+
+The 2.0 review found four user-invoked descriptions off the house line ("… Run it with
+/cmk:x."): `skill-authoring`, `retro`, `pathfind`, `catalog`. Rewriting them to the line,
+together with naming `cmk:debug` instead of the old `root-cause` in five model-invoked
+descriptions, was trigger-tested on harbor-ledger with all 93 skills installed
+(`skill-fixtures/triggers/fix-names.tsv`, sonnet, session auth). Two should-route-to-debug
+prompts — a double charge since yesterday's release, a locally failing test — scored:
+
+| Fixture | `cmk:debug` fired |
+|---|---|
+| HEAD (old descriptions) | 15 / 36 |
+| All nine descriptions changed | 4 / 36 |
+| Nine changed, the four user-invoked reverted | 10 / 20 |
+
+No run fired a wrong skill (`cmk:amend`, `cmk:incident`); the misses answered without a
+skill. So a `disable-model-invocation` description is not inert for routing here: changing
+four of them cost `cmk:debug` most of its fires. The four keep their old descriptions; the
+five model-invoked edits stay (each 3/3 on its own should-fire case). The mechanism — the
+skill listing's length budget, or the descriptions themselves — is not established; rewrite
+a user-invoked description only with a routing run beside it.

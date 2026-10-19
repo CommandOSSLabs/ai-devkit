@@ -1,11 +1,11 @@
 ---
 name: cmk:architecture-scan
 description: Produces a codebase-wide architecture and technical-debt scan, ranked by where refactoring pays off next. Run it with /cmk:architecture-scan.
-version: 1.2.0
+version: 1.2.1
 disable-model-invocation: true
 ---
 
-# Improve the Architecture
+# Architecture Scan
 
 Scan the codebase for accumulated friction, present deepening candidates as a visual report, and carry the one the user picks into the normal spec cycle. The goal is testability and navigability — modules deep enough that their interface is the test surface.
 

@@ -46,22 +46,22 @@
   },
   {
     "eval_id": 5,
-    "eval_name": "deployed-env-beats-root-cause",
+    "eval_name": "deployed-env-beats-debug",
     "kind": "trigger",
     "derived_from": "TESTS.md § Trigger queries",
     "prompt": "Production checkout is returning 500s, look in OpenObserve",
     "assertions": [
-      "invokes cmk:incident first, not root-cause alone"
+      "invokes cmk:incident first, not cmk:debug alone"
     ]
   },
   {
     "eval_id": 6,
-    "eval_name": "local-test-stays-root-cause",
+    "eval_name": "local-test-stays-debug",
     "kind": "trigger",
     "derived_from": "TESTS.md § Trigger queries",
     "prompt": "this unit test is failing locally",
     "assertions": [
-      "invokes root-cause, not cmk:incident"
+      "invokes cmk:debug, not cmk:incident"
     ]
   },
   {

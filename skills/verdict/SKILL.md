@@ -1,10 +1,10 @@
 ---
 name: cmk:verdict
 description: Use when cmk:delivery-ship or cmk:release hands off a terminal human verdict and a decision record must be published before the production crossing runs.
-version: 1.0.0
+version: 1.0.1
 ---
 
-# Record a Boundary Decision
+# Verdict
 
 Publish one **decision record** (immutable **payload** + append-only **envelope**)
 under `.skills/decisions/` for a skill-mediated **terminal verdict** — under

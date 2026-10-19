@@ -1,11 +1,11 @@
 ---
 name: cmk:delivery-pr
 description: Takes one open pull request to merge-ready, or names the blocker that stops it. Run it with /cmk:delivery-pr.
-version: 1.1.0
+version: 1.1.1
 disable-model-invocation: true
 ---
 
-# Tend a Pull Request
+# Delivery PR
 
 Take one open pull request from "opened" to "merge-ready", or to a blocker with
 a name. This skill owns **checks and mergeability**. It owns neither the diff's

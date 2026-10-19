@@ -6,7 +6,7 @@
 
 ## cmk:retro
 
-user-invoked (`/cmk:retro`) · pack `maintainers` · v1.0.0
+user-invoked (`/cmk:retro`) · pack `maintainers` · v1.0.1
 
 Mine the active session for durable process lessons and propose concrete skill edits — wait for approval before changing any skill.
 
@@ -17,11 +17,11 @@ Mine the active session for durable process lessons and propose concrete skill e
 
 ## cmk:skill-authoring
 
-user-invoked (`/cmk:skill-authoring`) · pack `maintainers` · v1.3.1
+user-invoked (`/cmk:skill-authoring`) · pack `maintainers` · v1.3.2
 
 Use when creating, authoring, or editing a skill — its SKILL.md, frontmatter, or description — reviewing a skill someone else wrote, deciding whether a skill is ready to ship, or diagnosing why a skill won't trigger.
 
 - **Where:** `skills/skill-authoring/SKILL.md`
 - **References:** `references/influence-principles.md`, `references/pressure-testing.md`
-- **Cites:** `cmk:acceptance`, `cmk:acceptance-api`, `cmk:debug`, `cmk:delivery-handoff`, `cmk:delivery-spec-plan`, `cmk:feedback`, `cmk:interview`, `cmk:release`, `cmk:scope`, `cmk:spike`, `cmk:tdd`, `cmk:traceability`
+- **Cites:** `cmk:acceptance`, `cmk:acceptance-api`, `cmk:debug`, `cmk:delivery-handoff`, `cmk:delivery-spec-plan`, `cmk:evidence`, `cmk:feedback`, `cmk:interview`, `cmk:release`, `cmk:scope`, `cmk:spike`, `cmk:tdd`, `cmk:traceability`
 - **Evidence:** `TESTS.md`, `eval.json`

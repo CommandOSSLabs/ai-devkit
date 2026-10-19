@@ -1,10 +1,10 @@
 ---
 name: cmk:repo-config
 description: Use when this repo's agent config needs writing or fixing — "configure the tracker", "set up the labels", "which commands verify this repo", "set up docs/agents", or as cmk:repo-setup's facet — producing docs/agents/ (posture, team, tracker, triage labels, verify and release commands), the spec catalog seeds, and the Agent skills block, each command proven wired.
-version: 2.0.0
+version: 2.0.1
 ---
 
-# Set Up the Repo
+# Repo Config
 
 Configure a repository, once, so every other skill can read its answers instead of guessing. The output is a set of agent-facing config files under `docs/agents/`, seed spec files, and a pointer block in the repo's agent instructions.
 

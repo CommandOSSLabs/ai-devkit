@@ -1,14 +1,14 @@
 ---
 name: cmk:requirements
 description: Use when discovery is complete and a tier-1 or tier-2 change needs its requirements written — the user stories and EARS acceptance criteria in requirements.md that every later task, test, and commit cites by ID — or when a product area's docs/requirements/<topic>.md needs its requirements updated. After cmk:scope, before any design or code.
-version: 1.0.0
+version: 1.0.1
 ---
+# Requirements
 
-Produce `docs/specs/<YYYY-MM-DD>-<feature>/requirements.md` from the approved
-cmk:scope outcome. Requirements are the durable source of intent: they outlive
-this conversation, and every task, test, and commit will cite their IDs. Input may
-arrive as conversation, local docs, or a linked Notion or Google Docs page — read the
-page through its connected tool.
+Produce `docs/specs/<YYYY-MM-DD>-<feature>/requirements.md` from the approved cmk:scope
+outcome. Requirements are the durable source of intent: they outlive this conversation, and
+every task, test, and commit will cite their IDs. Input may arrive as conversation, local
+docs, or a linked Notion or Google Docs page — read the page through its connected tool.
 
 ## Before drafting: an approved scope
 

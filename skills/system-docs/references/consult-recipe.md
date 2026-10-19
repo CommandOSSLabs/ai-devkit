@@ -50,5 +50,5 @@ within hard constraints.
 
 - Treating `proposal.md` or `.skills/system-docs/` ephemera as standing truth  
 - Listing a skill as a catalog reader without a real consult hook  
-- Skipping the red-capable loop because an ops runbook exists (root-cause)  
+- Skipping the red-capable loop because an ops runbook exists (cmk:debug)  
 - Replacing `docs/agents/project.md` release commands with ops deployment narrative  

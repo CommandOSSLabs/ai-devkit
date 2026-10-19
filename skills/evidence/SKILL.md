@@ -1,10 +1,10 @@
 ---
 name: cmk:evidence
 description: Use when about to say anything that implies success — "done", "fixed", "passing", "works", or any paraphrase — and before committing, opening a PR, closing a task, or reporting a subagent's result.
-version: 1.5.1
+version: 1.5.2
 ---
 
-# Prove Claim
+# Evidence
 
 ## The Iron Law
 

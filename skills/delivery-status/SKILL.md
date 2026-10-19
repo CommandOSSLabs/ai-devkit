@@ -1,11 +1,11 @@
 ---
 name: cmk:delivery-status
 description: Reports where one feature's build stands right now — done, in flight, waiting on you, not yet shipped, tracker — from every source at once. Run it with /cmk:delivery-status.
-version: 1.0.0
+version: 1.0.1
 disable-model-invocation: true
 ---
 
-# Show Run Status
+# Delivery Status
 
 Answer "where are we with `<CODE>`?" for a build that is running or stopped mid-way —
 in the time it takes to walk into a meeting. Roadmap-level standing is

@@ -1,7 +1,7 @@
 ---
 name: cmk:feedback
 description: Use when review feedback or PR comments arrive — from the user, a reviewer subagent, or an external reviewer — and before implementing or replying to any of it, especially when an item seems unclear or technically wrong.
-version: 1.0.0
+version: 1.0.1
 ---
 
 # Vet Feedback
@@ -37,7 +37,7 @@ State the correction plainly and fix it: "Verified — you were right, the API d
 |---|---|
 | "Agreeing quickly keeps the review friendly" | Unverified agreement ships the reviewer's mistakes under your name. |
 | "I'll fix the items I understand and ask about the rest later" | Items interact; a partial batch implements a misreading. Clarify all first. |
-| "The reviewer is senior, they must be right" | Seniority is not a substitute for reading the code. Prove Claim. |
+| "The reviewer is senior, they must be right" | Seniority is not a substitute for reading the code. Prove the claim. |
 | "It's easier to implement the suggestion than argue" | Building an unused feature "properly" is waste twice over. Grep first. |
 | "A quick 'thanks, great catch!' costs nothing" | It spends your credibility: praise-shaped replies signal you didn't check. |
 | "Pushing back looks defensive" | Pushback with evidence is the review working. Silence is the failure mode. |

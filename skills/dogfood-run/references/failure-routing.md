@@ -25,7 +25,7 @@ subagent.
    **no** session history and no long dogfood context. Master does **not**
    patch product code in the walkthrough session.
 3. The subagent's brief says **REQUIRED SUB-SKILL: use `cmk:debug`** (and
-   **test-first**). Isolation is **not** a free patch without root-cause. The
+   **`cmk:tdd`**). Isolation is **not** a free patch without `cmk:debug`. The
    brief also carries this line verbatim:
    > This run defers causal disposition to its close report. Write the
    > disposition request, then apply the fix on this branch and commit it

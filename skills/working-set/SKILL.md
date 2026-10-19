@@ -1,10 +1,10 @@
 ---
 name: cmk:working-set
 description: Use when more is live than one or two ideas — a long working set, a review that walks every requirement ID, a change that must stay consistent — produces a stage of the ideas this act uses, with the rest left on disk.
-version: 1.0.0
+version: 1.0.1
 ---
 
-# Hold Stage
+# Working Set
 
 The stage holds what this act uses. Everything else stays on the page.
 
