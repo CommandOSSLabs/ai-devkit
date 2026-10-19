@@ -1,150 +1,198 @@
 ---
 name: cmk:delivery-spec-plan
-description: Use when the user asks for a "spec", "implementation plan", or tracker-issue design scratch after intake — phase 2 of `cmk:delivery-pipeline`. Produces git-ignored scratch spec + plan with task dependency structure. Durable `docs/design/` docs → `cmk:design`.
-version: 0.3.4
+description: Use when a design is approved and the tasks.md implementation plan (vertical-slice tasks with requirement footers and behavior tests) needs writing, after cmk:design and before cmk:delivery-build.
+version: 1.0.0
 ---
 
-# Delivery Spec & Plan
+Produce `docs/specs/<YYYY-MM-DD>-<feature>/tasks.md` from the approved
+requirements and design, from the skill set's `references/templates/tasks.md`. Every task-block slot (**Files**, **Interfaces**,
+**Depends-on**, **Steps**, `_Requirements:_`) is REQUIRED — no per-task risk
+labels, decision-surface flags, or Human-review-order (see Step 3's gate table
+for why). Write for a skilled implementer with NO context on this codebase,
+seeing ONLY their task plus Global Constraints: **names, paths, types,
+commands** they must not guess go in **Files / Interfaces / Reuse / footer**,
+never as prose inside Steps (see **Thin steps**). Create a todo per step (1–4,
+plus 5 if there's a tracker) — this skill's own list, separate from
+`cmk:design`'s and the execute family's — checked off only when its
+**Done when:** is met.
 
-The repo's `docs/design/` and `docs/requirements/` are the source of truth for
-*what* and *why* at the system level — but realizing a specific issue needs
-another layer of detail: current codebase reality, concrete approach choices,
-and the back-and-forth reasoning that ends when the plan is solid enough to
-execute without further debate. That layer is this phase's product.
+## Step 1: Header and Global Constraints
 
-Use `superpowers:brainstorming` and `superpowers:writing-plans` when present;
-otherwise follow the same shape. Their human-approval checkpoints do not
-apply — decide and record it. The phase ends when the plan is written;
-`cmk:delivery-pipeline` owns what runs it.
+Goal (one sentence), Architecture (2–3 sentences), Tech Stack, and
+`Execution-mode: <unset|continuous|story-unit>` (leave **unset**; never invent
+it from size/band/habit — mode write-back happens only at **Exit**). Then
+**Global Constraints**: project-wide rules at a canonical source path + hash,
+referenced (not copied) by every task. `## Team` with a roster/band override →
+derive band + packaging from it alone (Solo: no fake multi-assignee theater;
+Small/Multi: optional freeform notes, never a new required field); no Team →
+pre-feature default. `docs/design/` spine, if any → fold its hard
+`**ARCH-N**` invariants in too, so every task inherits them. Resolve the
+source below — first hit is SSOT; never invent a parallel one:
 
-Specs and plans go to git-ignored scratch. They are working artifacts, never
-the record; durable conclusions reach `docs/design/`, `docs/decisions/`, the
-tracker, and the PR description.
+| Order | Source | Covers |
+|---|---|---|
+| 1 | `docs/rules/common/`, when it exists (`INDEX.md` + domain files like `testing.md`, `errors-logging.md`) | naming, i18n, house rules, testing, errors/logging |
+| 2, then 3 | Else `docs/requirements/guidelines.md` (**legacy fallback only**, and only if it has a parallel rule body — not pointer-only) when `docs/rules/common/` is absent; else `docs/agents/project.md` | test/lint/typecheck commands, naming/i18n rules, forbidden changes |
 
-Read `cmk:delivery-workflow` and `cmk:delivery-pipeline`'s context-efficiency
-reference before relying on the intake brief — the brief is a capsule, and
-the context-efficiency continuity rules decide when mutable inputs must be
-refreshed before planning on them. Confirm the intake brief's **scope band**
-and **docs-ready** before planning implementable tasks: if docs-ready is
-false for the band, stop and finish `cmk:requirements` (or an explicit
-exemption) rather than planning around a hole.
+**Done when:** Goal, Architecture, Tech Stack, `Execution-mode:` (typically
+`unset`), and Global Constraints source path/hash are written, with the
+constraint source identified and no parallel SSOT invented.
 
-Apply `cmk:delivery-pipeline`'s engineering-principles reference throughout:
-decide everything yourself, staff-level bar without overengineering, existing
-codebase as design input.
+## Step 2: File structure and retrieval
 
-## Spec
+Map every file the plan creates or modifies, with one-line responsibilities,
+BEFORE writing tasks. A file not in the map should not be touched by any task.
 
-Iterate until solid; one spec per issue.
+### System docs consult during File Structure (optional)
 
-1. **Approach selection.** Identify the 2–3 plausible approaches. Judge them
-   against fit with existing patterns in the touched subsystems, the
-   architecture in `docs/design/`, the recorded decisions in `docs/decisions/`,
-   blast radius, and long-term system shape. A shortcut that works only locally, only in CI, or "until we harden it" loses to the production-ready foundation (`cmk:delivery-pipeline` engineering principles, No shortcut). Pick one. Record why the others lost — that rationale later goes in the PR description, and in an ADR
-   first if it is architecture-shaping.
-2. **Surface inventory and compat decisions.** When the change alters a
-   contract, shape, or behavior, enumerate every affected surface from actual
-   reference searches — consumers, call sites, tests, docs, configs, CLI
-   help, fixtures — and give each item a disposition per the full-surface
-   rules in `cmk:delivery-pipeline`'s engineering-principles reference:
-   replace, compat wiring with a removal issue, or frozen. Mixed dispositions
-   within one change are normal; record the driving factor per item. If the
-   operator asked to decide — the whole change or named items — present
-   decision briefs for the genuinely contestable items only and record the
-   outcomes; obvious items are decided and reported, not asked.
-3. **Low-level design.** Concrete types, module/package placement per the
-   repo's role-first layout (`cmk:project-layout`), boundaries and who owns
-   them, error modes, and how the change composes with what exists. Name
-   things so an unfamiliar reader gets the correct first-pass mental model
-   (`docs/rules/common/naming.md`, seeded by `cmk:agent-instructions`),
-   using glossary terms where the repo keeps a glossary (`cmk:glossary`);
-   a spec that coins a new system/component/actor term adds it there as
-   part of the change. A new CI, deploy, or operator step names the
-   host-runnable script and the composer that calls it (`cmk:cicd`).
-4. **Invariant check.** Changes touching security, authorization, consensus,
-   wire-format or cross-language parity vectors, settlement, or randomness
-   invariants get the full-depth treatment (`docs/rules/common/testing.md`) —
-   spell out exactly what must not change and which suites prove it.
-5. **Doc impact.** List which `docs/design/`, `docs/requirements/`,
-   decisions, or `docs/guides/` pages this change makes stale. Updating them
-   is part of the implementation, not a follow-up.
-6. **Production readiness.** Walk the production-readiness checklist in
-   `cmk:delivery-pipeline`'s engineering-principles reference and address
-   each item relevant to this change's blast radius: failure modes, config
-   and secrets, migrations and compatibility, observability, rollout and
-   rollback, performance limits, runbook and doc impact. Items the change
-   deliberately does not cover are stated as accepted gaps with a reason —
-   the review's production-readiness lens audits against this section.
+WHEN this step writes or revises File Structure / path placement, read
+`references/system-docs-consult.md` and follow it exactly — it resolves
+codebase/standards authority, conflict handling, and the no-op path when those
+docs are absent or non-authoritative.
 
-## Plan
+Once the map is complete and **before writing task bodies** (Step 3), run
+retrieval once: REQUIRED SUB-SKILL: use `cmk:feature-graph` for **`blast_radius`**
+on the mapped paths, then for **`cluster(feature CODE)`** as sole focus. Hold
+the package while authoring Files/Reuse; for **grounded claims** (one home)
+follow `cmk:feature-graph`'s `references/grounded-claims.md` —
+empty/thin isn't a gate, but state coverage before absence claims.
 
-Break the spec into tasks with explicit dependency structure, so the next
-delivery phase can run independent tasks concurrently.
+**Done when:** every file to create/modify is mapped with a one-line responsibility,
+and blast_radius/cluster(feature CODE) ran once (or no-op if specs/seeds are missing).
 
-Open with a **Global Constraints** section carrying the change's binding
-obligations — the coverage bar, the surface inventory with its per-item
-dispositions, the doc-impact list from the spec, tracker reconciliation duty,
-the production-readiness tasks, and any invariant the change goes near with
-the suites that prove it — one line each, exact values verbatim.
+## Step 3: Tasks as vertical slices
 
-**Every task then carries these in its own `## Task N` body:**
+**Contract:** a task is a vertical slice — the smallest unit with its own test
+cycle and review verdict; split only where a reviewer could reject one task
+while approving its neighbor. **Shape:** one demoable end-to-end outcome per
+task per user story; prefactoring that only enables a later slice is its own
+**earlier task** ("make the change easy, then make the easy change") via
+`Depends-on` edges — never buried horizontal layers inside a story task.
 
-```markdown
-## Task 3: Persist the session ledger
+Each task carries these slots:
 
-Depends on: Task 1
-File scope: libs/session/src/ledger.rs, libs/session/tests/ledger.rs
-Exclusive resources: none
+| Slot | Rule |
+|---|---|
+| **Exclusive resources** | Non-path shared services the task holds exclusively — a Docker daemon, a shared local database or chain, a fixed port, an external sandbox — or `none`. Two tasks naming the same entry never share a wave (`cmk:delivery-build`'s `references/continuous.md` step 3), however disjoint their Files. |
+| **Files, Reuse, Interfaces, Depends-on** | Files: Create / Modify / Test, each path **hardened** in backticks (e.g. `` `src/foo/bar.ts` ``); never glue a line number/range into the path token (`path:86-103` is forbidden) — ranges go in surrounding prose or a separate annotation (new plans only; P1 ownership extraction still accepts legacy glued forms in already-written `tasks.md`). Reuse: the concrete existing code/library/pattern this task builds on, copied **verbatim** from the design section's `Reuse:` line — same `<rung> — <concrete target>` grammar (e.g. `Reuse: existing — src/util/dates:parseISO (rung 2)`); copy, don't reinterpret — Step 4 checks it against the design's line. Interfaces: Consumes / Produces — the names and types neighboring tasks share, so an isolated implementer learns what to call things. Depends-on: the earlier tasks this one truly needs — those whose interface it Consumes or whose files it builds on — as `Depends-on: Task 2, Task 4`, or `Depends-on: none`. Parallelism signal: two tasks sharing no files and no interface declare no edge, so the continuous `cmk:delivery-build`'s `references/continuous.md` scheduler may place them in one ready set when surfaces are disjoint and worktree isolation is safe; omitting the line falls back to depending on every prior task (safe but fully serial) — over-declaring needlessly serializes, under-declaring is caught by the executor's file-disjoint check before it can collide. Governs build waves — never reorder or narrow dependencies solely to tidy review units if that would lie about what the task needs. |
+| **Steps (thin, 3–8 checkboxes)** | Bite-sized checkboxes (2–5 min each, prefer **3–8** per task), TDD cycle: failing test (complete code describing **behavior**, not embedding requirement IDs in application/test source) → run, expect the stated failure → implement (complete code) → run, expect pass → commit with a conventional subject explaining the change (no `Implements:` / `Guards:` trailer required or taught). No novel-length essays here — that bloats review surface; long how-to narration for one worker goes in the execute brief (`.skills/<CODE>/task-N-brief.md`) at execute time, while the shared plan keeps **identifiers** (paths, type names, commands) in Files / Interfaces / Reuse so the brief cannot invent APIs. |
+| **Footer** | `` `_Requirements: CODE-N.M, CODE-N.M_` `` — the IDs this task implements or guards; every task has one. **Default: one story's IDs** (same story number N); multi-story footers **merge** those stories into one review unit under `cmk:delivery-build`'s `references/story-unit.md` (plan-quality signal — not a ban, not a reason to lie about Depends-on). IDs live in this footer (and in requirements/design), not in production source or test titles. No placeholders anywhere in a slot — "TBD", "add appropriate error handling", "similar to Task 3", or a type referenced but defined in no task — each is a plan bug; fix it before the plan ships. |
 
-<what to build, the behavior to prove, the gate command that verifies it>
-<plus the Global Constraints obligations that apply to THIS task, restated>
-```
+| Thought | Reality |
+|---|---|
+| "Prefactor first is always right — make the change easy" | Prefactor via Depends-on is fine; review units still follow story citations at cmk:delivery-build's references/story-unit.md |
+| "I'll add Risk: high so reviewers notice" | No such field. Risk globs on the actual diff replace agent labels |
+| "I'll write Human review order so the human knows what to read first" | Superseded: story-derived units are the review order; an authored second list dies without a consumer |
 
-- **`Depends on:`** — genuine ordering requirements only, by task number.
-  Omit it, or write `none`, when the task has none. This is what execution
-  schedules from.
-- **`File scope:`** — every path the task may touch. Disjoint scopes are
-  necessary for two tasks to share a wave, not sufficient (execution also
-  isolates worktrees and honors exclusive resources), and execution checks
-  each task's commits against this list afterwards, so an inaccurate scope
-  surfaces as a scope violation rather than silently permitting a race.
-- **`Exclusive resources:`** — non-path shared services the task needs
-  exclusively: a Docker daemon, a shared local chain or database, an
-  external sandbox. Write `none` when there are none. Tasks with
-  intersecting declarations never share an execution wave.
-- **The obligations, restated inside the task body.** This duplication is
-  deliberate and load-bearing. An execution engine builds an implementer's
-  brief by slicing the plan at the task heading, so a header-level Global
-  Constraints section reaches the *reviewer* and never the *builder*. The
-  task text is the copy the implementer actually receives; Global
-  Constraints is the copy the reviewer grades against. An obligation in
-  neither place is an obligation nobody enforces.
+**Done when:** every file in Step 2's map is covered by ≥1 task, each written
+as a vertical slice with its own test cycle — slot/placeholder cleanliness is
+Step 4's check, not this one.
 
-Close with the issue's acceptance criteria mapped to the tasks that satisfy
-them — cite `PREFIX-N.M` when the requirements doc defines IDs. An AC with
-no task is a hole in the plan, and so is a surface-inventory item with no
-covering task. Planning is the cheapest moment to find a criterion will not
-land: if no task can honestly satisfy one, disposition it on the issue now
-per `cmk:delivery-workflow`'s `references/acceptance-criteria.md`.
+## One triad, one plan
 
-A plan whose tasks all serialize on one file is worth re-partitioning
-before it executes; sequential-by-accident differs from sequential-by-
-necessity, and only the second is worth paying for.
+**Home for this rule** — Step 4 and Exit only point here.
 
-## Exit gate
+Write every vertical slice of the approved design and requirements into this
+`tasks.md`. One feature triad is one plan. `cmk:scope` / `cmk:roadmap`
+own *independent subsystems* or a *new feature shape*, not leftover slices
+of this triad. Cut scope only when the user strikes requirements. Merge only
+when the result stays a vertical slice (Step 3).
 
-The phase is done when a competent engineer or subagent could execute the
-plan without asking questions. Every open question from the intake brief is
-resolved with a decision and a written rationale destined for a durable
-surface. If one genuinely cannot be resolved safely it is a recorded
-blocker per the principles — not a silent guess, and not a question parked
-for the human.
+| Thought | Reality |
+|---|---|
+| "28 tasks — decompose leftover onto a later ROAD so this can Approve" | Leftover slices of this triad stay in this file. That split fragments the feature. |
+| "I'll merge layers into one mega-task so the file looks smaller" | Horizontal hiding is still a Step 3 plan bug. |
 
-Reconcile the tracker before exit when a decision changes scope, acceptance,
-constraints, relations, estimate, timing, risk, interfaces, or another issue's
-plan.
+## Step 4: Coverage and consistency check
 
-If Plannotator is already installed, hand the written plan to
-`/plannotator-annotate` and keep its notes with the plan. Absence is a no-op:
-do not install it, do not pipe its installer, and do not block exit. Contract:
-`docs/guides/companion-skills.md`.
+| Check | Rule |
+|---|---|
+| **Coverage: cmk:traceability, behavior steps, seam-table** | REQUIRED SUB-SKILL: use `cmk:traceability` — every Approved requirement cited by ≥1 task footer (uncited IDs mean incomplete, or strike with a reason); docs-only, no IDs in test source. Each footer ID needs a covering TDD step (or manual/acceptance step) asserting **behavior** in domain language — never `[CODE-N.M]`, `/// REQ:`, or `@CODE-N.M` in test source; map IDs to tests in the task report / Spec review, not production trees. Covering is not one test per ID: IDs whose behavior has the same shape at the same seam (a rule applied to several inputs, several defaults) share one table-driven test with a row per ID, and the footer still cites every ID. If `design.md` has a "Seams for testing" table, every ID in every row needs a planned test/acceptance step at that seam — an ID promised but left uncovered is *dropped coverage*: add the step, don't renumber. |
+| **Type/name + Reuse consistency + reuse-miss** | The same function must have the same name and signature in every task that mentions it. Flag any task whose `Reuse:` line disagrees with the design section's `Reuse:` line. Also flag any task whose Files **Create** something the scan digest or an already-installed dependency already provides — build on it instead (task-granularity sibling of `cmk:delivery-review`'s `reuse-miss`; advisory, not a hard block). |
+| **Spec alignment + upstream sync-back** | Re-read requirements.md once, checking each criterion against the task that claims it. If a requirement proves *wrong or infeasible as written* — not merely uncovered — correct it in requirements.md and re-surface for approval; do not bury a workaround in a task that leaves the requirement lying — a plan that satisfies a false requirement ships the falsehood. |
+| **Production readiness** | Fill the template's `## Production readiness` section: read `references/production-readiness.md` and give each line that the change's blast radius touches a covering task or an accepted gap with its reason. A docs-only plan writes `None — docs only`. |
+| **Independent plan review (dispatch, don't self-review)** | The checks above are doc-only and stay here; the codebase comparison does not. Dispatch a review subagent with the plan, requirements.md, design.md, and the repo; have it verify against real code every symbol, signature, path, import, and **hardcoded test value** the plan asserts — a fabricated golden or a guessed API is the classic plan defect — citing `file:line` and defaulting to flag. Findings to `.skills/<CODE>/plan-review.md`; fix before offering execution (no subagents? do the comparison yourself). Check **One triad, one plan** (one home). |
+
+**Done when:** every requirement ID has a task footer and a planned behavior
+test at an agreed seam; cmk:traceability, the seam-table reconcile, and the
+placeholder scan are clean.
+
+## Step 5 (optional): Publish to the issue tracker
+
+If the repo has no tracker (`docs/agents/issue-tracker.md` absent, or
+**Tracker:** empty / none) → **skip** this step (not pending). Otherwise, read
+`references/publish-recipe.md` and follow it exactly: resolve **Publish
+unit**, author the issue body, and record ids under `.skills/<CODE>/`. Default
+and only tracker-visible unit: **one feature issue** per plan, closed by the
+feature PR.
+
+| Thought | Reality |
+|---|---|
+| "Four tasks → four issues so agents can grab in parallel" | Waves read `tasks.md` + Depends-on. Tracker noise is not parallelism |
+| "Sub-issues keep hierarchy without noise" | Under unit `feature`, tasks are not tracker tickets |
+| "cmk:discover-efforts's references/publish.md always means one issue per slice" | Non-triad path only. This step follows Publish unit |
+| "I'll publish tasks; the user can close extras" | Extras are the defect under unit `feature` |
+| "Many tasks — config must mean tasks" | Size never sets Publish unit; only the file line or explicit user order |
+
+### Red Flags — Step 5
+
+- Under unit `feature`: more than one triad issue, or any issue titled like a plan task (`Task N:`)
+- Setting or assuming `Publish unit: tasks` from plan size alone
+- Falling back to task issues after a permission error
+
+**Done when:** skipped (no tracker / cannot publish), **or** unit `feature` with
+exactly one feature issue (union IDs, plan path, id under `.skills/<CODE>/`),
+**or** unit `tasks` with one issue per plan task and ids recorded.
+
+## Change map — when the operator asks to see it
+
+WHEN the operator asks to see what the plan changes — a picture, diagram, map — the
+presentation includes a change map. REQUIRED SUB-SKILL: use `cmk:visualize`, figure job
+`before/after structure`; write `.skills/<CODE>/change-map.html` and give its path. Four
+baseline runs asked for a picture: one drew none, three drew the feature's own call chain
+in ASCII, and none showed that REFUND's Task 4 rewrites the same `invoiceView` — one drew
+the merged signature `invoiceView(invoice, refunds, today)` that neither plan holds.
+
+The files are every path in the plan's `**Files:**` lines, docs included — one early
+haiku map dropped the `docs/api.md` its plan modifies, and its owner with it. Run
+`grep -ln '<path>' docs/specs/*/tasks.md` for each. The page shows:
+
+1. Each of those files, marked new or changed, with its owner from
+   `docs/agents/project.md` Ownership notes.
+2. The calls and imports the plan adds or changes between them.
+3. Each external consumer of a changed surface (the design's `Surface:` lines).
+4. On the figure itself: each other plan the grep names whose `requirements.md` is not
+   `Shipped`, as a collision on that file, with the signature or change as each plan
+   writes it.
+
+A picture drawn inline in the reply is not the map, even when it "covers the same ground":
+the three baseline pictures were inline, and the collision was on none of them.
+
+*Done when: the page exists with all four, and every collision is on the figure.*
+
+## Exit
+
+| Step | Rule |
+|---|---|
+| **1–2. Present** | Present the FILE and STOP — conversational agreement is not approval; the written plan is what gets approved, and the execute family runs only on an approved `tasks.md`. Follow **One triad, one plan** (one home). |
+| **3. On approval** | Set `Status: Approved`. Leave `Execution-mode:` as `unset` (or untouched); do **not** write `continuous` or `story-unit` yourself. |
+| **4. Offer three routes** | Exactly three, one question — do **not** first ask continuous vs story-unit (that interview is dead); mode write-back owned by the picked skill. `cmk:delivery-build`'s `references/story-unit.md`: subagent path, human-gated review units derived from stories (writes `story-unit`). `cmk:delivery-build`'s `references/continuous.md`: subagent waves, no human pause between tasks (writes `continuous`). `cmk:delivery-build`'s `references/inline.md`: controller implements sequentially with `cmk:tdd`, no implementer subagents (writes `continuous` as bookkeeping; **does not** run unit barriers). **Recommend (label only, not invent mode):** mark **`cmk:delivery-build`'s `references/story-unit.md` (Recommended)** first WHEN user-facing UI/UX, Team Solo/Small, or `requirements.md` has **≥2** behavioral stories — still offer all three, still wait for the pick; no triggers → leave unmarked (not invent mode, not a size default — see gate table below). |
+| **5–6. On pick, INDEX** | Name the skill and hand off — REQUIRED SUB-SKILL: use `cmk:delivery-build`'s `references/continuous.md`, `cmk:delivery-build`'s `references/story-unit.md`, or `cmk:delivery-build`'s `references/inline.md` as chosen (for the two subagent routes, prefer REQUIRED SUB-SKILL: use `cmk:worktree` first when none exists yet). WHEN `docs/agents/host-build.md` exists, ask **once after the pick** whether the chosen route runs here or on the build host — offload → REQUIRED SUB-SKILL: use `cmk:delivery-remote`, which wraps the pick rather than replacing it. Then confirm the feature's row in `docs/specs/INDEX.md` carries the same `Status:` as its `requirements.md`. |
+
+| Thought | Reality |
+|---|---|
+| "PM said just mark Approved — continuous is obvious" | Offer the three skills. Do not invent mode. |
+| "I'll ask continuous vs story-unit, then offer routes" | One question: which of the three skills. |
+| "I'll write Execution-mode now so the plan looks complete" | Mode is written by the execute skill. |
+
+### Red Flags — Exit
+
+- Asking continuous vs story-unit before the three-skill offer
+- Setting `Status: Approved` while inventing `Execution-mode:`
+- Splitting leftover slices of this triad onto a new ROAD because of task count
+- Offering only one route, or treating "LGTM, build it" as `cmk:delivery-build`'s `references/continuous.md`
+- Omitting `(Recommended)` on `cmk:delivery-build`'s `references/story-unit.md` when the Recommend predicate holds
+
+**Done when:** **One triad, one plan** holds, `Status: Approved`,
+one of the three execute skills named (and handed off on pick),
+`Execution-mode:` not invented here, and the INDEX.md row agrees.

@@ -1,0 +1,143 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "three-execute-routes-at-exit",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules — exactly three execute routes at Exit (Exit step 3 table)",
+    "prompt": "The design is approved and you have just finished writing tasks.md. Reach the Exit step.",
+    "assertions": [
+      "exactly three execute routes are presented",
+      "the routes are presented as a choice rather than one being started automatically"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "no-silent-invention-of-execution-mode",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules — no silent invent of continuous at plan time (Exit step 2 + Red Flags; RED failure 2)",
+    "prompt": "Write tasks.md for an approved design. The user has said nothing about how execution should run.",
+    "assertions": [
+      "no Execution-mode value is written into tasks.md at plan time",
+      "continuous mode is not assumed as a default",
+      "plan approval is not made to depend on choosing an execution mode first"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "mode-write-back-belongs-to-the-execute-skill",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules — mode write-back owned by execute skill",
+    "prompt": "The user picks a route at the Exit step.",
+    "assertions": [
+      "the Execution-mode line is written back by the execute skill rather than by cmk:delivery-spec-plan",
+      "cmk:delivery-spec-plan does not record the mode itself"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "triad-publishes-one-feature-issue",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules — triad publish is one feature issue, not one per task (Step 5; S-WP-PUBLISH RED)",
+    "prompt": "tasks.md is approved with nine tasks, the specs are committed to git, and the repo has a configured tracker. Publish.",
+    "assertions": [
+      "one feature issue is published, not one issue per task",
+      "the issue carries the union of the requirement IDs the tasks cover, because the specs are tracked"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "trigger-fires-on-task-planning",
+    "kind": "trigger",
+    "derived_from": "TESTS.md § Description trigger check — should-fire",
+    "prompt": "break the design into implementation tasks",
+    "assertions": [
+      "cmk:delivery-spec-plan is selected"
+    ]
+  },
+  {
+    "eval_id": 6,
+    "eval_name": "trigger-yields-to-design",
+    "kind": "trigger",
+    "derived_from": "TESTS.md § Description trigger check — should-not-fire",
+    "prompt": "design the architecture for this feature",
+    "assertions": [
+      "cmk:design is selected rather than cmk:delivery-spec-plan"
+    ]
+  },
+  {
+    "eval_id": 7,
+    "eval_name": "one-triad-one-plan",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v1.5.0 — drop the 12-task Approve ceiling (RED S-PLAN-SPLIT)",
+    "prompt": "tasks.md has 28 tasks covering one approved design. User says approve and start building — don't split.",
+    "assertions": [
+      "Status: Approved may be set; a task count of 28 is not a reason to refuse",
+      "leftover slices of this triad are not moved onto a new ROAD-N solely because of count",
+      "Execution-mode is not invented by cmk:delivery-spec-plan",
+      "tasks are not merged into horizontal mega-tasks to fake a smaller count"
+    ]
+  },
+  {
+    "eval_id": 8,
+    "eval_name": "recommend-build-by-story-for-ui",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules — Recommend cmk:delivery-build's references/story-unit.md when UI / Solo-Small / ≥2 stories (RED S-PLAN-RECOMMEND; GREEN v1.2.0)",
+    "prompt": "UI plan with multiple stories on a Small team. User approves and says waves are faster — skip story stops.",
+    "assertions": [
+      "cmk:delivery-build's references/story-unit.md is marked Recommended in the three-route offer",
+      "all three execute routes are still offered",
+      "Execution-mode is not invented by cmk:delivery-spec-plan",
+      "waves preference is not treated as a silent route pick"
+    ]
+  },
+  {
+    "eval_id": 9,
+    "eval_name": "private-specs-publish-a-standalone-issue",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v1.6.0 — reader reach for the tracker issue (RED S1 3/3, GREEN private 3/3 + shared 2/2)",
+    "prompt": "The plan is approved. docs/specs/ is git-ignored in this repo and the team assigns work from Linear. Publish it to the tracker; write the exact title and body to linear-issue.md.",
+    "assertions": [
+      "git check-ignore is run on the plan's tasks.md before the body is written",
+      "the title carries no [CODE] prefix",
+      "the body carries no requirement IDs, no Requirements covered line, no Plan: line, and no docs/specs path",
+      "the body's first line is still the drafted-by-AI marker"
+    ]
+  },
+  {
+    "eval_name": "same-shape-ids-share-one-table-test",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v1.7.0 — RED: one test per ID",
+    "prompt": "requirements CFG-1.1..1.10 are all at the single seam validate(): four required-field rejections, two timeout-bound rejections, three defaults, one pass-through. Write Task 1's Steps.",
+    "assertions": [
+      "rejections of the same shape share one table-driven test with a row per case",
+      "the defaults share one table-driven test with a row per default",
+      "the planned test count is well below ten",
+      "the footer still cites every one of the ten IDs"
+    ],
+    "eval_id": 10
+  },
+  {
+    "eval_id": 11,
+    "eval_name": "change-map-when-asked",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v1.8.0 — the change map (2026-10-18)",
+    "prompt": "LATEFEE's requirements and design are approved. Write the plan, then give me a picture of what it's going to change — which parts of the system it touches and how they connect — before I approve it. (REFUND's approved Task 4 rewrites the same invoiceView.)",
+    "assertions": [
+      ".skills/LATEFEE/change-map.html exists, drawn through cmk:visualize as inline SVG",
+      "the figure marks the REFUND collision on invoiceView with both plans' signatures",
+      "the page lists every file in the plan's Files lines, docs included, with owners and the external consumer",
+      "a picture drawn only inline in the reply does not count"
+    ]
+  },
+  {
+    "eval_id": 12,
+    "eval_name": "no-map-unasked",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v1.8.0 — the change map (2026-10-18)",
+    "prompt": "LATEFEE's requirements and design are approved. Write the plan, then walk me through what it's going to change before I approve it.",
+    "assertions": [
+      "no change-map page is written",
+      "the walk-through still names the REFUND collision"
+    ]
+  }
+]
