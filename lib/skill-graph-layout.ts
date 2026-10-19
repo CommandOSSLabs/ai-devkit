@@ -41,6 +41,11 @@ const LANE_ORDER = [
   "sui",
   "sync",
   "session",
+  "roadmap",
+  "acceptance",
+  "ops",
+  "quality",
+  "meta",
   "other",
 ];
 

@@ -40,6 +40,12 @@ import {
   Globe,
   Star,
   RefreshCw,
+  MessagesSquare,
+  Milestone,
+  ClipboardCheck,
+  Activity,
+  Gauge,
+  PenTool,
 } from "lucide-react";
 
 /* ─── Types ─────────────────────────────────────────────────────────── */
@@ -60,6 +66,12 @@ const CATEGORY_ICONS: Record<string, React.ElementType> = {
   docs: BookOpen,
   testing: TestTube2,
   sui: Hexagon,
+  session: MessagesSquare,
+  roadmap: Milestone,
+  acceptance: ClipboardCheck,
+  ops: Activity,
+  quality: Gauge,
+  meta: PenTool,
   other: Box,
 };
 

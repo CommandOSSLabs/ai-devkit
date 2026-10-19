@@ -39,8 +39,9 @@ set). Text with no recorded failure behind it is not added.
 **Families** (the explorer's categories, `lib/skill-types.ts`): documentation (specs,
 requirements, design, decisions, glossary, catalog), delivery (the closed workflow, its five
 commands and the build–review–ship chain), setup and infra facets, testing and code, session
-companions, and the opt-in packs — roadmap, acceptance and UI, ops, quality, project,
-maintainers, extras.
+companions, and one family per opt-in pack — roadmap, acceptance and UI (the `acceptance`
+and `ui` packs), ops, quality, and skill authoring (`maintainers`). The `project` pack's
+skills sit in documentation and the `extras` pack's in session.
 
 **Shapes.** Setup facets end in a report-only `## Verify`. Delivery skills are gates inside the
 closed workflow owned by `cmk:delivery-workflow` — they move a ticket only through the states

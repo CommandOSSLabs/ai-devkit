@@ -6,14 +6,16 @@ The 93 `cmk:*` skill packages under [`skills/`](../../../skills/), one page per 
 
 - [acceptance.md](./acceptance.md) — Acceptance & UI, 8 skills.
 - [agent.md](./agent.md) — Agent & Vendors, 2 skills.
-- [delivery.md](./delivery.md) — Delivery, 26 skills.
-- [docs.md](./docs.md) — Documentation, 23 skills.
+- [delivery.md](./delivery.md) — Delivery, 24 skills.
+- [docs.md](./docs.md) — Documentation, 21 skills.
 - [meta.md](./meta.md) — Skill Authoring, 2 skills.
-- [roadmap.md](./roadmap.md) — Roadmap, 5 skills.
+- [ops.md](./ops.md) — Ops, 3 skills.
+- [quality.md](./quality.md) — Quality, 4 skills.
+- [roadmap.md](./roadmap.md) — Roadmap, 4 skills.
 - [session.md](./session.md) — Session, 8 skills.
-- [setup.md](./setup.md) — Setup & Infra, 11 skills.
+- [setup.md](./setup.md) — Setup & Infra, 9 skills.
 - [sui.md](./sui.md) — Sui Network, 2 skills.
-- [sync.md](./sync.md) — Sync, 1 skills.
+- [sync.md](./sync.md) — Sync, 1 skill.
 - [testing.md](./testing.md) — Testing & Code, 5 skills.
 
 ## When to read
