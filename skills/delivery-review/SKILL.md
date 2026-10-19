@@ -1,139 +1,196 @@
 ---
 name: cmk:delivery-review
-description: Use when the user asks to "review my changes", "review this PR", "take a look at this diff", or "is this ready to ship" — before shipping tracked work (phase 4 of cmk:delivery-pipeline) or standalone against any pull request or local diff. Produces a depth-disclosed verdict with evidence-backed findings dispositioned against acceptance criteria (citing requirement IDs when present).
-version: 0.2.4
+description: Use when a branch, PR, diff, or set of changes needs review before merging — produces a two-axis verdict (repo-standards conformance plus spec/requirements conformance, reported separately) — when cmk:delivery-build's references/continuous.md reaches its final whole-branch review, or when the user asks to review work since some ref.
+version: 1.0.0
 ---
 
-# Delivery Review
+# Delivery review
 
-One contract, two occasions, three depths. This skill owns the lens list,
-the evidence bar, adversarial verification, and disposition authority; the
-fan-out mechanics are an engine choice.
+Review a diff on two independent axes, each run by its own subagent:
 
-- **Pre-ship mode** (own work, before a PR exists): findings are fixed in
-  the working tree or deferred with a tracker issue. Nothing is posted.
-- **Standalone mode** (an existing PR, or someone else's diff): findings
-  are reported — for a PR, on one surface, the code host's PR or the
-  tracker's synced review thread if it has one, never both; for an
-  unpushed local diff, to the operator directly.
+- **Standards** — does the code follow this repo's documented conventions and avoid the baseline smells?
+- **Spec** — does the code implement what the requirements asked for, ID by ID?
 
-First assemble the same context an author would have: the issue and its
-acceptance criteria, the spec including its production-readiness section,
-the relevant `docs/design/` and `docs/requirements/` pages, and any
-`docs/decisions/` ADRs governing the touched area — refreshed against the
-current diff, HEAD, and PR state before dispatch. On pipeline pre-ship,
-re-read HEAD after phase 3b; do not re-apply simplify (review judges).
-**Reviewing a diff without its contract only catches typos** — that is why
-this skill exists rather than a bare reviewer.
+The axes are deliberately separate because a change can pass one and fail the other: flawless code that builds the wrong thing, or a faithful implementation that tramples the repo's conventions. Merged reports let one axis mask the other.
 
-## Review depth
+## 1. Pin the range — fail fast
 
-Depth is chosen before an engine, and applies to every review this skill runs.
+Take the base ref the caller supplied (a sha, branch, tag, or merge-base). Confirm it resolves — `git rev-parse <base>` — and that `git diff <base>...HEAD` is non-empty. A bad ref or empty diff must fail HERE, not inside two parallel subagents. Also capture `git log <base>..HEAD --oneline`. If no base was given, ask. *Done when: the ref resolves and the diff is non-empty.*
 
-| Depth | Engine | Fits |
-|---|---|---|
-| **Quick** | one pass on the runtime's native review command | ordinary PRs, small or mechanical diffs |
-| **Targeted** | only the lenses the diff implicates | the usual case |
-| **Full** | the seven-lens corroborated fan-out | a diff where a wrong answer is expensive |
+## 1b. Reverse-track the pinned range (scripts, read-only)
 
-- **Adaptive when unstated.** Select from the diff — size, blast radius,
-  subsystem — defaulting to targeted. Changes touching security,
-  authorization, consensus, wire-format or cross-language parity vectors,
-  settlement, or randomness invariants get the full-depth treatment
-  (`docs/rules/common/testing.md`), and so does a cross-cutting
-  replacement or refactor of a shared surface.
-- **Binding when stated.** An explicit depth is honored exactly, in both
-  directions — never silently escalated or reduced. Where it contradicts
-  a risk signal, run at the chosen depth and name the unacted signal.
-- **Disclosed unconditionally.** Every verdict states the depth reached
-  and whether it was chosen or adaptive — no reader can recover that
-  difference unless it is written down.
+Run the cmk:catalog reverse runner on the pinned `base..HEAD` — **advisory
+envelope only**, no dispose writes to INDEX/shards:
 
-Choosing or running a review engine at full depth? Read `references/engines.md`.
+```bash
+python3 <cmk:catalog skill root>/scripts/reconcile.py \
+  --repo <root> --base <base> --head HEAD --mode full
+```
 
-## The two occasions
+Add `--write-overlay` only when `.skills/` is writable and gitignored (same
+contract as `/cmk:catalog` dispose step 0). Hold the envelope it prints. Step 2
+consumes it; do not mint Feature CODEs here. Pending OBS → **name** `/cmk:catalog`
+for disposition; never auto-invoke it.
+*Done when: the reverse envelope is held (or the runner’s explicit stateless
+outcome).*
 
-**Boundary review** — a concrete cross-work or risk boundary: a join of two
-or more issues or branches, a shared or public contract, a persisted format,
-a deployable-component handoff, an upstream pin replacement, or a changed
-consumer interface. State the trigger and inspect every relevant lens.
+## 2. Locate the spec
 
-**Pre-ship review** — mandatory before every completed issue or branch
-ships, and before every combined integration output; `cmk:delivery-ship`
-gates on it having run and its depth being disclosed. It never reduces
-depth adaptively — absent an explicit instruction it runs full. An
-operator may reduce it, but the completion report then says plainly the
-run shipped below its standard gate: a decision that leaves a trace, not
-a quiet default.
+Find the governing requirements, in order, **using the step-1b envelope**:
 
-## The lenses
+1. Envelope `known-impact` CODE → that feature’s `requirements.md`.
+2. Else a `docs/specs/<date>-<feature>/requirements.md` matching the branch,
+   feature name, or INDEX code for paths in the diff (exact CODE lookup per
+   `catalog-query.md` — do not paste INDEX).
+3. A path the caller handed you.
+4. Envelope pending OBS / known-impact / uncertain on unowned paths → **not**
+   “no spec.” Hold those handles; do not skip the Spec axis as absence.
+5. Otherwise ask the user. If they confirm no spec **and** 1b has no pending
+   OBS on those paths, skip the Spec axis and say so in the final report.
 
-The seven lenses (correctness, spec/AC compliance with requirement IDs,
-code quality, cross-surface consistency, edge cases, security, production
-readiness) — full definitions: read `references/lenses.md`.
+(Commit trailers are not required carriers of requirement IDs — docs-only spine.)
 
-## Evidence, or it did not happen
+*Done when: you hold a requirements.md path, or pending OBS / uncertain handles
+for unowned paths, or an explicit "no spec" after (5).*
 
-Every lens writes findings with `file:line` traces and severity, plus a
-"what I read / ran / checked" section: files examined, commands executed
-with output, criteria walked. A review with zero findings and a thin
-evidence section is a failed review — re-run it. An empty findings list is
-only credible next to a substantial evidence trail.
+## 3. Gather the standards sources
 
-## Verify before acting
+Collect how code here should be written: CLAUDE.md, lint/formatter configs, docs/requirements/glossary.md, prefer **`docs/rules/common/`**. Missing `docs/agents/project.md` → note it, suggest `cmk:repo-config`. Standards axis always carries `references/standards-baseline.md` (twelve smells + Security + Production-readiness). A documented repo standard overrides the baseline. Skip what tooling already enforces. *Done when: the source list and the baseline path are in hand.*
 
-Reviewer output is claims, not truth. Adversarially verify each finding —
-the `cmk-delivery-verifier` role, or the runtime's adversarial mechanism —
-by reproducing it or tracing its exact path, before acting on it. Discard
-what does not survive. This applies at every depth, including quick: a
-false positive fixed is a new bug, and one posted to a teammate's PR is
-noise that erodes trust. A faster reviewer raises findings sooner, which
-makes verification more necessary, not less.
+## 3a. Check for duplication against existing features
 
-## Disposition (every finding gets exactly one)
+For the diff's changed source files (from the range pinned in step 1), REQUIRED
+SUB-SKILL: use `cmk:feature-graph` with those paths and optional key terms from the
+diff/PR summary so P0 and P1 both contribute. Hold neighbor **cards** from schema
+1.1 fields (`path_evidence`, `term_evidence`, `via_traces`); surface
+**`owns_coverage`**. **Grounded claims** (one home): follow
+`cmk:feature-graph`'s `references/grounded-claims.md` for every conclusion
+from the package (including reuse-miss for Spec).
+*Done when: you hold the overlapping features' cards, or an explicit "no overlap"
+with emptiness/coverage stated per grounded-claims.md.*
 
-- **Fix now** — anything required by the current acceptance criteria,
-  plus cheap-and-clear improvements. AC-required work is never
-  *deferred*: fix it, rescope the criterion in the open, or formally
-  block the delivery. A finding that reveals delivery truth another
-  session needs still reconciles its owning issue, even fixed.
-- **Rescope the criterion** — the criterion is real but will not land
-  here. Narrow the issue's criteria to the honest outcome and move the
-  remainder to a tracked successor per `cmk:delivery-workflow`'s
-  `references/acceptance-criteria.md`. This is the only way AC-required
-  work leaves an issue, available only when the issue and its successor
-  are both updated before the verdict.
-- **Defer with a tracker issue** — real, out of current scope. File a
-  thorough issue (context, why deferred, acceptance criteria, priority,
-  estimate, links) or extend the issue that already owns it; in
-  standalone mode link the review thread to the new issue. A deferral
-  without an issue is a dropped finding.
-- **Discard with a reason** — did not survive verification. Keep the
-  reason in the review record so the same ghost is not chased twice.
+## 3b. Invariant conformance (advisory)
 
-A finding that collides with what a plan's text mandates is dispositioned
-here, not escalated: where the plan and the repository's quality bar
-disagree, the bar wins and the plan is corrected in the same change.
+When `docs/design/` exists, REQUIRED SUB-SKILL: use `references/invariants.md` on the diff — it returns a per-`Respects: ARCH-N` verdict (respects / violates / unclear). Hold the violates/unclear verdicts for step 5. This lane is advisory by construction and stays OUT of the two hard axes — it never becomes a merge blocker. If `docs/design/` does not exist, skip this step and inject nothing. *Done when: you hold the invariant verdicts, or an explicit "no spine".*
 
-Re-run gates after fixes. Pre-ship mode exits when every finding is
-dispositioned and gates are green. Standalone mode ends with a verdict —
-approve or request changes — and findings posted to one surface. Before
-either exit, reconcile every delivery consequence on the affected tracker
-issues.
+## 3c. Codebase navigation docs (optional context)
 
-## Red Flags
+**Applicability:** diff paths intersect modules, ownership, or dependency surfaces in
+standing nav docs. **Load**, when `cmk:system-docs` is installed: `cmk:system-docs`'s
+`references/consult-recipe.md`.
 
-- Bare "LGTM" / approve with a thin or empty evidence section
-- Skipping the AC walk because "nothing jumps out"
-- Treating Quick depth as permission to skip adversarial verification
-- Social proof ("nobody writes evidence sections") waiving the evidence bar
+**Paths:** `docs/ai/` (`cmk:codebase-docs`), or `docs/codebase/modules.md`, `ownership.md`, `dependencies.md`.
 
-## Rationalizations
+**When Approved:** advisory Spec/Standards context only — flag conflicts with documented
+boundaries/ownership/deps as advisory findings (not a hard merge gate by themselves).
+Ownership docs are **not** access-control enforcement.
 
-| Thought | Reality |
-|---|---|
-| "Just say LGTM if nothing jumps out" | Zero findings need a substantial evidence trail or the review failed — re-run it. |
-| "Nobody writes evidence sections" | Social proof does not replace `file:line` traces and commands-run. |
-| "Ship tonight — full lenses are overkill" | Depth may be Quick/Targeted; evidence and AC walk still run. |
+**When absent / non-authoritative:** CONTINUE (no-op). Suggest once
+`/cmk:system-docs codebase/modules|ownership|dependencies`, when that skill is installed,
+only when a missing nav doc would clarify the review; never auto-invoke.
 
-Using Linear as your tracker? Read `references/linear.md`.
+*Done when: nav context is held or an explicit no-op for absence.*
+
+## 3d. UI review — observable conditional
+
+WHEN the step-1 range's `--name-only` list includes files a browser renders
+(HTML, CSS/styling, JSX/TSX/Vue/Svelte components, templates) and `cmk:ui-review` is
+installed → REQUIRED SUB-SKILL: use `cmk:ui-review` on the same range. Not installed →
+say once in the report that rendered files went without a screenshot review. Hold its screenshot-backed
+findings and its `needs-human-eyes` line for step 5. No rendered file in the
+diff → skip, inject nothing. *Done when: you hold the UI findings, or an
+explicit "no rendered surface".*
+
+## 3e. Stage the spec
+
+REQUIRED SUB-SKILL: use `cmk:working-set` before the Spec dispatch (and before
+the inline Spec walk). Admit the IDs this pinned diff implements or
+violates. Every other ID in the governing spec is **not in this range** —
+still report that list once if the spec promised them; do not write a
+full finding per non-home. *Done when: the Spec brief names the admitted
+set and a one-line not-in-range list (or "all IDs are in range").*
+
+## 3f. Blast prove — observable conditional
+
+WHEN the pinned range changes runtime behavior, storage, a wire/contract
+shape, or configuration → read `references/blast-prove.md` and follow
+it exactly before the merge verdict. Hold the `## Blast prove` block for
+step 5. Docs/test-only diffs → skip. *Done when: proven or explicitly
+unproven, or "no runtime surface".*
+
+## 4. Dispatch both subagents in parallel
+
+Send ONE message containing both dispatches so they run concurrently and neither pollutes the other's context. Both are **read-only**: no mutation of the working tree, index, HEAD, or branch state; to inspect another revision, use a temporary worktree (`git worktree add <tmpdir> <sha>`), never move HEAD. Keep each brief under 400 words. Never pre-judge findings in a dispatch — no "do not flag", no pre-rated severities.
+
+**Standards subagent** gets: the diff command and commit list; the standards-source paths; the path to `references/standards-baseline.md`, which it MUST read first.
+
+Its report is a fixed shape — five parts, in order, each part complete before the next:
+
+- **(a) Documented standards** — every place the diff breaks a repo-documented rule, citing the document and rule. Include docs/requirements/glossary.md vocabulary drift (a diff that renames or re-terms a glossary concept is a finding).
+- **(b) The twelve smells** — one verdict line per smell, numbered 1–12, **including the ones that did not hit**. Write the smell's name then `HIT` (naming it and quoting the hunk) or `no hit`. A part-(b) section with fewer than twelve verdict lines is incomplete and gets re-run.
+- **(c) Security** — items 13–18, only for hunks crossing a trust boundary (untrusted input, secret handling, a privileged action). No boundary crossed → say so once and move on; do not manufacture findings.
+- **(d) Production readiness** — items 19–24, only when the diff changes runtime behavior, storage, a contract, or configuration. Name the item and what an operator would see when it bites. Item 24 MUST be answered from a search of the repo **beyond the diff** — the readers it asks about live in files the diff does not touch, so a diff-only reading always returns a false clean.
+- **(e) Tests** — items 25–27, only when the diff adds or changes test files. One verdict line per added or changed test file, or per test when a file holds few: name the test and item number, quote the assertion. A test that restates a literal, repeats another test's failure, or could not fail is a finding; never report "covered" on the strength of a test that is one of these. No test files in the diff → say so once.
+
+Parts (c), (d) and (e) are each scoped by their own predicate; a part that does not apply is reported as not applying, never silently dropped. Adding a later part never licenses shortening an earlier one — (b) is walked in full whether or not (c), (d) and (e) fire. Documented breaches may be hard findings; baseline smells, security and production-readiness items are always judgment calls; the repo's documents override the baseline; skip anything tooling enforces.
+
+**Spec subagent** gets: the diff command and commit list; the requirements.md path; the step-3e admitted set and not-in-range list; the brief — walk **admitted** IDs and report (a) IDs that are missing or only partially implemented, (b) behavior in the diff no requirement asked for (scope creep), (c) IDs that look implemented but wrong; quote the requirement ID on every finding; list not-in-range IDs once (they stay missing-if-promised, not a per-ID essay); also check that each covered admitted ID has **behavior** covered by tests or acceptance evidence (domain-language tests — do **not** require ID tags in test source). When step 3a found overlapping features, the Spec subagent ALSO receives those neighbor cards (owned paths + Out-of-Scope) as context, and its brief directs it to flag — as a **reuse-miss** finding citing the neighbor's feature code — any place the diff reimplements behavior a shares-surface neighbor already owns.
+
+*Done when: both reports are back.*
+
+## 4b. Second Standards pass — when the harness can
+
+The Standards axis is the one that carries most of what a review catches, and a
+single pass over it leaves findings on the table. When the harness can dispatch
+another read-only subagent, send a second Standards reviewer with the identical
+brief in its own fresh context. Prefer a different model when the harness offers
+a choice; take a second pass on the same model when it does not, because the
+second pass is what pays and the model difference is a bonus nobody here has
+measured. Name in the report which model each Standards pass ran on, or `unknown`
+— never infer it from the harness name.
+
+**Merge the two as a union, never as a vote.** A finding one reviewer raised and
+the other missed is not weaker for being alone. Measured on a seeded diff, four
+reviewers agreed on the first five findings and split on the rest, and the two
+findings raised by exactly one reviewer were the deepest in the set — an audit
+log that could not reconstruct the incident its own code enables, and an implicit
+trust boundary in first-touch provisioning. Weighting by agreement would have
+demoted both. Deduplicate where two reports describe one defect, keep both
+framings when they name different failures of the same line, and drop nothing for
+lack of a second voice.
+
+## 5. Aggregate
+
+Present the reports under `## Standards` and `## Spec` headings — lightly cleaned at most. Do NOT merge, dedupe across axes, or rerank one axis's findings against the other's; that reranking is exactly what the separation prevents. When step 3b produced invariant verdicts, present them under a separate `## Invariants (advisory)` heading — a third lane, never merged into or reranked against Standards/Spec. When step 3d ran, present `cmk:ui-review`'s findings under a `## UI` heading — its findings carry severities and count toward the verdict exactly like the two axes' (they are screenshot-backed, not advisory), and its `needs-human-eyes` line is reproduced verbatim. When step 3f ran, present its block under `## Blast prove` — an unproven safety fact blocks **Ready to merge? Yes**.
+
+Every finding carries: severity (Critical / Important / Minor), file:line, why it matters, and a suggested fix unless obvious.
+
+End with the verdict:
+
+```
+Ready to merge? Yes | No | With fixes
+[1–2 sentences of technical reasoning]
+```
+
+Then the **banked** slot. Where the verdict ships with **Minor** findings nobody will action on this branch, those findings exist nowhere but this report. For **each** such Minor emit this block — same slot names as `cmk:debt`'s **The entry**, except the heading has **no** `DEBT-N` (`/cmk:debt` stamps the ID). Name `/cmk:debt` for the user to run. Critical and Important are never banked.
+
+```
+### `<path>` — <one-line finding>
+
+- **Found:** `<YYYY-MM-DD>` · cmk:delivery-review on `<branch or range>`
+- **Cost:** <what this makes harder or riskier, concretely>
+- **Deferred because:** unactioned Minor on this branch
+- **Fix shape:** <one line | Unknown>
+- **Ticket:** none
+- **Status:** open
+```
+
+A slot with no answer gets `Unknown` — never omit the line. "Just list the leftovers" / "don't invent a ledger format" is not a skip of these slots. Minting `**DEBT-N**` here is a collision; do not.
+
+*Done when: both axis sections, the verdict, and the banked slot are delivered — banked as "none to bank" when no Minor survives unactioned.*
+
+## Inline fallback (no subagent capability)
+
+No subagent capability in this harness? Run the two axes yourself, sequentially, in one context: **Standards first** — read `references/standards-baseline.md`, walk the diff against each of its twelve smells, the Security section, and the Production-readiness section — then **Spec** — cmk:working-set first, then walk admitted IDs (not-in-range once) — then, when step 3d fired, the **UI lane** per `cmk:ui-review`. Finish and record one axis completely before starting the next, and still present them under separate `## Standards`, `## Spec` (and `## UI`) headings without reranking one against the other. This loses the context isolation two subagents provide, so the discipline of closing out one axis before opening the next is what keeps them from bleeding together.
+
+Using Linear? Its synced Diff is the review surface — read `references/linear.md`.

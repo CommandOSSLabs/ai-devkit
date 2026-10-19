@@ -16,6 +16,9 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
+# Sibling modules resolve even under `python3 -I`, which drops the script's directory.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
 from cluster import (
     PATH_STOPWORDS,
     cluster_unowned_paths,

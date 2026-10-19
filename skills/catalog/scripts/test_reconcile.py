@@ -64,6 +64,14 @@ class TestClassify(unittest.TestCase):
         rows = classify_paths(["docs/guide/README.md"], {})
         self.assertEqual(rows[0]["change_class"], "no-spec-impact")
 
+    def test_runs_in_isolated_mode(self):
+        # Agents told to run untrusted-adjacent Python with -I drop the script dir from sys.path.
+        import subprocess, sys, os
+        here = os.path.dirname(os.path.abspath(__file__))
+        r = subprocess.run([sys.executable, "-I", os.path.join(here, "reconcile.py"), "--help"],
+                           cwd="/", capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stderr)
+
     def test_installed_agent_skills_are_no_spec_impact(self):
         # A repo that vendors this kit commits .agents/skills/ and installs .claude/skills/;
         # their bundled scripts are tooling, not a capability a feature should own.

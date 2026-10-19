@@ -1,0 +1,185 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "production-readiness-on-a-runtime-diff",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § RED — S-PROD (frame gap)",
+    "prompt": "Review the Standards axis of a diff that adds tier-aware pricing behind an env flag. The diff contains: a loadTiers() helper retrying `while (true)` with no cap or timeout; a catch in the pricing path that silently falls back to the old flat-rate result; a TIERED_PRICING flag read as `!== 'off'`, so the new path is on unless disabled; a migration adding a column and running `ALTER TABLE orders ALTER COLUMN total_cents DROP NOT NULL`, where total_cents is emitted on a webhook two external partners consume; and a switch of one caller to the new function while three other callers in files the diff does not touch keep calling the old one.",
+    "assertions": [
+      "the report includes a production-readiness part covering items 19-24, in addition to the twelve smells and the security items",
+      "the uncapped retry is raised as an unbounded failure mode in terms of what it does to a live request, not only as a comment or naming smell",
+      "the silent fallback is raised as silent degradation, naming that nothing records that the degraded path fired",
+      "the TIERED_PRICING flag is raised as an unsafe default because it is opt-out, so merging the diff is itself the rollout",
+      "the migration is raised as irreversible, naming both the absent reverse path and the external readers the relaxed constraint affects",
+      "the absence of a log, metric, or trace on the new failure path is raised as no operational signal",
+      "the three callers still on the old path are found and reported, which requires searching the repo beyond the diff since none of those files appear in it"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "twelve-smells-survive-the-added-parts",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § GREEN v1 — regression: part (b) collapsed to 4 of 12",
+    "prompt": "Review the Standards axis of the same tier-pricing diff, which triggers both the security predicate and the production-readiness predicate.",
+    "assertions": [
+      "part (b) carries one verdict line for each of the twelve smells, numbered 1 through 12",
+      "smells that did not hit still get an explicit no-hit verdict rather than being omitted",
+      "the twelve-smell walk is complete even though parts (c) and (d) both fired",
+      "the parts appear in order, each completed before the next begins"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "predicates-scope-the-optional-parts",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules this evidence owns — each optional part scoped by its own predicate",
+    "prompt": "Review the Standards axis of a diff that only rewords prose in three README files. No code, config, storage, or contract changes.",
+    "assertions": [
+      "the production-readiness part is reported as not applying rather than being silently dropped",
+      "the security part is reported as not applying rather than being silently dropped",
+      "no production-readiness or security findings are manufactured to fill the sections",
+      "part (b) is still walked"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "two-axis-verdict-preserved",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Rules this evidence owns — production readiness sits inside Standards",
+    "prompt": "Run a full cmk:delivery-review review on a feature branch that has a requirements.md and a diff touching runtime behavior. Report the result.",
+    "assertions": [
+      "the report presents Standards and Spec as separate sections and does not merge or rerank one against the other",
+      "production-readiness findings appear inside the Standards section rather than as a third hard axis",
+      "production-readiness findings are labeled judgment calls, not hard violations",
+      "the verdict line states Ready to merge? Yes, No, or With fixes"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "minors-are-banked-criticals-are-not",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Edit — the banked slot: same omission as cmk:delivery-simplify's S-BANKED-SLOT, RED 2/3",
+    "prompt": "Deliver the step-5 aggregate for a review that produced two Critical findings, one Important, and three Minor findings nobody will action on this branch. Verdict is 'With fixes'.",
+    "assertions": [
+      "the banked line follows the verdict",
+      "the three Minor findings are listed as bankable",
+      "the Critical and Important findings are not banked",
+      "`/cmk:debt` is named for the user to run rather than invoked",
+      "the two axis sections are still presented separately and unmerged"
+    ]
+  },
+  {
+    "eval_id": 6,
+    "eval_name": "banked-payload-slots-no-debt-id",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Edit — banked payload (v1.2.0)",
+    "prompt": "Deliver the step-5 aggregate. Verdict With fixes. Two Critical, one Important, three unactioned Minors. Standup in five minutes — just list the leftovers, don't invent a ledger format.",
+    "assertions": [
+      "each unactioned Minor is a paste-ready block with Found, Cost, Deferred because, Fix shape, Ticket, and Status",
+      "no DEBT-N is assigned in the inspect report",
+      "Critical and Important findings are not banked",
+      "/cmk:debt is named for the user"
+    ]
+  },
+  {
+    "eval_id": 7,
+    "eval_name": "ui-lane-fires-on-rendered-diff",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § UI lane — RED static-only review left visual claims as inference; GREEN 3d lane produced screenshot-backed UI findings",
+    "prompt": "The reviewed range touches styles.css and a component file alongside logic changes. Run the review and aggregate.",
+    "assertions": [
+      "cmk:ui-review runs on the range and its findings appear under a ## UI heading beside ## Standards and ## Spec",
+      "UI findings carry severities that count toward the merge verdict and cite screenshot paths",
+      "a range with no rendered files skips the lane with an explicit note"
+    ]
+  },
+  {
+    "eval_id": 8,
+    "eval_name": "spec-axis-stages-before-id-walk",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Edit — stage the spec (v1.4.0): 2/2 walked all twelve IDs as full findings; GREEN admitted 1.3+1.10 and listed the rest once",
+    "prompt": "Inspect the Spec axis. requirements.md has BILL-1.1 through BILL-1.12. The diff adds only src/tax.js (exempt short-circuit, flat 0.1). WORKING_SET says keep all 12 live.",
+    "assertions": [
+      "cmk:working-set runs before the Spec walk",
+      "IDs this diff implements or violates get a full finding",
+      "IDs not in the range are listed once, not as a per-ID essay",
+      "a failing ID on this file is not dropped to keep the stage small"
+    ]
+  },
+  {
+    "eval_id": 9,
+    "eval_name": "reverse-track-scripts-read-only-before-locate-spec",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Edit — reverse-track scripts (v1.6.0)",
+    "prompt": "Review abc1234...HEAD including a new mail_labels_service crate with no INDEX CODE. Walk through step 1b.",
+    "assertions": [
+      "cmk:catalog's scripts/reconcile.py runs on the pinned base..HEAD before locating the governing spec",
+      "reconcile-features skill is not loaded",
+      "unowned behavior-bearing paths produce pending OBS handles rather than silent skip",
+      "no Feature CODE is minted during cmk:delivery-review",
+      "pending OBS disposition names /cmk:catalog only"
+    ]
+  },
+  {
+    "eval_id": 10,
+    "eval_name": "second-standards-pass-merges-as-a-union",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Second Standards pass — v1.7.0 (2026-09-08)",
+    "prompt": "Two Standards reviewers returned. They agree on four findings; each raised one the other did not.",
+    "assertions": [
+      "both single-reviewer findings survive into the verdict",
+      "a finding is not demoted or dropped for having been raised by only one reviewer",
+      "two reports describing one defect are deduplicated, but two different failures of the same line both survive",
+      "the report names which model each Standards pass ran on, or unknown"
+    ]
+  },
+  {
+    "eval_id": 11,
+    "eval_name": "blast-prove-conditional",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 3f. Blast prove",
+    "prompt": "When does cmk:delivery-review require a runtime safety proof?",
+    "assertions": [
+      "references/blast-prove.md",
+      "3f",
+      "unproven"
+    ]
+  },
+  {
+    "eval_name": "test-quality-part-on-a-test-diff",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v1.10.0 — RED: test files never judged",
+    "prompt": "Review the Standards axis of a diff adding a new config.ts `validate()` plus a config.test.ts holding 12 tests: six `rejects_*` tests differing only in which field is empty, three tests that each assert one default literal, `DEFAULTS has upload 600`, `returns an object` (typeof), and `accepts valid config` asserting only `.endpoint`.",
+    "assertions": [
+      "the report includes a tests part covering items 25-27",
+      "the tests that assert a default literal or the DEFAULTS constant are raised as pinning what the code says",
+      "the tests differing only by which field is empty are raised as one failure tested separately, with a table-driven fold suggested",
+      "the typeof-object test is raised as unable to fail",
+      "a test is not reported as covering behavior on the strength of being one of these"
+    ],
+    "eval_id": 12
+  },
+  {
+    "eval_id": 13,
+    "eval_name": "absent-spine-is-a-clean-no-op",
+    "kind": "contract",
+    "derived_from": "references/invariants.md § When there is nothing to check",
+    "prompt": "Review invariant conformance on a repo with no docs/design/ directory.",
+    "assertions": [
+      "the run reports there is nothing to check and injects no findings",
+      "no invariants are invented to have something to report"
+    ]
+  },
+  {
+    "eval_id": 14,
+    "eval_name": "verdict-per-citation",
+    "kind": "contract",
+    "derived_from": "references/invariants.md § The judgment",
+    "prompt": "The design cites Respects: ARCH-2 and ARCH-5.",
+    "assertions": [
+      "each cited ARCH-N gets its own respects / violates / unclear verdict",
+      "each verdict carries a one-line rationale",
+      "the lane stays advisory rather than becoming a merge blocker"
+    ]
+  }
+]
