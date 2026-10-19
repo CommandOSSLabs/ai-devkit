@@ -56,7 +56,13 @@ export default function SkillsBrowsePage() {
         </div>
       </div>
 
-      <SkillCatalog skills={skills} categories={categories} handles={handles} />
+      {/* The grid never renders a skill's sections; sending them made this page grow
+          with every skill's whole body. Detail pages read the full summary. */}
+      <SkillCatalog
+        skills={skills.map((s) => ({ ...s, sections: [], workflows: [] }))}
+        categories={categories}
+        handles={handles}
+      />
     </div>
   );
 }

@@ -172,7 +172,8 @@ function collectFiles(dir: string, skillId: string, out: SkillFileRef[] = []): S
   for (const entry of entries) {
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      collectFiles(full, skillId, out);
+      // Script test fixtures are inputs to a skill's own unit tests, not part of the skill.
+      if (entry.name !== "testdata") collectFiles(full, skillId, out);
       continue;
     }
     const relativePath = path.relative(path.join(skillsDir(), skillId), full);
