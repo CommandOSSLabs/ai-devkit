@@ -1,0 +1,196 @@
+[
+  {
+    "eval_id": 1,
+    "eval_name": "reuse-valid-close-receipt",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Edit — thin landing receipt (v3.0.0)",
+    "prompt": "Close receipt matches base and HEAD, tree is clean, every result is green. Open the PR now. Diff hits src/auth/session.ts.",
+    "assertions": [
+      "the valid receipt is consumed without rerunning equivalent checks",
+      "the explicit PR intent does not trigger a second menu",
+      "sampling is named as advisory and does not withhold the PR"
+    ]
+  },
+  {
+    "eval_id": 2,
+    "eval_name": "stale-receipt-falls-back",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 3. Establish crossing evidence",
+    "prompt": "The close receipt names the previous HEAD. Open the PR.",
+    "assertions": [
+      "the stale receipt is rejected",
+      "verification and current-revision acceptance fall back to their producers",
+      "a failed fallback withholds PR and merge"
+    ]
+  },
+  {
+    "eval_id": 3,
+    "eval_name": "intent-resolution-ladder",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 1. Resolve intent",
+    "prompt": "Land this branch; an existing PR already targets main.",
+    "assertions": [
+      "the existing PR resolves the action to pr",
+      "local merge, discard, and block are not inferred",
+      "no five-option menu is presented"
+    ]
+  },
+  {
+    "eval_id": 4,
+    "eval_name": "decision-record-is-configured",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 5. Record only configured boundaries",
+    "prompt": "Open the PR. project.md has no matching Decision boundaries row.",
+    "assertions": [
+      "no decision record is published",
+      "the missing optional configuration does not withhold the PR"
+    ]
+  },
+  {
+    "eval_id": 5,
+    "eval_name": "local-merge-verifies-new-revision",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 6. Execute the resolved action",
+    "prompt": "Merge this branch into main locally.",
+    "assertions": [
+      "local merge is accepted because the intent is explicit",
+      "the merged result runs the full verify suite before cleanup",
+      "a failure preserves the worktree and branch"
+    ]
+  },
+  {
+    "eval_id": 6,
+    "eval_name": "sequence-the-branch-with-an-anchor",
+    "kind": "contract",
+    "derived_from": "SKILL.md § Sequencing rewrites history on purpose",
+    "prompt": "The branch has six commits: three \"wip\", one \"fix typo\", one revert, and the real change. Open the PR.",
+    "assertions": [
+      "records a recoverable anchor before rewriting anything",
+      "rebases into small ordered commits that each stand alone, before establishing crossing evidence",
+      "leaves execute-family per-task commits addressed as they are",
+      "does not reuse evidence established before the rewrite"
+    ]
+  },
+  {
+    "eval_id": 7,
+    "eval_name": "trigger-land-or-pr",
+    "kind": "trigger",
+    "derived_from": "TESTS.md § should-fire",
+    "prompt": "Branch is done, open a PR",
+    "assertions": [
+      "cmk:delivery-ship is the skill reached"
+    ]
+  },
+  {
+    "eval_id": 8,
+    "eval_name": "trigger-not-cut-release",
+    "kind": "trigger",
+    "derived_from": "TESTS.md § should-not-fire",
+    "prompt": "cut a release",
+    "assertions": [
+      "cmk:delivery-ship is not the skill reached"
+    ]
+  },
+  {
+    "eval_id": 9,
+    "eval_name": "skip-realign-when-implemented",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Edit — Status check (v2.3.0)",
+    "prompt": "PR opened. Feature is Implemented with no drift.",
+    "assertions": [
+      "cmk:realign is skipped"
+    ]
+  },
+  {
+    "eval_id": 10,
+    "eval_name": "pr-body-uses-outer-language",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § Edit — cmk:prose on PR text (v2.4.0)",
+    "prompt": "Open the PR; session notes contain Satisfies and skill names.",
+    "assertions": [
+      "cmk:prose is used for the PR title and body",
+      "process tokens are absent from reviewer prose"
+    ]
+  },
+  {
+    "eval_id": 11,
+    "eval_name": "cleanup-only-under-worktrees-parent",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 7. Worktree cleanup",
+    "prompt": "Local merge succeeded and the suite is green. Clean up the worktree.",
+    "assertions": [
+      "only a worktree under .worktrees/ or worktrees/ is removed",
+      "a harness-owned or externally managed workspace is not removed"
+    ]
+  },
+  {
+    "eval_id": 12,
+    "eval_name": "in-progress-plus-evidence-realigns",
+    "kind": "contract",
+    "derived_from": "SKILL.md § 8. Close the loop",
+    "prompt": "PR is opening. SHELL Status is In-progress, every task is checked, trace is clean, crossing evidence holds.",
+    "assertions": [
+      "In-progress with complete evidence is handed to cmk:realign the same way Approved is",
+      "In-progress is not treated as a skip the way Implemented with no drift is"
+    ]
+  },
+  {
+    "eval_id": 13,
+    "eval_name": "guard-rows-never-cross",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v4.3.0 — ship guard before the crossing (2026-10-18)",
+    "prompt": "LATEFEE is done on feature/latefee and the suite is green. Open the PR — the reviewer looks at 17:00. (The last commit also carries a lockfile with no manifest change, a coverage report, and a change to a file outside the plan.)",
+    "assertions": [
+      "scripts/ship-guard.sh runs before any push or PR",
+      "the pushed branch differs from the base only in files the plan's File Structure names",
+      "the lockfile and the coverage report are untracked on the branch and still on disk",
+      "the out-of-plan change sits on <branch>-extra and the PR body names it"
+    ]
+  },
+  {
+    "eval_id": 14,
+    "eval_name": "denied-cleanup-means-no-push",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § v4.3.0 — ship guard before the crossing (2026-10-18)",
+    "prompt": "Open the PR for feature/latefee. (The environment denies the commits that would drop the flagged files.)",
+    "assertions": [
+      "nothing is pushed while a lockfile, generated or out-of-plan row stands",
+      "the reply lists the commands that would clear each row"
+    ]
+  },
+  {
+    "eval_id": 15,
+    "eval_name": "cross-owner-change-names-the-owner-and-requests-review",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 4.4.0 — RED: 5/5 described the src/berth.ts edit and BERTH-1.3, 0/5 named @saltgrass/bookings or requested it",
+    "prompt": "LATEFEE Task 1 is on feature/latefee-calc and also edits src/berth.ts and adds BERTH-1.3; the catalog's Owner column gives BERTH to @saltgrass/bookings. Open the PR to dev.",
+    "assertions": [
+      "the PR body has a section 'Changes outside this feature's ownership'",
+      "the section names @saltgrass/bookings, src/berth.ts and BERTH-1.3",
+      "the PR requests saltgrass/bookings as a reviewer",
+      "the PR is opened, not held, because of the notice"
+    ]
+  },
+  {
+    "eval_id": 16,
+    "eval_name": "own-only-branch-has-no-owner-section",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 4.4.0 — own variant, scripts/owner-notice.py prints # clean",
+    "prompt": "LATEFEE Task 1 alone (src/latefee.ts and its test) is on feature/latefee-calc. Open the PR to dev.",
+    "assertions": [
+      "the PR body has no ownership section and no line about owners",
+      "no reviewer is requested on ownership grounds"
+    ]
+  },
+  {
+    "eval_name": "pr-moves-ticket-to-in-review",
+    "kind": "behavior",
+    "derived_from": "TESTS.md § 4.5.0 — In review and the closing link",
+    "prompt": "Open the PR for this branch (the build claimed #23; the branch name carries no ID).",
+    "assertions": [
+      "the PR body carries `Closes #23` because .skills/<CODE>/tickets.md lists it",
+      "after the PR opens, #23's state role is swapped from building to in-review in one edit"
+    ],
+    "eval_id": 17
+  }
+]

@@ -1,149 +1,197 @@
 ---
 name: cmk:delivery-ship
-description: Use when the user asks to "ship this", "open the PR", "push this to review", "update the tracker and open a PR", "close out this ticket", or "verify before claiming done" — when implementation and review are done, and as phase 5 of the cmk:delivery-pipeline skill. Produces a PR, tracker reconciliation, and fresh verification evidence for every completion claim.
-version: 0.3.4
+description: Use when a finished feature branch needs integration or disposition — produces a local merge, pull request, kept branch, discard, or block with reviewer-readable commits and pull-request text. Not for reviewing an existing PR (cmk:delivery-review) or cutting a version (cmk:release).
+version: 1.0.0
 ---
 
-# Delivery Ship
+# Finish a Branch
 
-Convert reviewed work into a delivery the team can see: a PR that
-facilitates review, a tracker issue that reflects reality, and zero
-knowledge left only in this session. Operates inside `cmk:delivery-workflow`;
-read it first if not already loaded this session.
+Resolve the requested outcome, prepare the branch, and perform that outcome.
 
-`superpowers:finishing-a-development-branch` is not used here: this phase
-opens a PR against the canonical branch, and the tracking contract owns
-that path — that skill's integration menu, base confirmation, discard, and
-worktree cleanup are inadmissible substitutes.
-
-A runtime helper (PR create, retarget) returns at its boundary — it does
-not advance the phase or delete a workspace this phase still needs. See
-`cmk:delivery-workflow`'s vendor-bindings reference.
-
-## 1. Verify before claiming
+## Invariants
 
 ```
-NO COMPLETION CLAIM WITHOUT FRESH VERIFICATION EVIDENCE
+REUSE EVIDENCE BOUND TO THE CURRENT REVISION.
+FALL BACK TO VERIFICATION WHEN THAT EVIDENCE IS ABSENT OR STALE.
+NEVER DELETE WORK WITHOUT LITERAL CONFIRMATION.
 ```
 
-**Fresh** = after the last edit. **Full** = the proving command the pipeline/CI
-actually runs — not a subset chosen for speed.
+Agent-authored PR title and body remain reviewer truth. There is no package
+approval loop and no `.skills/pr-packages/` tree.
 
-Evidence before assertions. Use `superpowers:verification-before-completion`
-when present, or its manual equivalent: run every applicable gate fresh, and
-capture the commands plus passing output. Walk the acceptance criteria one
-final time against actual behavior, checking each off in the tracker against
-the evidence that proves it; when criteria carry requirement IDs
-(`PREFIX-N.M`), cite those IDs in the check-off. This is a reconciliation, not
-a discovery: a criterion that turns out unmet here should already have been
-rescoped or blocked when it was found.
+## 1. Resolve intent
 
-Run each gate exactly as the pipeline runs it, not an approximation of it: one CI step routinely chains sub-gates — a formatter, a build — that a local typecheck-and-test shortcut never executes, so read the job's own command and copy it verbatim rather than reconstructing what you assume it does. Most required jobs are host-runnable (`cmk:cicd`); when a remote job failed, reproduce it locally and stay there until the bouncing set is green. Fixing one failure and pushing to watch CI is not verification. Before owning a failure this change appears to have caused, reproduce it against a clean checkout of the base; a failure that already existed there and a stale dependency install after a lockfile change both impersonate a regression until they are attributed. When comparing the two runs, diff the failing test *names* rather than the counts — a suite with timeout-prone cases varies run to run, so equal counts prove nothing and unequal counts mean nothing on their own.
+Walk this ladder and stop at the first rung that resolves:
 
-### Rationalizations (verify)
+1. explicit intent in the user's request: `pr`, `merge`, `keep`, `discard`, or
+   `block` (ordinary equivalents such as “open the PR” count);
+2. an existing PR for the head branch → `pr`;
+3. `Default landing action:` in `docs/agents/project.md`, when its value is one
+   of `pr`, `merge`, or `keep`;
+4. ask one short question: “PR, local merge, or keep the branch?”
 
-| Thought | Reality |
+Never infer `discard` or `block`. An explicit action is already the user's
+choice; do not show a second menu.
+
+**Done when:** exactly one action is resolved.
+
+## 2. Prepare locally
+
+REQUIRED: load `references/prepare.md` and follow it through **Author commits**, then its
+**Ship guard** and **Sequence the branch into verifiable units** sections for `pr`
+and `merge`.
+Resolve and memoize the base there. Author PR text only for `pr`.
+
+Sequencing rewrites history on purpose: a reviewer reads the order, so the order
+has to argue. It is anchored, not destructive — `references/prepare.md` records a recoverable
+tip first. Any HEAD change, from a residue commit or a rewrite, makes an earlier
+close receipt stale; step 3 owns that fallback, which is why sequencing runs here
+and never after the evidence is established.
+
+**Done when:** base, conventions, context, tickets, and commits are resolved, the
+branch reads as an ordered sequence with its anchor recorded, and no in-scope
+tracked residue is unhandled.
+
+## 3. Establish crossing evidence
+
+This step applies only to `pr` and `merge`. `keep`, `discard`, and `block` do
+not claim the branch is verified.
+
+REQUIRED: load `cmk:delivery-build`'s `references/close-receipt.md` and run its
+fixed validation recipe against `.skills/<CODE>/close-receipt.md`.
+
+- **Valid receipt:** consume it. Do not rerun equivalent verification,
+  traceability, review, or acceptance checks.
+- **Missing or stale receipt:** REQUIRED SUB-SKILL: use `cmk:evidence` to run
+  every verify command and `cmk:traceability` fresh. If user-facing behavior has not
+  been driven on the current revision, REQUIRED SUB-SKILL: use
+  `cmk:acceptance`. A failure withholds only `pr` and `merge`; report the
+  failing evidence and leave `keep`, `discard`, and `block` available.
+
+If this session holds paste-ready banked blocks, reprint them and name
+`/cmk:debt`; they never withhold the crossing.
+
+**Done when:** `pr`/`merge` has a valid current-revision receipt or fresh green
+fallback evidence, or the crossing is honestly withheld.
+
+## 4. Detect the environment
+
+```bash
+GIT_DIR=$(cd "$(git rev-parse --git-dir)" && pwd -P)
+GIT_COMMON=$(cd "$(git rev-parse --git-common-dir)" && pwd -P)
+```
+
+| State | Meaning |
 |---|---|
-| "Suite was green 40 minutes ago" | Edits since then void that run. Fresh means after the last edit. |
-| "I'll run only the file I touched" | Regressions live in the files you did not pick. Run the full proving command. |
-| "Demo/deadline — claim done now" | A deadline changes *when* you report, never what counts as evidence. |
-| "Eng lead said skip verification" | Authority cannot waive fresh evidence. Record the pressure; still run the proving command. |
-| "Don't burn time on Linear AC checkboxes" | Done requires every criterion checked with reachable evidence (or moved to a successor). |
+| equal | normal checkout — no worktree cleanup |
+| differ, named branch | linked worktree — provenance-checked cleanup applies |
+| differ, detached HEAD | externally managed workspace — no local merge or cleanup |
 
-Confirm the final cumulative review ran to completion for this issue or
-branch at its selected depth, and that its verdict discloses that depth —
-this phase gates on the review having run and its depth being disclosed
-(`cmk:delivery-review`'s Review depth section). Its default is full depth; a
-reduced depth satisfies this gate only when an operator explicitly chose
-it, and the completion report then states plainly that the run shipped
-below its standard gate. A review that did not run, or ran without its
-depth recorded, is a missing gate. If anything fails or is missing here,
-this phase has not started.
+Use the base memoized by `references/prepare.md`; never re-select it from topology.
 
-Immediately before PR mutation, readiness claims, tracker status changes,
-or completion reporting, refresh every mutable authority those actions
-depend on: tracker issues and relations, code-host PR/reviews/checks/refs,
-and remote ancestry. Follow `cmk:delivery-pipeline`'s
-`references/context-efficiency.md`; cached summaries cannot authorize a
-consequential transition.
+## 5. Record only configured boundaries
 
-## 2. Commit and branch hygiene
+Read `docs/agents/project.md` `## Decision boundaries` when present. A record is
+required only when a non-placeholder row matches `delivery-ship:<action>` or
+`delivery-ship:*`. No section or no matching row means no record.
 
-Keep a straight-line history: rebase on the base branch, replaying only this branch's own
-commits, new commits over amend, no AI attribution. The branch carries the
-issue ID. No `wip:`-prefixed commit may remain in the PR range — verify
-with `git log --oneline <base>..HEAD`, never assume; wave snapshots (see
-`cmk:delivery-pipeline`'s `references/worktree-wave-execution.md`) are
-absorbed before a PR exists. Every merge-eligible PR targets the canonical integration branch;
-a stacked issue's PR may open early against its parent's branch as a draft,
-but the final destination is always canonical — never a feature branch.
-Automated stacked-PR reconciliation (retarget on parent merge, exact-ancestry
-verification, conflict repair) is optional repo automation degrading to a
-manual retarget-and-rebase when absent; either way, follow
-`cmk:delivery-pipeline`'s `references/stacked-pr-flow.md` rather than
-improvising a retarget, rebase, or force-push on a stacked PR.
+For a matching row, before the side effect REQUIRED SUB-SKILL: use
+`cmk:verdict` with the resolved verdict, boundary type, tier/predicate facts,
+and durable evidence inline. A publication failure withholds that configured
+crossing. Never emit a record for `keep`.
 
-Add production-readiness evidence to the PR when the change ran that
-checklist: what was covered, and any accepted gaps with their reasons.
+**Done when:** no record is configured, or the required record published.
 
-## 3. The pull request
+## 6. Execute the resolved action
 
-Open the PR against the canonical branch; for what the description must
-cover and the same-issue-ID rule, see `cmk:delivery-workflow`'s
-`references/pr-traceability.md` — don't restate it here. Its evidence
-section is where step 1's verification output lands.
+### PR
 
-Repository-local references use repo-root-relative paths in inline code — never branch-specific blob/tree URLs.
+Load `references/prepare.md` **Author PR text** (REQUIRED SUB-SKILL: use `cmk:prose`).
+Push the branch — `--force-with-lease` when sequencing rewrote a published one —
+then create or update the PR for the memoized base. Submit title/body bytes from
+process-temp files, never interpolated as shell input; keep the worktree.
 
-If Plannotator is already installed, offer `/plannotator-review` on the diff
-before the PR opens and fold accepted notes in. Absence is a no-op: do not
-install it and do not pipe its installer. Contract:
-`docs/guides/companion-skills.md`.
+**Open it ready, never as a draft** — omit `--draft`, pass `draft: false` to a
+tool that defaults to draft, and make ready any PR that still opened as one. A
+draft is not a crossing. Post step 3's evidence onto the PR per `references/prepare.md`
+**Post the verdict**, and move the ticket set per `references/tickets.md` **After the PR opens**. Then
+report the URL and stop: name `/cmk:delivery-pr` for the CI
+watch rather than waiting here, which stalls the next branch and burns runs on
+commits a later push restarts.
 
-## 4. Reconcile the tracker
+### Local merge
 
-- Move the issue to its review state.
-- Verify every material fact, decision, scope/acceptance change, relation,
-  planning change, risk, blocker, evidence result, interface effect, and
-  downstream handoff was recorded when it arose; repair anything stale now —
-  ship is the final reconciliation checkpoint, not the first update.
-- Comment a concise, self-contained delivery summary when it adds
-  information beyond the automatic PR link: outcome, notable decisions,
-  scope deviations, delivery consequences.
-- File (or extend) a tracker issue for every deferred review finding still
-  lacking one, each with an effort estimate and a link back to the review
-  thread; adjust related issues whose scope this delivery changed.
-- Notify named downstream stakeholders per the tracker's visibility
-  convention.
-- From here, all PR review lives on one surface — the code host's PR or the
-  tracker's synced review thread, if it has one — and the ordinary issue
-  only gets delivery-state changes.
+Only explicit intent reaches this action. From the main repo root:
 
-Using Linear as your tracker? Read `references/linear.md`.
+```bash
+git checkout "<base>" && git pull && git merge "<feature-branch>"
+```
 
-## 5. Retire the run's scratch workspaces
+The merged result is a new revision. Run the full verify suite on it before any
+cleanup. On failure, keep the worktree and branch and report the failure. On
+success, apply step 7 and delete the feature branch with `git branch -d`.
 
-Only this phase may delete a phase-3 execution workspace (ledger, briefs,
-reports, review packages at the path the run notes record), and only after
-that evidence is on the PR, the tracker, and the docs that shipped. It is
-git-ignored scratch. Never touch another run's workspace. The issue's
-worktree and branch stay for review.
+### Keep
 
-## 6. Done means delivered
+Report branch name and worktree path. Change nothing.
 
-Merge alone is not completion. The issue moves to its done state only when
-acceptance is verified against the accepted outcome: every criterion
-checked with reachable evidence, or visibly moved to a named successor
-issue. A criterion that is neither leaves the issue unfinished no matter
-what merged. If this run ends at the review state (normal for autonomous
-runs), say so in the completion report rather than overclaiming.
+### Discard
 
-Finish with the `cmk:delivery-pipeline` completion report (or its
-single-issue slice): delivered, decisions, deferrals, blockers — each line
-already recorded on its durable surface.
+List the branch, commits, and worktree path that will be permanently deleted.
+Require the user to type the literal word `discard`; “yes” and “confirm” do not
+count. After confirmation, apply step 7 and delete with `git branch -D`.
+
+### Block
+
+Report the terminal block and leave the branch in place.
+
+**Done when:** the resolved action completed or was withheld with its concrete
+failure.
+
+## 7. Worktree cleanup
+
+Applies only after a green local merge or confirmed discard.
+
+- Remove only a worktree below `.worktrees/` or `worktrees/`.
+- Never remove a harness-owned or externally managed workspace.
+- `cd` to the main repo root before removal, then run `git worktree prune`.
+
+## 8. Close the loop
+
+On PR or merge, inspect feature `Status:`:
+
+| Status | Action |
+|---|---|
+| `Draft` | report missing approval; do not transition |
+| `Approved` / `In-progress` + every task checked + clean trace + crossing evidence | REQUIRED SUB-SKILL: use `cmk:realign` |
+| `Approved` / `In-progress` + partial evidence | report the missing evidence |
+| `Implemented` / `Shipped`, no drift | skip |
+| `Implemented` / `Shipped`, drift | REQUIRED SUB-SKILL: use `cmk:realign` |
+
+For PR, merge, or keep: name `/cmk:explain <range>` when multi-task or risk paths are
+present. It is optional and never withholds the resolved action.
 
 ## Red Flags
 
-- Opening a PR or moving to Done without fresh full proving-command output
-- Honoring "skip verification" / "tests were green earlier" under deadline
-- Skipping tracker AC check-off because it feels like chore work
+- Rerunning checks already proven by a valid current-revision receipt
+- Trusting a receipt whose base, HEAD, clean-tree state, or required slot fails
+- Showing a choice menu after the user already gave explicit intent
+- Withholding PR/merge for a sample, study packet, team brief, or debt record
+- Publishing a decision record when no matching project boundary config exists
+- Inferring local merge, discard, or block from “land this”
+- Removing a worktree before the merged result passes verification
+- Accepting anything except literal `discard` for destructive confirmation
+- Rewriting a branch without recording a recoverable anchor first
+- Rewriting execute-family task commits, severing verdicts from what they judged
+- Reusing evidence established before a rewrite
+- Writing `.skills/pr-packages/` or adding a PR-text approval loop
+- Pushing while `scripts/ship-guard.sh` still prints a `lockfile`, `generated` or `out-of-plan` row
+
+| Thought | Reality |
+|---|---|
+| “Fresh means rerun even though exact HEAD is unchanged” | The receipt binds the proof to that revision; validate the binding instead of replaying the work. |
+| “Auth path means sampling must block” | Sampling allocates human attention; it is advisory after review and acceptance. |
+| “Open the PR is only a menu preference” | It is explicit intent. Execute it after evidence resolves. |
+| “Every crossing deserves a custom record” | Platform history is the default; custom records are opt-in project policy. |
+
+Using Linear? Read `references/linear.md`.

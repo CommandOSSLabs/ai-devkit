@@ -10,7 +10,7 @@ destination is always canonical.
 This is the default in every repository, with no automation required:
 
 1. Branch the dependent issue's work from the blocker's branch (or its
-   pinned handoff commit, per `references/cluster-mode.md`).
+   pinned handoff commit, per `cmk:delivery-pipeline`'s `references/cluster-mode.md`).
 2. Open the dependent's PR as a draft against the blocker's branch, so the
    code host shows the dependency and the diff stays reviewable.
 3. When the blocker's PR merges into the canonical branch, retarget the
