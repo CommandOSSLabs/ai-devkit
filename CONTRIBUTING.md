@@ -21,8 +21,15 @@ a memory of how things used to work.
   in that order. A user-invoked skill may add `disable-model-invocation:
   true` as a fourth field; nothing else belongs in the block.
 - `SKILL.md` stays within the 150-line budget (≤ 150); move detail into
-  `references/*.md` and point to it from the skill. Pre-existing exceptions
-  are allowlisted in `scripts/skill-lint.sh` and not granted to new skills.
+  `references/` and point to it from the skill. A skill ported over budget
+  (ADR 0001) carries an entry in `scripts/skill-size-budget.json` equal to its
+  length; the entry only goes down, and is deleted once the skill is ≤ 150.
+- A package holds `SKILL.md`, optional `TESTS.md` and `eval.json`, and the
+  folders `references/`, `scripts/` and `agents/`. Every reference file is
+  named by `SKILL.md` or another reference of the same skill; every script is
+  executable and named as `scripts/<file>`.
+- `REQUIRED SUB-SKILL` names only model-invocable skills. A user-invoked skill
+  (`disable-model-invocation: true`) is named for the person to run.
 - A skill file never reaches outside its own package with a relative `../`
   path. Name a target-repo artifact repo-root-relative, and cite another
   skill by its `cmk:` name.
@@ -33,10 +40,12 @@ a memory of how things used to work.
 bash scripts/skill-lint.sh
 ```
 
-This mechanically enforces frontmatter shape, the 150-line budget, reference
-integrity (no dangling or orphaned `references/*.md`), that every `cmk:`
-citation resolves to a real skill, the cross-package path rule, and valid
-`eval.json` fixtures. Genericity (the kit's bar, above) is a review
+This mechanically enforces frontmatter shape (one-line description), the
+150-line budget and its ratchet, reference integrity (no dangling or orphaned
+`references/**/*.md`), that every `cmk:` citation resolves to a real skill,
+the cross-package path rule, `eval.json` shape and anchors, hand-offs, bundled
+scripts, and the package root. The Python half lives in
+`scripts/skill_checks.py`. Genericity (the kit's bar, above) is a review
 judgment, not something the script greps for — keep product/repo vocabulary
 out of your own diff. CI runs the same script on every PR touching
 `skills/**`.

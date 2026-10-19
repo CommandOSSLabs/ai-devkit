@@ -1,18 +1,20 @@
 #!/usr/bin/env bash
-# Lints skills/*/SKILL.md and skills/*/references/*.md against the shape the
-# skills tree is expected to hold: frontmatter, size budget, reference
-# integrity, path portability, and eval fixture validity. Exits 1 and lists
-# every violation found rather than stopping at the first.
+# Lints skills/*/SKILL.md and skills/*/references/**/*.md against the shape
+# the skills tree is expected to hold: frontmatter, size budget, reference
+# integrity, path portability, eval fixtures, hand-offs, and bundled scripts.
+# Exits 1 and lists every violation found rather than stopping at the first.
+# SKILL_LINT_ROOT lints another tree (a staging copy) instead of this repo.
 set -euo pipefail
 
-cd "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "${SKILL_LINT_ROOT:-$SCRIPT_DIR/..}"
 
 violations=()
 fail() { violations+=("$1"); }
 
 # Pre-existing exceptions. A new entry here must be a deliberate, reviewed
-# decision, not a way to silence a fresh violation.
-SIZE_BUDGET_ALLOWLIST=(codebase-docs)
+# decision, not a way to silence a fresh violation. The size budget is a
+# ratchet in scripts/skill-size-budget.json, checked by skill_checks.py.
 CROSS_PACKAGE_PATH_ALLOWLIST=(
   "skills/docs/references/scaffold-manifest.md"
   "skills/sui-devstack/references/instance-isolation.md"
@@ -71,17 +73,7 @@ check_frontmatter() {
   done
 }
 
-# --- 2. Size budget ----------------------------------------------------------
-check_size_budget() {
-  local skill_md skill_name lines
-  for skill_md in skills/*/SKILL.md; do
-    skill_name=$(basename "$(dirname "$skill_md")")
-    lines=$(wc -l < "$skill_md" | tr -d ' ')
-    if [ "$lines" -gt 150 ] && ! in_allowlist "$skill_name" "${SIZE_BUDGET_ALLOWLIST[@]}"; then
-      fail "$skill_md: $lines lines exceeds the 150-line SKILL.md budget"
-    fi
-  done
-}
+# --- 2. Size budget: see skill_checks.py ------------------------------------
 
 # --- 3. Dangling references --------------------------------------------------
 # A `references/<file>.md` mention in a SKILL.md normally belongs to that
@@ -94,14 +86,14 @@ check_size_budget() {
 # every file that exists must be mentioned under its own name at least once,
 # from any SKILL.md (orphan).
 extract_reference_mentions() {
-  local skill_md skill_name
-  for skill_md in skills/*/SKILL.md; do
-    skill_name=$(basename "$(dirname "$skill_md")")
+  local src skill_name
+  while IFS= read -r src; do
+    skill_name=$(echo "$src" | cut -d/ -f2)
     awk -v skill="$skill_name" '
       BEGIN { apos = sprintf("%c", 39); last_cmk = ""; last_line = -10 }
       {
         rest = $0
-        while (match(rest, /cmk:[a-z][a-z0-9-]*|references\/[A-Za-z0-9_.-]+\.md/)) {
+        while (match(rest, /cmk:[a-z][a-z0-9-]*|references\/[A-Za-z0-9_.\/-]+\.md/)) {
           tok  = substr(rest, RSTART, RLENGTH)
           tail = substr(rest, RSTART + RLENGTH)
           if (tok ~ /^cmk:/) {
@@ -121,8 +113,8 @@ extract_reference_mentions() {
           rest = tail
         }
       }
-    ' "$skill_md"
-  done
+    ' "$src"
+  done < <( { ls skills/*/SKILL.md; find skills/*/references -name '*.md' 2>/dev/null; } | sort)
 }
 
 check_dangling_references() {
@@ -137,19 +129,16 @@ check_dangling_references() {
 }
 
 check_orphan_references() {
-  local mentions_file skill_name refdir rf fname
+  local mentions_file skill_name rf fname
   mentions_file="$1"
-  for refdir in skills/*/references; do
-    [ -d "$refdir" ] || continue
-    skill_name=$(basename "$(dirname "$refdir")")
-    for rf in "$refdir"/*.md; do
-      [ -e "$rf" ] || continue
-      fname=$(basename "$rf")
-      if ! awk -F'\t' -v s="$skill_name" -v f="$fname" '$1 == s && $2 == f { found=1 } END { exit !found }' "$mentions_file"; then
-        fail "$rf: never mentioned as references/$fname by any SKILL.md"
-      fi
-    done
-  done
+  # A reference is reached when SKILL.md or another file of the skill names it.
+  while IFS= read -r rf; do
+    skill_name=$(echo "$rf" | cut -d/ -f2)
+    fname="${rf#skills/$skill_name/references/}"
+    if ! awk -F'\t' -v s="$skill_name" -v f="$fname" -v self="$rf" '$1 == s && $2 == f && $3 != self { found=1 } END { exit !found }' "$mentions_file"; then
+      fail "$rf: never mentioned as references/$fname by its SKILL.md or another reference"
+    fi
+  done < <(find skills/*/references -name '*.md' 2>/dev/null | sort)
 }
 
 # Every `cmk:<name>` citation under skills/ must resolve to a real skill
@@ -160,7 +149,7 @@ check_orphan_references() {
 # CITATION_ALLOWLIST, not by excluding eval.json from the scan.
 check_citations_resolve() {
   local f name
-  for f in skills/*/SKILL.md skills/*/references/*.md skills/*/eval.json; do
+  for f in skills/*/SKILL.md $(find skills/*/references -name '*.md' 2>/dev/null) skills/*/eval.json; do
     [ -e "$f" ] || continue
     while IFS= read -r name; do
       [ -z "$name" ] && continue
@@ -196,19 +185,27 @@ except Exception as e:
   done
 }
 
+# --- 6. Ratchet, descriptions, evals, hand-offs, scripts, package root ------
+check_python() {
+  local line
+  while IFS= read -r line; do
+    if [ -n "$line" ]; then fail "$line"; fi
+  done < <(python3 "$SCRIPT_DIR/skill_checks.py")
+}
+
 mentions_file=""
 main() {
   mentions_file=$(mktemp)
   trap 'rm -f "$mentions_file"' EXIT
 
   check_frontmatter
-  check_size_budget
   extract_reference_mentions > "$mentions_file"
   check_dangling_references "$mentions_file"
   check_orphan_references "$mentions_file"
   check_citations_resolve
   check_cross_package_paths
   check_eval_json
+  check_python
 
   if [ "${#violations[@]}" -gt 0 ]; then
     echo "skill-lint: ${#violations[@]} violation(s) found:" >&2
@@ -219,7 +216,7 @@ main() {
     exit 1
   fi
 
-  echo "skill-lint: OK (frontmatter, size, references, citations, paths, eval.json across skills/)"
+  echo "skill-lint: OK (frontmatter, size ratchet, references, citations, paths, evals, hand-offs, scripts across skills/)"
 }
 
 main "$@"

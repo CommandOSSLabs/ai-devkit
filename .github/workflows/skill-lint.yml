@@ -5,6 +5,8 @@ on:
     paths:
       - "skills/**"
       - "scripts/skill-lint.sh"
+      - "scripts/skill_checks.py"
+      - "scripts/skill-size-budget.json"
       - ".github/workflows/skill-lint.yml"
   push:
     branches:
@@ -12,6 +14,8 @@ on:
     paths:
       - "skills/**"
       - "scripts/skill-lint.sh"
+      - "scripts/skill_checks.py"
+      - "scripts/skill-size-budget.json"
       - ".github/workflows/skill-lint.yml"
 
 jobs:
