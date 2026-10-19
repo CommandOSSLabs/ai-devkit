@@ -46,3 +46,8 @@ Compliant = **A** (refuse the stamp; one-feature triad repair only if drift).
 | S1 | grok-4.6 | **A** |
 
 Meta (both): iron rule + table + mid-cut sentence made A unmistakable.
+
+
+## Smoke after the cmk rename (2026-10-19)
+
+skill-tester-haiku on harbor-ledger (`KIT=cmk`, all 93 skills): **PASS** — `/cmk:realign BERTH`: traceability before/after (W1 5 → 0), reconstructed tasks.md noted as such, Status → Implemented on a fresh `bun test`.

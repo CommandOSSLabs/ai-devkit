@@ -51,7 +51,7 @@ GENERATED_SEGMENTS = {
     "generated",
     "__generated__",
 }
-DOCS_PREFIXES = ("docs/", ".skills/", "README", "CHANGELOG", "LICENSE")
+DOCS_PREFIXES = ("docs/", ".skills/", ".claude/", ".agents/", "README", "CHANGELOG", "LICENSE")
 SOURCE_EXTS = (
     ".rs",
     ".ts",

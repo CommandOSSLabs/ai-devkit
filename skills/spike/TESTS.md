@@ -39,3 +39,8 @@ code, even when invited to." Several gave the owner's file as a second reason: "
 `src/latefee.ts` now would also mean deciding the `today` source ahead of Minh's review."
 
 Not covered: the UI branch (`cmk:ui-brief`), which is its own skill.
+
+
+## Smoke after the cmk rename (2026-10-19)
+
+skill-tester-haiku on harbor-ledger (`KIT=cmk`, all 93 skills): **PASS** — waitlist offer state machine: `src/waitlist.spike*.ts` marked throwaway, logic module apart from the TUI, verdict PLACEHOLDER, no production file touched, `bun test` green.

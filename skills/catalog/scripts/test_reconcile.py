@@ -64,6 +64,16 @@ class TestClassify(unittest.TestCase):
         rows = classify_paths(["docs/guide/README.md"], {})
         self.assertEqual(rows[0]["change_class"], "no-spec-impact")
 
+    def test_installed_agent_skills_are_no_spec_impact(self):
+        # A repo that vendors this kit commits .agents/skills/ and installs .claude/skills/;
+        # their bundled scripts are tooling, not a capability a feature should own.
+        from reconcile import classify_paths
+
+        rows = classify_paths([".claude/skills/cmk-catalog/scripts/owns.py",
+                               ".agents/skills/cmk-board/scripts/board.py"], {})
+        self.assertTrue(rows)
+        self.assertTrue(all(r["change_class"] == "no-spec-impact" for r in rows))
+
     def test_findings_capped_at_twelve(self):
         from reconcile import classify_paths, FINDINGS_MAX
 

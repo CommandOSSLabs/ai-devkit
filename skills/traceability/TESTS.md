@@ -84,3 +84,8 @@ a control. Both reps loaded the two files whose triggers existed, declined the t
 triggers did not and said why, and returned the same four errors plus the same
 two correct warnings nobody planted. Every extracted pass fired on its
 predicate, and the two runs agreed finding for finding.
+
+
+## Smoke after the cmk rename (2026-10-19)
+
+skill-tester-haiku on harbor-ledger (`KIT=cmk`, all 93 skills): **PASS** — `/cmk:traceability REFUND`: 6 defined, 6 cited, 0 unknown; W1 on BERTH and LATEFEE (no tasks.md); inapplicable passes skipped by their input predicates.

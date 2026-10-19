@@ -55,3 +55,8 @@ Mechanical: `scripts/test_owns.py` rejects flat INDEX; shared fixture loads CODE
 - export/materialize only when `Catalog sync: index-only`
 - Preflight missing INDEX → `/cmk:repo-config`
 - OBS provenance + batch confirm
+
+
+## Smoke after the cmk rename (2026-10-19)
+
+skill-tester-haiku on harbor-ledger (`KIT=cmk`, all 93 skills): **PASS** — `/cmk:catalog` reverse, full mode: `scripts/reconcile.py` ran from the installed package (exit 0) and proposed P01–P05 without writing. Found: installed `.claude/skills/**/scripts` classed as a new capability — fixed (`.claude/` and `.agents/` are tooling; test `test_installed_agent_skills_are_no_spec_impact`).

@@ -151,3 +151,8 @@ against the jdk set (77 skills, jdk names).
 
 jdk `why` merged in as `references/rationale.md`; the converted description never named the why
 question. The shipped one leads with it.
+
+
+## Smoke after the cmk rename (2026-10-19)
+
+skill-tester-haiku on harbor-ledger (`KIT=cmk`, all 93 skills): **PASS** — "why one JSON file instead of a database?" (rationale mode): read `references/rationale.md`; no recorded reason found, inferences labeled, the refund/schemaVersion tension surfaced, note in `.skills/research/`.
