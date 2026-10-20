@@ -3,7 +3,7 @@
 Every piece of work is a ticket. A ticket is always in exactly one state, and each move
 between states belongs to exactly one command or one person, so the board always tells the
 truth about what waits on whom. The design is [`../design/sdl-phases.md`](../design/sdl-phases.md);
-the rules live in `cmk:delivery-workflow`.
+the rules live in `cmk:delivery-workflow`. First time in a repo: [Setting it up](#setting-it-up).
 
 ## The five commands
 
@@ -57,7 +57,15 @@ requirement and its `SHALL CONTINUE TO` guard, the ticket is Ready.
 
 ## Setting it up
 
-`cmk:repo-setup` (or `cmk:repo-config` alone) maps the state roles to your tracker: labels on
-GitHub, `status:shaping`, `status:building`, `status:in-review` and `status:shipped` for the
-newer ones; workflow states plus labels on Linear. Creating labels is a tracker write, so it
-asks first.
+Once per repo, before the first ticket:
+
+- **A new project:** tell the agent "Set up this repo". `cmk:repo-setup` (init) settles the
+  stack, then runs layout, toolchain, docs, `CLAUDE.md`, `cmk:repo-config`, MCP, local stack,
+  infra, CI and skill vendoring in that order, and ends when install and verify run green.
+- **An existing repo:** the same request runs `cmk:repo-setup` in adopt mode: a migration
+  plan, every move approved first. If the repo only needs the workflow, run
+  `cmk:repo-config` alone.
+
+`cmk:repo-config` maps the state roles to your tracker: labels on GitHub, `status:shaping`,
+`status:building`, `status:in-review` and `status:shipped` for the newer ones; workflow
+states plus labels on Linear. Creating labels is a tracker write, so it asks first.

@@ -14,7 +14,11 @@ Fetch and follow https://raw.githubusercontent.com/CommandOSSLabs/ai-devkit/refs
 
 ## Quick Start
 
-Skills trigger from natural language — describe what you need and the right one picks it up. Five commands run the whole ticket flow:
+Skills trigger from natural language — describe what you need and the right one picks it up.
+
+Once per repo, tell your agent **"Set up this repo"**. `cmk:repo-setup` scaffolds a new repo (layout, toolchain, docs, `CLAUDE.md`, CI, the vendored skills) or adopts an existing one, and through `cmk:repo-config` maps the workflow's states to your tracker's labels. A repo that already has the rest can run `cmk:repo-config` alone ("configure the tracker").
+
+Then five commands run the whole ticket flow:
 
 ```
 /cmk:idea Vessel owners get an SMS when an invoice goes overdue
@@ -72,7 +76,7 @@ This devkit solves that by using structured documentation as the shared state. T
 | Delivery | `cmk:delivery-workflow`, `cmk:delivery-pipeline`, `cmk:delivery-intake`, `cmk:delivery-spec-plan`, `cmk:delivery-build`, `cmk:tdd`, `cmk:debug`, `cmk:evidence`, `cmk:delivery-simplify`, `cmk:delivery-review`, `cmk:delivery-ship`, `cmk:delivery-pr`, `cmk:verdict`, `cmk:delivery-status`, `cmk:delivery-reroute`, `cmk:delivery-handoff`, `cmk:discover-efforts`, `cmk:worktree`, `cmk:feature-graph`, `cmk:working-set`, `cmk:feedback` |
 | Session | `cmk:interpret`, `cmk:prose`, `cmk:source-trust` |
 | Setup and infra | `cmk:repo-setup`, `cmk:repo-config`, `cmk:project-layout`, `cmk:toolchain`, `cmk:agent-instructions`, `cmk:mcp-config`, `cmk:local-stack`, `cmk:infra`, `cmk:cicd`, `cmk:enclave`, `cmk:agent-vendors`, `cmk:sync` |
-| Testing and knowledge | `cmk:test-resources`, `cmk:testcontainers`, `cmk:rust`, `cmk:sui-sdk`, `cmk:sui-devstack` |
+| Testing and stacks | `cmk:test-resources`, `cmk:testcontainers`, `cmk:rust`, `cmk:sui-sdk`, `cmk:sui-devstack` |
 
 | Pack | Skills |
 |---|---|
@@ -95,9 +99,10 @@ Set up this repo                                   → cmk:repo-setup (init or a
 /cmk:shape #N                                      → requirements → design → plan, stopping for your approval
 /cmk:go                                            → every Ready ticket built, reviewed, opened as a PR
 /cmk:board                                         → what waits on you, what agents are doing
+/cmk:release                                       → the version, tag and notes; its tickets read shipped
 Something is broken and I don't know why           → cmk:debug
 Prove it works before you call it done             → cmk:evidence
-Record that we chose X over Y                       → cmk:adr
+Record that we chose X over Y                      → cmk:adr
 We keep saying relay and router for the same thing → cmk:glossary
 Hand this off to another agent                     → cmk:delivery-handoff
 Vendor the devkit skills into this repo            → cmk:agent-vendors

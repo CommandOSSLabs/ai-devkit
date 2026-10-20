@@ -21,7 +21,7 @@ Prerequisite: the agent needs the upstream skills to copy from. Clone this repos
 1. Follow `cmk:agent-vendors` (in `skills/agent-vendors/SKILL.md` if the skill isn't yet invocable) to establish the canonical `.agents/skills/cmk-<name>/` home and generate the adapters each vendor in use needs. It vendors the **core** skills plus the **packs** the user names — roadmap, acceptance, ui, ops, quality, project, maintainers, extras (`skills/agent-vendors/references/packs.md`) — and records them under `[packs] installed` in `.agents/skills.lock`.
 2. Follow `cmk:sync` in baseline mode (`skills/sync/SKILL.md`) to record the upstream ref, SHA, and pristine content hash per skill in `.agents/skills.lock`.
 3. If a trial install served as the copy source, remove it afterward — see [Switching paths](#switching-paths).
-4. Run `cmk:repo-setup` ("Set up this repo"): it writes `docs/agents/` through `cmk:repo-config` — tracker, the closed workflow's state labels, verify commands — which the delivery skills read.
+4. Set the repo up — [After installing](#after-installing).
 
 Per-vendor adapters, by discovery tier:
 
@@ -57,6 +57,10 @@ Try the kit before vendoring anything into your repo. Plugin skills are immutabl
 ```bash
 claude plugin add CommandOSSLabs/ai-devkit
 ```
+
+## After installing
+
+Whatever the path, set the repo up once before the first ticket: tell the agent "Set up this repo". `cmk:repo-setup` scaffolds an empty directory (init) or proposes a migration plan for an existing repo (adopt), and writes `docs/agents/` through `cmk:repo-config` — the tracker, the closed workflow's state labels, the verify commands. Until `docs/agents/` exists, `/cmk:go` and `/cmk:board` have no states to read. A repo that only needs the workflow can run `cmk:repo-config` alone ("configure the tracker"). Then follow [`docs/guides/workflow.md`](./docs/guides/workflow.md).
 
 ## Switching paths
 
