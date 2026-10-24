@@ -60,6 +60,7 @@ const CATEGORY_ICONS: Record<string, React.ElementType> = {
   docs: BookOpen,
   testing: TestTube2,
   sui: Hexagon,
+  security: ShieldCheck,
   other: Box,
 };
 

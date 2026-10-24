@@ -38,6 +38,7 @@ const LANE_ORDER = [
   "setup",
   "agent",
   "testing",
+  "security",
   "sui",
   "sync",
   "session",

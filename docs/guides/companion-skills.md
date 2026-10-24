@@ -76,7 +76,7 @@ this table does not invent one.
 |---|---|---|---|
 | [superpowers](https://github.com/obra/superpowers) | Brainstorming, plans, TDD, debugging | `npx skills add obra/superpowers` | brainstorming ≈ `cmk:requirements`; writing-plans ≈ `cmk:delivery-spec-plan` |
 | [mattpocock/skills](https://github.com/mattpocock/skills) | grill-me, tdd, triage, handoff | `npx skills add mattpocock/skills` | grill-me beside `cmk:requirements` |
-| [getsentry/skills](https://github.com/getsentry/skills) `security-review` | Reasoning-style security review | `npx skills add getsentry/skills --skill security-review` | lens inside `cmk:delivery-review`, not a replacement |
+| [getsentry/skills](https://github.com/getsentry/skills) `security-review` | Reasoning-style security review | `npx skills add getsentry/skills --skill security-review` | lens inside `cmk:delivery-review`, not a replacement; overlaps `cmk:security-audit` guidance mode |
 | [Plannotator](https://github.com/backnotprop/plannotator) | Annotate a plan; review a diff | none — see above | optional step in `cmk:delivery-spec-plan` and `cmk:delivery-ship` |
 
 ## Expected outcome
