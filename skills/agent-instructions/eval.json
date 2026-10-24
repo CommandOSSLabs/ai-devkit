@@ -18,7 +18,7 @@
     "prompt": "We just created a new repo and want to set up the root instruction file and engineering rules from scratch. Nothing exists yet.",
     "assertions": [
       "CLAUDE.md is seeded from the template with project identity, layout, invariants, build/test commands, and the rules pointer table filled from evidence in the repo, not aspiration",
-      "docs/rules/common/ is seeded with the six topic files: naming, doc-comments, testing, git-workflow, cli-surfaces, and agent-conduct",
+      "docs/rules/common/ is seeded with the seven topic files: naming, doc-comments, testing, git-workflow, cli-surfaces, agent-conduct, and untrusted-input",
       "CLAUDE.md points into docs/rules/common/{topic}.md for each seeded topic rather than inlining the standards themselves",
       "AGENTS.md is created as a symlink to CLAUDE.md",
       "every pointer row added to CLAUDE.md's rules table resolves to a topic file that was actually seeded, with no row added for a file that wasn't created",

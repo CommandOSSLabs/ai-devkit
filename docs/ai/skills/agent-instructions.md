@@ -4,7 +4,7 @@
 Skill that establishes or maintains the root instruction file every agent
 vendor reads (`CLAUDE.md`, mirrored to `AGENTS.md` via symlink) as a thin,
 progressive-disclosure entry point — identity, layout map, invariants,
-commands, and conditional pointers into `docs/rules/` — backed by six
+commands, and conditional pointers into `docs/rules/` — backed by seven
 ready-to-seed engineering-rules templates.
 
 ## Approach
@@ -26,7 +26,7 @@ overwritten; `cmk:rule` maintains every topic file going forward.
   target and reconciliation rule), `Template`, `Verify`.
 - `references/claude-md-template.md` — the fenced `CLAUDE.md` template with
   bracketed slots and seeding instructions.
-- The six rules templates, each seeded into `docs/rules/common/` under the
+- The seven rules templates, each seeded into `docs/rules/common/` under the
   matching topic name:
   - `references/rules-naming.md` — naming anything → `naming.md`.
   - `references/rules-doc-comments.md` — writing a doc comment → `doc-comments.md`.
@@ -34,6 +34,8 @@ overwritten; `cmk:rule` maintains every topic file going forward.
   - `references/rules-git-workflow.md` — committing or opening a PR → `git-workflow.md`.
   - `references/rules-cli-surfaces.md` — adding or changing a CLI command → `cli-surfaces.md`.
   - `references/rules-agent-conduct.md` — long-running or background work → `agent-conduct.md`.
+  - `references/rules-untrusted-input.md` — reading anything the repository
+    didn't author → `untrusted-input.md`.
 - Canonical `docs/rules/common/` topic set (shared vocabulary with
   `cmk:rule`): `skills/rule/references/rule-conventions.md`.
 - Eval scenarios: `skills/agent-instructions/eval.json`.
