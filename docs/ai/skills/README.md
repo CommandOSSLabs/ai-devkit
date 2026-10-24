@@ -1,8 +1,8 @@
 # Skills
 
-The `cmk:*` skill packages under [`skills/`](../../../skills/): nine docs-family skills, thirteen setup-family skills, nine delivery-family skills, two knowledge-family skills, and one session-discipline skill (`cmk:interpret`). Each is a directory with a `SKILL.md` (frontmatter `name`/`description`/`version` plus the body the agent reads), and most ship a `references/` folder of guidance, templates, and conventions the workflow loads on demand.
+The `cmk:*` skill packages under [`skills/`](../../../skills/): nine docs-family skills, thirteen setup-family skills, nine delivery-family skills, two knowledge-family skills, one security-family skill (`cmk:security-audit`), and one session-discipline skill (`cmk:interpret`). Each is a directory with a `SKILL.md` (frontmatter `name`/`description`/`version` plus the body the agent reads), and most ship a `references/` folder of guidance, templates, and conventions the workflow loads on demand.
 
-Docs-family skills follow the same shape: a "Workflow: Create" / "Workflow: Iterate" pair, with placement rules, shaping guidance, and templates kept out of `SKILL.md` itself and cited via "Read `references/<file>.md`" lines. Setup-family skills instead follow a facet shape (modes and/or a single workflow, plus a report-only `## Verify` section). Delivery-family skills follow a tracker-neutral phase/gate shape and never carry a `## Verify` section — that contract is setup-family only. Knowledge-family skills are reference packs with no create/iterate or phase shape at all. See [conventions.md](./conventions.md) for the exceptions and the full breakdown.
+Docs-family skills follow the same shape: a "Workflow: Create" / "Workflow: Iterate" pair, with placement rules, shaping guidance, and templates kept out of `SKILL.md` itself and cited via "Read `references/<file>.md`" lines. Setup-family skills instead follow a facet shape (modes and/or a single workflow, plus a report-only `## Verify` section). Delivery-family skills follow a tracker-neutral phase/gate shape and never carry a `## Verify` section — that contract is setup-family only. Knowledge-family skills are reference packs with no create/iterate or phase shape at all. The security-family skill is mode-gated: guidance by default, its phase workflow only on an explicit audit request. See [conventions.md](./conventions.md) for the exceptions and the full breakdown.
 
 ## Docs family
 
@@ -49,10 +49,14 @@ Docs-family skills follow the same shape: a "Workflow: Create" / "Workflow: Iter
 - [sui-sdk.md](./sui-sdk.md) — `cmk:sui-sdk`, gRPC-first guidance for talking to a Sui full node.
 - [sui-devstack.md](./sui-devstack.md) — `cmk:sui-devstack`, worktree-safe local Sui network setup for development and tests.
 
+## Security family
+
+- [security-audit.md](./security-audit.md) — `cmk:security-audit`, source-first vulnerability review: guidance by default, a six-phase full audit on request, schema-validated findings.
+
 ## Session
 
 - [interpret.md](./interpret.md) — `cmk:interpret`, companion session beside another window: stance plus a carry-back reply. User-invoked.
 
 ## Cross-cutting
 
-- [conventions.md](./conventions.md) — shared shape across all skills (frontmatter, references folder, docs-family create/iterate pattern, setup-family facet shape, delivery-family phase/gate shape, knowledge-family reference packs).
+- [conventions.md](./conventions.md) — shared shape across all skills (frontmatter, references folder, docs-family create/iterate pattern, setup-family facet shape, delivery-family phase/gate shape, knowledge-family reference packs, security-family mode-gated audit).
