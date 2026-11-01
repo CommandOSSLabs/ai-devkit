@@ -8,6 +8,7 @@ import {
   type CuratedSkillRef,
   type SkillCollection,
 } from "@/lib/skill-collections";
+import type { XThumbnailResponse } from "@/app/api/x-thumbnail/route";
 
 export const CUSTOM_REFS_STORAGE_KEY = "ai-devkit-custom-refs-v1";
 export const CUSTOM_COLLECTIONS_STORAGE_KEY = "ai-devkit-custom-collections-v1";
@@ -63,6 +64,8 @@ export function AddRefModal() {
   const [tagline, setTagline] = useState("");
   const [pairsWithInput, setPairsWithInput] = useState("design, delivery-review");
   const [copiedJson, setCopiedJson] = useState(false);
+  const [resolvedX, setResolvedX] = useState<XThumbnailResponse | null>(null);
+  const [resolvingX, setResolvingX] = useState(false);
 
   // New Collection form state
   const [colTitle, setColTitle] = useState("");
@@ -84,11 +87,46 @@ export function AddRefModal() {
     return () => window.removeEventListener(OPEN_ADD_REF_EVENT, onOpen);
   }, []);
 
-  const cleanHandle = xHandle.trim().replace(/^@/, "") || "builder";
+  const cleanHandle = xHandle.trim().replace(/^@/, "") || resolvedX?.handle || "builder";
   const cleanRepo = githubRepo
     .trim()
     .replace(/^https?:\/\/github\.com\//, "")
     .replace(/\/$/, "");
+
+  useEffect(() => {
+    const targetX = xPostUrl.trim() || (xHandle.trim() ? `https://x.com/${xHandle.trim().replace(/^@/, "")}` : "");
+    if (!targetX) {
+      setResolvedX(null);
+      return;
+    }
+
+    let cancelled = false;
+    const timer = window.setTimeout(() => {
+      setResolvingX(true);
+      const params = new URLSearchParams({ url: targetX });
+      if (cleanRepo) params.set("repo", cleanRepo);
+      fetch(`/api/x-thumbnail?${params.toString()}`)
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data: XThumbnailResponse | null) => {
+          if (cancelled || !data?.ok) return;
+          setResolvedX(data);
+          if (!xHandle.trim() && data.handle) {
+            setXHandle(`@${data.handle}`);
+          }
+        })
+        .catch(() => {
+          // ignore
+        })
+        .finally(() => {
+          if (!cancelled) setResolvingX(false);
+        });
+    }, 320);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, [xPostUrl, xHandle, cleanRepo]);
 
   const previewRef: CuratedSkillRef = {
     id: (skillName || title || "custom-skill")
@@ -99,16 +137,21 @@ export function AddRefModal() {
     title: title.trim() || skillName.trim() || "Community Agent Skill",
     tagline:
       tagline.trim() ||
+      resolvedX?.text?.slice(0, 180) ||
       "Curated community skill from X that pairs with CommandOSS workflows.",
     collectionId,
     creator: {
-      name: `@${cleanHandle}`,
+      name: resolvedX?.authorName || `@${cleanHandle}`,
       xHandle: cleanHandle,
       xUrl: `https://x.com/${cleanHandle}`,
       xPostUrl: xPostUrl.trim() || undefined,
       githubRepo: cleanRepo || `${cleanHandle}/skills`,
       githubUrl: cleanRepo ? `https://github.com/${cleanRepo}` : `https://x.com/${cleanHandle}`,
     },
+    thumbnailUrl: resolvedX?.thumbnailUrl ?? undefined,
+    xAvatarUrl: resolvedX?.avatarUrl ?? undefined,
+    xBannerUrl: resolvedX?.bannerUrl ?? undefined,
+    xVideoUrl: resolvedX?.videoUrl ?? undefined,
     installCommand: cleanRepo
       ? skillName.trim()
         ? `npx skills add ${cleanRepo} --skill ${skillName.trim()}`
@@ -325,15 +368,52 @@ export function AddRefModal() {
               </label>
 
               <label className="flex flex-col gap-1.5 text-[12px] text-[var(--text-secondary)]">
-                <span>Original X Post URL (optional)</span>
+                <span>Original X Post URL (auto-resolves X thumbnail)</span>
                 <input
                   type="url"
                   value={xPostUrl}
                   onChange={(e) => setXPostUrl(e.target.value)}
-                  placeholder="https://x.com/..."
+                  placeholder="https://x.com/handle/status/..."
                   className="h-9 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-base)] px-3 font-mono text-[12.5px] text-[var(--text-primary)] placeholder:text-[var(--text-disabled)] focus:border-[var(--accent)] focus:outline-none"
                 />
               </label>
+
+              {(resolvedX?.thumbnailUrl || resolvingX) && (
+                <div className="flex items-center gap-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-base)] p-2.5">
+                  {resolvedX?.thumbnailUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={resolvedX.thumbnailUrl}
+                      alt="Resolved X thumbnail"
+                      referrerPolicy="no-referrer"
+                      className="h-14 w-24 shrink-0 rounded-lg border border-white/10 object-cover"
+                    />
+                  ) : (
+                    <div className="h-14 w-24 shrink-0 animate-pulse rounded-lg bg-white/5" />
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5">
+                      {resolvedX?.avatarUrl && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={resolvedX.avatarUrl}
+                          alt=""
+                          referrerPolicy="no-referrer"
+                          className="h-4 w-4 rounded-full object-cover"
+                        />
+                      )}
+                      <span className="truncate font-mono text-[11.5px] font-medium text-[var(--text-primary)]">
+                        {resolvingX
+                          ? "Resolving X link thumbnail..."
+                          : `Resolved X thumbnail (@${resolvedX?.handle ?? cleanHandle})`}
+                      </span>
+                    </div>
+                    <p className="mt-0.5 truncate font-mono text-[10.5px] text-[var(--text-tertiary)]">
+                      {resolvedX?.thumbnailUrl}
+                    </p>
+                  </div>
+                </div>
+              )}
 
               <div className="mt-2 flex flex-wrap items-center justify-between gap-2 border-t border-[var(--border-subtle)] pt-4">
                 <div className="flex items-center gap-2">

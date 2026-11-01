@@ -37,15 +37,15 @@ const COLLECTION_PREVIEW_ACCENTS: Record<string, string[]> = {
     "linear-gradient(135deg, #f43f5e 0%, #8b5cf6 100%)",
     "linear-gradient(135deg, #fab12f 0%, #ea580c 100%)",
   ],
-  "context-memory": [
-    "linear-gradient(135deg, #a855f7 0%, #6366f1 100%)",
+  vendors: [
     "linear-gradient(135deg, #38bdf8 0%, #10b981 100%)",
-    "linear-gradient(135deg, #f79ad0 0%, #8b5cf6 100%)",
-  ],
-  harnesses: [
-    "linear-gradient(135deg, #fab12f 0%, #10b981 100%)",
+    "linear-gradient(135deg, #fab12f 0%, #dd0303 100%)",
     "linear-gradient(135deg, #82aaff 0%, #6366f1 100%)",
-    "linear-gradient(135deg, #fb923c 0%, #ec4899 100%)",
+  ],
+  memory: [
+    "linear-gradient(135deg, #a855f7 0%, #6366f1 100%)",
+    "linear-gradient(135deg, #f79ad0 0%, #8b5cf6 100%)",
+    "linear-gradient(135deg, #fab12f 0%, #10b981 100%)",
   ],
 };
 
@@ -93,14 +93,23 @@ export function CollectionsView() {
     [customRefs],
   );
 
+  const refsByCollection = useMemo(() => {
+    const map: Record<string, CuratedSkillRef[]> = {};
+    for (const c of allCollections) map[c.id] = [];
+    for (const item of allRefs) {
+      if (!map[item.collectionId]) map[item.collectionId] = [];
+      map[item.collectionId].push(item);
+    }
+    return map;
+  }, [allCollections, allRefs]);
+
   const countByCollection = useMemo(() => {
     const counts: Record<string, number> = {};
-    for (const c of allCollections) counts[c.id] = 0;
-    for (const item of allRefs) {
-      counts[item.collectionId] = (counts[item.collectionId] ?? 0) + 1;
+    for (const c of allCollections) {
+      counts[c.id] = refsByCollection[c.id]?.length ?? 0;
     }
     return counts;
-  }, [allCollections, allRefs]);
+  }, [allCollections, refsByCollection]);
 
   const activeCollection = useMemo(
     () => allCollections.find((c) => c.id === activeCollectionId) ?? null,
@@ -177,6 +186,7 @@ export function CollectionsView() {
             />
 
             {allCollections.map((collection) => {
+              const items = refsByCollection[collection.id] ?? [];
               const count = countByCollection[collection.id] ?? 0;
               return (
                 <StackedFolderCard
@@ -185,6 +195,7 @@ export function CollectionsView() {
                   countLabel={`${count} ${count === 1 ? "ref" : "refs"}`}
                   active={activeCollectionId === collection.id}
                   previewAccents={COLLECTION_PREVIEW_ACCENTS[collection.id]}
+                  previewItems={items}
                   onClick={() => setActiveCollectionId(collection.id)}
                 />
               );

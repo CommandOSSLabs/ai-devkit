@@ -7,12 +7,19 @@ import {
   Copy,
   ExternalLink,
   GitBranch,
+  Play,
   ShieldCheck,
   Sparkles,
   Terminal,
   X,
 } from "lucide-react";
-import { buildShoutoutTweet, type CuratedSkillRef } from "@/lib/skill-collections";
+import {
+  buildShoutoutTweet,
+  resolveRefAvatar,
+  resolveRefXLink,
+  type CuratedSkillRef,
+} from "@/lib/skill-collections";
+import { useResolvedXMedia } from "@/lib/use-x-thumbnail";
 
 function XLogo({ className }: { className?: string }) {
   return (
@@ -52,9 +59,10 @@ function getHashIndex(id: string, mod: number): number {
 }
 
 /**
- * Art-directed visual preview canvas inside each `.md-tile-frame`, inspired by
- * the visual diversity of `marked.dev/explore` (dark UI windows, editorial type
- * specimens, CLI terminal cards, workflow graphs, and component mockups).
+ * X Link Thumbnail Stage inside each `.md-tile-frame`:
+ * Renders the resolved thumbnail from the item's X post/profile link
+ * (`pbs.twimg.com` media/video thumb, creator banner, or linked card OG image)
+ * with real X creator avatar, handle, and install metadata.
  */
 export function TileVisualArtwork({
   item,
@@ -65,10 +73,154 @@ export function TileVisualArtwork({
   index: number;
   large?: boolean;
 }) {
-  const variant = index % 6;
+  const media = useResolvedXMedia(item);
+  const [imgSrc, setImgSrc] = useState(media.thumbnailUrl);
+  const [imgFailed, setImgFailed] = useState(false);
   const cmdShort = item.installCommand
     ? item.installCommand.replace(/^npx skills add\s+/, "")
     : item.creator.githubRepo;
+
+  useEffect(() => {
+    setImgSrc(media.thumbnailUrl);
+    setImgFailed(false);
+  }, [media.thumbnailUrl]);
+
+  if (!imgFailed && imgSrc) {
+    return (
+      <div
+        className={`relative flex w-full flex-col justify-between overflow-hidden bg-[#111115] ${
+          large ? "min-h-[460px] p-5 sm:p-7" : "min-h-[330px] p-4"
+        }`}
+      >
+        {/* Ambient blurred backdrop derived from the X link thumbnail */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-30">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={imgSrc}
+            alt=""
+            aria-hidden="true"
+            referrerPolicy="no-referrer"
+            className="h-full w-full scale-125 object-cover blur-2xl"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#111115]/75 via-[#111115]/65 to-[#111115]/95" />
+        </div>
+
+        {/* Top X Source Header */}
+        <div className="relative z-10 mb-3 flex items-center justify-between gap-2">
+          <div className="inline-flex min-w-0 items-center gap-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={media.avatarUrl}
+              alt={`@${media.handle}`}
+              referrerPolicy="no-referrer"
+              className="h-5 w-5 shrink-0 rounded-full border border-white/20 bg-[#18151B] object-cover"
+            />
+            <span className="truncate font-mono text-[11.5px] font-medium text-white/90">
+              @{media.handle}
+            </span>
+            <VerifiedBadge />
+          </div>
+
+          <div className="flex shrink-0 items-center gap-1.5">
+            {item.starsOrInstalls && (
+              <span className="rounded-full border border-white/10 bg-white/[0.06] px-2 py-0.5 font-mono text-[10px] text-white/80">
+                {item.starsOrInstalls}
+              </span>
+            )}
+            <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-white/[0.08] text-white/85">
+              <XLogo className="h-2.5 w-2.5 fill-current" />
+            </span>
+          </div>
+        </div>
+
+        {/* Main X Link Thumbnail Frame */}
+        <div className="relative z-10 overflow-hidden rounded-[16px] border border-white/[0.12] bg-[#0b0b0e] shadow-[0_14px_32px_rgba(0,0,0,0.55)]">
+          {large && media.videoUrl ? (
+            <video
+              src={media.videoUrl}
+              poster={imgSrc}
+              controls
+              playsInline
+              muted
+              loop
+              autoPlay
+              className="aspect-[16/10] w-full bg-black object-cover"
+            />
+          ) : (
+            <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#16151d]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={imgSrc}
+                alt={`${item.title} X thumbnail`}
+                loading="lazy"
+                referrerPolicy="no-referrer"
+                onError={() => {
+                  if (imgSrc !== media.fallbackThumbnailUrl) {
+                    setImgSrc(media.fallbackThumbnailUrl);
+                  } else {
+                    setImgFailed(true);
+                  }
+                }}
+                className="h-full w-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+              />
+
+              {/* Subtle inner frame vignette */}
+              <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]" />
+
+              {/* X video/post indicator badge */}
+              <div className="pointer-events-none absolute left-2.5 top-2.5 flex items-center gap-1.5">
+                {media.videoUrl ? (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/70 px-2 py-0.5 font-mono text-[10px] font-medium text-white backdrop-blur-md">
+                    <Play size={9} className="fill-current" />
+                    <span>X Video</span>
+                  </span>
+                ) : media.isStatusPost ? (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/65 px-2 py-0.5 font-mono text-[10px] text-white/90 backdrop-blur-md">
+                    <span>X Post Media</span>
+                  </span>
+                ) : null}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Bottom Caption & CMK Pairing Strip */}
+        <div className="relative z-10 mt-3.5 pb-8">
+          <div className="flex items-center justify-between gap-2">
+            <h4 className="truncate text-[16px] font-medium leading-[1.25] tracking-[-0.015em] text-white">
+              {item.title}
+            </h4>
+            <span className="shrink-0 rounded-md bg-white/[0.07] px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-white/70">
+              {item.collectionId}
+            </span>
+          </div>
+          <p className="mt-1 line-clamp-2 text-[12.5px] leading-[1.45] text-[#a3a3ad]">
+            {item.tagline}
+          </p>
+
+          <div className="mt-2.5 flex flex-wrap items-center justify-between gap-1.5 border-t border-white/[0.07] pt-2.5">
+            <span className="truncate font-mono text-[10.5px] text-[#c3e88d]">
+              $ {item.installCommand ?? cmdShort}
+            </span>
+            {item.pairsWithCmk.length > 0 && (
+              <div className="flex items-center gap-1">
+                {item.pairsWithCmk.slice(0, 2).map((cmk) => (
+                  <span
+                    key={cmk}
+                    className="rounded-full bg-white/[0.07] px-2 py-0.5 font-mono text-[10px] text-[#d4d4d8]"
+                  >
+                    + cmk:{cmk}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const variant = index % 6;
 
   // Variant 0: Floating App / Studio Window Preview
   if (variant === 0) {
@@ -366,6 +518,7 @@ export function ExploreVisualTile({
   onSelect?: (item: CuratedSkillRef) => void;
 }) {
   const [copied, setCopied] = useState(false);
+  const media = useResolvedXMedia(item);
   const avatarBg = AVATAR_GRADIENTS[getHashIndex(item.id, AVATAR_GRADIENTS.length)];
   const shoutoutUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(
     buildShoutoutTweet(item),
@@ -429,29 +582,36 @@ export function ExploreVisualTile({
             </a>
           </div>
 
-          {/* Bottom overlay (.tile-foot): Creator avatar on left, CMK badge on right */}
+          {/* Bottom overlay (.tile-foot): Creator X avatar & X link on left, CMK badge on right */}
           <div className="pointer-events-none absolute inset-x-3.5 bottom-3.5 z-20 flex h-[30px] items-center justify-between">
             <a
-              href={item.creator.xUrl}
+              href={media.xLink}
               target="_blank"
               rel="noreferrer"
               onClick={(e) => e.stopPropagation()}
-              title={`@${item.creator.xHandle} on X`}
+              title={`Open @${media.handle} on X`}
               className="pointer-events-auto inline-flex items-center gap-2 rounded-full pr-2.5 transition-transform duration-200 hover:scale-105"
             >
               <span
-                className="inline-flex h-[30px] w-[30px] items-center justify-center rounded-full font-mono text-[11px] font-semibold uppercase text-white shadow-[0_0_0_1px_rgba(255,255,255,0.18),0_2px_8px_rgba(0,0,0,0.45)]"
+                className="relative inline-flex h-[30px] w-[30px] items-center justify-center overflow-hidden rounded-full font-mono text-[11px] font-semibold uppercase text-white shadow-[0_0_0_1px_rgba(255,255,255,0.22),0_2px_8px_rgba(0,0,0,0.45)]"
                 style={{ background: avatarBg }}
               >
-                {item.creator.xHandle.slice(0, 2)}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={media.avatarUrl}
+                  alt={`@${media.handle}`}
+                  referrerPolicy="no-referrer"
+                  className="h-full w-full object-cover"
+                />
               </span>
-              <span className="rounded-full bg-[#171717]/90 px-2.5 py-1 font-mono text-[11px] text-white opacity-0 shadow-[0_0_0_1px_rgba(255,255,255,0.1)] backdrop-blur-md transition-opacity duration-150 group-hover:opacity-100">
-                @{item.creator.xHandle}
+              <span className="inline-flex items-center gap-1 rounded-full bg-[#171717]/90 px-2.5 py-1 font-mono text-[11px] text-white shadow-[0_0_0_1px_rgba(255,255,255,0.1)] backdrop-blur-md">
+                <span>@{media.handle}</span>
+                <XLogo className="h-2.5 w-2.5 fill-current opacity-80" />
               </span>
             </a>
 
             {item.pairsWithCmk[0] && (
-              <span className="rounded-full bg-[#171717]/85 px-2.5 py-1 font-mono text-[10.5px] text-[#b4b4b4] opacity-0 shadow-[0_0_0_1px_rgba(255,255,255,0.08)] backdrop-blur-md transition-opacity duration-150 group-hover:opacity-100">
+              <span className="rounded-full bg-[#171717]/85 px-2.5 py-1 font-mono text-[10.5px] text-[#b4b4b4] shadow-[0_0_0_1px_rgba(255,255,255,0.08)] backdrop-blur-md">
                 cmk:{item.pairsWithCmk[0]}
               </span>
             )}
@@ -541,16 +701,22 @@ export function RefDetailModal({
               {/* Creator credit row (.ref-detail-credit) */}
               <div className="mt-3 flex items-center gap-2">
                 <a
-                  href={item.creator.xUrl}
+                  href={resolveRefXLink(item)}
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center gap-2 text-[13.5px] font-medium text-white hover:underline"
                 >
                   <span
-                    className="inline-flex h-[22px] w-[22px] items-center justify-center rounded-full font-mono text-[10px] font-semibold uppercase text-white"
+                    className="relative inline-flex h-[22px] w-[22px] items-center justify-center overflow-hidden rounded-full font-mono text-[10px] font-semibold uppercase text-white"
                     style={{ background: avatarBg }}
                   >
-                    {item.creator.xHandle.slice(0, 2)}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={resolveRefAvatar(item)}
+                      alt={`@${item.creator.xHandle}`}
+                      referrerPolicy="no-referrer"
+                      className="h-full w-full object-cover"
+                    />
                   </span>
                   <span>{item.creator.name}</span>
                   <VerifiedBadge />

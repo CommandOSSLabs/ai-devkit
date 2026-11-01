@@ -12,6 +12,10 @@ export type CuratedSkillRef = {
     githubRepo: string;
     githubUrl: string;
   };
+  thumbnailUrl?: string;
+  xAvatarUrl?: string;
+  xBannerUrl?: string;
+  xVideoUrl?: string;
   installCommand?: string;
   installNote?: string;
   pinnedSha?: string;
@@ -97,6 +101,9 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
       githubRepo: "emilkowalski/skills",
       githubUrl: "https://github.com/emilkowalski/skills",
     },
+    thumbnailUrl: "https://emilkowal.ski/skill/opengraph-image.jpg",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/1469017066795679751/CjEOyirb_400x400.jpg",
+    xBannerUrl: "https://pbs.twimg.com/profile_banners/1255500442898964481/1703289098",
     installCommand: "npx skills add emilkowalski/skills",
     vettedAt: "2026-10-11",
     starsOrInstalls: "45.1k stars",
@@ -115,9 +122,14 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
       name: "Paul Bakaus",
       xHandle: "pbakaus",
       xUrl: "https://x.com/pbakaus",
+      xPostUrl: "https://x.com/adrien_ninet/status/2041825321721458961",
       githubRepo: "pbakaus/impeccable",
       githubUrl: "https://github.com/pbakaus/impeccable",
     },
+    thumbnailUrl: "https://impeccable.style/og-image-v6.png",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/1550292580117622784/cT3WhwXw_400x400.jpg",
+    xBannerUrl: "https://pbs.twimg.com/profile_banners/12999402/1777331270",
+    xVideoUrl: "https://video.twimg.com/amplify_video/2041825305669857283/vid/avc1/1280x720/tpRpK9gSAglhlRFA.mp4?tag=21",
     installCommand: "npx skills add pbakaus/impeccable",
     vettedAt: "2026-10-11",
     starsOrInstalls: "79.5k stars",
@@ -138,6 +150,9 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
       githubRepo: "Leonxlnx/taste-skill",
       githubUrl: "https://github.com/Leonxlnx/taste-skill",
     },
+    thumbnailUrl: "https://repository-images.githubusercontent.com/1162099055/0a968964-fdca-4781-853b-84afc2bc2d31",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/1801274240634937344/rYkSOdHw_400x400.jpg",
+    xBannerUrl: "https://www.tasteskill.dev/og-image.jpg",
     installCommand: "npx skills add Leonxlnx/taste-skill --skill design-taste-frontend",
     vettedAt: "2026-10-11",
     starsOrInstalls: "94.5k stars",
@@ -157,6 +172,9 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
       githubRepo: "nextlevelbuilder/ui-ux-pro-max-skill",
       githubUrl: "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
     },
+    thumbnailUrl: "https://repository-images.githubusercontent.com/1106996539/d7c84c2d-e797-405f-a868-87fb194e8432",
+    xAvatarUrl: "https://avatars.githubusercontent.com/u/246974152?v=4",
+    xBannerUrl: "https://uupm.cc/share.png",
     installCommand: "npx skills add nextlevelbuilder/ui-ux-pro-max-skill --skill ui-ux-pro-max",
     vettedAt: "2026-10-11",
     starsOrInstalls: "134.6k stars",
@@ -176,6 +194,9 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
       githubRepo: "anthropics/skills",
       githubUrl: "https://github.com/anthropics/skills/tree/main/skills/frontend-design",
     },
+    thumbnailUrl: "https://pbs.twimg.com/profile_banners/1353836358901501952/1719228429",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/1798110641414443008/XP8gyBaY_400x400.jpg",
+    xBannerUrl: "https://opengraph.githubassets.com/89a9ab61c8e03f11c2ce9cd1c6c4d641aee8037ebbc4e8ce2c1bb1e458e88de1/anthropics/skills",
     installCommand: "npx skills add anthropics/skills --skill frontend-design",
     vettedAt: "2026-10-11",
     starsOrInstalls: "973k installs",
@@ -195,6 +216,9 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
       githubRepo: "vercel-labs/agent-skills",
       githubUrl: "https://github.com/vercel-labs/agent-skills",
     },
+    thumbnailUrl: "https://pbs.twimg.com/profile_banners/4686835494/1768602813",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/1767351110228918272/3Pndc5OT_400x400.png",
+    xBannerUrl: "https://opengraph.githubassets.com/37abb79e97149a7ab6b0f994db64997203f3a6db7813f1edfba229094141f463/vercel-labs/agent-skills",
     installCommand: "npx skills add vercel-labs/agent-skills --skill web-design-guidelines",
     vettedAt: "2026-10-11",
     starsOrInstalls: "32.2k stars",
@@ -214,6 +238,9 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
       githubRepo: "shadcn-ui/ui",
       githubUrl: "https://ui.shadcn.com/docs/skills",
     },
+    thumbnailUrl: "https://repository-images.githubusercontent.com/585146387/5afcd3e9-126b-48c8-b8d1-e17240c10d51",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/1593304942210478080/TUYae5z7_400x400.jpg",
+    xBannerUrl: "https://repository-images.githubusercontent.com/585146387/5afcd3e9-126b-48c8-b8d1-e17240c10d51",
     installCommand: "npx skills add shadcn/ui",
     vettedAt: "2026-10-11",
     starsOrInstalls: "125k stars",
@@ -235,6 +262,9 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
       githubRepo: "wheresryan22/anatomy",
       githubUrl: "https://github.com/wheresryan22/anatomy",
     },
+    thumbnailUrl: "https://skills.wheresryan.sh/anatomy/og.png",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/2099342814383308806/jbg4Mcs9_400x400.jpg",
+    xBannerUrl: "https://pbs.twimg.com/profile_banners/1688810283601387520/1770834316",
     installCommand: "npx skills add wheresryan22/anatomy",
     vettedAt: "2026-10-11",
     starsOrInstalls: "418 stars · MIT",
@@ -253,9 +283,14 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
       name: "Nico Bailon",
       xHandle: "nicobailon",
       xUrl: "https://x.com/nicobailon",
+      xPostUrl: "https://x.com/JayScambler/status/2088356230968287547",
       githubRepo: "nicobailon/visual-explainer",
       githubUrl: "https://github.com/nicobailon/visual-explainer",
     },
+    thumbnailUrl: "https://pbs.twimg.com/amplify_video_thumb/2088356115289395201/img/YnyFaXJaMAE2smE6.jpg",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/2031940627114463232/JmwSPNSq_200x200.jpg",
+    xBannerUrl: "https://opengraph.githubassets.com/b020eacb9a0242b155f46ef59309925bb23ac7c62bf63012f45b705218ec022e/nicobailon/visual-explainer",
+    xVideoUrl: "https://video.twimg.com/amplify_video/2088356115289395201/vid/avc1/1128x720/AySRhHycB4Wi4P8B.mp4?tag=29",
     installCommand: "npx skills add nicobailon/visual-explainer",
     vettedAt: "2026-10-11",
     starsOrInstalls: "10.3k stars",
@@ -271,11 +306,15 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
     collectionId: "explainers",
     creator: {
       name: "Egonex AI",
-      xHandle: "EgonexAI",
-      xUrl: "https://x.com/search?q=Understand-Anything+github",
+      xHandle: "fleetingbits",
+      xUrl: "https://x.com/fleetingbits",
+      xPostUrl: "https://x.com/fleetingbits/status/2088016749849682120",
       githubRepo: "Egonex-AI/Understand-Anything",
       githubUrl: "https://github.com/Egonex-AI/Understand-Anything",
     },
+    thumbnailUrl: "https://pbs.twimg.com/media/HPofaRHbMAA8NNO.jpg?name=large",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/1905042879460069376/XLCyb9Cr_200x200.jpg",
+    xBannerUrl: "https://pbs.twimg.com/profile_banners/1699179045764612096/1699141885",
     installCommand: "npx skills add Egonex-AI/Understand-Anything",
     vettedAt: "2026-10-11",
     starsOrInstalls: "85.9k stars",
@@ -297,6 +336,9 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
       githubRepo: "mattpocock/skills",
       githubUrl: "https://github.com/mattpocock/skills",
     },
+    thumbnailUrl: "https://res.cloudinary.com/total-typescript/image/upload/v1777381841/skills-og_2x.jpg",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/1666460461884211204/SmBm505D_400x400.jpg",
+    xBannerUrl: "https://pbs.twimg.com/profile_banners/346640777/1779721449",
     installCommand: "npx skills add mattpocock/skills",
     vettedAt: "2026-10-11",
     starsOrInstalls: "1.3M installs",
@@ -315,9 +357,14 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
       name: "backnotprop",
       xHandle: "backnotprop",
       xUrl: "https://x.com/backnotprop",
+      xPostUrl: "https://x.com/plannotator/status/2093419561077154287",
       githubRepo: "backnotprop/plannotator",
       githubUrl: "https://github.com/backnotprop/plannotator",
     },
+    thumbnailUrl: "https://pbs.twimg.com/amplify_video_thumb/2093418875631353856/img/iKilY-db-ShvKgyT.jpg",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/1993077560985767936/kJPMmCOb_400x400.jpg",
+    xBannerUrl: "https://plannotator.ai/assets/plannotator-generic-og-v1.jpg",
+    xVideoUrl: "https://video.twimg.com/amplify_video/2093418875631353856/vid/avc1/1144x720/bs8zrtzV4LZhUC68.mp4?tag=29",
     installNote: "Use when already installed locally (/plannotator-annotate & /plannotator-review)",
     pinnedSha: "5e38b79",
     vettedAt: "2026-10-12",
@@ -340,6 +387,9 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
       githubRepo: "obra/superpowers",
       githubUrl: "https://github.com/obra/superpowers",
     },
+    thumbnailUrl: "https://pbs.twimg.com/profile_banners/289403/1385248556",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/1594449061754843136/gc_DEnhp_400x400.jpg",
+    xBannerUrl: "https://opengraph.githubassets.com/d628990887706651e0730a8cba13a90a76b4c1207d405b2e22917fd1cb869fe9/obra/superpowers",
     installCommand: "npx skills add obra/superpowers",
     vettedAt: "2026-10-11",
     starsOrInstalls: "297k stars",
@@ -359,6 +409,9 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
       githubRepo: "EveryInc/compound-engineering-plugin",
       githubUrl: "https://github.com/EveryInc/compound-engineering-plugin",
     },
+    thumbnailUrl: "https://pbs.twimg.com/profile_banners/809565356/1791303348",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/2087946611716472832/m2zR-Rci_400x400.jpg",
+    xBannerUrl: "https://opengraph.githubassets.com/985ac33607f5402a82da2372fc3e648960bef0eb9e895b58347efa89c547a551/EveryInc/compound-engineering-plugin",
     installCommand: "npx skills add EveryInc/compound-engineering-plugin",
     vettedAt: "2026-10-11",
     starsOrInstalls: "25.5k stars",
@@ -380,6 +433,9 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
       githubRepo: "getsentry/skills",
       githubUrl: "https://github.com/getsentry/skills",
     },
+    thumbnailUrl: "https://pbs.twimg.com/profile_banners/1923107326858493952/1762815857",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/1988020311061917702/0OIJY0PS_400x400.png",
+    xBannerUrl: "https://opengraph.githubassets.com/e07908a205fa8c0df51eec8a77ca91800144c12e827bd0dda23d41886457a762/getsentry/skills",
     installCommand: "npx skills add getsentry/skills --skill security-review",
     vettedAt: "2026-10-11",
     starsOrInstalls: "1.0k stars",
@@ -400,6 +456,9 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
       githubRepo: "trailofbits/skills",
       githubUrl: "https://github.com/trailofbits/skills",
     },
+    thumbnailUrl: "https://pbs.twimg.com/profile_banners/127289989/1628021425",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/1422651083500003334/FbbYmQT__400x400.png",
+    xBannerUrl: "https://opengraph.githubassets.com/b9091f8c11f1f5fd19e6fc31745aba143b38d1d99f783db325687c45df083d42/trailofbits/skills",
     installCommand: "npx skills add trailofbits/skills",
     vettedAt: "2026-10-11",
     starsOrInstalls: "7.5k stars",
@@ -419,6 +478,9 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
       githubRepo: "vercel-labs/agent-browser",
       githubUrl: "https://github.com/vercel-labs/agent-browser",
     },
+    thumbnailUrl: "https://repository-images.githubusercontent.com/1140553475/42a931e7-9d10-4ffb-8605-41de16eefd0b",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/1767351110228918272/3Pndc5OT_400x400.png",
+    xBannerUrl: "https://pbs.twimg.com/profile_banners/4686835494/1768602813",
     installCommand: "npx skills add vercel-labs/agent-browser",
     vettedAt: "2026-10-11",
     starsOrInstalls: "1.1M installs",
@@ -440,6 +502,9 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
       githubRepo: "vercel-labs/agent-skills",
       githubUrl: "https://github.com/vercel-labs/agent-skills",
     },
+    thumbnailUrl: "https://repository-images.githubusercontent.com/1140553475/42a931e7-9d10-4ffb-8605-41de16eefd0b",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/1767351110228918272/3Pndc5OT_400x400.png",
+    xBannerUrl: "https://pbs.twimg.com/profile_banners/4686835494/1768602813",
     installCommand: "npx skills add vercel-labs/agent-skills",
     vettedAt: "2026-10-11",
     starsOrInstalls: "32.2k stars",
@@ -459,6 +524,9 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
       githubRepo: "cloudflare/skills",
       githubUrl: "https://github.com/cloudflare/skills",
     },
+    thumbnailUrl: "https://pbs.twimg.com/profile_banners/300637864/1792655993",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/2091957221253173248/kB_huM5C_400x400.jpg",
+    xBannerUrl: "https://opengraph.githubassets.com/d090393fe2bfa9e1aeafc5ba3023239375f0d021c2c741c607d32d5eb18d03f5/cloudflare/skills",
     installCommand: "npx skills add cloudflare/skills",
     vettedAt: "2026-10-11",
     starsOrInstalls: "3.0k stars",
@@ -478,6 +546,9 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
       githubRepo: "supabase/agent-skills",
       githubUrl: "https://github.com/supabase/agent-skills",
     },
+    thumbnailUrl: "https://pbs.twimg.com/profile_banners/1219566488325017602/1747832797",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/1822981431586439168/7xkKXRGQ_400x400.jpg",
+    xBannerUrl: "https://opengraph.githubassets.com/82e8e541cc939613b820854f5fa0e790f57709a511519fd6899649c519a886843/supabase/agent-skills",
     installCommand: "npx skills add supabase/agent-skills",
     vettedAt: "2026-10-11",
     starsOrInstalls: "2.7k stars",
@@ -499,6 +570,9 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
       githubRepo: "blader/humanizer",
       githubUrl: "https://github.com/blader/humanizer",
     },
+    thumbnailUrl: "https://repository-images.githubusercontent.com/1136666433/96e8e1ef-3e9d-4c03-be6f-15d6fd662f6d",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/1600585199800111106/zIdLh9UL_400x400.jpg",
+    xBannerUrl: "https://pbs.twimg.com/profile_banners/4468111/1729962315",
     installCommand: "npx skills add blader/humanizer",
     vettedAt: "2026-10-11",
     starsOrInstalls: "55.5k stars",
@@ -519,6 +593,9 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
       githubRepo: "aeonfun/soul.md",
       githubUrl: "https://github.com/aeonfun/soul.md",
     },
+    thumbnailUrl: "https://repository-images.githubusercontent.com/1148236572/202b6911-c8fa-4961-8dca-e085a03ff563",
+    xAvatarUrl: "https://avatars.githubusercontent.com/u/10599870?v=4",
+    xBannerUrl: "https://repository-images.githubusercontent.com/1148236572/202b6911-c8fa-4961-8dca-e085a03ff563",
     installCommand: "npx skills add aeonfun/soul.md",
     vettedAt: "2026-10-11",
     starsOrInstalls: "687 stars",
@@ -604,3 +681,40 @@ export function buildShoutoutTweet(ref: CuratedSkillRef): string {
     .filter(Boolean)
     .join("\n");
 }
+
+export function resolveRefXLink(ref: CuratedSkillRef): string {
+  return ref.creator.xPostUrl || ref.creator.xUrl || `https://x.com/${ref.creator.xHandle}`;
+}
+
+export function resolveRefThumbnail(ref: CuratedSkillRef): string {
+  if (ref.thumbnailUrl) return ref.thumbnailUrl;
+  if (ref.xBannerUrl) return ref.xBannerUrl;
+  const repo = ref.creator.githubRepo?.trim();
+  if (repo && repo.includes("/") && !repo.startsWith("http")) {
+    return `https://opengraph.githubassets.com/1/${repo}`;
+  }
+  const handle = ref.creator.xHandle?.replace(/^@/, "").trim();
+  if (handle) {
+    return `https://unavatar.io/x/${handle}`;
+  }
+  return "https://pbs.twimg.com/profile_banners/4686835494/1768602813";
+}
+
+export function resolveRefFallbackThumbnail(ref: CuratedSkillRef): string {
+  if (ref.xBannerUrl && ref.xBannerUrl !== ref.thumbnailUrl) return ref.xBannerUrl;
+  const repo = ref.creator.githubRepo?.trim();
+  if (repo && repo.includes("/") && !repo.startsWith("http")) {
+    return `https://opengraph.githubassets.com/1/${repo}`;
+  }
+  return resolveRefAvatar(ref);
+}
+
+export function resolveRefAvatar(ref: CuratedSkillRef): string {
+  if (ref.xAvatarUrl) return ref.xAvatarUrl;
+  const handle = ref.creator.xHandle?.replace(/^@/, "").trim();
+  if (handle) {
+    return `https://unavatar.io/x/${handle}`;
+  }
+  return "https://pbs.twimg.com/profile_images/1767351110228918272/3Pndc5OT_400x400.png";
+}
+
