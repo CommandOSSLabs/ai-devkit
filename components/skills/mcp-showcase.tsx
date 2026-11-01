@@ -67,8 +67,15 @@ const AGENT_SLOTS = [
 
 const SOURCE_SLOTS = [
   {
+    id: "cmk",
+    label: "23 Core CMK Skills",
+    bg: "#437df5",
+    color: "#ffffff",
+    icon: <Terminal className="h-4 w-4" />,
+  },
+  {
     id: "x",
-    label: "X Skill Collections",
+    label: "X Companion Collections",
     bg: "#262626",
     color: "#ffffff",
     icon: (
@@ -76,13 +83,6 @@ const SOURCE_SLOTS = [
         <path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3L12 14.6 5.5 22H2.3l7.9-9L1.6 2H8l4.5 6.7L18.9 2Zm-1.1 18h1.8L7 4H5.1l12.7 16Z" />
       </svg>
     ),
-  },
-  {
-    id: "cmk",
-    label: "CMK Core Skills",
-    bg: "#437df5",
-    color: "#ffffff",
-    icon: <Terminal className="h-4 w-4" />,
   },
   {
     id: "web",
@@ -96,50 +96,50 @@ const SOURCE_SLOTS = [
 const HERO_STEPS = [
   {
     step: "01",
-    title: "Browse 6 Curated Collections",
+    title: "1. Load Core cmk:* Workflows First",
     detail:
-      "18+ maintainer-vetted X companion skills (Design, Explainers, Workflow, Security, Vendors, Memory) paired with 23 core cmk:* skills.",
-    badge: "/skills/collections",
+      "Start from the 23 canonical cmk:* engineering skills (cmk:delivery-pipeline, cmk:design, cmk:repo-setup, cmk:codebase-docs, cmk:mcp-config).",
+    badge: "23 Core CMK Skills",
   },
   {
     step: "02",
-    title: "Agent Queries Skills via MCP",
+    title: "2. Auto-Pair Companion Collections",
     detail:
-      "Your coding agent calls list_collections, get_collection, or get_skill_ref to fetch SKILL.md rules, X reference media, and cmk:* pairing recipes.",
-    badge: "5 MCP Tools",
+      "MCP automatically resolves vetted X companion skills from the 6 Collection folders (grill-me, plannotator, impeccable, anatomy) that pair with your active cmk:* skill.",
+    badge: "CMK + 6 Collections",
   },
   {
     step: "03",
-    title: "Pull, Install & Execute in Repo",
+    title: "3. Vendor & Execute Across Agents",
     detail:
-      "The agent runs npx skills add <owner>/<repo> at a pinned commit SHA, wires .agents/skills/, and applies the skill instructions immediately.",
-    badge: "npx skills add",
+      "Syncs skills/<name>/SKILL.md and companion skills into .agents/skills/ for Claude Code, Codex, and Cursor with pinned commit SHAs.",
+    badge: "cmk:agent-vendors",
   },
 ];
 
 const MCP_CAPABILITIES = [
   {
-    title: "Pull entire Collection folders",
+    title: "Run 23 Core cmk:* Workflows",
     description:
-      "Fetch every vetted X companion skill inside design, explainers, workflow, security, vendors, or memory with one MCP call.",
-    tools: ["list_collections", "get_collection"],
+      "Load canonical engineering skills (cmk:delivery-pipeline, cmk:design, cmk:repo-setup, cmk:codebase-docs, cmk:adr, cmk:rule) directly into your agent.",
+    tools: ["get_cmk_skill", "run_cmk_pipeline"],
   },
   {
-    title: "Read SKILL.md & X context",
+    title: "Auto-pair X Collection skills",
     description:
-      "Inspect a skill's full SKILL.md rules, creator X thread/video thumbnail, pinned commit SHA, and paired cmk:* workflow before writing code.",
-    tools: ["get_skill_ref", "search_collection_skills"],
+      "Every cmk:* skill declares its vetted companion skills from /skills/collections (e.g. cmk:delivery-spec-plan + grill-me + plannotator).",
+    tools: ["get_collection", "get_skill_ref"],
   },
   {
     title: "Install at pinned commit SHAs",
     description:
-      "Execute npx skills add <owner>/<repo> --skill <name> directly from the collection manifest with maintainer-vetted provenance.",
+      "Execute npx skills add CommandOSSLabs/ai-devkit --skill <cmk-name> plus companion repos with maintainer-vetted provenance.",
     tools: ["install_collection_skill", "npx skills add"],
   },
   {
     title: "Sync across all agent vendors",
     description:
-      "Wire pulled collection skills and core cmk:* skills into .agents/skills/ for Claude Code, Codex, Cursor, and OpenCode.",
+      "Use cmk:mcp-config and cmk:agent-vendors to wire .mcp.json and .agents/skills/ across Claude Code, Codex, Cursor, and OpenCode.",
     tools: ["cmk:mcp-config", "cmk:agent-vendors"],
   },
 ];
@@ -490,16 +490,16 @@ export function McpShowcase({
         >
           <div className="mb-5 inline-flex flex-wrap items-center justify-center gap-2 rounded-full border border-white/[0.1] bg-white/[0.04] px-3.5 py-1.5 font-mono text-[11.5px] text-[var(--md-text-secondary)]">
             <Sparkles size={12} className="text-[#c3e88d]" />
-            <span>AI DevKit Collections MCP</span>
+            <span>AI DevKit CMK-First MCP</span>
             <span className="text-white/25">·</span>
-            <span>6 Collection Folders</span>
+            <span className="text-[#c3e88d]">23 Core cmk:* Skills</span>
             <span className="text-white/25">·</span>
-            <span>{CURATED_SKILL_REFS.length} Vetted X Skills + 23 Core CMK Skills</span>
+            <span>+ 6 Companion X Collections ({CURATED_SKILL_REFS.length} refs)</span>
           </div>
 
           <h1
             id="mcp-title"
-            className="max-w-[780px] text-[34px] font-medium leading-[1.08] tracking-[-0.024em] text-[var(--md-fg)] sm:text-[46px]"
+            className="max-w-[820px] text-[34px] font-medium leading-[1.08] tracking-[-0.024em] text-[var(--md-fg)] sm:text-[46px]"
           >
             <span className="inline-flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1">
               <span>The MCP server</span>
@@ -510,10 +510,14 @@ export function McpShowcase({
               >
                 {currentAgent.icon}
               </span>
+              <span>for</span>
+              <code className="rounded-xl bg-white/[0.08] px-2.5 py-0.5 font-mono text-[30px] text-[#c3e88d] sm:text-[40px]">
+                cmk:*
+              </code>
             </span>
             <br />
             <span className="inline-flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1">
-              <span>to pull skills from</span>
+              <span>&amp; companion</span>
               <span
                 title={currentSource.label}
                 style={{ background: currentSource.bg, color: currentSource.color }}
@@ -525,31 +529,22 @@ export function McpShowcase({
             </span>
           </h1>
 
-          <p className="mt-5 max-w-[650px] text-[15.5px] leading-[24px] text-[var(--md-text-tertiary)]">
-            Instead of hunting through X bookmarks or manually copying{" "}
-            <code className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-[13px] text-[var(--md-fg)]">
-              npx skills add
-            </code>{" "}
-            commands, connect{" "}
-            <strong className="font-medium text-[var(--md-fg)]">
-              Claude Code, Codex, or Cursor
-            </strong>{" "}
-            to the AI DevKit MCP. Your agent can query any{" "}
+          <p className="mt-5 max-w-[660px] text-[15.5px] leading-[24px] text-[var(--md-text-tertiary)]">
+            AI DevKit puts the{" "}
+            <Link
+              href="/skills/cmk"
+              className="font-medium text-[#c3e88d] underline decoration-[#c3e88d]/40 underline-offset-4 hover:decoration-[#c3e88d]"
+            >
+              23 core <code className="font-mono text-[13.5px]">cmk:*</code> engineering skills
+            </Link>{" "}
+            first — covering repo setup, living architecture docs, and the 5-phase delivery pipeline — and automatically pairs them with vetted community skills from{" "}
             <Link
               href="/skills/collections"
               className="text-[var(--md-fg)] underline decoration-white/30 underline-offset-4 hover:decoration-white"
             >
-              Collection folder
+              6 Collection folders
             </Link>{" "}
-            (<code className="font-mono text-[13px] text-white/85">design</code>,{" "}
-            <code className="font-mono text-[13px] text-white/85">explainers</code>,{" "}
-            <code className="font-mono text-[13px] text-white/85">workflow</code>,{" "}
-            <code className="font-mono text-[13px] text-white/85">security</code>,{" "}
-            <code className="font-mono text-[13px] text-white/85">vendors</code>,{" "}
-            <code className="font-mono text-[13px] text-white/85">memory</code>),
-            read each skill&apos;s <code className="font-mono text-[13px] text-white/85">SKILL.md</code> rules &amp; X demo, and pair them with{" "}
-            <code className="font-mono text-[13px] text-[#c3e88d]">cmk:*</code>{" "}
-            workflows automatically.
+            inside <strong className="font-medium text-[var(--md-fg)]">Claude Code, Codex, and Cursor</strong>.
           </p>
 
           <div className="mt-7 flex flex-wrap items-center justify-center gap-2.5">
