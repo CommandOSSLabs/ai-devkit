@@ -25,24 +25,38 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://skills.commandoss.com"),
   title: {
-    default: "AI DevKit Skills — Evolvable agent skills for the full SDLC",
+    default: "AI DevKit — Evolvable agent skills for the full SDLC",
     template: "%s",
   },
   description:
-    "23 canonical cmk:* engineering workflows, 6 curated X companion collections, and MCP support for Claude Code, Codex, and Cursor.",
+    "Make your coding agent feel right. 23 core cmk:* engineering skills, 6 curated X collections, and MCP support for Claude Code, Codex, and Cursor.",
   openGraph: {
-    title: "AI DevKit Skills — Evolvable agent skills for the full SDLC",
+    title: "AI DevKit — Evolvable agent skills for the full SDLC",
     description:
-      "23 canonical cmk:* engineering workflows, 6 curated X companion collections, and MCP support for Claude Code, Codex, and Cursor.",
+      "Make your coding agent feel right. 23 core cmk:* engineering skills, 6 curated X collections, and MCP support.",
     url: "https://skills.commandoss.com",
-    siteName: "AI DevKit Skills",
+    siteName: "AI DevKit",
     type: "website",
+    images: [
+      {
+        url: "https://skills.commandoss.com/og.png",
+        width: 2600,
+        height: 1658,
+        alt: "AI DevKit is a tool for shaping your SDLC by feel.",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI DevKit Skills — Evolvable agent skills for the full SDLC",
+    title: "AI DevKit — Evolvable agent skills for the full SDLC",
     description:
-      "23 canonical cmk:* engineering workflows, 6 curated X companion collections, and MCP support for Claude Code, Codex, and Cursor.",
+      "Make your coding agent feel right. 23 core cmk:* engineering skills, 6 curated X collections, and MCP support.",
+    images: [
+      {
+        url: "https://skills.commandoss.com/og.png",
+        alt: "AI DevKit is a tool for shaping your SDLC by feel.",
+      },
+    ],
   },
 };
 
