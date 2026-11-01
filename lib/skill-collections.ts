@@ -17,6 +17,7 @@ export type CuratedSkillRef = {
   xBannerUrl?: string;
   xVideoUrl?: string;
   installCommand?: string;
+  stylePrompt?: string;
   installNote?: string;
   pinnedSha?: string;
   vettedAt: string;
@@ -90,16 +91,16 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
   {
     id: "the-making-of-nhang",
     name: "the-making-of-nhang",
-    title: "The Making of Nhang — Illustrated Editorial UI/UX Diagram",
+    title: "The Making of Nhang — Illustrated Editorial UI/UX Style",
     tagline:
-      "Warm editorial infographic & step-by-step illustrated canvas style in plain JavaScript showing how Vietnamese folks craft incense sticks, inspired by @poteto's /statechart.",
+      "Warm giay-do rice-paper canvas (#F5F0E6), hand-drawn ultramarine & vermilion colored-pencil cross-hatching in plain JavaScript, bilingual notebook statechart nodes, and step-by-step playback controls.",
     collectionId: "design",
     creator: {
       name: "Ann Nguyen",
       xHandle: "ann_nnng",
       xUrl: "https://x.com/ann_nnng",
       xPostUrl: "https://x.com/ann_nnng/status/2116811409921372642",
-      githubRepo: "cursor/plugins",
+      githubRepo: "ann_nnng/the-making-of-nhang",
       githubUrl: "https://x.com/ann_nnng/status/2116811409921372642",
     },
     thumbnailUrl: "https://pbs.twimg.com/amplify_video_thumb/2116811213246242816/img/k5NYAZhiuP4gAvKK.jpg",
@@ -107,8 +108,10 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
     xBannerUrl: "https://pbs.twimg.com/profile_banners/1160414154974519296/1744434703",
     xVideoUrl: "https://video.twimg.com/amplify_video/2116811213246242816/vid/avc1/900x720/kyh5C2Q33CYP3Kpn.mp4?tag=29",
     installCommand: "npx skills add cursor/plugins --skill statechart",
+    stylePrompt:
+      "Draw an interactive step-by-step illustrated diagram in plain JavaScript using 'The Making of Nhang' editorial UI/UX style: (1) warm Vietnamese giay-do rice-paper background (#F5F0E6) with subtle organic grain; (2) procedural colored-pencil & ballpoint cross-hatch illustrations in ultramarine blue (#1E3296), vermilion red (#D6382E), bamboo green (#5DBB46), and golden ochre (#E8A331) with jittered multi-pass strokes; (3) distressed typewriter slab-serif typography (Special Elite / Courier Prime) with Roman numeral chapter kicker, bold ink-bleed display title, blue italic English subtitle, and red italic Vietnamese caption; (4) lined notebook-paper statechart nodes with red margin rule, bilingual labels, wavy blue pencil bottom edge, and animated state token; (5) fixed bottom playback bar with pill buttons (restart, prev, pause, next, 3x speed) and step counter (e.g. 2/27).",
     vettedAt: "2026-11-01",
-    starsOrInstalls: "UI/UX Editorial Diagram · @ann_nnng",
+    starsOrInstalls: "UI/UX Style + JS Canvas · @ann_nnng",
     pairsWithCmk: ["design", "codebase-docs"],
     featured: true,
     isNew: true,

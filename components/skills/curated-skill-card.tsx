@@ -531,7 +531,7 @@ export function ExploreVisualTile({
 
   function handleCopy(e: React.MouseEvent) {
     e.stopPropagation();
-    const text = item.installCommand ?? item.creator.githubUrl;
+    const text = item.stylePrompt ?? item.installCommand ?? item.creator.githubUrl;
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 1600);
@@ -559,7 +559,13 @@ export function ExploreVisualTile({
             <button
               type="button"
               onClick={handleCopy}
-              title={item.installCommand ? `Copy: ${item.installCommand}` : "Copy repo URL"}
+              title={
+                item.stylePrompt
+                  ? "Copy UI/UX Style Prompt"
+                  : item.installCommand
+                    ? `Copy: ${item.installCommand}`
+                    : "Copy repo URL"
+              }
               className="inline-flex h-[30px] items-center gap-1.5 rounded-full bg-[#171717]/90 px-3 font-mono text-[11px] font-medium text-white shadow-[0_0_0_1px_rgba(255,255,255,0.12),0_4px_12px_rgba(0,0,0,0.4)] backdrop-blur-md transition-transform active:scale-95"
             >
               {copied ? (
@@ -570,7 +576,13 @@ export function ExploreVisualTile({
               ) : (
                 <>
                   <Copy size={11} />
-                  <span>{item.installCommand ? "npx add" : "Copy"}</span>
+                  <span>
+                    {item.stylePrompt
+                      ? "Copy Style"
+                      : item.installCommand
+                        ? "npx add"
+                        : "Copy"}
+                  </span>
                 </>
               )}
             </button>
@@ -641,6 +653,7 @@ export function RefDetailModal({
   onClose: () => void;
 }) {
   const [copiedCmd, setCopiedCmd] = useState(false);
+  const [copiedStyle, setCopiedStyle] = useState(false);
 
   useEffect(() => {
     if (!item) return;
@@ -663,6 +676,13 @@ export function RefDetailModal({
     navigator.clipboard.writeText(text);
     setCopiedCmd(true);
     setTimeout(() => setCopiedCmd(false), 1800);
+  }
+
+  function handleCopyStylePrompt() {
+    if (!item?.stylePrompt) return;
+    navigator.clipboard.writeText(item.stylePrompt);
+    setCopiedStyle(true);
+    setTimeout(() => setCopiedStyle(false), 1800);
   }
 
   return (
@@ -736,6 +756,37 @@ export function RefDetailModal({
             <p className="text-[13.5px] leading-[20px] text-[#b4b4b4]">
               {item.tagline}
             </p>
+
+            {/* UI/UX Style Prompt box */}
+            {item.stylePrompt && (
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[11.5px] font-medium text-[#8a8a8a]">
+                    UI/UX Style Prompt
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleCopyStylePrompt}
+                    className="inline-flex items-center gap-1 rounded-full bg-white/[0.08] px-2.5 py-0.5 font-mono text-[11px] text-white hover:bg-white/[0.15]"
+                  >
+                    {copiedStyle ? (
+                      <>
+                        <Check size={12} className="text-[#c3e88d]" />
+                        <span className="text-[#c3e88d]">Copied</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy size={12} />
+                        <span>Copy Prompt</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+                <div className="max-h-[110px] overflow-y-auto rounded-xl bg-white/[0.06] p-3 font-mono text-[11.5px] leading-[1.55] text-[#d4d4d4]">
+                  {item.stylePrompt}
+                </div>
+              </div>
+            )}
 
             {/* Install command box */}
             {item.installCommand && (
