@@ -9,6 +9,8 @@ import {
   FileCode2,
   FolderPlus,
   GitPullRequest,
+  Loader2,
+  Play,
   Plus,
   ShieldCheck,
   X,
@@ -17,6 +19,7 @@ import {
   type CuratedSkillRef,
   type SkillCollection,
 } from "@/lib/skill-collections";
+import type { XThumbnailResponse } from "@/app/api/x-thumbnail/route";
 
 export const OPEN_ADD_REF_EVENT = "ai-devkit-open-add-ref";
 
@@ -115,6 +118,11 @@ export function AddRefModal() {
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<"ref" | "collection">("ref");
   const [copiedSnippet, setCopiedSnippet] = useState(false);
+  const [xInputUrl, setXInputUrl] = useState(
+    "https://x.com/benjitaylor/status/2116593247854453244",
+  );
+  const [previewData, setPreviewData] = useState<XThumbnailResponse | null>(null);
+  const [loadingPreview, setLoadingPreview] = useState(false);
 
   useEffect(() => {
     const onOpen = (e: Event) => {
@@ -128,7 +136,61 @@ export function AddRefModal() {
     return () => window.removeEventListener(OPEN_ADD_REF_EVENT, onOpen);
   }, []);
 
-  const activeSnippet = mode === "ref" ? REF_TS_SNIPPET : COLLECTION_TS_SNIPPET;
+  useEffect(() => {
+    if (!open || mode !== "ref") return;
+    const trimmed = xInputUrl.trim();
+    if (!trimmed) {
+      setPreviewData(null);
+      return;
+    }
+
+    let cancelled = false;
+    const timer = setTimeout(async () => {
+      setLoadingPreview(true);
+      try {
+        const res = await fetch(`/api/x-thumbnail?url=${encodeURIComponent(trimmed)}`);
+        const data = (await res.json()) as XThumbnailResponse;
+        if (!cancelled) {
+          setPreviewData(data.ok ? data : null);
+        }
+      } catch {
+        if (!cancelled) setPreviewData(null);
+      } finally {
+        if (!cancelled) setLoadingPreview(false);
+      }
+    }, 280);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [open, mode, xInputUrl]);
+
+  const dynamicRefSnippet = previewData
+    ? `{
+  id: "${(previewData.installCommand?.split("--skill")[1]?.trim() || previewData.handle || "custom-skill").toLowerCase().replace(/[^a-z0-9-]+/g, "-")}",
+  name: "${previewData.installCommand?.split("--skill")[1]?.trim() || previewData.githubRepo || previewData.handle || "skill-name"}",
+  title: "${(previewData.text?.split(/[.\n]/)[0] || `${previewData.authorName ?? previewData.handle} Skill`).replace(/"/g, '\\"').slice(0, 68)}",
+  tagline:
+    "${(previewData.text?.replace(/\s+/g, " ").trim() || "One-sentence summary of what the skill does.").replace(/"/g, '\\"').slice(0, 160)}",
+  collectionId: "design",
+  creator: {
+    name: "${(previewData.authorName || previewData.handle || "Creator").replace(/"/g, '\\"')}",
+    xHandle: "${previewData.handle || "handle"}",
+    xUrl: "https://x.com/${previewData.handle || "handle"}",
+    xPostUrl: "${previewData.xUrl}",
+    githubRepo: "${previewData.githubRepo || `${previewData.handle || "owner"}/skills`}",
+    githubUrl: "https://github.com/${previewData.githubRepo || `${previewData.handle || "owner"}/skills`}",
+  },
+  thumbnailUrl: "${previewData.thumbnailUrl || ""}",
+  xAvatarUrl: "${previewData.avatarUrl || ""}",${previewData.videoUrl ? `\n  xVideoUrl: "${previewData.videoUrl}",` : ""}
+  installCommand: "${previewData.installCommand || `npx skills add ${previewData.githubRepo || `${previewData.handle || "owner"}/skills`}`}",
+  vettedAt: "${new Date().toISOString().slice(0, 10)}",
+  pairsWithCmk: ["design", "delivery-review"],
+}`
+    : REF_TS_SNIPPET;
+
+  const activeSnippet = mode === "ref" ? dynamicRefSnippet : COLLECTION_TS_SNIPPET;
 
   function handleCopySnippet() {
     navigator.clipboard.writeText(activeSnippet);
@@ -201,11 +263,105 @@ export function AddRefModal() {
 
           {/* Scrollable Guide Body */}
           <div className="flex flex-col gap-3.5 overflow-y-auto pr-1">
-            {/* Step 1: Vetting Criteria */}
+            {/* Live X Post Unfurler & Video Preview when mode === "ref" */}
+            {mode === "ref" && (
+              <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-base)] p-3.5">
+                <div className="flex items-center justify-between gap-2 text-[13px] font-medium text-[var(--text-primary)]">
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/10 font-mono text-[11px] text-white">
+                      1
+                    </span>
+                    <span>Paste X Post URL to Preview Video & Auto-Fill Entry</span>
+                  </div>
+                  {loadingPreview && (
+                    <Loader2 size={13} className="animate-spin text-[var(--text-tertiary)]" />
+                  )}
+                </div>
+
+                <div className="mt-2.5">
+                  <input
+                    type="url"
+                    value={xInputUrl}
+                    onChange={(e) => setXInputUrl(e.target.value)}
+                    placeholder="https://x.com/benjitaylor/status/2116593247854453244"
+                    className="h-9 w-full rounded-lg border border-white/10 bg-[#0b0b0e] px-3 font-mono text-[12px] text-white placeholder:text-white/35 focus:border-white/30 focus:outline-none"
+                  />
+                </div>
+
+                {previewData && (
+                  <div className="mt-3 overflow-hidden rounded-xl border border-white/10 bg-[#111115] p-3">
+                    <div className="mb-2.5 flex items-center justify-between gap-2">
+                      <div className="flex min-w-0 items-center gap-2">
+                        {previewData.avatarUrl && (
+                          /* eslint-disable-next-line @next/next/no-img-element */
+                          <img
+                            src={previewData.avatarUrl}
+                            alt=""
+                            referrerPolicy="no-referrer"
+                            className="h-5 w-5 shrink-0 rounded-full object-cover"
+                          />
+                        )}
+                        <span className="truncate font-mono text-[12px] font-medium text-white">
+                          {previewData.authorName ?? `@${previewData.handle}`}
+                        </span>
+                        <span className="truncate font-mono text-[11px] text-white/55">
+                          @{previewData.handle}
+                        </span>
+                      </div>
+                      {previewData.videoUrl && (
+                        <span className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/10 px-2 py-0.5 font-mono text-[10px] text-[#38bdf8]">
+                          <Play size={9} className="fill-current" />
+                          <span>X Video Post</span>
+                        </span>
+                      )}
+                    </div>
+
+                    {previewData.videoUrl ? (
+                      <div className="overflow-hidden rounded-lg border border-white/10 bg-black">
+                        <video
+                          src={previewData.videoUrl}
+                          poster={previewData.thumbnailUrl ?? undefined}
+                          controls
+                          playsInline
+                          muted
+                          loop
+                          autoPlay
+                          className="aspect-[16/10] w-full object-cover"
+                        />
+                      </div>
+                    ) : previewData.thumbnailUrl ? (
+                      <div className="overflow-hidden rounded-lg border border-white/10 bg-black">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={previewData.thumbnailUrl}
+                          alt=""
+                          referrerPolicy="no-referrer"
+                          className="aspect-[16/10] w-full object-cover"
+                        />
+                      </div>
+                    ) : null}
+
+                    {previewData.text && (
+                      <p className="mt-2.5 line-clamp-2 text-[12px] leading-[1.45] text-white/80">
+                        {previewData.text}
+                      </p>
+                    )}
+
+                    {previewData.installCommand && (
+                      <div className="mt-2 rounded-lg bg-white/[0.06] px-2.5 py-1.5 font-mono text-[11px] text-[#c3e88d]">
+                        $ {previewData.installCommand}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Step: Vetting Criteria */}
             <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-base)] p-3.5">
               <div className="flex items-center gap-2 text-[13px] font-medium text-[var(--text-primary)]">
                 <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/10 font-mono text-[11px] text-white">
-                  1
+                  {mode === "ref" ? "2" : "1"}
                 </span>
                 <span>
                   {mode === "ref"
@@ -253,7 +409,7 @@ export function AddRefModal() {
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2 text-[13px] font-medium text-[var(--text-primary)]">
                   <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/10 font-mono text-[11px] text-white">
-                    2
+                    {mode === "ref" ? "3" : "2"}
                   </span>
                   <span className="inline-flex items-center gap-1.5">
                     <FileCode2 size={14} className="text-[var(--text-secondary)]" />
@@ -300,7 +456,7 @@ export function AddRefModal() {
             <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-base)] p-3.5">
               <div className="flex items-center gap-2 text-[13px] font-medium text-[var(--text-primary)]">
                 <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/10 font-mono text-[11px] text-white">
-                  3
+                  {mode === "ref" ? "4" : "3"}
                 </span>
                 <span>Open a Pull Request (or Nominate via Issue)</span>
               </div>

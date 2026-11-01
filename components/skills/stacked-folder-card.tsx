@@ -64,21 +64,34 @@ function FolderXThumbnailCard({
   return (
     <div className="relative h-[74px] w-24 overflow-hidden rounded-xl border border-white/25 bg-[#121017] p-[3px] shadow-[0_10px_22px_rgba(0,0,0,0.45)] sm:h-[80px] sm:w-28">
       <div className="relative h-full w-full overflow-hidden rounded-[9px] bg-[#1A1721]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={imgSrc}
-          alt={item.title}
-          loading="lazy"
-          referrerPolicy="no-referrer"
-          onError={() => {
-            if (imgSrc !== media.fallbackThumbnailUrl) {
-              setImgSrc(media.fallbackThumbnailUrl);
-            } else if (imgSrc !== media.avatarUrl) {
-              setImgSrc(media.avatarUrl);
-            }
-          }}
-          className="h-full w-full object-cover object-center"
-        />
+        {media.videoUrl ? (
+          <video
+            src={media.videoUrl}
+            poster={imgSrc}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            className="h-full w-full object-cover object-center"
+          />
+        ) : (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img
+            src={imgSrc}
+            alt={item.title}
+            loading="lazy"
+            referrerPolicy="no-referrer"
+            onError={() => {
+              if (imgSrc !== media.fallbackThumbnailUrl) {
+                setImgSrc(media.fallbackThumbnailUrl);
+              } else if (imgSrc !== media.avatarUrl) {
+                setImgSrc(media.avatarUrl);
+              }
+            }}
+            className="h-full w-full object-cover object-center"
+          />
+        )}
 
         {/* Subtle gradient scrim so X handle & skill name remain legible */}
         <div

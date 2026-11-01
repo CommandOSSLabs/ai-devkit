@@ -11,9 +11,49 @@ export interface XThumbnailResponse {
   thumbnailUrl: string | null;
   videoUrl: string | null;
   text: string | null;
+  installCommand?: string | null;
+  githubRepo?: string | null;
+  likes?: number | null;
+  bookmarks?: number | null;
+  views?: number | null;
 }
 
 const REVALIDATE_SECONDS = 3600;
+
+function pickOptimalMp4Url(videoMedia: {
+  url?: string;
+  formats?: Array<{ url?: string; container?: string; bitrate?: number }>;
+} | null): string | null {
+  if (!videoMedia) return null;
+  const mp4Formats = (videoMedia.formats ?? []).filter(
+    (f) => f.container === "mp4" && typeof f.url === "string",
+  );
+  if (mp4Formats.length > 0) {
+    const preferred =
+      mp4Formats.find((f) => (f.bitrate ?? 0) >= 1500000 && (f.bitrate ?? 0) <= 4500000) ??
+      mp4Formats[Math.min(mp4Formats.length - 1, 2)] ??
+      mp4Formats[0];
+    if (preferred?.url) return preferred.url;
+  }
+  return videoMedia.url ?? null;
+}
+
+function extractSkillInstallInfo(text: string | null | undefined): {
+  installCommand: string | null;
+  githubRepo: string | null;
+} {
+  if (!text) return { installCommand: null, githubRepo: null };
+  const cmdMatch = text.match(/npx\s+skills\s+add\s+([^\s\n]+)(?:\s+--skill\s+([^\s\n]+))?/i);
+  if (cmdMatch) {
+    const fullCmd = cmdMatch[0].trim();
+    const repoCandidate = cmdMatch[1]?.replace(/^https?:\/\/github\.com\//i, "").trim() ?? null;
+    return {
+      installCommand: fullCmd,
+      githubRepo: repoCandidate && repoCandidate.includes("/") ? repoCandidate : null,
+    };
+  }
+  return { installCommand: null, githubRepo: null };
+}
 
 function upgradeTwimgAvatar(url: string | null | undefined): string | null {
   if (!url) return null;
@@ -132,6 +172,9 @@ export async function GET(request: NextRequest) {
             thumbnailUrl = bannerUrl ?? avatarUrl;
           }
 
+          const tweetText: string | null = tweet.text ?? null;
+          const { installCommand, githubRepo } = extractSkillInstallInfo(tweetText);
+
           const payload: XThumbnailResponse = {
             ok: true,
             xUrl: tweet.url ?? rawUrl,
@@ -141,8 +184,13 @@ export async function GET(request: NextRequest) {
             avatarUrl,
             bannerUrl,
             thumbnailUrl,
-            videoUrl: videoMedia?.url ?? null,
-            text: tweet.text ?? null,
+            videoUrl: pickOptimalMp4Url(videoMedia),
+            text: tweetText,
+            installCommand,
+            githubRepo,
+            likes: typeof tweet.likes === "number" ? tweet.likes : null,
+            bookmarks: typeof tweet.bookmarks === "number" ? tweet.bookmarks : null,
+            views: typeof tweet.views === "number" ? tweet.views : null,
           };
 
           return NextResponse.json(payload, {

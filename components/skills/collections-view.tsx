@@ -137,18 +137,16 @@ export function CollectionsView() {
             </h1>
           )}
 
-          {activeCollection && (
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => triggerOpenAddRefModal({ mode: "ref" })}
-                className="md-header-cta"
-              >
-                <Plus size={15} />
-                <span>Add ref</span>
-              </button>
-            </div>
-          )}
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => triggerOpenAddRefModal({ mode: "ref" })}
+              className="md-header-cta"
+            >
+              <Plus size={15} />
+              <span>Share X skill post</span>
+            </button>
+          </div>
         </header>
 
         {/* Main Collections Stacked Folder Grid (exact marked.dev/collections layout) */}
@@ -175,6 +173,44 @@ export function CollectionsView() {
                 />
               );
             })}
+          </section>
+        )}
+
+        {/* Featured X Video Posts Showcase on root /skills/collections */}
+        {!activeCollection && query.trim().length === 0 && (
+          <section aria-label="Featured X Video Posts" className="mt-14">
+            <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <h2 className="text-[20px] font-medium tracking-[-0.015em] text-[var(--md-fg)]">
+                  X Video Posts
+                </h2>
+                <p className="mt-1 text-[13.5px] text-[var(--md-text-tertiary)]">
+                  Live video demos from X skill launches — click any post to inspect or copy its{" "}
+                  <code className="font-mono text-[12px] text-[var(--md-fg)]">npx skills add</code> command.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => triggerOpenAddRefModal({ mode: "ref" })}
+                className="inline-flex h-8 items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.05] px-3.5 text-[12px] font-medium text-[var(--md-fg)] transition-colors hover:bg-white/[0.1]"
+              >
+                <Plus size={13} />
+                <span>Paste X post link</span>
+              </button>
+            </div>
+
+            <div className="md-ref-grid">
+              {allRefs
+                .filter((item) => Boolean(item.xVideoUrl || item.creator.xPostUrl))
+                .map((item, index) => (
+                  <ExploreVisualTile
+                    key={item.id}
+                    item={item}
+                    index={index}
+                    onSelect={(ref) => setSelectedRef(ref)}
+                  />
+                ))}
+            </div>
           </section>
         )}
 

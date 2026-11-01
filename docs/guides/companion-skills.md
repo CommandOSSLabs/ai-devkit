@@ -55,6 +55,8 @@ this table does not invent one.
 
 | Skill | What it does | Install |
 |---|---|---|
+| [stageshow](https://github.com/benjitaylor/skills) | Faux UI stills, animations, and bento grids by Benji Taylor (`@benjitaylor`) | `npx skills add benjitaylor/skills --skill stageshow` |
+| [dialkit](https://github.com/joshpuckett/dialkit) | Live interface parameter and spring timeline tuner by Josh Puckett (`@joshpuckett`) | `npm install dialkit` |
 | [frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design) | Baseline "avoid generic AI UI" | `npx skills add anthropics/skills --skill frontend-design` |
 | [impeccable](https://github.com/pbakaus/impeccable) | Design-language layer with `/polish`, `/audit`, `/typeset` | `npx skills add pbakaus/impeccable` |
 | [ui-ux-pro-max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | Style, palette, and WCAG lookup | `npx skills add nextlevelbuilder/ui-ux-pro-max-skill --skill ui-ux-pro-max` |

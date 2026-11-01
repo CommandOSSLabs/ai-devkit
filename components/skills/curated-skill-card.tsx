@@ -7,7 +7,6 @@ import {
   Copy,
   ExternalLink,
   GitBranch,
-  Play,
   ShieldCheck,
   Sparkles,
   Terminal,
@@ -133,19 +132,30 @@ export function TileVisualArtwork({
           </div>
         </div>
 
-        {/* Main X Link Thumbnail Frame */}
+        {/* Main X Link Thumbnail / Video Post Frame */}
         <div className="relative z-10 overflow-hidden rounded-[16px] border border-white/[0.12] bg-[#0b0b0e] shadow-[0_14px_32px_rgba(0,0,0,0.55)]">
-          {large && media.videoUrl ? (
-            <video
-              src={media.videoUrl}
-              poster={imgSrc}
-              controls
-              playsInline
-              muted
-              loop
-              autoPlay
-              className="aspect-[16/10] w-full bg-black object-cover"
-            />
+          {media.videoUrl ? (
+            <div className="relative aspect-[16/10] w-full overflow-hidden bg-black">
+              <video
+                src={media.videoUrl}
+                poster={imgSrc}
+                controls={large}
+                playsInline
+                muted
+                loop
+                autoPlay
+                preload="metadata"
+                className="h-full w-full bg-black object-cover"
+              />
+              {!large && (
+                <div className="pointer-events-none absolute left-2.5 top-2.5 flex items-center gap-1.5">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-black/75 px-2.5 py-0.5 font-mono text-[10px] font-medium text-white backdrop-blur-md">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#38bdf8] shadow-[0_0_8px_#38bdf8]" />
+                    <span>X Video Post</span>
+                  </span>
+                </div>
+              )}
+            </div>
           ) : (
             <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#16151d]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -167,14 +177,9 @@ export function TileVisualArtwork({
               {/* Subtle inner frame vignette */}
               <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]" />
 
-              {/* X video/post indicator badge */}
+              {/* X post indicator badge */}
               <div className="pointer-events-none absolute left-2.5 top-2.5 flex items-center gap-1.5">
-                {media.videoUrl ? (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/70 px-2 py-0.5 font-mono text-[10px] font-medium text-white backdrop-blur-md">
-                    <Play size={9} className="fill-current" />
-                    <span>X Video</span>
-                  </span>
-                ) : media.isStatusPost ? (
+                {media.isStatusPost ? (
                   <span className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/65 px-2 py-0.5 font-mono text-[10px] text-white/90 backdrop-blur-md">
                     <span>X Post Media</span>
                   </span>
