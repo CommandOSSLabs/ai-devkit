@@ -69,6 +69,7 @@ this table does not invent one.
 
 | Skill | What it does | Install |
 |---|---|---|
+| [gamedev-cheatsheet](https://gamedev-cheatsheet.com) | 34 animated game dev & rendering concepts with exact vocabulary lines for AI coding prompts (`@NicolasZu`) | `https://gamedev-cheatsheet.com` |
 | [anatomy](https://github.com/wheresryan22/anatomy) | Explains an idea by building it as a working object | `npx skills add wheresryan22/anatomy` |
 | [visual-explainer](https://github.com/nicobailon/visual-explainer) | HTML pages and decks for diffs, plans, and recaps | `npx skills add nicobailon/visual-explainer` |
 

@@ -300,6 +300,32 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
 
   // ─── Explainers Collection ───────────────────────────────────────────
   {
+    id: "gamedev-cheatsheet",
+    name: "gamedev-cheatsheet",
+    title: "Game Dev Cheat Sheet — 34 Animated AI Prompt Concepts",
+    tagline:
+      "34 interactive game development & rendering concepts with live animations and exact vocabulary lines to paste into AI coding prompts.",
+    collectionId: "explainers",
+    creator: {
+      name: "Nicolas Zullo",
+      xHandle: "NicolasZu",
+      xUrl: "https://x.com/NicolasZu",
+      xPostUrl: "https://x.com/NicolasZu/status/2116601766410326177",
+      githubRepo: "NicolasZu/gamedev-cheatsheet",
+      githubUrl: "https://gamedev-cheatsheet.com",
+    },
+    thumbnailUrl: "https://pbs.twimg.com/amplify_video_thumb/2116599538760781824/img/QnwZuRP1mdCGmX5R.jpg",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/1592537257008840709/dIE0_SfE_400x400.jpg",
+    xBannerUrl: "https://gamedev-cheatsheet.com/og.jpg",
+    xVideoUrl: "https://video.twimg.com/amplify_video/2116599538760781824/vid/avc1/1032x720/TN7jG4oIxcXmtgxi.mp4?tag=29",
+    installCommand: "https://gamedev-cheatsheet.com",
+    vettedAt: "2026-10-31",
+    starsOrInstalls: "1.1k likes · 1.9k bookmarks · 61.5k views",
+    pairsWithCmk: ["glossary", "design", "codebase-docs"],
+    featured: true,
+    isNew: true,
+  },
+  {
     id: "anatomy",
     name: "anatomy",
     title: "Anatomy — Explain by Building",
