@@ -33,7 +33,6 @@ const memoryCache = new Map<string, XThumbnailResponse>();
 
 export function useResolvedXMedia(ref: CuratedSkillRef): ResolvedXMedia {
   const platform = resolveRefPlatform(ref);
-  const platformLabel = getSocialPlatformLabel(platform);
   const xLink = resolveRefXLink(ref);
   const postUrl = resolveRefPostUrl(ref);
   const isStatusPost = Boolean(
