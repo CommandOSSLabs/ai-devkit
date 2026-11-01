@@ -36,9 +36,12 @@ export function useResolvedXMedia(ref: CuratedSkillRef): ResolvedXMedia {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Fetch live X thumbnail if the ref has no explicit thumbnailUrl yet or is a status post without a pbs.twimg thumbnail
+    // Automatically resolve X video post, poster thumbnail, and creator avatar whenever
+    // a ref in lib/skill-collections.ts provides an xPostUrl (or is missing static media fields).
     const needsLiveFetch =
-      !ref.thumbnailUrl || (isStatusPost && !ref.thumbnailUrl.includes("twimg.com"));
+      !ref.thumbnailUrl ||
+      !ref.xAvatarUrl ||
+      (isStatusPost && (!ref.xVideoUrl || !ref.thumbnailUrl.includes("twimg.com")));
 
     if (!needsLiveFetch) return;
     const cached = memoryCache.get(xLink);

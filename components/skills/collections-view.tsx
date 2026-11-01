@@ -137,16 +137,18 @@ export function CollectionsView() {
             </h1>
           )}
 
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => triggerOpenAddRefModal({ mode: "ref" })}
-              className="md-header-cta"
-            >
-              <Plus size={15} />
-              <span>Share X skill post</span>
-            </button>
-          </div>
+          {activeCollection && (
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => triggerOpenAddRefModal({ mode: "ref" })}
+                className="md-header-cta"
+              >
+                <Plus size={15} />
+                <span>Add ref</span>
+              </button>
+            </div>
+          )}
         </header>
 
         {/* Main Collections Stacked Folder Grid (exact marked.dev/collections layout) */}
@@ -185,18 +187,27 @@ export function CollectionsView() {
                   X Video Posts
                 </h2>
                 <p className="mt-1 text-[13.5px] text-[var(--md-text-tertiary)]">
-                  Live video demos from X skill launches — click any post to inspect or copy its{" "}
-                  <code className="font-mono text-[12px] text-[var(--md-fg)]">npx skills add</code> command.
+                  Resolved automatically from <code className="font-mono text-[12px] text-[var(--md-fg)]">xPostUrl</code> in{" "}
+                  <a
+                    href="https://github.com/CommandOSSLabs/ai-devkit/blob/main/lib/skill-collections.ts"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-mono text-[12px] text-[var(--md-fg)] underline decoration-white/25 underline-offset-4 hover:decoration-white/70"
+                  >
+                    lib/skill-collections.ts
+                  </a>{" "}
+                  on GitHub.
                 </p>
               </div>
-              <button
-                type="button"
-                onClick={() => triggerOpenAddRefModal({ mode: "ref" })}
+              <a
+                href="https://github.com/CommandOSSLabs/ai-devkit/edit/main/lib/skill-collections.ts"
+                target="_blank"
+                rel="noreferrer"
                 className="inline-flex h-8 items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.05] px-3.5 text-[12px] font-medium text-[var(--md-fg)] transition-colors hover:bg-white/[0.1]"
               >
                 <Plus size={13} />
-                <span>Paste X post link</span>
-              </button>
+                <span>Add via GitHub PR</span>
+              </a>
             </div>
 
             <div className="md-ref-grid">
