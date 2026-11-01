@@ -55,6 +55,7 @@ this table does not invent one.
 
 | Skill | What it does | Install |
 |---|---|---|
+| [pixel-plays](https://github.com/amirmushichge/pixel-plays) | Open-source 3D isometric voxel & pixel diorama games OS UI/UX by Amir Mušić (`@AmirMushich`) | `git clone https://github.com/amirmushichge/pixel-plays` |
 | [the-making-of-nhang](https://x.com/ann_nnng/status/2116811409921372642) | Illustrated editorial UI/UX step-by-step diagram in plain JS by Ann Nguyen (`@ann_nnng`), inspired by `@poteto`'s `/statechart` | `npx skills add cursor/plugins --skill statechart` |
 | [stageshow](https://github.com/benjitaylor/skills) | Faux UI stills, animations, and bento grids by Benji Taylor (`@benjitaylor`) | `npx skills add benjitaylor/skills --skill stageshow` |
 | [dialkit](https://github.com/joshpuckett/dialkit) | Live interface parameter and spring timeline tuner by Josh Puckett (`@joshpuckett`) | `npm install dialkit` |

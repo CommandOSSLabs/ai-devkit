@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import { Plus } from "lucide-react";
 import { type CuratedSkillRef } from "@/lib/skill-collections";
 import { useResolvedXMedia } from "@/lib/use-x-thumbnail";
+import { SocialPlatformIcon } from "@/components/skills/curated-skill-card";
 
 const PAGE_VARIANTS = [
   {
@@ -114,8 +115,11 @@ function FolderXThumbnailCard({
             />
             <span className="truncate">@{media.handle}</span>
           </span>
-          <span className="inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-black/65 text-[7.5px] font-bold text-white/90">
-            𝕏
+          <span
+            title={media.platformLabel}
+            className="inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-black/65 text-white/90"
+          >
+            <SocialPlatformIcon platform={media.platform} className="h-2 w-2 fill-current" />
           </span>
         </div>
 

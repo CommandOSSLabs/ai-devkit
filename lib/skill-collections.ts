@@ -1,3 +1,23 @@
+export type SocialPlatform =
+  | "x"
+  | "threads"
+  | "instagram"
+  | "facebook"
+  | "youtube"
+  | "github"
+  | "web";
+
+export type CuratedSkillSource = {
+  platform?: SocialPlatform;
+  postUrl?: string;
+  profileUrl?: string;
+  handle?: string;
+  thumbnailUrl?: string;
+  videoUrl?: string;
+  avatarUrl?: string;
+  bannerUrl?: string;
+};
+
 export type CuratedSkillRef = {
   id: string;
   name: string;
@@ -9,9 +29,18 @@ export type CuratedSkillRef = {
     xHandle: string;
     xUrl: string;
     xPostUrl?: string;
+    platform?: SocialPlatform;
+    handle?: string;
+    profileUrl?: string;
+    postUrl?: string;
     githubRepo: string;
     githubUrl: string;
   };
+  /**
+   * Platform-agnostic social & media source (supports X, Threads, Instagram, Facebook, YouTube, GitHub, Web).
+   * Falls back to top-level `thumbnailUrl` / `xVideoUrl` / `xAvatarUrl` / `creator.xPostUrl` when omitted.
+   */
+  source?: CuratedSkillSource;
   thumbnailUrl?: string;
   xAvatarUrl?: string;
   xBannerUrl?: string;
@@ -88,6 +117,44 @@ export const SKILL_COLLECTIONS: SkillCollection[] = [
 
 export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
   // ─── Design Collection ───────────────────────────────────────────────
+  {
+    id: "pixel-plays",
+    name: "pixel-plays",
+    title: "Pixel Plays — 3D Pixel Games OS UI/UX",
+    tagline:
+      "Open-source 3D isometric voxel & pixel diorama games built with Claude Opus 5.5 — minimal gallery OS chrome, dithered foliage, soft directional shadows, and tactile micro-controls.",
+    collectionId: "design",
+    creator: {
+      name: "Amir Mušić",
+      xHandle: "AmirMushich",
+      xUrl: "https://x.com/AmirMushich",
+      xPostUrl: "https://x.com/AmirMushich/status/2116509069477621819",
+      githubRepo: "amirmushichge/pixel-plays",
+      githubUrl: "https://github.com/amirmushichge/pixel-plays",
+    },
+    source: {
+      platform: "x",
+      postUrl: "https://x.com/AmirMushich/status/2116509069477621819",
+      profileUrl: "https://x.com/AmirMushich",
+      handle: "AmirMushich",
+      thumbnailUrl: "https://pbs.twimg.com/amplify_video_thumb/2116507953377185792/img/7IPO0A17F2lDnamm.jpg",
+      videoUrl: "https://video.twimg.com/amplify_video/2116507953377185792/vid/avc1/884x720/MgUUucrULvfImfbg.mp4?tag=29",
+      avatarUrl: "https://pbs.twimg.com/profile_images/1872350781686321152/P-st4llY_400x400.jpg",
+      bannerUrl: "https://pbs.twimg.com/profile_banners/249795230/1767459893",
+    },
+    thumbnailUrl: "https://pbs.twimg.com/amplify_video_thumb/2116507953377185792/img/7IPO0A17F2lDnamm.jpg",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/1872350781686321152/P-st4llY_400x400.jpg",
+    xBannerUrl: "https://pbs.twimg.com/profile_banners/249795230/1767459893",
+    xVideoUrl: "https://video.twimg.com/amplify_video/2116507953377185792/vid/avc1/884x720/MgUUucrULvfImfbg.mp4?tag=29",
+    installCommand: "git clone https://github.com/amirmushichge/pixel-plays",
+    stylePrompt:
+      "Design an interactive 3D isometric pixel-art diorama & mini-game OS ('Pixel Plays' style): (1) pure gallery-white full-viewport stage (#FFFFFF) that lets the isometric diorama float in negative space; (2) crisp nearest-neighbor voxel/pixel rendering with dithered grass fringes, warm timber court borders, and soft angled cast shadows; (3) ultra-minimal OS switcher pill at top-center in monospace (e.g. 'Balote ▾') with zero visual clutter; (4) responsive physics and subtle ambient particle/foliage motion.",
+    vettedAt: "2026-11-01",
+    starsOrInstalls: "937 likes · 48k views · Open Source",
+    pairsWithCmk: ["design", "project-layout"],
+    featured: true,
+    isNew: true,
+  },
   {
     id: "the-making-of-nhang",
     name: "the-making-of-nhang",
@@ -788,26 +855,109 @@ export function buildShoutoutTweet(ref: CuratedSkillRef): string {
     .join("\n");
 }
 
+export function detectSocialPlatform(rawUrl?: string | null): SocialPlatform {
+  if (!rawUrl) return "x";
+  try {
+    const trimmed = rawUrl.trim();
+    const normalized = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+    const host = new URL(normalized).hostname.replace(/^www\./i, "").toLowerCase();
+    if (host === "x.com" || host === "twitter.com" || host.endsWith(".twitter.com")) return "x";
+    if (host === "threads.net" || host === "threads.com" || host.endsWith(".threads.net")) return "threads";
+    if (host === "instagram.com" || host === "instagr.am" || host.endsWith(".instagram.com")) return "instagram";
+    if (host === "facebook.com" || host === "fb.com" || host === "fb.watch" || host.endsWith(".facebook.com")) {
+      return "facebook";
+    }
+    if (host === "youtube.com" || host === "youtu.be" || host.endsWith(".youtube.com")) return "youtube";
+    if (host === "github.com" || host.endsWith(".github.com")) return "github";
+    return "web";
+  } catch {
+    return "x";
+  }
+}
+
+export function getSocialPlatformLabel(platform: SocialPlatform): string {
+  switch (platform) {
+    case "x":
+      return "X";
+    case "threads":
+      return "Threads";
+    case "instagram":
+      return "Instagram";
+    case "facebook":
+      return "Facebook";
+    case "youtube":
+      return "YouTube";
+    case "github":
+      return "GitHub";
+    default:
+      return "Web";
+  }
+}
+
+export function resolveRefPlatform(ref: CuratedSkillRef): SocialPlatform {
+  if (ref.source?.platform) return ref.source.platform;
+  if (ref.creator.platform) return ref.creator.platform;
+  const candidateUrl =
+    ref.source?.postUrl ??
+    ref.creator.postUrl ??
+    ref.creator.xPostUrl ??
+    ref.source?.profileUrl ??
+    ref.creator.profileUrl ??
+    ref.creator.xUrl;
+  return detectSocialPlatform(candidateUrl);
+}
+
+export function resolveRefHandle(ref: CuratedSkillRef): string {
+  return (
+    ref.source?.handle ??
+    ref.creator.handle ??
+    ref.creator.xHandle ??
+    ref.creator.name
+  ).replace(/^@/, "");
+}
+
+export function resolveRefPostUrl(ref: CuratedSkillRef): string | undefined {
+  return ref.source?.postUrl ?? ref.creator.postUrl ?? ref.creator.xPostUrl;
+}
+
+export function resolveRefVideoUrl(ref: CuratedSkillRef): string | null {
+  return ref.source?.videoUrl ?? ref.xVideoUrl ?? null;
+}
+
 export function resolveRefXLink(ref: CuratedSkillRef): string {
-  return ref.creator.xPostUrl || ref.creator.xUrl || `https://x.com/${ref.creator.xHandle}`;
+  return (
+    ref.source?.postUrl ||
+    ref.creator.postUrl ||
+    ref.creator.xPostUrl ||
+    ref.source?.profileUrl ||
+    ref.creator.profileUrl ||
+    ref.creator.xUrl ||
+    `https://x.com/${resolveRefHandle(ref)}`
+  );
 }
 
 export function resolveRefThumbnail(ref: CuratedSkillRef): string {
+  if (ref.source?.thumbnailUrl) return ref.source.thumbnailUrl;
   if (ref.thumbnailUrl) return ref.thumbnailUrl;
+  if (ref.source?.bannerUrl) return ref.source.bannerUrl;
   if (ref.xBannerUrl) return ref.xBannerUrl;
   const repo = ref.creator.githubRepo?.trim();
   if (repo && repo.includes("/") && !repo.startsWith("http")) {
     return `https://opengraph.githubassets.com/1/${repo}`;
   }
-  const handle = ref.creator.xHandle?.replace(/^@/, "").trim();
+  const handle = resolveRefHandle(ref).trim();
+  const platform = resolveRefPlatform(ref);
   if (handle) {
-    return `https://unavatar.io/x/${handle}`;
+    const provider = platform === "threads" ? "instagram" : platform === "web" ? "x" : platform;
+    return `https://unavatar.io/${provider}/${handle}`;
   }
   return "https://pbs.twimg.com/profile_banners/4686835494/1768602813";
 }
 
 export function resolveRefFallbackThumbnail(ref: CuratedSkillRef): string {
-  if (ref.xBannerUrl && ref.xBannerUrl !== ref.thumbnailUrl) return ref.xBannerUrl;
+  const primary = ref.source?.thumbnailUrl ?? ref.thumbnailUrl;
+  const banner = ref.source?.bannerUrl ?? ref.xBannerUrl;
+  if (banner && banner !== primary) return banner;
   const repo = ref.creator.githubRepo?.trim();
   if (repo && repo.includes("/") && !repo.startsWith("http")) {
     return `https://opengraph.githubassets.com/1/${repo}`;
@@ -816,10 +966,13 @@ export function resolveRefFallbackThumbnail(ref: CuratedSkillRef): string {
 }
 
 export function resolveRefAvatar(ref: CuratedSkillRef): string {
+  if (ref.source?.avatarUrl) return ref.source.avatarUrl;
   if (ref.xAvatarUrl) return ref.xAvatarUrl;
-  const handle = ref.creator.xHandle?.replace(/^@/, "").trim();
+  const handle = resolveRefHandle(ref).trim();
+  const platform = resolveRefPlatform(ref);
   if (handle) {
-    return `https://unavatar.io/x/${handle}`;
+    const provider = platform === "threads" ? "instagram" : platform === "web" ? "x" : platform;
+    return `https://unavatar.io/${provider}/${handle}`;
   }
   return "https://pbs.twimg.com/profile_images/1767351110228918272/3Pndc5OT_400x400.png";
 }

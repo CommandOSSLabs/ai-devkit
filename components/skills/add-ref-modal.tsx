@@ -40,24 +40,27 @@ export function loadCustomCollections(): SkillCollection[] {
 }
 
 const REF_TS_SNIPPET = `{
-  id: "stageshow",
-  name: "stageshow",
-  title: "Stageshow Faux UI & Bento Animations",
+  id: "pixel-plays",
+  name: "pixel-plays",
+  title: "Pixel Plays — 3D Pixel Games OS UI/UX",
   tagline:
-    "Stageshow: a skill that helps your agent make better faux UI stills, animations, bento grids, and more.",
+    "Open-source 3D isometric voxel & pixel diorama games built with Claude Opus 5.5.",
   collectionId: "design", // "design" | "explainers" | "workflow" | "security" | "vendors" | "memory"
   creator: {
-    name: "Benji Taylor",
-    xHandle: "benjitaylor",
-    xUrl: "https://x.com/benjitaylor",
-    // Just set xPostUrl — the X Video Post, thumbnail & avatar resolve automatically!
-    xPostUrl: "https://x.com/benjitaylor/status/2116593247854453244",
-    githubRepo: "benjitaylor/skills",
-    githubUrl: "https://github.com/benjitaylor/skills",
+    name: "Amir Mušić",
+    xHandle: "AmirMushich",
+    xUrl: "https://x.com/AmirMushich",
+    githubRepo: "amirmushichge/pixel-plays",
+    githubUrl: "https://github.com/amirmushichge/pixel-plays",
   },
-  installCommand: "npx skills add benjitaylor/skills --skill stageshow",
-  vettedAt: "2026-10-31",
-  pairsWithCmk: ["design", "delivery-review"],
+  // Flexible multi-platform source: "x" | "threads" | "instagram" | "facebook" | "youtube" | "web"
+  source: {
+    platform: "x", // or "threads" | "instagram" | "facebook"
+    postUrl: "https://x.com/AmirMushich/status/2116509069477621819",
+  },
+  installCommand: "git clone https://github.com/amirmushichge/pixel-plays",
+  vettedAt: "2026-11-01",
+  pairsWithCmk: ["design", "project-layout"],
 }`;
 
 const COLLECTION_TS_SNIPPET = `{

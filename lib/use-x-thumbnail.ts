@@ -3,14 +3,22 @@
 import { useEffect, useState } from "react";
 import {
   type CuratedSkillRef,
+  type SocialPlatform,
+  getSocialPlatformLabel,
   resolveRefAvatar,
   resolveRefFallbackThumbnail,
+  resolveRefHandle,
+  resolveRefPlatform,
+  resolveRefPostUrl,
   resolveRefThumbnail,
+  resolveRefVideoUrl,
   resolveRefXLink,
 } from "@/lib/skill-collections";
 import type { XThumbnailResponse } from "@/app/api/x-thumbnail/route";
 
 export interface ResolvedXMedia {
+  platform: SocialPlatform;
+  platformLabel: string;
   thumbnailUrl: string;
   fallbackThumbnailUrl: string;
   avatarUrl: string;
@@ -24,8 +32,17 @@ export interface ResolvedXMedia {
 const memoryCache = new Map<string, XThumbnailResponse>();
 
 export function useResolvedXMedia(ref: CuratedSkillRef): ResolvedXMedia {
+  const platform = resolveRefPlatform(ref);
+  const platformLabel = getSocialPlatformLabel(platform);
   const xLink = resolveRefXLink(ref);
-  const isStatusPost = /\/status(?:es)?\/\d+/i.test(xLink);
+  const postUrl = resolveRefPostUrl(ref);
+  const isStatusPost = Boolean(
+    postUrl ||
+      /\/status(?:es)?\/\d+|\/post\/|\/reel\/|\/p\/|\/videos\/|watch\?v=/i.test(xLink),
+  );
+  const staticThumb = ref.source?.thumbnailUrl ?? ref.thumbnailUrl;
+  const staticAvatar = ref.source?.avatarUrl ?? ref.xAvatarUrl;
+  const staticVideo = resolveRefVideoUrl(ref);
   const initialThumb = resolveRefThumbnail(ref);
   const fallbackThumb = resolveRefFallbackThumbnail(ref);
   const initialAvatar = resolveRefAvatar(ref);
@@ -36,12 +53,12 @@ export function useResolvedXMedia(ref: CuratedSkillRef): ResolvedXMedia {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Automatically resolve X video post, poster thumbnail, and creator avatar whenever
-    // a ref in lib/skill-collections.ts provides an xPostUrl (or is missing static media fields).
+    // Automatically resolve social media (X, Threads, Instagram, Facebook, YouTube, Web)
+    // whenever a postUrl is provided or static thumbnail/avatar fields are omitted.
     const needsLiveFetch =
-      !ref.thumbnailUrl ||
-      !ref.xAvatarUrl ||
-      (isStatusPost && (!ref.xVideoUrl || !ref.thumbnailUrl.includes("twimg.com")));
+      !staticThumb ||
+      !staticAvatar ||
+      (isStatusPost && platform === "x" && (!staticVideo || !staticThumb.includes("twimg.com")));
 
     if (!needsLiveFetch) return;
     const cached = memoryCache.get(xLink);
@@ -77,19 +94,22 @@ export function useResolvedXMedia(ref: CuratedSkillRef): ResolvedXMedia {
   }, [
     xLink,
     isStatusPost,
-    ref.thumbnailUrl,
-    ref.xAvatarUrl,
-    ref.xVideoUrl,
+    platform,
+    staticThumb,
+    staticAvatar,
+    staticVideo,
     ref.creator.githubRepo,
   ]);
 
   return {
+    platform: dynamicData?.platform || platform,
+    platformLabel: getSocialPlatformLabel(dynamicData?.platform || platform),
     thumbnailUrl: dynamicData?.thumbnailUrl || initialThumb,
     fallbackThumbnailUrl: dynamicData?.bannerUrl || fallbackThumb,
     avatarUrl: dynamicData?.avatarUrl || initialAvatar,
-    videoUrl: dynamicData?.videoUrl || ref.xVideoUrl || null,
+    videoUrl: dynamicData?.videoUrl || staticVideo || null,
     xLink,
-    handle: dynamicData?.handle || ref.creator.xHandle.replace(/^@/, ""),
+    handle: dynamicData?.handle || resolveRefHandle(ref),
     isStatusPost,
     loading,
   };

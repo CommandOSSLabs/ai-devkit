@@ -17,6 +17,7 @@ import {
   resolveRefAvatar,
   resolveRefXLink,
   type CuratedSkillRef,
+  type SocialPlatform,
 } from "@/lib/skill-collections";
 import { useResolvedXMedia } from "@/lib/use-x-thumbnail";
 
@@ -26,6 +27,45 @@ function XLogo({ className }: { className?: string }) {
       <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
     </svg>
   );
+}
+
+export function SocialPlatformIcon({
+  platform,
+  className,
+}: {
+  platform?: SocialPlatform;
+  className?: string;
+}) {
+  const cls = className ?? "h-3 w-3 fill-current";
+  if (platform === "threads") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className={cls}>
+        <path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.34-.774-.963-1.391-1.855-1.842-.202 1.385-.662 2.487-1.396 3.314-1.016 1.145-2.464 1.77-4.187 1.808-1.38.03-2.559-.356-3.41-1.116-.887-.792-1.367-1.884-1.351-3.075.033-2.435 1.987-4.195 4.863-4.38 1.095-.07 2.138.046 3.103.346-.096-.834-.376-1.464-.838-1.882-.547-.495-1.368-.75-2.441-.758h-.033c-1.26 0-2.29.442-2.977 1.278l-1.641-1.35c1.087-1.323 2.688-2.024 4.63-2.024h.05c3.274.024 5.268 1.976 5.39 5.252.008.21.007.422-.001.635 1.246.63 2.185 1.545 2.724 2.775.792 1.807.828 4.566-1.435 6.783-1.848 1.812-4.14 2.607-7.442 2.633zm-.398-8.983c-1.763.113-2.796.973-2.815 2.345-.01.662.238 1.213.719 1.592.478.377 1.166.564 1.99.546 1.158-.025 2.083-.42 2.75-1.174.477-.539.8-1.277.967-2.204-.883-.3-1.855-.423-2.893-.365l-.718.06z" />
+      </svg>
+    );
+  }
+  if (platform === "instagram") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className={cls}>
+        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+      </svg>
+    );
+  }
+  if (platform === "facebook") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className={cls}>
+        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+      </svg>
+    );
+  }
+  if (platform === "youtube") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className={cls}>
+        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+      </svg>
+    );
+  }
+  return <XLogo className={cls} />;
 }
 
 function VerifiedBadge() {
@@ -126,8 +166,11 @@ export function TileVisualArtwork({
                 {item.starsOrInstalls}
               </span>
             )}
-            <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-white/[0.08] text-white/85">
-              <XLogo className="h-2.5 w-2.5 fill-current" />
+            <span
+              title={`Source: ${media.platformLabel}`}
+              className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-white/[0.08] text-white/85"
+            >
+              <SocialPlatformIcon platform={media.platform} className="h-2.5 w-2.5 fill-current" />
             </span>
           </div>
         </div>
@@ -151,7 +194,7 @@ export function TileVisualArtwork({
                 <div className="pointer-events-none absolute left-2.5 top-2.5 flex items-center gap-1.5">
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-black/75 px-2.5 py-0.5 font-mono text-[10px] font-medium text-white backdrop-blur-md">
                     <span className="h-1.5 w-1.5 rounded-full bg-[#38bdf8] shadow-[0_0_8px_#38bdf8]" />
-                    <span>X Video Post</span>
+                    <span>{media.platformLabel} Video Post</span>
                   </span>
                 </div>
               )}
@@ -161,7 +204,7 @@ export function TileVisualArtwork({
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={imgSrc}
-                alt={`${item.title} X thumbnail`}
+                alt={`${item.title} ${media.platformLabel} thumbnail`}
                 loading="lazy"
                 referrerPolicy="no-referrer"
                 onError={() => {
@@ -177,11 +220,11 @@ export function TileVisualArtwork({
               {/* Subtle inner frame vignette */}
               <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]" />
 
-              {/* X post indicator badge */}
+              {/* Social post indicator badge */}
               <div className="pointer-events-none absolute left-2.5 top-2.5 flex items-center gap-1.5">
                 {media.isStatusPost ? (
                   <span className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/65 px-2 py-0.5 font-mono text-[10px] text-white/90 backdrop-blur-md">
-                    <span>X Post Media</span>
+                    <span>{media.platformLabel} Post Media</span>
                   </span>
                 ) : null}
               </div>
@@ -623,7 +666,10 @@ export function ExploreVisualTile({
               </span>
               <span className="inline-flex items-center gap-1 rounded-full bg-[#171717]/90 px-2.5 py-1 font-mono text-[11px] text-white shadow-[0_0_0_1px_rgba(255,255,255,0.1)] backdrop-blur-md">
                 <span>@{media.handle}</span>
-                <XLogo className="h-2.5 w-2.5 fill-current opacity-80" />
+                <SocialPlatformIcon
+                  platform={media.platform}
+                  className="h-2.5 w-2.5 fill-current opacity-80"
+                />
               </span>
             </a>
 
