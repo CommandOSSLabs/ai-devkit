@@ -376,6 +376,28 @@ function Nav({
           </a>
 
           <SkillsTransitionLink
+            href="/skills/explore"
+            className={`hidden items-center gap-1.5 rounded border px-2.5 py-1.5 text-[13px] font-medium transition-colors sm:flex ${
+              isDark
+                ? "border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:border-[var(--border-strong)] hover:text-[var(--text-primary)]"
+                : "border-[#E2E8F0] bg-[#F1F5F9] text-[#475569] hover:border-[#CBD5E1] hover:text-[#0F172A]"
+            }`}
+          >
+            Explore
+          </SkillsTransitionLink>
+
+          <SkillsTransitionLink
+            href="/skills/collections"
+            className={`hidden items-center gap-1.5 rounded border px-2.5 py-1.5 text-[13px] font-medium transition-colors sm:flex ${
+              isDark
+                ? "border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:border-[var(--border-strong)] hover:text-[var(--text-primary)]"
+                : "border-[#E2E8F0] bg-[#F1F5F9] text-[#475569] hover:border-[#CBD5E1] hover:text-[#0F172A]"
+            }`}
+          >
+            Collections
+          </SkillsTransitionLink>
+
+          <SkillsTransitionLink
             href="/skills"
             className={`hidden items-center gap-1.5 rounded border px-2.5 py-1.5 text-[13px] font-medium transition-colors sm:flex ${
               isDark
@@ -383,7 +405,7 @@ function Nav({
                 : "border-[#E2E8F0] bg-[#F1F5F9] text-[#475569] hover:border-[#CBD5E1] hover:text-[#0F172A]"
             }`}
           >
-            Browse Skills
+            CMK Skills
           </SkillsTransitionLink>
 
           <Link

@@ -2,50 +2,85 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Layers, Share2, SendHorizontal, type LucideIcon } from "lucide-react";
+import {
+  FolderClosed,
+  Layers,
+  Plus,
+  SendHorizontal,
+  Share2,
+  Sparkles,
+  type LucideIcon,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
+import { triggerOpenAddRefModal } from "./add-ref-modal";
 
 export const NAV_ITEMS: { href: string; label: string; icon: LucideIcon }[] = [
-  { href: "/skills", label: "Skills", icon: Layers },
-  { href: "/skills/visualize-interactions", label: "How skills connect", icon: Share2 },
-  { href: "/skills/prompt-inputs", label: "Prompt Inputs", icon: SendHorizontal },
+  { href: "/skills/explore", label: "Explore", icon: Sparkles },
+  { href: "/skills", label: "CMK Skills", icon: Layers },
+  { href: "/skills/collections", label: "Collections", icon: FolderClosed },
+  { href: "/skills/visualize-interactions", label: "Graph", icon: Share2 },
+  { href: "/skills/prompt-inputs", label: "MCP", icon: SendHorizontal },
 ];
-
-// Playground has no surface yet. Rather than route people to a 404 or to a
-// placeholder that adds a page with nothing in it, it is absent from the nav
-// until it exists; /skills/playground redirects to the catalog so any link
-// already in the wild lands somewhere real.
 
 const TITLE_BY_PATH: Record<string, string> = Object.fromEntries(
   NAV_ITEMS.map(({ href, label }) => [href, label]),
 );
 
-// /skills owns two child routes now — /skills/<id> and its workspace — so
-// "Skills" stays the active section while you're inside one, rather than the
-// nav going blank the moment you open a skill. Sibling routes are matched
-// first so /skills/playground never counts as a skill id.
 export function isNavActive(pathname: string, href: string): boolean {
   if (href !== "/skills") return pathname === href || pathname.startsWith(`${href}/`);
   if (pathname === "/skills") return true;
   const claimedBySibling = NAV_ITEMS.some(
-    (item) => item.href !== "/skills" && (pathname === item.href || pathname.startsWith(`${item.href}/`)),
+    (item) =>
+      item.href !== "/skills" &&
+      (pathname === item.href || pathname.startsWith(`${item.href}/`)),
   );
   return pathname.startsWith("/skills/") && !claimedBySibling;
 }
 
-// The top bar's title needs to react to the active route, but layout.tsx
-// stays a server component — so that one bit of client state lives here,
-// next to the nav data it's already derived from, instead of forcing the
-// whole shell to become a client component just for a label.
 export function SkillsSectionTitle() {
   const pathname = usePathname();
   const exact = TITLE_BY_PATH[pathname];
   if (exact) return <>{exact}</>;
 
   const match = pathname.match(/^\/skills\/([^/]+)(\/workspace)?\/?$/);
-  if (match) return <>{`Skills / ${match[1]}${match[2] ? " / Workspace" : ""}`}</>;
+  if (match) return <>{`CMK Skills / ${match[1]}${match[2] ? " / Workspace" : ""}`}</>;
 
-  return <>Skills</>;
+  return <>CMK Skills</>;
+}
+
+export function SkillsTopNav() {
+  const pathname = usePathname();
+
+  return (
+    <nav aria-label="Main navigation" className="md-site-nav overflow-x-auto">
+      {NAV_ITEMS.map(({ href, label }) => {
+        const active = isNavActive(pathname, href);
+        return (
+          <Link
+            key={href}
+            href={href}
+            aria-current={active ? "page" : undefined}
+            className="whitespace-nowrap"
+          >
+            {label}
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}
+
+export function AddRefTriggerButton() {
+  return (
+    <button
+      type="button"
+      onClick={() => triggerOpenAddRefModal({ mode: "ref" })}
+      className="md-header-cta"
+    >
+      <Plus size={15} strokeWidth={1.9} />
+      <span>Add ref</span>
+    </button>
+  );
 }
 
 export function SkillsSidebarNav({ className = "" }: { className?: string }) {
