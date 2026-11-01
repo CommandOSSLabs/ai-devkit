@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Terminal } from "lucide-react";
+import { AiDevkitLogoIcon } from "@/components/brand-logo";
 import { NAV_ITEMS, isNavActive } from "./skills-sidebar-nav";
 
 // The rail is icon-only where space is tight and grows real labels once the
@@ -54,7 +54,7 @@ export function SkillsIconRail() {
   return (
     <div className="flex w-full flex-col items-center gap-4 xl:items-stretch">
       <RailButton href="/" label="ai-devkit">
-        <Terminal size={15} className="shrink-0 text-[color:var(--accent)]" />
+        <AiDevkitLogoIcon size="sm" />
       </RailButton>
 
       <span aria-hidden="true" className="h-px w-6 bg-[var(--border-subtle)] xl:w-full" />

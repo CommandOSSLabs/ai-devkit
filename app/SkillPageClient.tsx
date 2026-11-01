@@ -3,6 +3,7 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { Drawer } from "vaul";
+import { AiDevkitLogoIcon } from "@/components/brand-logo";
 import { GlowingWave } from "@/components/GlowingWave";
 import { CircuitBoard } from "@/components/motion/circuit-board";
 import { FlameWrap } from "@/components/motion/flame-wrap";
@@ -267,24 +268,18 @@ function Nav({
     >
       <div className="mx-auto flex h-full max-w-7xl items-center justify-between px-4 sm:px-6">
         {/* Brand */}
-        <div className="flex items-center gap-3">
-          <Link href="/" onClick={navigateHome} className="flex items-center gap-2">
-            <div
-              className={`flex h-7 w-7 items-center justify-center rounded-md border ${
-                isDark ? "border-[var(--border-strong)] bg-[var(--bg-surface)]" : "border-[#E2E8F0] bg-[#F1F5F9]"
-              }`}
-            >
-              <Terminal size={14} className="text-[#82AAFF]" />
-            </div>
-            <span className="whitespace-nowrap font-pixel text-[14px] font-semibold">
+        <div className="flex items-center gap-2.5">
+          <Link href="/" onClick={navigateHome} className="flex items-center gap-2.5">
+            <AiDevkitLogoIcon size="md" />
+            <span className="whitespace-nowrap font-pixel text-[14px] font-semibold tracking-tight">
               ai-devkit
             </span>
           </Link>
           <span
-            className={`hidden rounded border px-1.5 py-0.5 font-mono text-[11px] sm:inline-block ${
+            className={`hidden rounded-md border px-2 py-0.5 font-mono text-[11px] font-medium sm:inline-block ${
               isDark
-                ? "border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-tertiary)]"
-                : "border-[#E2E8F0] bg-[#F1F5F9] text-[#64748B]"
+                ? "border-[#82AAFF]/20 bg-[#82AAFF]/[0.07] text-[#93C5FD]"
+                : "border-[#E2E8F0] bg-[#F1F5F9] text-[#475569]"
             }`}
           >
             {repoMeta.latestTag ?? "—"}
@@ -1683,11 +1678,11 @@ function Footer() {
 
           <div className="relative z-10 grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-8">
             <div className="flex flex-col gap-6 sm:gap-8">
-              <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-md border border-[var(--border-subtle)] bg-[var(--bg-base)]">
-                  <Terminal size={16} className="text-[#82AAFF]" />
-                </div>
-                <span className="font-mono text-[15px] font-semibold text-[var(--text-primary)]">ai-devkit</span>
+              <div className="flex items-center gap-2.5">
+                <AiDevkitLogoIcon size="md" />
+                <span className="font-pixel text-[15px] font-semibold tracking-tight text-[var(--text-primary)]">
+                  ai-devkit
+                </span>
               </div>
 
               <p className="max-w-sm text-[14px] leading-[1.6] text-[var(--text-secondary)]">

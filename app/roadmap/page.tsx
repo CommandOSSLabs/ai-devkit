@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Terminal, ArrowLeft, Github } from "lucide-react";
+import { ArrowLeft, Github } from "lucide-react";
+import { AiDevkitLogoIcon } from "@/components/brand-logo";
 import { ArcadeBackground } from "@/components/marketing/arcade/ArcadeBackground";
 import { RoadmapBoard } from "@/components/marketing/roadmap/RoadmapBoard";
 
@@ -40,11 +41,11 @@ export default function RoadmapPage() {
       <div className="relative z-10">
         <header className="border-b border-[var(--border-subtle)] px-4 py-4 sm:px-6">
           <div className="mx-auto flex max-w-5xl items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-md border border-[var(--border-strong)] bg-[var(--bg-surface)]">
-                <Terminal size={14} style={{ color: ACCENT }} />
-              </div>
-              <span className="whitespace-nowrap font-mono text-[14px] font-semibold">ai-devkit</span>
+            <Link href="/" className="flex items-center gap-2.5">
+              <AiDevkitLogoIcon size="md" />
+              <span className="whitespace-nowrap font-pixel text-[14px] font-semibold tracking-tight">
+                ai-devkit
+              </span>
             </Link>
             <Link
               href="/"
