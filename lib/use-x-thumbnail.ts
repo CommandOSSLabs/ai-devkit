@@ -74,7 +74,14 @@ export function useResolvedXMedia(ref: CuratedSkillRef): ResolvedXMedia {
     return () => {
       cancelled = true;
     };
-  }, [xLink, isStatusPost, ref.thumbnailUrl, ref.creator.githubRepo]);
+  }, [
+    xLink,
+    isStatusPost,
+    ref.thumbnailUrl,
+    ref.xAvatarUrl,
+    ref.xVideoUrl,
+    ref.creator.githubRepo,
+  ]);
 
   return {
     thumbnailUrl: dynamicData?.thumbnailUrl || initialThumb,
