@@ -34,14 +34,14 @@ export const metadata: Metadata = {
     title: "AI DevKit — Evolvable agent skills for the full SDLC",
     description:
       "Make your coding agent feel right. 23 core cmk:* engineering skills, 6 curated X collections, and MCP support.",
-    url: "https://skills.commandoss.com",
     siteName: "AI DevKit",
     type: "website",
     images: [
       {
-        url: "https://skills.commandoss.com/og.png",
-        width: 2600,
-        height: 1658,
+        url: "https://skills.commandoss.com/og.png?v=4",
+        width: 1200,
+        height: 630,
+        type: "image/png",
         alt: "AI DevKit is a tool for shaping your SDLC by feel.",
       },
     ],
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
       "Make your coding agent feel right. 23 core cmk:* engineering skills, 6 curated X collections, and MCP support.",
     images: [
       {
-        url: "https://skills.commandoss.com/og.png",
+        url: "https://skills.commandoss.com/og.png?v=4",
         alt: "AI DevKit is a tool for shaping your SDLC by feel.",
       },
     ],

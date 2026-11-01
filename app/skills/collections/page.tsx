@@ -10,15 +10,15 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Collections · AI DevKit Skills",
     description:
-      "Curated collections of standout agent skills discovered on X — vetted, paired with cmk:* workflows, and ready to shout out.",
-    url: "https://skills.commandoss.com/skills/collections",
+      "AI DevKit is a kit for curating agent skills by craft — 6 translucent folders of vetted X skills paired with 23 cmk:* workflows.",
     siteName: "AI DevKit",
     type: "website",
     images: [
       {
-        url: "https://skills.commandoss.com/og-collections.png",
-        width: 2600,
-        height: 1658,
+        url: "https://skills.commandoss.com/og-collections.png?v=4",
+        width: 1200,
+        height: 630,
+        type: "image/png",
         alt: "AI DevKit is a kit for curating agent skills by craft.",
       },
     ],
@@ -27,10 +27,10 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Collections · AI DevKit Skills",
     description:
-      "Curated collections of standout agent skills discovered on X — vetted, paired with cmk:* workflows, and ready to shout out.",
+      "AI DevKit is a kit for curating agent skills by craft — 6 translucent folders of vetted X skills paired with 23 cmk:* workflows.",
     images: [
       {
-        url: "https://skills.commandoss.com/og-collections.png",
+        url: "https://skills.commandoss.com/og-collections.png?v=4",
         alt: "AI DevKit is a kit for curating agent skills by craft.",
       },
     ],

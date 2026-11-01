@@ -12,14 +12,14 @@ export const metadata: Metadata = {
     title: "MCP · AI DevKit Skills",
     description:
       "The MCP server that lets Claude Code, Codex, and Cursor run the 23 core cmk:* skills and companion collections.",
-    url: "https://skills.commandoss.com/skills/prompt-inputs",
     siteName: "AI DevKit",
     type: "website",
     images: [
       {
-        url: "https://skills.commandoss.com/og-mcp.png",
-        width: 2600,
-        height: 1658,
+        url: "https://skills.commandoss.com/og-mcp.png?v=4",
+        width: 1200,
+        height: 630,
+        type: "image/png",
         alt: "AI DevKit is a tool for teaching your agents by feel.",
       },
     ],
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
       "The MCP server that lets Claude Code, Codex, and Cursor run the 23 core cmk:* skills and companion collections.",
     images: [
       {
-        url: "https://skills.commandoss.com/og-mcp.png",
+        url: "https://skills.commandoss.com/og-mcp.png?v=4",
         alt: "AI DevKit is a tool for teaching your agents by feel.",
       },
     ],
