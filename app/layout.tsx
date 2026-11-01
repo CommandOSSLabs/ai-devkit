@@ -23,8 +23,27 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI DevKit Skills",
-  description: "Browse and copy AI DevKit skills for your project",
+  metadataBase: new URL("https://skills.commandoss.com"),
+  title: {
+    default: "AI DevKit Skills — Evolvable agent skills for the full SDLC",
+    template: "%s",
+  },
+  description:
+    "23 canonical cmk:* engineering workflows, 6 curated X companion collections, and MCP support for Claude Code, Codex, and Cursor.",
+  openGraph: {
+    title: "AI DevKit Skills — Evolvable agent skills for the full SDLC",
+    description:
+      "23 canonical cmk:* engineering workflows, 6 curated X companion collections, and MCP support for Claude Code, Codex, and Cursor.",
+    url: "https://skills.commandoss.com",
+    siteName: "AI DevKit Skills",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AI DevKit Skills — Evolvable agent skills for the full SDLC",
+    description:
+      "23 canonical cmk:* engineering workflows, 6 curated X companion collections, and MCP support for Claude Code, Codex, and Cursor.",
+  },
 };
 
 const THEME_INIT_SCRIPT = `

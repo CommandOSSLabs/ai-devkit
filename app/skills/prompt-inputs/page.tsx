@@ -7,7 +7,21 @@ export const dynamic = "force-static";
 export const metadata: Metadata = {
   title: "MCP · AI DevKit Skills",
   description:
-    "The MCP server and canonical skill kit that lets Claude Code, Codex, and Cursor read your saved CMK skills and X references.",
+    "The MCP server that lets Claude Code, Codex, and Cursor run the 23 core cmk:* skills and companion collections.",
+  openGraph: {
+    title: "MCP · AI DevKit Skills",
+    description:
+      "The MCP server that lets Claude Code, Codex, and Cursor run the 23 core cmk:* skills and companion collections.",
+    url: "https://skills.commandoss.com/skills/prompt-inputs",
+    siteName: "AI DevKit Skills",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MCP · AI DevKit Skills",
+    description:
+      "The MCP server that lets Claude Code, Codex, and Cursor run the 23 core cmk:* skills and companion collections.",
+  },
 };
 
 export default function PromptInputsPage() {
