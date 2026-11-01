@@ -5,12 +5,10 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import {
   ArrowUpRight,
-  Check,
   ChevronDown,
   Columns2,
-  Copy,
-  ExternalLink,
   Folder,
+  Globe,
   Laptop,
   MoreVertical,
   PanelLeft,
@@ -20,314 +18,230 @@ import {
   Sparkles,
   Terminal,
 } from "lucide-react";
-import {
-  CURATED_SKILL_REFS,
-  resolveRefAvatar,
-  resolveRefThumbnail,
-  resolveRefXLink,
-  type CuratedSkillRef,
-} from "@/lib/skill-collections";
 
-interface CmkSceneSkillStep {
-  cmkSlug: string;
+interface CmkThumbSpec {
+  slug: string;
+  shortLabel: string;
   cmkName: string;
-  cmkPhaseBadge: string;
-  cmkRoleTitle: string;
-  cmkSkillPath: string;
-  cmkDeliverable: string;
-  cmkCoreRule: string;
-  cmkInstallCmd: string;
-  companionRefId: string;
-  companionBoostNote: string;
-  mcpCall: string;
-  contextAddedPct: string;
+  skillPath: string;
+  mode: "dark" | "light" | "code";
+  accent: string;
+  title: string;
+  detail: string;
+  companionLabel: string;
+  contextPct: string;
 }
 
 interface DemoScene {
   id: string;
-  stepNumber: string;
   label: string;
-  domainBadge: string;
   windowTitle: string;
   envName: string;
   userPrompt: string;
   toolCall: string;
   duration: string;
-  skills: CmkSceneSkillStep[];
+  extraCount: string;
+  connectorStatus: string;
+  thumbs: CmkThumbSpec[];
 }
 
 const DEMO_SCENES: DemoScene[] = [
   {
-    id: "cmk-delivery",
-    stepNumber: "01",
-    label: "1. cmk:delivery-pipeline",
-    domainBadge: "Core SDLC Pipeline (5 Phases)",
-    windowTitle: "MCP · cmk:delivery-pipeline",
-    envName: "ai-devkit · skills/delivery-*",
-    userPrompt:
-      "Run cmk:delivery-pipeline on ticket #42: intake context, grill edge cases, spec the plan, and review the diff before shipping",
-    toolCall: 'ai-devkit.run_cmk_pipeline({ skill: "cmk:delivery-pipeline" })',
-    duration: "1.2s",
-    skills: [
-      {
-        cmkSlug: "delivery-intake",
-        cmkName: "cmk:delivery-intake",
-        cmkPhaseBadge: "Phase 1 · Intake",
-        cmkRoleTitle: "Context & Tracker Reconciliation",
-        cmkSkillPath: "skills/delivery-intake/SKILL.md",
-        cmkDeliverable: "Tracker state + affected docs/code scope",
-        cmkCoreRule:
-          "Pulls ticket acceptance criteria, maps affected modules in docs/ai/, and verifies branch/worktree isolation before planning.",
-        cmkInstallCmd:
-          "npx skills add CommandOSSLabs/ai-devkit --skill delivery-intake",
-        companionRefId: "understand-anything",
-        companionBoostNote:
-          "Optional Collection boost: pairs with @fleetingbits/Understand-Anything to build an interactive knowledge graph of unfamiliar modules.",
-        mcpCall:
-          'ai-devkit.get_cmk_skill({ skill: "cmk:delivery-intake", with_companions: true })',
-        contextAddedPct: "21%",
-      },
-      {
-        cmkSlug: "delivery-spec-plan",
-        cmkName: "cmk:delivery-spec-plan",
-        cmkPhaseBadge: "Phase 2 · Spec & Plan",
-        cmkRoleTitle: "Architecture Spec & Execution Plan",
-        cmkSkillPath: "skills/delivery-spec-plan/SKILL.md",
-        cmkDeliverable: "docs/design/<feature>.md + step-by-step plan",
-        cmkCoreRule:
-          "Checks upstream docs/requirements/ and docs/adr/, resolves open design trade-offs, and writes a verifiable implementation plan.",
-        cmkInstallCmd:
-          "npx skills add CommandOSSLabs/ai-devkit --skill delivery-spec-plan",
-        companionRefId: "grill-me",
-        companionBoostNote:
-          "Optional Collection boost: pairs with @mattpocockuk/grill-me to relentlessly interrogate hidden assumptions before locking the spec.",
-        mcpCall:
-          'ai-devkit.get_cmk_skill({ skill: "cmk:delivery-spec-plan", with_companions: true })',
-        contextAddedPct: "29%",
-      },
-      {
-        cmkSlug: "delivery-review",
-        cmkName: "cmk:delivery-review",
-        cmkPhaseBadge: "Phase 4 · Review Gate",
-        cmkRoleTitle: "Pre-Ship Code & Acceptance Audit",
-        cmkSkillPath: "skills/delivery-review/SKILL.md",
-        cmkDeliverable: "Verified diff + acceptance checklist pass",
-        cmkCoreRule:
-          "Audits the local diff against docs/rules/, acceptance criteria, type-check/test gates, and security boundaries before cmk:delivery-ship.",
-        cmkInstallCmd:
-          "npx skills add CommandOSSLabs/ai-devkit --skill delivery-review",
-        companionRefId: "plannotator",
-        companionBoostNote:
-          "Optional Collection boost: pairs with @backnotprop/plannotator for local PR-style visual diff & plan annotation.",
-        mcpCall:
-          'ai-devkit.get_cmk_skill({ skill: "cmk:delivery-review", with_companions: true })',
-        contextAddedPct: "36%",
-      },
-    ],
-  },
-  {
-    id: "cmk-architecture",
-    stepNumber: "02",
-    label: "2. cmk:design & codebase-docs",
-    domainBadge: "Living Architecture & AI Docs",
-    windowTitle: "MCP · cmk:design + cmk:codebase-docs",
-    envName: "ai-devkit · docs/",
-    userPrompt:
-      "Use cmk:design, cmk:codebase-docs, and cmk:adr to update our system design and progressive-disclosure AI docs",
-    toolCall:
-      'ai-devkit.get_cmk_skill({ skill: ["cmk:design", "cmk:codebase-docs", "cmk:adr"] })',
+    id: "delivery",
+    label: "cmk:delivery-pipeline",
+    windowTitle: "cmk:delivery-pipeline · SDLC",
+    envName: "ai-devkit · ~",
+    userPrompt: "Run cmk:delivery-pipeline to intake, spec, and review ticket #42",
+    toolCall: "Using ai-devkit: cmk:delivery-pipeline",
     duration: "1.4s",
-    skills: [
+    extraCount: "+5",
+    connectorStatus: "4 active",
+    thumbs: [
       {
-        cmkSlug: "design",
-        cmkName: "cmk:design",
-        cmkPhaseBadge: "Core · Design Spec",
-        cmkRoleTitle: "Distilled System & Feature Design",
-        cmkSkillPath: "skills/design/SKILL.md",
-        cmkDeliverable: "docs/design/ living specifications",
-        cmkCoreRule:
-          "Authors concise, non-duplicative design specs under docs/design/ reconciled against product requirements and recorded ADRs.",
-        cmkInstallCmd: "npx skills add CommandOSSLabs/ai-devkit --skill design",
-        companionRefId: "impeccable",
-        companionBoostNote:
-          "Optional Collection boost: pairs with @pbakaus/impeccable (/polish, /audit, /typeset) for frontend UI & anti-slop craft.",
-        mcpCall:
-          'ai-devkit.get_cmk_skill({ skill: "cmk:design", with_companions: true })',
-        contextAddedPct: "25%",
+        slug: "delivery-intake",
+        shortLabel: "cmk:intake",
+        cmkName: "cmk:delivery-intake",
+        skillPath: "skills/delivery-intake/SKILL.md",
+        mode: "dark",
+        accent: "#c3e88d",
+        title: "Reconciled ticket #42 scope & affected modules",
+        detail:
+          "Mapped acceptance criteria against docs/ai/ and paired with Understand-Anything.",
+        companionLabel: "+ @fleetingbits/Understand-Anything",
+        contextPct: "22%",
       },
       {
-        cmkSlug: "codebase-docs",
-        cmkName: "cmk:codebase-docs",
-        cmkPhaseBadge: "Core · AI Map",
-        cmkRoleTitle: "Hierarchical AI Navigation Docs",
-        cmkSkillPath: "skills/codebase-docs/SKILL.md",
-        cmkDeliverable: "docs/ai/ progressive-disclosure tree",
-        cmkCoreRule:
-          "Generates concise docs/ai/ maps that point agents directly to source files and module boundaries without duplicating code.",
-        cmkInstallCmd:
-          "npx skills add CommandOSSLabs/ai-devkit --skill codebase-docs",
-        companionRefId: "anatomy",
-        companionBoostNote:
-          "Optional Collection boost: pairs with @wheresryan22/anatomy to render interactive isometric SVG machines for complex subsystems.",
-        mcpCall:
-          'ai-devkit.get_cmk_skill({ skill: "cmk:codebase-docs", with_companions: true })',
-        contextAddedPct: "32%",
+        slug: "delivery-spec-plan",
+        shortLabel: "cmk:spec",
+        cmkName: "cmk:delivery-spec-plan",
+        skillPath: "skills/delivery-spec-plan/SKILL.md",
+        mode: "light",
+        accent: "#3b82f6",
+        title: "Drafted implementation spec under docs/design/",
+        detail:
+          "Interrogated edge cases with grill-me and checked upstream ADRs before planning.",
+        companionLabel: "+ @mattpocockuk/grill-me",
+        contextPct: "28%",
       },
       {
-        cmkSlug: "adr",
-        cmkName: "cmk:adr",
-        cmkPhaseBadge: "Core · Decisions",
-        cmkRoleTitle: "Architecture Decision Records",
-        cmkSkillPath: "skills/adr/SKILL.md",
-        cmkDeliverable: "docs/adr/ADR-XXXX-*.md",
-        cmkCoreRule:
-          "Records durable technical decisions, rejected alternatives, and trade-offs under docs/adr/ so agents never relitigate settled architecture.",
-        cmkInstallCmd: "npx skills add CommandOSSLabs/ai-devkit --skill adr",
-        companionRefId: "visual-explainer",
-        companionBoostNote:
-          "Optional Collection boost: pairs with @nicobailon/visual-explainer to generate self-contained HTML comparison decks for ADR trade-offs.",
-        mcpCall:
-          'ai-devkit.get_cmk_skill({ skill: "cmk:adr", with_companions: true })',
-        contextAddedPct: "38%",
+        slug: "delivery-review",
+        shortLabel: "cmk:review",
+        cmkName: "cmk:delivery-review",
+        skillPath: "skills/delivery-review/SKILL.md",
+        mode: "code",
+        accent: "#a855f7",
+        title: "Audited local diff against docs/rules/ & acceptance gates",
+        detail:
+          "Verified type-check, test suite, and visual diff annotations with plannotator.",
+        companionLabel: "+ @backnotprop/plannotator",
+        contextPct: "34%",
       },
     ],
   },
   {
-    id: "cmk-repo-setup",
-    stepNumber: "03",
-    label: "3. cmk:repo-setup & mcp-config",
-    domainBadge: "Multi-Vendor Repo Bootstrap",
-    windowTitle: "MCP · cmk:repo-setup + cmk:mcp-config",
-    envName: "ai-devkit · .agents/skills",
-    userPrompt:
-      "Bootstrap this repo with cmk:repo-setup: configure .mcp.json, wire .agents/skills for Claude/Codex/Cursor, and codify engineering rules",
-    toolCall: 'ai-devkit.get_cmk_skill({ skill: "cmk:repo-setup" })',
-    duration: "1.5s",
-    skills: [
+    id: "architecture",
+    label: "cmk:design & docs",
+    windowTitle: "cmk:design · Living Docs",
+    envName: "ai-devkit · ~",
+    userPrompt: "Update our system design, codebase maps, and ADRs for the new UI",
+    toolCall: "Using ai-devkit: cmk:design",
+    duration: "1.8s",
+    extraCount: "+4",
+    connectorStatus: "4 active",
+    thumbs: [
       {
-        cmkSlug: "mcp-config",
+        slug: "design",
+        shortLabel: "cmk:design",
+        cmkName: "cmk:design",
+        skillPath: "skills/design/SKILL.md",
+        mode: "dark",
+        accent: "#fab12f",
+        title: "Updated distilled feature spec in docs/design/",
+        detail:
+          "Aligned component boundaries and applied impeccable UI anti-slop rules.",
+        companionLabel: "+ @pbakaus/impeccable",
+        contextPct: "25%",
+      },
+      {
+        slug: "codebase-docs",
+        shortLabel: "cmk:ai-docs",
+        cmkName: "cmk:codebase-docs",
+        skillPath: "skills/codebase-docs/SKILL.md",
+        mode: "light",
+        accent: "#10b981",
+        title: "Refreshed progressive-disclosure maps under docs/ai/",
+        detail:
+          "Linked entrypoints and rendered interactive SVG explainers with anatomy.",
+        companionLabel: "+ @wheresryan22/anatomy",
+        contextPct: "31%",
+      },
+      {
+        slug: "adr",
+        shortLabel: "cmk:adr",
+        cmkName: "cmk:adr",
+        skillPath: "skills/adr/SKILL.md",
+        mode: "code",
+        accent: "#3b82f6",
+        title: "Recorded architecture decision in docs/adr/",
+        detail:
+          "Captured trade-offs and rejected alternatives with visual-explainer diagrams.",
+        companionLabel: "+ @nicobailon/visual-explainer",
+        contextPct: "37%",
+      },
+    ],
+  },
+  {
+    id: "setup",
+    label: "cmk:repo-setup",
+    windowTitle: "cmk:repo-setup · Multi-Vendor",
+    envName: "ai-devkit · ~",
+    userPrompt: "Configure MCP servers and sync skills for Claude Code, Codex, and Cursor",
+    toolCall: "Using ai-devkit: cmk:repo-setup",
+    duration: "1.6s",
+    extraCount: "+6",
+    connectorStatus: "4 active",
+    thumbs: [
+      {
+        slug: "mcp-config",
+        shortLabel: "cmk:mcp",
         cmkName: "cmk:mcp-config",
-        cmkPhaseBadge: "Core · MCP Wiring",
-        cmkRoleTitle: "Checked-In Multi-Vendor MCP Config",
-        cmkSkillPath: "skills/mcp-config/SKILL.md",
-        cmkDeliverable: ".mcp.json + .codex/config.toml",
-        cmkCoreRule:
-          "Establishes deterministic, secret-free MCP server configs across Claude Code, Codex, and Cursor with clean environment variable binding.",
-        cmkInstallCmd:
-          "npx skills add CommandOSSLabs/ai-devkit --skill mcp-config",
-        companionRefId: "shadcn-skill",
-        companionBoostNote:
-          "Optional Collection boost: pairs with @shadcn/ui registry skill for zero-conflict component & token installation.",
-        mcpCall:
-          'ai-devkit.get_cmk_skill({ skill: "cmk:mcp-config", with_companions: true })',
-        contextAddedPct: "24%",
+        skillPath: "skills/mcp-config/SKILL.md",
+        mode: "dark",
+        accent: "#c3e88d",
+        title: "Wrote checked-in .mcp.json & .codex/config.toml",
+        detail:
+          "Zero hardcoded secrets; environment variables bound cleanly across vendors.",
+        companionLabel: "+ @shadcn/ui",
+        contextPct: "24%",
       },
       {
-        cmkSlug: "agent-vendors",
+        slug: "agent-vendors",
+        shortLabel: "cmk:vendors",
         cmkName: "cmk:agent-vendors",
-        cmkPhaseBadge: "Core · Vendor Sync",
-        cmkRoleTitle: "One Canonical Skill Set Across Agents",
-        cmkSkillPath: "skills/agent-vendors/SKILL.md",
-        cmkDeliverable: ".agents/skills/ + vendor adapters",
-        cmkCoreRule:
-          "Vendors all 23 cmk:* skills and selected companion skills into one canonical .agents/skills/ directory discoverable by every coding agent.",
-        cmkInstallCmd:
-          "npx skills add CommandOSSLabs/ai-devkit --skill agent-vendors",
-        companionRefId: "emilkowalski-skills",
-        companionBoostNote:
-          "Optional Collection boost: syncs @emilkowalski_/skills alongside cmk:* so every agent shares the same motion & UI standards.",
-        mcpCall:
-          'ai-devkit.get_cmk_skill({ skill: "cmk:agent-vendors", with_companions: true })',
-        contextAddedPct: "33%",
+        skillPath: "skills/agent-vendors/SKILL.md",
+        mode: "light",
+        accent: "#3b82f6",
+        title: "Synced 23 cmk:* skills into .agents/skills/",
+        detail:
+          "Wired one canonical skill directory for Claude Code, Codex, and Cursor.",
+        companionLabel: "+ @emilkowalski_/skills",
+        contextPct: "30%",
       },
       {
-        cmkSlug: "rule",
+        slug: "rule",
+        shortLabel: "cmk:rule",
         cmkName: "cmk:rule",
-        cmkPhaseBadge: "Core · Guardrails",
-        cmkRoleTitle: "Enforceable Engineering Standards",
-        cmkSkillPath: "skills/rule/SKILL.md",
-        cmkDeliverable: "docs/rules/*.md + thin AGENTS.md",
-        cmkCoreRule:
-          "Promotes engineering conventions and security invariants into on-demand rules under docs/rules/ referenced from a thin root AGENTS.md.",
-        cmkInstallCmd: "npx skills add CommandOSSLabs/ai-devkit --skill rule",
-        companionRefId: "trailofbits-skills",
-        companionBoostNote:
-          "Optional Collection boost: pairs with @trailofbits/skills for differential security audit rules and invariant checks.",
-        mcpCall:
-          'ai-devkit.get_cmk_skill({ skill: "cmk:rule", with_companions: true })',
-        contextAddedPct: "41%",
+        skillPath: "skills/rule/SKILL.md",
+        mode: "code",
+        accent: "#f59e0b",
+        title: "Codified enforceable standards in docs/rules/",
+        detail:
+          "Kept root AGENTS.md thin and paired with trailofbits security invariants.",
+        companionLabel: "+ @trailofbits/skills",
+        contextPct: "36%",
       },
     ],
   },
 ];
 
-function getRefById(id: string): CuratedSkillRef {
-  return (
-    CURATED_SKILL_REFS.find((r) => r.id === id) ?? CURATED_SKILL_REFS[0]
-  );
-}
-
 export function McpVideoStage() {
   const [sceneIndex, setSceneIndex] = useState(0);
-  const [selectedSkillIdx, setSelectedSkillIdx] = useState(0);
+  const [selectedThumbIdx, setSelectedThumbIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [copiedCmd, setCopiedCmd] = useState(false);
 
-  // Auto-advance through each of the 3 primary cmk:* skills in the current scene,
-  // then advance to the next scene.
+  // Step through each of the 3 cmk:* thumbnails inside the scene, then advance to the next scene
   useEffect(() => {
     if (!isPlaying) return;
     const timer = setInterval(() => {
-      setSelectedSkillIdx((prevSkill) => {
-        if (prevSkill < 2) {
-          return prevSkill + 1;
+      setSelectedThumbIdx((prevThumb) => {
+        if (prevThumb < 2) {
+          return prevThumb + 1;
         }
         setSceneIndex((prevScene) => (prevScene + 1) % DEMO_SCENES.length);
         return 0;
       });
-    }, 3000);
+    }, 2600);
     return () => clearInterval(timer);
   }, [isPlaying]);
 
   const scene = DEMO_SCENES[sceneIndex];
-  const activeStep = scene.skills[selectedSkillIdx] ?? scene.skills[0];
-  const companionRef = getRefById(activeStep.companionRefId);
-  const companionThumbUrl = resolveRefThumbnail(companionRef);
-  const companionAvatarUrl = resolveRefAvatar(companionRef);
-  const companionXLink = resolveRefXLink(companionRef);
+  const activeThumb = scene.thumbs[selectedThumbIdx] ?? scene.thumbs[0];
 
-  function handleSelectScene(idx: number) {
-    setSceneIndex(idx);
-    setSelectedSkillIdx(0);
-    setIsPlaying(false);
-  }
-
-  function handleSelectSkill(idx: number) {
-    setSelectedSkillIdx(idx);
-    setIsPlaying(false);
-  }
-
-  function handleCopyInstall(cmd: string) {
-    navigator.clipboard.writeText(cmd);
-    setCopiedCmd(true);
-    setTimeout(() => setCopiedCmd(false), 1600);
-  }
+  // Cursor X offset per thumbnail index (0, 1, 2)
+  const cursorOffsets = [-116, -48, 20];
+  const cursorX = cursorOffsets[selectedThumbIdx] ?? -48;
 
   return (
-    <section
-      id="how"
-      aria-label="Interactive CMK Skills & Collections MCP Demo Stage"
-      className="mb-20 scroll-mt-20"
-    >
-      {/* .mcp-video-frame — atmospheric sky backdrop framing the live agent MCP window */}
+    <section id="how" aria-label="Demo video" className="mb-20 scroll-mt-20">
+      {/* .mcp-video-frame — exact 3:2 aspect ratio & atmospheric cloud wallpaper matching marked.dev/mcp */}
       <div
-        className="group relative w-full overflow-hidden rounded-[24px] p-3 shadow-[0_28px_90px_rgba(0,0,0,0.72)] outline outline-1 -outline-offset-1 outline-white/[0.14] sm:p-7"
+        className="group relative aspect-[15/10] w-full overflow-hidden rounded-[24px] shadow-[0_28px_90px_rgba(0,0,0,0.72)] outline outline-1 -outline-offset-1 outline-white/[0.14]"
         style={{
           background:
             "linear-gradient(180deg, #1b76d2 0%, #3592eb 32%, #6cb8f8 68%, #bce0fd 100%)",
         }}
       >
-        {/* Photorealistic multi-layered clouds */}
+        {/* Photorealistic multi-layered clouds matching the marked.dev/mcp sky backdrop */}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 overflow-hidden"
@@ -346,22 +260,28 @@ export function McpVideoStage() {
                 "radial-gradient(circle at 60% 18%, rgba(255,252,245,0.96) 0%, rgba(255,236,209,0.75) 26%, transparent 55%), radial-gradient(circle at 70% 48%, rgba(255,252,246,0.95) 0%, rgba(248,228,202,0.7) 30%, transparent 60%), radial-gradient(circle at 65% 78%, rgba(255,250,242,0.94) 0%, rgba(242,222,198,0.75) 32%, transparent 62%)",
             }}
           />
+          <div
+            className="absolute inset-x-12 top-1 h-24 opacity-85 blur-md"
+            style={{
+              background:
+                "radial-gradient(circle at 18% 40%, #ffffff 0%, transparent 28%), radial-gradient(circle at 46% 30%, #ffffff 0%, transparent 32%), radial-gradient(circle at 76% 35%, #fffdf9 0%, transparent 30%)",
+            }}
+          />
         </div>
 
-        {/* Desktop Agent Window */}
-        <div className="relative mx-auto flex w-full flex-col overflow-hidden rounded-[20px] border border-white/60 bg-[#fcfcfb] text-[#18181b] shadow-[0_24px_70px_rgba(12,38,78,0.38)] ring-[5px] ring-white/35">
+        {/* Left-bleeding Desktop Agent Window (1:1 geometry with marked.dev/mcp video) */}
+        <div className="relative -ml-3 mt-8 flex h-[calc(100%-2rem)] w-[calc(100%-1.25rem)] flex-col overflow-hidden rounded-tr-[20px] border border-white/60 bg-[#fcfcfb] text-[#18181b] shadow-[0_24px_70px_rgba(12,38,78,0.38)] ring-[5px] ring-white/35 sm:-ml-6 sm:mt-12 sm:h-[calc(100%-3rem)] sm:w-[calc(100%-2.25rem)]">
           {/* Window Top Navigation Bar */}
-          <div className="flex h-12 shrink-0 items-center justify-between border-b border-black/[0.06] bg-white px-4 sm:px-6">
-            <div className="flex items-center gap-3 text-[13px] text-[#71717a]">
-              <span className="inline-flex h-6 items-center rounded-md bg-[#18181b] px-2 font-mono text-[11px] font-semibold text-[#c3e88d]">
-                CMK CORE · {scene.stepNumber}
-              </span>
+          <div className="flex h-12 shrink-0 items-center justify-between border-b border-black/[0.05] px-5 sm:px-7">
+            <div className="flex items-center gap-3.5 text-[13px] text-[#71717a]">
+              <span className="select-none text-[#a1a1aa]">→</span>
               <button
                 type="button"
-                onClick={() =>
-                  handleSelectScene((sceneIndex + 1) % DEMO_SCENES.length)
-                }
-                className="inline-flex items-center gap-1.5 font-mono text-[12.5px] font-semibold text-[#18181b] transition-colors hover:text-[#2563eb]"
+                onClick={() => {
+                  setSceneIndex((prev) => (prev + 1) % DEMO_SCENES.length);
+                  setSelectedThumbIdx(0);
+                }}
+                className="inline-flex items-center gap-1.5 font-medium text-[#18181b] transition-colors hover:text-[#2563eb]"
               >
                 <span>{scene.windowTitle}</span>
                 <ChevronDown size={13} className="text-[#71717a]" />
@@ -370,9 +290,6 @@ export function McpVideoStage() {
 
             {/* Right macOS Agent Toolbar Icons */}
             <div className="flex items-center gap-1.5 text-[#71717a] sm:gap-2">
-              <span className="hidden rounded-full bg-[#eff6ff] px-2.5 py-1 font-mono text-[11px] font-medium text-[#2563eb] sm:inline-flex">
-                {scene.domainBadge}
-              </span>
               <span className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-black/[0.08] bg-black/[0.03] text-[#18181b]">
                 <PanelLeft size={13.5} />
               </span>
@@ -381,6 +298,9 @@ export function McpVideoStage() {
               </span>
               <span className="hidden h-7 w-7 items-center justify-center rounded-md hover:bg-black/[0.04] sm:inline-flex">
                 <Columns2 size={13.5} />
+              </span>
+              <span className="inline-flex h-7 w-7 items-center justify-center rounded-md hover:bg-black/[0.04]">
+                <Globe size={13.5} />
               </span>
               <span className="inline-flex h-7 w-7 items-center justify-center rounded-md hover:bg-black/[0.04]">
                 <Folder size={13.5} />
@@ -392,365 +312,223 @@ export function McpVideoStage() {
           </div>
 
           {/* Window Content Area */}
-          <div className="relative grid flex-1 grid-cols-1 gap-6 p-5 sm:p-7 lg:grid-cols-[1fr_270px]">
-            {/* Left/Center Agent Conversation + Connected CMK Skill Inspector */}
-            <div className="flex w-full flex-col justify-between">
+          <div className="relative grid flex-1 grid-cols-1 gap-6 overflow-hidden p-5 sm:p-8 lg:grid-cols-[1fr_240px]">
+            {/* Center Agent Conversation Column */}
+            <div className="mx-auto flex w-full max-w-[560px] flex-col justify-between">
               <div>
-                {/* 1. User Prompt Bubble */}
-                <div className="flex items-center justify-between gap-2">
-                  <span className="font-mono text-[11px] uppercase tracking-wider text-[#71717a]">
-                    1. Operator Prompt (CMK-First Workflow)
-                  </span>
-                  <span className="font-mono text-[11px] font-medium text-[#18181b]">
-                    23 Core <code className="text-[#2563eb]">cmk:*</code> Skills + Companion Collections
-                  </span>
-                </div>
+                {/* Subtle Environment Suggestion Banner */}
+                <p className="text-center text-[11px] leading-relaxed text-[#a1a1aa]">
+                  You often start on This computer · {scene.envName.split(" ")[0]};
+                  save it as an environment to start here in one click ·{" "}
+                  <span className="underline decoration-[#d4d4d8]">
+                    Save as environment
+                  </span>{" "}
+                  · <span className="underline decoration-[#d4d4d8]">Not now</span>
+                </p>
 
+                {/* User Prompt Pill (Right-aligned) */}
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={scene.id + "-prompt"}
-                    initial={{ opacity: 0, y: 5 }}
+                    initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -4 }}
-                    transition={{ duration: 0.2 }}
-                    className="mt-2 flex justify-end"
+                    transition={{ duration: 0.22 }}
+                    className="mt-6 flex justify-end sm:mt-8"
                   >
-                    <div className="w-full rounded-[16px] border border-black/[0.07] bg-[#f4f4f1] px-4 py-2.5 text-[13.5px] font-medium text-[#18181b] shadow-sm">
-                      &ldquo;{scene.userPrompt}&rdquo;
+                    <div className="rounded-[18px] bg-[#f3f2f0] px-4 py-2 text-[13px] font-medium text-[#18181b]">
+                      {scene.userPrompt}
                     </div>
                   </motion.div>
                 </AnimatePresence>
 
-                {/* 2. Agent MCP Tool Call + 3 Selectable PRIMARY CMK Skill Cards */}
-                <div className="mt-5">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <div className="inline-flex items-center gap-2 text-[12.5px] text-[#52525b]">
-                      <span className="relative inline-flex h-3.5 w-3.5 items-center justify-center">
-                        <span className="absolute h-2.5 w-2.5 animate-ping rounded-full bg-[#2563eb]/40" />
-                        <span className="relative h-2 w-2 rounded-full bg-[#2563eb]" />
+                {/* Agent MCP Tool Execution Row + 3 Selectable CMK Skill Chips + Animated Cursor */}
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={scene.id + "-tool"}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.26, delay: 0.05 }}
+                    className="mt-7 flex flex-wrap items-center justify-between gap-4 sm:mt-9"
+                  >
+                    {/* Left: Dot + Tool Call Name + Duration */}
+                    <div className="inline-flex items-center gap-2.5 text-[13px] text-[#71717a]">
+                      <span className="relative inline-flex h-4 w-4 items-center justify-center">
+                        <span className="absolute h-2.5 w-2.5 animate-ping rounded-full bg-[#ea580c]/40" />
+                        <span className="relative h-2 w-2 rounded-full bg-[#ea580c]" />
                       </span>
-                      <code className="rounded bg-black/[0.05] px-1.5 py-0.5 font-mono text-[11.5px] font-medium text-[#18181b]">
+                      <span className="font-normal text-[#52525b]">
                         {scene.toolCall}
-                      </code>
-                      <span className="font-mono text-[11px] text-[#a1a1aa]">
-                        {scene.duration}
+                      </span>
+                      <span className="text-[12px] text-[#a1a1aa]">
+                        {scene.duration} ›
                       </span>
                     </div>
 
-                    <span className="font-mono text-[11px] text-[#71717a]">
-                      2. Select a <strong className="text-[#18181b]">cmk:*</strong> skill below ({selectedSkillIdx + 1}/3)
-                    </span>
-                  </div>
+                    {/* Right: 3 Selectable CMK Skill Thumbnails + Animated Pointer Cursor */}
+                    <div className="relative flex items-center gap-1.5 pr-2">
+                      <span className="mr-1 font-mono text-[11.5px] text-[#a1a1aa]">
+                        {scene.extraCount}
+                      </span>
 
-                  {/* 3 Selectable Primary CMK Skill Cards (with distinct CMK badges + distinct companion thumbnails) */}
-                  <div className="mt-2.5 grid grid-cols-1 gap-2.5 sm:grid-cols-3">
-                    {scene.skills.map((skillStep, idx) => {
-                      const comp = getRefById(skillStep.companionRefId);
-                      const compAvatar = resolveRefAvatar(comp);
-                      const isSelected = idx === selectedSkillIdx;
-
-                      return (
-                        <button
-                          key={skillStep.cmkSlug}
-                          type="button"
-                          onClick={() => handleSelectSkill(idx)}
-                          onMouseEnter={() => handleSelectSkill(idx)}
-                          className={`group/card relative flex flex-col justify-between rounded-[14px] border p-3 text-left transition-all duration-200 ${
-                            isSelected
-                              ? "border-[#2563eb] bg-[#eff6ff] shadow-[0_8px_20px_rgba(37,99,235,0.15)] ring-2 ring-[#2563eb]/30"
-                              : "border-black/[0.08] bg-white hover:border-black/20 hover:bg-[#fafaf9]"
-                          }`}
-                        >
-                          <div>
-                            <div className="flex items-center justify-between gap-1.5">
+                      {scene.thumbs.map((thumb, idx) => {
+                        const isSelected = idx === selectedThumbIdx;
+                        return (
+                          <button
+                            key={thumb.slug}
+                            type="button"
+                            onClick={() => {
+                              setSelectedThumbIdx(idx);
+                              setIsPlaying(false);
+                            }}
+                            onMouseEnter={() => {
+                              setSelectedThumbIdx(idx);
+                              setIsPlaying(false);
+                            }}
+                            className={`relative flex h-[34px] w-[62px] flex-col justify-between overflow-hidden rounded-[7px] px-2 py-1.5 text-left transition-all duration-200 ${
+                              thumb.mode === "dark"
+                                ? "bg-[#18181b] text-white"
+                                : thumb.mode === "code"
+                                  ? "bg-[#1e1b4b] text-white"
+                                  : "bg-[#f8fafc] text-[#0f172a]"
+                            } ${
+                              isSelected
+                                ? "z-10 scale-105 shadow-md ring-2 ring-[#3b82f6]"
+                                : "opacity-85 ring-1 ring-black/15 hover:opacity-100"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between gap-1">
                               <span
-                                className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 font-mono text-[10px] font-semibold ${
-                                  isSelected
-                                    ? "bg-[#2563eb] text-white"
-                                    : "bg-[#18181b] text-[#c3e88d]"
-                                }`}
-                              >
-                                <Terminal size={10} />
-                                <span>{skillStep.cmkPhaseBadge}</span>
-                              </span>
-                              <span className="font-mono text-[9.5px] text-[#71717a]">
-                                Primary
-                              </span>
-                            </div>
-
-                            <div className="mt-2 font-mono text-[13px] font-bold tracking-tight text-[#18181b]">
-                              {skillStep.cmkName}
-                            </div>
-                            <div className="mt-0.5 truncate text-[11.5px] font-medium text-[#52525b]">
-                              {skillStep.cmkRoleTitle}
-                            </div>
-                          </div>
-
-                          {/* Paired Collection Companion Strip at bottom of card */}
-                          <div className="mt-2.5 flex items-center justify-between gap-1.5 border-t border-black/[0.06] pt-2">
-                            <span className="inline-flex min-w-0 items-center gap-1.5 truncate font-mono text-[10px] text-[#52525b]">
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img
-                                src={compAvatar}
-                                alt=""
-                                referrerPolicy="no-referrer"
-                                className="h-3.5 w-3.5 shrink-0 rounded-full object-cover"
+                                className="h-1.5 w-3.5 rounded-full"
+                                style={{ background: thumb.accent }}
                               />
-                              <span className="truncate">
-                                + {comp.name}
-                              </span>
+                              <span className="h-1 w-2 rounded-full bg-current opacity-25" />
+                            </div>
+                            <span className="truncate font-mono text-[8px] font-medium opacity-95">
+                              {thumb.shortLabel}
                             </span>
-                            <span className="shrink-0 font-mono text-[9.5px] text-[#71717a]">
-                              @{comp.creator.xHandle}
-                            </span>
-                          </div>
+                          </button>
+                        );
+                      })}
 
-                          {/* Active pointer pill */}
-                          {isSelected && (
-                            <motion.div
-                              layoutId="mcp-active-cursor-pointer"
-                              transition={{
-                                type: "spring",
-                                stiffness: 280,
-                                damping: 24,
-                              }}
-                              className="pointer-events-none absolute -bottom-2.5 right-2 z-20 flex items-center gap-1 rounded-full bg-[#18181b] px-2 py-0.5 font-mono text-[9.5px] font-medium text-[#c3e88d] shadow-md"
-                            >
-                              <span>Active CMK</span>
-                            </motion.div>
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
+                      {/* Smoothly Animated macOS Pointer Cursor */}
+                      <motion.svg
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                        animate={{
+                          x: cursorX,
+                          y: [0, -2, 0],
+                          scale: [1, 0.94, 1],
+                        }}
+                        transition={{
+                          x: { type: "spring", stiffness: 180, damping: 22 },
+                          y: { duration: 1.8, repeat: Infinity, ease: "easeInOut" },
+                          scale: {
+                            duration: 1.8,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                          },
+                        }}
+                        className="pointer-events-none absolute -bottom-4 right-0 z-20 h-6 w-6 drop-shadow-[0_3px_6px_rgba(0,0,0,0.3)]"
+                      >
+                        <path
+                          d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87c.45 0 .67-.53.35-.85L6.35 2.86a.5.5 0 0 0-.85.35Z"
+                          fill="#111111"
+                          stroke="#ffffff"
+                          strokeWidth="1.6"
+                        />
+                      </motion.svg>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
 
-                {/* 3. Connected Live CMK + Companion Inspector Card */}
+                {/* Connected Live CMK Inspection Card (updates whenever you select any of the 3 cmk:* thumbnails!) */}
                 <AnimatePresence mode="wait">
                   <motion.div
-                    key={`${scene.id}-${activeStep.cmkSlug}`}
+                    key={`${scene.id}-${activeThumb.slug}`}
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -4 }}
-                    transition={{ duration: 0.2 }}
-                    className="mt-4 overflow-hidden rounded-[18px] border border-black/[0.08] bg-[#141418] text-white shadow-[0_12px_30px_rgba(0,0,0,0.16)]"
+                    transition={{ duration: 0.22 }}
+                    className="mt-8 rounded-2xl border border-black/[0.06] bg-[#f8f8f6] px-4 py-3.5 text-[12.5px] text-[#3f3f46] shadow-[0_2px_10px_rgba(0,0,0,0.02)]"
                   >
-                    {/* Top bar: MCP Call + Direct Link to CMK Skill Page */}
-                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/[0.08] bg-white/[0.03] px-4 py-2.5">
-                      <div className="flex items-center gap-2">
-                        <Sparkles size={13} className="text-[#c3e88d]" />
-                        <code className="font-mono text-[11.5px] text-[#c3e88d]">
-                          {activeStep.mcpCall}
-                        </code>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Link
-                          href={`/skills/${activeStep.cmkSlug}`}
-                          className="inline-flex items-center gap-1 rounded-full bg-[#c3e88d]/15 px-2.5 py-0.5 font-mono text-[11px] font-medium text-[#c3e88d] hover:bg-[#c3e88d]/25"
-                        >
-                          <span>Open {activeStep.cmkName}</span>
-                          <ArrowUpRight size={11} />
-                        </Link>
-                      </div>
+                    <div className="flex items-center justify-between gap-2">
+                      <Link
+                        href={`/skills/${activeThumb.slug}`}
+                        className="inline-flex items-center gap-1.5 font-mono text-[11px] font-medium text-[#2563eb] hover:underline"
+                      >
+                        <Sparkles size={11.5} />
+                        <span>{activeThumb.cmkName}</span>
+                        <ArrowUpRight size={11} />
+                      </Link>
+                      <span className="font-mono text-[10.5px] text-[#71717a]">
+                        {activeThumb.companionLabel}
+                      </span>
                     </div>
-
-                    {/* Body: Left = CMK Skill Spec + Companion X Card; Right = CMK Rules + Companion Boost */}
-                    <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-[215px_1fr]">
-                      {/* Left Visual Column: Primary CMK Spec Card + Companion X Thumbnail */}
-                      <div className="flex flex-col justify-between gap-2.5 rounded-xl border border-white/10 bg-[#0b0b0e] p-3">
-                        <div>
-                          <div className="flex items-center justify-between gap-1">
-                            <span className="rounded bg-[#c3e88d]/15 px-1.5 py-0.5 font-mono text-[9.5px] font-semibold text-[#c3e88d]">
-                              PRIMARY CMK SKILL
-                            </span>
-                            <span className="font-mono text-[9.5px] text-white/50">
-                              {activeStep.cmkPhaseBadge}
-                            </span>
-                          </div>
-                          <div className="mt-1.5 font-mono text-[14px] font-bold text-white">
-                            {activeStep.cmkName}
-                          </div>
-                          <div className="mt-0.5 font-mono text-[10px] text-white/55">
-                            {activeStep.cmkSkillPath}
-                          </div>
-                          <div className="mt-2 rounded-lg border border-white/[0.07] bg-white/[0.03] px-2 py-1.5 font-mono text-[10px] text-[#82AAFF]">
-                            Out: {activeStep.cmkDeliverable}
-                          </div>
-                        </div>
-
-                        {/* Companion X Thumbnail Preview strip */}
-                        <div className="overflow-hidden rounded-lg border border-white/10 bg-black/60">
-                          <div className="relative h-16 w-full overflow-hidden">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src={companionThumbUrl}
-                              alt={companionRef.title}
-                              referrerPolicy="no-referrer"
-                              className="h-full w-full object-cover opacity-90"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-                            <a
-                              href={companionXLink}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="absolute inset-x-2 bottom-1.5 flex items-center justify-between font-mono text-[10px] text-white hover:underline"
-                            >
-                              <span className="inline-flex items-center gap-1 truncate">
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img
-                                  src={companionAvatarUrl}
-                                  alt=""
-                                  referrerPolicy="no-referrer"
-                                  className="h-3.5 w-3.5 rounded-full object-cover"
-                                />
-                                <span className="truncate">
-                                  + {companionRef.name}
-                                </span>
-                              </span>
-                              <ExternalLink size={10} className="shrink-0 opacity-80" />
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Right Content Column: Primary CMK Engineering Rule + Optional Collection Boost */}
-                      <div className="flex flex-col justify-between gap-2.5">
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-[14px] font-semibold text-white">
-                              {activeStep.cmkName} — {activeStep.cmkRoleTitle}
-                            </span>
-                          </div>
-
-                          <p className="mt-1.5 text-[12.5px] leading-[19px] text-[#d4d4d8]">
-                            {activeStep.cmkCoreRule}
-                          </p>
-
-                          <div className="mt-2.5 rounded-xl border border-[#82AAFF]/20 bg-[#82AAFF]/[0.07] px-3 py-2 text-[11.5px] leading-[17.5px] text-[#bfd6ff]">
-                            {activeStep.companionBoostNote}
-                          </div>
-                        </div>
-
-                        {/* Install command + Companion install */}
-                        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-white/[0.08] pt-2.5">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              handleCopyInstall(activeStep.cmkInstallCmd)
-                            }
-                            className="inline-flex items-center gap-1.5 rounded-lg bg-white/[0.08] px-2.5 py-1 font-mono text-[11px] text-[#c3e88d] transition-colors hover:bg-white/[0.14]"
-                          >
-                            <span>$ {activeStep.cmkInstallCmd}</span>
-                            {copiedCmd ? (
-                              <Check size={11} />
-                            ) : (
-                              <Copy size={11} className="text-white/60" />
-                            )}
-                          </button>
-
-                          <span className="font-mono text-[10.5px] text-white/60">
-                            Companion: @{companionRef.creator.xHandle} ({companionRef.collectionId})
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+                    <p className="mt-1.5 font-medium text-[#18181b]">
+                      {activeThumb.title}
+                    </p>
+                    <p className="mt-0.5 text-[12px] text-[#71717a]">
+                      {activeThumb.detail}
+                    </p>
                   </motion.div>
                 </AnimatePresence>
               </div>
             </div>
 
-            {/* Right Column: CMK Priority Hierarchy & Active Stack */}
-            <div className="hidden flex-col justify-between gap-3 text-[12px] lg:flex">
-              <div className="space-y-2.5">
-                <div className="rounded-2xl border border-black/[0.07] bg-white p-3.5 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
-                  <div className="mb-2 flex items-center justify-between font-medium text-[#18181b]">
-                    <span>MCP Skill Priority</span>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-[#dcfce7] px-2 py-0.5 font-mono text-[10px] font-semibold text-[#15803d]">
-                      ● CMK-First
-                    </span>
-                  </div>
-                  <div className="space-y-1.5 text-[#52525b]">
-                    <div className="flex items-center justify-between">
-                      <span className="inline-flex items-center gap-1.5">
-                        <Laptop size={12} className="text-[#71717a]" />
-                        <span>1. Core Engine</span>
-                      </span>
-                      <code className="font-mono text-[11px] font-semibold text-[#18181b]">
-                        23 cmk:* skills
-                      </code>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="inline-flex items-center gap-1.5">
-                        <Folder size={12} className="text-[#71717a]" />
-                        <span>2. Companions</span>
-                      </span>
-                      <code className="font-mono text-[11px] text-[#2563eb]">
-                        6 X Collections
-                      </code>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="inline-flex items-center gap-1.5">
-                        <Radio size={12} className="text-[#71717a]" />
-                        <span>Auto-Pair</span>
-                      </span>
-                      <span className="inline-flex h-4 w-7 items-center rounded-full bg-[#2563eb] p-0.5">
-                        <span className="ml-auto h-3 w-3 rounded-full bg-white shadow-sm" />
-                      </span>
-                    </div>
-                  </div>
+            {/* Right Environment / Connectors Inspector Column (1:1 with marked.dev/mcp screenshot) */}
+            <div className="hidden flex-col gap-2.5 text-[12px] lg:flex">
+              <div className="rounded-2xl border border-black/[0.06] bg-white p-3.5 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+                <div className="mb-2.5 flex items-center justify-between font-medium text-[#18181b]">
+                  <span className="inline-flex items-center gap-1">
+                    Environment
+                    <ChevronDown size={12} className="text-[#71717a]" />
+                  </span>
                 </div>
-
-                {/* Active CMK Pipeline Stack in Right Sidebar (clickable) */}
-                <div className="rounded-2xl border border-black/[0.07] bg-white p-3.5 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
-                  <div className="mb-2 flex items-center justify-between">
-                    <span className="font-medium text-[#18181b]">
-                      Active CMK Stack
+                <div className="space-y-2 text-[#52525b]">
+                  <div className="flex items-center justify-between">
+                    <span className="inline-flex items-center gap-2">
+                      <Laptop size={12.5} className="text-[#71717a]" />
+                      This computer
                     </span>
-                    <span className="font-mono text-[10.5px] text-[#71717a]">
-                      3 core skills
+                    <span className="text-[11px] text-[#a1a1aa] underline">
+                      Save
                     </span>
                   </div>
-                  <div className="space-y-1.5">
-                    {scene.skills.map((stepItem, idx) => {
-                      const comp = getRefById(stepItem.companionRefId);
-                      const active = idx === selectedSkillIdx;
-                      return (
-                        <button
-                          key={stepItem.cmkSlug}
-                          type="button"
-                          onClick={() => handleSelectSkill(idx)}
-                          className={`flex w-full flex-col rounded-xl px-2.5 py-1.5 text-left font-mono transition-colors ${
-                            active
-                              ? "bg-[#eff6ff] text-[#2563eb]"
-                              : "text-[#52525b] hover:bg-black/[0.04]"
-                          }`}
-                        >
-                          <div className="flex w-full items-center justify-between text-[11px] font-semibold">
-                            <span className="truncate">
-                              {active ? "▸ " : "  "}
-                              {stepItem.cmkName}
-                            </span>
-                          </div>
-                          <div className="pl-3 text-[9.5px] opacity-75">
-                            + {comp.name} (@{comp.creator.xHandle})
-                          </div>
-                        </button>
-                      );
-                    })}
+                  <div className="flex items-center gap-2">
+                    <Folder size={12.5} className="text-[#71717a]" />
+                    <span className="truncate font-mono text-[11px]">
+                      {scene.envName}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between pt-0.5">
+                    <span className="inline-flex items-center gap-2">
+                      <Radio size={12.5} className="text-[#71717a]" />
+                      Remote Control
+                    </span>
+                    <span className="inline-flex h-4 w-7 items-center rounded-full bg-[#3b82f6] p-0.5">
+                      <span className="ml-auto h-3 w-3 rounded-full bg-white shadow-sm" />
+                    </span>
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between rounded-2xl border border-black/[0.07] bg-white px-3.5 py-3 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
-                <span className="font-medium text-[#18181b]">
-                  Context Loaded ›
+              <div className="flex items-center justify-between rounded-2xl border border-black/[0.06] bg-white px-3.5 py-3 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+                <span className="font-medium text-[#18181b]">Connectors ›</span>
+                <span className="text-[11.5px] text-[#a1a1aa]">
+                  {scene.connectorStatus}
                 </span>
-                <span className="inline-flex items-center gap-2 font-mono text-[11.5px] text-[#2563eb]">
-                  {activeStep.contextAddedPct}
-                  <span className="inline-flex h-1.5 w-8 overflow-hidden rounded-full bg-black/[0.08]">
+              </div>
+
+              <div className="flex items-center justify-between rounded-2xl border border-black/[0.06] bg-white px-3.5 py-3 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+                <span className="font-medium text-[#18181b]">Context ›</span>
+                <span className="inline-flex items-center gap-2 text-[11.5px] text-[#a1a1aa]">
+                  {activeThumb.contextPct}
+                  <span className="inline-flex h-1.5 w-7 overflow-hidden rounded-full bg-black/[0.08]">
                     <span
-                      className="rounded-full bg-[#2563eb] transition-all duration-300"
-                      style={{ width: activeStep.contextAddedPct }}
+                      className="rounded-full bg-[#3b82f6] transition-all duration-300"
+                      style={{ width: activeThumb.contextPct }}
                     />
                   </span>
                 </span>
@@ -758,29 +536,33 @@ export function McpVideoStage() {
             </div>
           </div>
 
-          {/* Bottom Scene Switcher & Playback Controls */}
-          <div className="mt-auto flex flex-wrap items-center justify-between gap-2 border-t border-black/[0.06] bg-[#fafaf9] px-4 py-2.5 sm:px-6">
-            <div className="flex flex-wrap items-center gap-1.5">
+          {/* Sleek Video Overlay Controls at Bottom of Window */}
+          <div className="mt-auto flex flex-wrap items-center justify-between gap-2 border-t border-black/[0.05] bg-[#fafaf9]/90 px-4 py-2.5 backdrop-blur-sm sm:px-6">
+            <div className="flex items-center gap-1.5">
               <button
                 type="button"
                 onClick={() => setIsPlaying((p) => !p)}
-                aria-label={isPlaying ? "Pause walkthrough" : "Play walkthrough"}
+                aria-label={isPlaying ? "Pause demo" : "Play demo"}
                 className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#18181b] text-white transition-transform active:scale-95"
               >
                 {isPlaying ? <Pause size={11} /> : <Play size={11} />}
               </button>
-              <div className="flex flex-wrap items-center gap-1 pl-1">
+              <div className="flex items-center gap-1 pl-1">
                 {DEMO_SCENES.map((item, idx) => {
                   const active = idx === sceneIndex;
                   return (
                     <button
                       key={item.id}
                       type="button"
-                      onClick={() => handleSelectScene(idx)}
-                      className={`rounded-full px-3 py-1 font-mono text-[11.5px] font-medium transition-colors ${
+                      onClick={() => {
+                        setSceneIndex(idx);
+                        setSelectedThumbIdx(0);
+                        setIsPlaying(false);
+                      }}
+                      className={`rounded-full px-2.5 py-1 text-[11.5px] font-medium transition-colors ${
                         active
-                          ? "bg-[#18181b] text-[#c3e88d] shadow-sm"
-                          : "text-[#52525b] hover:bg-black/[0.05] hover:text-[#18181b]"
+                          ? "bg-black/[0.08] text-[#18181b]"
+                          : "text-[#71717a] hover:bg-black/[0.04] hover:text-[#18181b]"
                       }`}
                     >
                       {item.label}
@@ -790,10 +572,10 @@ export function McpVideoStage() {
               </div>
             </div>
 
-            <span className="font-mono text-[11px] text-[#71717a]">
+            <span className="font-mono text-[11px] text-[#a1a1aa]">
               {isPlaying
-                ? `Auto-stepping ${activeStep.cmkName} (${selectedSkillIdx + 1}/3)`
-                : `Interactive · Inspecting ${activeStep.cmkName}`}
+                ? `Auto-playing · ${activeThumb.cmkName}`
+                : `Interactive · ${activeThumb.cmkName}`}
             </span>
           </div>
         </div>
