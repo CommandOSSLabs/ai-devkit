@@ -88,6 +88,32 @@ export const SKILL_COLLECTIONS: SkillCollection[] = [
 export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
   // ─── Design Collection ───────────────────────────────────────────────
   {
+    id: "the-making-of-nhang",
+    name: "the-making-of-nhang",
+    title: "The Making of Nhang — Illustrated Editorial UI/UX Diagram",
+    tagline:
+      "Warm editorial infographic & step-by-step illustrated canvas style in plain JavaScript showing how Vietnamese folks craft incense sticks, inspired by @poteto's /statechart.",
+    collectionId: "design",
+    creator: {
+      name: "Ann Nguyen",
+      xHandle: "ann_nnng",
+      xUrl: "https://x.com/ann_nnng",
+      xPostUrl: "https://x.com/ann_nnng/status/2116811409921372642",
+      githubRepo: "cursor/plugins",
+      githubUrl: "https://x.com/ann_nnng/status/2116811409921372642",
+    },
+    thumbnailUrl: "https://pbs.twimg.com/amplify_video_thumb/2116811213246242816/img/k5NYAZhiuP4gAvKK.jpg",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/2091330595632861184/QKmUwPaL_400x400.jpg",
+    xBannerUrl: "https://pbs.twimg.com/profile_banners/1160414154974519296/1744434703",
+    xVideoUrl: "https://video.twimg.com/amplify_video/2116811213246242816/vid/avc1/900x720/kyh5C2Q33CYP3Kpn.mp4?tag=29",
+    installCommand: "npx skills add cursor/plugins --skill statechart",
+    vettedAt: "2026-11-01",
+    starsOrInstalls: "UI/UX Editorial Diagram · @ann_nnng",
+    pairsWithCmk: ["design", "codebase-docs"],
+    featured: true,
+    isNew: true,
+  },
+  {
     id: "stageshow",
     name: "stageshow",
     title: "Stageshow Faux UI & Bento Animations",
