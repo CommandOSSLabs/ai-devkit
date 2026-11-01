@@ -6,15 +6,10 @@ import {
   CURATED_SKILL_REFS,
   SKILL_COLLECTIONS,
   type CuratedSkillRef,
-  type SkillCollection,
 } from "@/lib/skill-collections";
 import { StackedFolderCard } from "./stacked-folder-card";
 import { ExploreVisualTile, RefDetailModal } from "./curated-skill-card";
-import {
-  loadCustomCollections,
-  loadCustomRefs,
-  triggerOpenAddRefModal,
-} from "./add-ref-modal";
+import { triggerOpenAddRefModal } from "./add-ref-modal";
 
 const COLLECTION_PREVIEW_ACCENTS: Record<string, string[]> = {
   design: [
@@ -53,20 +48,7 @@ export function CollectionsView() {
   const [activeCollectionId, setActiveCollectionId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [selectedRef, setSelectedRef] = useState<CuratedSkillRef | null>(null);
-  const [customRefs, setCustomRefs] = useState<CuratedSkillRef[]>([]);
-  const [customCollections, setCustomCollections] = useState<SkillCollection[]>([]);
   const searchInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    function syncCustomData() {
-      setCustomRefs(loadCustomRefs());
-      setCustomCollections(loadCustomCollections());
-    }
-    syncCustomData();
-    window.addEventListener("ai-devkit-collections-updated", syncCustomData);
-    return () =>
-      window.removeEventListener("ai-devkit-collections-updated", syncCustomData);
-  }, []);
 
   useEffect(() => {
     function handleSlashKey(e: KeyboardEvent) {
@@ -83,15 +65,8 @@ export function CollectionsView() {
     return () => window.removeEventListener("keydown", handleSlashKey);
   }, []);
 
-  const allCollections = useMemo(
-    () => [...SKILL_COLLECTIONS, ...customCollections],
-    [customCollections],
-  );
-
-  const allRefs = useMemo(
-    () => [...customRefs, ...CURATED_SKILL_REFS],
-    [customRefs],
-  );
+  const allCollections = SKILL_COLLECTIONS;
+  const allRefs = CURATED_SKILL_REFS;
 
   const refsByCollection = useMemo(() => {
     const map: Record<string, CuratedSkillRef[]> = {};
@@ -181,7 +156,7 @@ export function CollectionsView() {
           <section aria-label="Skill collections" className="md-collections-grid">
             <StackedFolderCard
               variant="new"
-              title="New collection"
+              title="Propose collection"
               onClick={() => triggerOpenAddRefModal({ mode: "collection" })}
             />
 

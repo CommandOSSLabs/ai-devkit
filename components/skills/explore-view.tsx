@@ -9,14 +9,13 @@ import {
   type CuratedSkillRef,
 } from "@/lib/skill-collections";
 import { ExploreVisualTile, RefDetailModal } from "./curated-skill-card";
-import { loadCustomRefs, triggerOpenAddRefModal } from "./add-ref-modal";
+import { triggerOpenAddRefModal } from "./add-ref-modal";
 
 export function ExploreView({ skills = [] }: { skills?: SkillSummary[] }) {
   const [query, setQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState<string>("all");
   const [filterOpen, setFilterOpen] = useState(false);
   const [selectedRef, setSelectedRef] = useState<CuratedSkillRef | null>(null);
-  const [customRefs, setCustomRefs] = useState<CuratedSkillRef[]>([]);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const cmkExploreRefs = useMemo<CuratedSkillRef[]>(
@@ -45,16 +44,6 @@ export function ExploreView({ skills = [] }: { skills?: SkillSummary[] }) {
   );
 
   useEffect(() => {
-    function syncCustom() {
-      setCustomRefs(loadCustomRefs());
-    }
-    syncCustom();
-    window.addEventListener("ai-devkit-collections-updated", syncCustom);
-    return () =>
-      window.removeEventListener("ai-devkit-collections-updated", syncCustom);
-  }, []);
-
-  useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (
         e.key === "/" &&
@@ -71,7 +60,7 @@ export function ExploreView({ skills = [] }: { skills?: SkillSummary[] }) {
 
   // Interleave X companion refs and core CMK skills for a rich visual masonry feed
   const allExploreRefs = useMemo(() => {
-    const combined: CuratedSkillRef[] = [...customRefs];
+    const combined: CuratedSkillRef[] = [];
     const maxLen = Math.max(CURATED_SKILL_REFS.length, cmkExploreRefs.length);
     for (let i = 0; i < maxLen; i += 1) {
       if (CURATED_SKILL_REFS[i]) combined.push(CURATED_SKILL_REFS[i]);
@@ -80,7 +69,7 @@ export function ExploreView({ skills = [] }: { skills?: SkillSummary[] }) {
       }
     }
     return combined;
-  }, [customRefs, cmkExploreRefs]);
+  }, [cmkExploreRefs]);
 
   const filteredRefs = useMemo(() => {
     const q = query.trim().toLowerCase();
