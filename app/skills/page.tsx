@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Layers } from "lucide-react";
+import Link from "next/link";
+import { FolderClosed, Layers, Sparkles } from "lucide-react";
 import { getCatalogCategories, getSkillCatalog } from "@/lib/skill-catalog";
 import { getRepoSnapshot } from "@/lib/repo-snapshot";
 import { SkillCatalog } from "@/components/skills/skill-catalog";
@@ -9,13 +10,13 @@ import { GooeyTextReveal } from "@/components/motion/gooey-text-reveal";
 export const dynamic = "force-static";
 
 export const metadata: Metadata = {
-  title: "Browse Skills · AI DevKit Skills",
+  title: "CMK Skills · AI DevKit Skills",
   description:
-    "Every skill in CommandOSSLabs/ai-devkit — what it does, when to use it, and which skills it works with. Generated from the repository at build time.",
+    "Every canonical cmk:* skill in CommandOSSLabs/ai-devkit — what it does, when to use it, and which skills it works with. Generated from the repository at build time.",
 };
 
 const metaChipClassName =
-  "flex h-9 items-center gap-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--glass-elevated)] px-3 text-[12.5px] text-[var(--text-secondary)]";
+  "flex h-9 items-center gap-1.5 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 text-[12.5px] text-[var(--text-secondary)]";
 
 export default function SkillsBrowsePage() {
   const skills = getSkillCatalog();
@@ -24,30 +25,41 @@ export default function SkillsBrowsePage() {
   const handles = Object.fromEntries(skills.map((s) => [s.id, s.handle]));
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-5">
+    <div className="mx-auto flex h-full min-h-0 w-full max-w-[1320px] flex-col gap-5">
       <div className="flex shrink-0 flex-wrap items-start justify-between gap-4">
-        {/* basis + flex-1 rather than shrink-to-fit: GooeyTextReveal re-splits
-          its text whenever its own width changes, so a container sized BY that
-          text re-measures on every split and the reveal restarts forever,
-          leaving the heading permanently blurred out. Sizing the column from
-          the row instead makes the width independent of the split. */}
         <div className="min-w-0 flex-1 basis-[340px]">
-        <GooeyTextReveal
-          mode="immediate"
-          duration={0.9}
-          stagger={0.08}
-          blurAmount={0.3}
-          delay={0.05}
-          className="flex w-full max-w-[62ch] flex-col gap-1"
-        >
-          <h1 className="text-[19px] font-semibold tracking-[-0.02em] text-[var(--text-primary)]">Skills</h1>
-          <p className="text-[13px] leading-[1.6] text-[var(--text-secondary)]">
-            Find the right workflow, open its files, and adapt it to your repository.
-          </p>
-        </GooeyTextReveal>
+          <GooeyTextReveal
+            mode="immediate"
+            duration={0.9}
+            stagger={0.08}
+            blurAmount={0.3}
+            delay={0.05}
+            className="flex w-full max-w-[62ch] flex-col gap-1"
+          >
+            <h1 className="text-[18px] font-medium tracking-[-0.01em] text-[var(--text-primary)]">
+              CMK Skills
+            </h1>
+            <p className="text-[13px] leading-[1.6] text-[var(--text-secondary)]">
+              Canonical CommandOSS workflows — find the right skill, inspect its files, and pair it with curated X companions.
+            </p>
+          </GooeyTextReveal>
         </div>
 
         <div className="flex min-w-0 flex-wrap items-center gap-2">
+          <Link
+            href="/skills/explore"
+            className="inline-flex h-9 items-center gap-1.5 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 text-[12.5px] text-[var(--text-secondary)] transition-colors hover:border-[var(--border-strong)] hover:text-[var(--text-primary)]"
+          >
+            <Sparkles size={13} className="text-[color:var(--accent)]" />
+            <span>Explore new</span>
+          </Link>
+          <Link
+            href="/skills/collections"
+            className="inline-flex h-9 items-center gap-1.5 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3 text-[12.5px] text-[var(--text-secondary)] transition-colors hover:border-[var(--border-strong)] hover:text-[var(--text-primary)]"
+          >
+            <FolderClosed size={13} className="text-[color:var(--accent)]" />
+            <span>X Collections</span>
+          </Link>
           <div className={metaChipClassName}>
             <Layers size={13} aria-hidden="true" />
             <span>{skills.length} skills</span>

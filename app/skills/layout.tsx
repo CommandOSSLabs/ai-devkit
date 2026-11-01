@@ -1,13 +1,77 @@
 import Link from "next/link";
-import { Terminal, ArrowLeft } from "lucide-react";
 import {
-  SkillsSidebarNav,
-  SkillsSectionTitle,
+  AddRefTriggerButton,
+  SkillsTopNav,
 } from "@/components/skills/skills-sidebar-nav";
-import { SkillsIconRail } from "@/components/skills/skills-icon-rail";
-import { SkillsBackdrop } from "@/components/skills/skills-backdrop";
+import { AddRefModal } from "@/components/skills/add-ref-modal";
 import { ThemeToggle } from "@/components/skills/theme-toggle";
 import { LiquefyTheme } from "@/components/skills/liquefy-theme";
+
+function BrandMark() {
+  return (
+    <span className="inline-flex items-center gap-2.5">
+      <span className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-[#14161d] shadow-[inset_0_0_0_1px_rgba(130,170,255,0.28),0_4px_14px_rgba(67,125,245,0.18)]">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+          className="h-[18px] w-[18px]"
+        >
+          <defs>
+            <linearGradient
+              id="cmk-skills-logo-grad"
+              x1="2"
+              y1="2"
+              x2="22"
+              y2="22"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop offset="0%" stopColor="#93C5FD" />
+              <stop offset="50%" stopColor="#82AAFF" />
+              <stop offset="100%" stopColor="#6366F1" />
+            </linearGradient>
+          </defs>
+          {/* Back stacked skill layer */}
+          <path
+            d="M7 4.75H16.5C17.8807 4.75 19 5.86929 19 7.25V15.5"
+            stroke="url(#cmk-skills-logo-grad)"
+            strokeWidth="1.75"
+            strokeLinecap="round"
+            strokeOpacity="0.55"
+          />
+          {/* Front modular skill tile */}
+          <rect
+            x="4"
+            y="7.5"
+            width="12.5"
+            height="12.5"
+            rx="3.5"
+            stroke="url(#cmk-skills-logo-grad)"
+            strokeWidth="1.85"
+            fill="#0B0D13"
+          />
+          {/* Terminal prompt `>_` inside the skill tile */}
+          <path
+            d="M7.5 11.75L9.75 13.75L7.5 15.75"
+            stroke="#FFFFFF"
+            strokeWidth="1.75"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M11.25 15.75H13.25"
+            stroke="#82AAFF"
+            strokeWidth="1.75"
+            strokeLinecap="round"
+          />
+        </svg>
+      </span>
+      <span className="font-pixel text-[13.5px] font-semibold tracking-tight text-[var(--md-fg)]">
+        ai-devkit
+      </span>
+    </span>
+  );
+}
 
 export default function SkillsLayout({
   children,
@@ -16,55 +80,44 @@ export default function SkillsLayout({
 }) {
   return (
     <LiquefyTheme>
-      <div className="skills-shell relative flex h-screen flex-col gap-3 bg-[var(--bg-elevated)] p-4 text-[var(--text-primary)] lg:flex-row">
-        <SkillsBackdrop />
-
-        {/* z-20, above the content column's z-10: backdrop-filter makes this
-          aside a stacking context, so the rail's hover tooltips cannot escape
-          it on z-index alone. At equal z the later sibling wins and the
-          content panel painted over them, leaving a sliver at the rail edge. */}
-        <aside className="relative z-20 hidden shrink-0 flex-col items-center rounded-2xl border border-[var(--border-subtle)] bg-[var(--glass-surface)] px-2 py-5 backdrop-blur-sm lg:flex lg:w-16 xl:w-52 xl:items-stretch xl:px-3">
-          <SkillsIconRail />
-        </aside>
-
-        <div className="skills-column relative z-10 flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[color-mix(in_srgb,var(--bg-base)_92%,transparent)] backdrop-blur-sm">
-          <header className="skills-topbar shrink-0 border-b border-[var(--border-subtle)] px-4 py-4 sm:px-6">
-            <div className="flex items-center justify-between gap-3">
-              <Link href="/" className="flex items-center gap-2 lg:hidden">
-                <div className="flex h-7 w-7 items-center justify-center rounded-md border border-[var(--border-strong)] bg-[var(--bg-surface)]">
-                  <Terminal size={14} className="text-[color:var(--accent)]" />
-                </div>
-                <span className="whitespace-nowrap font-mono text-[14px] font-semibold">
-                  ai-devkit
-                </span>
+      <div className="skills-shell relative flex h-screen flex-col overflow-hidden bg-[var(--bg-base)] text-[var(--text-primary)]">
+        <div className="skills-column relative z-10 flex min-w-0 flex-1 flex-col overflow-hidden bg-[var(--bg-base)]">
+          <header className="skills-topbar md-site-header shrink-0">
+            <div className="md-header-lead min-w-0">
+              <Link
+                href="/"
+                title="AI DevKit Home"
+                aria-label="AI DevKit Home"
+                className="inline-flex h-10 items-center transition-opacity hover:opacity-85"
+              >
+                <BrandMark />
               </Link>
-              <div className="hidden min-w-0 items-center gap-2 text-[15px] text-[var(--text-tertiary)] lg:flex">
-                <span>ai-devkit</span>
-                <span className="text-[var(--border-strong)]">|</span>
-                <span className="truncate font-medium text-[var(--text-primary)]/80">
-                  <SkillsSectionTitle />
-                </span>
-              </div>
-              <div className="flex shrink-0 items-center gap-1">
-                <ThemeToggle />
-                <Link
-                  href="/catalog"
-                  className="flex items-center gap-1.5 text-[13px] text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
-                >
-                  <ArrowLeft size={14} />
-                  <span>Back to catalog</span>
-                </Link>
-              </div>
+
+              <SkillsTopNav />
             </div>
-            <SkillsSidebarNav className="mt-4 flex-row overflow-x-auto lg:hidden" />
+
+            <div className="flex shrink-0 items-center gap-2">
+              <AddRefTriggerButton />
+              <ThemeToggle />
+              <a
+                href="https://github.com/CommandOSSLabs/ai-devkit"
+                target="_blank"
+                rel="noreferrer"
+                title="CommandOSSLabs/ai-devkit on GitHub"
+                aria-label="CommandOSSLabs/ai-devkit on GitHub"
+                className="md-avatar-orb"
+              />
+            </div>
           </header>
 
           <main className="flex min-h-0 flex-1 flex-col overflow-hidden">
-            <div className="skills-content-pad flex min-h-0 flex-1 flex-col p-4 sm:p-6">
+            <div className="skills-content-pad flex min-h-0 flex-1 flex-col px-5 pb-6 pt-2">
               {children}
             </div>
           </main>
         </div>
+
+        <AddRefModal />
       </div>
     </LiquefyTheme>
   );
