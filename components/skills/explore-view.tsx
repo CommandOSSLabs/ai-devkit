@@ -84,7 +84,8 @@ export function ExploreView({ skills = [] }: { skills?: SkillSummary[] }) {
         activeFilter !== "all" &&
         activeFilter !== "x-companions" &&
         activeFilter !== "cmk-core" &&
-        item.collectionId !== activeFilter
+        item.collectionId !== activeFilter &&
+        !item.additionalCollectionIds?.includes(activeFilter)
       ) {
         return false;
       }

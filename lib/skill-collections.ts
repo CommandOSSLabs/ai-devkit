@@ -24,6 +24,7 @@ export type CuratedSkillRef = {
   title: string;
   tagline: string;
   collectionId: string;
+  additionalCollectionIds?: string[];
   creator: {
     name: string;
     xHandle: string;
@@ -65,6 +66,14 @@ export type SkillCollection = {
 };
 
 export const SKILL_COLLECTIONS: SkillCollection[] = [
+  {
+    id: "3d",
+    title: "3D & Interactive",
+    subtitle: "WebGL, voxel dioramas & 3D presentations",
+    description:
+      "3D isometric pixel-art games, interactive 3D flipbook brandbooks, and real-time rendering cheat sheets for coding agents.",
+    badge: "3D & Spatial",
+  },
   {
     id: "design",
     title: "Design",
@@ -116,14 +125,15 @@ export const SKILL_COLLECTIONS: SkillCollection[] = [
 ];
 
 export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
-  // ─── Design Collection ───────────────────────────────────────────────
+  // ─── 3D & Interactive + Design Collection ────────────────────────────
   {
     id: "pixel-plays",
     name: "pixel-plays",
     title: "Pixel Plays — 3D Pixel Games OS UI/UX",
     tagline:
       "Open-source 3D isometric voxel & pixel diorama games built with Claude Opus 5.5 — minimal gallery OS chrome, dithered foliage, soft directional shadows, and tactile micro-controls.",
-    collectionId: "design",
+    collectionId: "3d",
+    additionalCollectionIds: ["design"],
     creator: {
       name: "Amir Mušić",
       xHandle: "AmirMushich",
@@ -152,6 +162,45 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
     vettedAt: "2026-11-01",
     starsOrInstalls: "937 likes · 48k views · Open Source",
     pairsWithCmk: ["design", "project-layout"],
+    featured: true,
+    isNew: true,
+  },
+  {
+    id: "brand-system-skill",
+    name: "brand-system-skill",
+    title: "Leaf 3D Brandbook & Brand System Skill",
+    tagline:
+      "Open-source creative-direction skill that turns one visual reference into a connected Anchor Brand Kit, paired with Leaf — an interactive 3D page-flipping brandbook presentation tool.",
+    collectionId: "3d",
+    additionalCollectionIds: ["design"],
+    creator: {
+      name: "Amir Mušić",
+      xHandle: "AmirMushich",
+      xUrl: "https://x.com/AmirMushich",
+      xPostUrl: "https://x.com/AmirMushich/status/2116176771385045204",
+      githubRepo: "amirmushichge/brand-system-skill",
+      githubUrl: "https://github.com/amirmushichge/brand-system-skill",
+    },
+    source: {
+      platform: "x",
+      postUrl: "https://x.com/AmirMushich/status/2116176771385045204",
+      profileUrl: "https://x.com/AmirMushich",
+      handle: "AmirMushich",
+      thumbnailUrl: "https://pbs.twimg.com/amplify_video_thumb/2116175518932336640/img/oHR3hAzR5n68rVdy.jpg",
+      videoUrl: "https://video.twimg.com/amplify_video/2116175518932336640/vid/avc1/1280x720/Wj9Z9xIIr2_zrBFq.mp4?tag=29",
+      avatarUrl: "https://pbs.twimg.com/profile_images/1872350781686321152/P-st4llY_400x400.jpg",
+      bannerUrl: "https://pbs.twimg.com/profile_banners/249795230/1767459893",
+    },
+    thumbnailUrl: "https://pbs.twimg.com/amplify_video_thumb/2116175518932336640/img/oHR3hAzR5n68rVdy.jpg",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/1872350781686321152/P-st4llY_400x400.jpg",
+    xBannerUrl: "https://pbs.twimg.com/profile_banners/249795230/1767459893",
+    xVideoUrl: "https://video.twimg.com/amplify_video/2116175518932336640/vid/avc1/1280x720/Wj9Z9xIIr2_zrBFq.mp4?tag=29",
+    installCommand: "npx skills add amirmushichge/brand-system-skill",
+    stylePrompt:
+      "Present brand guidelines and multi-slide decks as an interactive 3D physical book ('Leaf' by @AmirMushich style, https://amirmushich.com/lab/leaf/): (1) clean studio light-gray infinity backdrop (#ECECEE) with soft realistic floor contact shadow; (2) floating 3D landscape hardcover spread with perspective tilt, physical page thickness, and smooth spring page-turn physics; (3) bold oversized display wordmark integrated with photography cutouts and modular grid spreads.",
+    vettedAt: "2026-11-01",
+    starsOrInstalls: "175 stars · 365 bookmarks · 14k views",
+    pairsWithCmk: ["design", "requirements"],
     featured: true,
     isNew: true,
   },
@@ -402,6 +451,7 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
     tagline:
       "34 interactive game development & rendering concepts with live animations and exact vocabulary lines to paste into AI coding prompts.",
     collectionId: "explainers",
+    additionalCollectionIds: ["3d"],
     creator: {
       name: "Nicolas Zullo",
       xHandle: "NicolasZu",

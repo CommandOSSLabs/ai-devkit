@@ -12,6 +12,11 @@ import { ExploreVisualTile, RefDetailModal } from "./curated-skill-card";
 import { triggerOpenAddRefModal } from "./add-ref-modal";
 
 const COLLECTION_PREVIEW_ACCENTS: Record<string, string[]> = {
+  "3d": [
+    "linear-gradient(135deg, #38bdf8 0%, #6366f1 100%)",
+    "linear-gradient(135deg, #f79ad0 0%, #8b5cf6 100%)",
+    "linear-gradient(135deg, #c3e88d 0%, #10b981 100%)",
+  ],
   design: [
     "linear-gradient(135deg, #fab12f 0%, #dd0303 100%)",
     "linear-gradient(135deg, #f79ad0 0%, #8b5cf6 100%)",
@@ -74,6 +79,12 @@ export function CollectionsView() {
     for (const item of allRefs) {
       if (!map[item.collectionId]) map[item.collectionId] = [];
       map[item.collectionId].push(item);
+      for (const extraId of item.additionalCollectionIds ?? []) {
+        if (!map[extraId]) map[extraId] = [];
+        if (!map[extraId].some((r) => r.id === item.id)) {
+          map[extraId].push(item);
+        }
+      }
     }
     return map;
   }, [allCollections, allRefs]);
@@ -94,7 +105,11 @@ export function CollectionsView() {
   const filteredRefs = useMemo(() => {
     const q = query.trim().toLowerCase();
     return allRefs.filter((item) => {
-      if (activeCollectionId && item.collectionId !== activeCollectionId) {
+      if (
+        activeCollectionId &&
+        item.collectionId !== activeCollectionId &&
+        !item.additionalCollectionIds?.includes(activeCollectionId)
+      ) {
         return false;
       }
       if (!q) return true;
