@@ -127,6 +127,43 @@ export const SKILL_COLLECTIONS: SkillCollection[] = [
 export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
   // ─── Featured Social & 3D / Design / Workflow Collection ─────────────
   {
+    id: "stack-diagram",
+    name: "stack-diagram",
+    title: "Stack Diagram — Architecture Diagrams with Official Logos",
+    tagline:
+      "Describe your tech stack in a single sentence and get a light + dark architecture diagram with official vendor logos, rendered as a standalone HTML file, PNGs, and React component.",
+    collectionId: "explainers",
+    additionalCollectionIds: ["design", "workflow"],
+    creator: {
+      name: "caru-ini",
+      xHandle: "caru-ini",
+      xUrl: "https://stacks.caru.moe",
+      githubRepo: "caru-ini/stack-diagram",
+      githubUrl: "https://github.com/caru-ini/stack-diagram",
+    },
+    source: {
+      platform: "github",
+      postUrl: "https://github.com/caru-ini/stack-diagram",
+      profileUrl: "https://github.com/caru-ini",
+      handle: "caru-ini",
+      thumbnailUrl: "https://github.com/caru-ini/stack-diagram/raw/main/docs/light-dark.png",
+      avatarUrl: "https://avatars.githubusercontent.com/u/166897461?v=4",
+      bannerUrl: "https://github.com/caru-ini/stack-diagram/raw/main/docs/hero-dark.png",
+    },
+    thumbnailUrl: "https://github.com/caru-ini/stack-diagram/raw/main/docs/light-dark.png",
+    xAvatarUrl: "https://avatars.githubusercontent.com/u/166897461?v=4",
+    xBannerUrl: "https://github.com/caru-ini/stack-diagram/raw/main/docs/hero-dark.png",
+    installCommand: "npx skills add caru-ini/stack-diagram",
+    stylePrompt:
+      "Render a dual light/dark architecture stack diagram ('stack-diagram' by caru-ini style): (1) subtle blueprint grid background (#F8FAFC in light mode, #0D1117 in dark mode); (2) crisp white rounded-square icon tiles (64×64, rx=14, 1px subtle border and soft shadow) so official brand/vendor SVG logos preserve their authentic colors in both themes; (3) bold node title + monospace role subtitle underneath each tile; (4) translucent rounded boundary containers for workspaces/clouds (e.g. 'pnpm workspace', 'GitHub') with brand icon + label in top-left; (5) orthogonal/straight connector arrows with inline monospace edge verbs ('git push', 'publish', 'turbo run', 'pre-commit').",
+    pinnedSha: "main",
+    vettedAt: "2026-11-02",
+    starsOrInstalls: "881 stars · stacks.caru.moe",
+    pairsWithCmk: ["design", "codebase-docs", "toolchain"],
+    featured: true,
+    isNew: true,
+  },
+  {
     id: "coworkers",
     name: "coworkers",
     title: "Coworkers — Inline Skill Installer & Cloudflare AI Teammates",

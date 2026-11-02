@@ -227,7 +227,7 @@ export function CollectionsView() {
 
             <div className="md-ref-grid">
               {allRefs
-                .filter((item) => Boolean(item.xVideoUrl || item.creator.xPostUrl))
+                .filter((item) => Boolean(item.xVideoUrl || item.creator.xPostUrl || item.source?.postUrl))
                 .map((item, index) => (
                   <ExploreVisualTile
                     key={item.id}
