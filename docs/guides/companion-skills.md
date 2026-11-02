@@ -80,6 +80,7 @@ this table does not invent one.
 
 | Skill | What it does | Install | Overlap |
 |---|---|---|---|
+| [coworkers](https://github.com/fayazara/coworkers) | Cloudflare Durable Object AI teammates with inline `Install skills?` approval card (`@fayazara`) | `git clone https://github.com/fayazara/coworkers` | pairs with `cmk:agent-vendors` and `cmk:sync` |
 | [superpowers](https://github.com/obra/superpowers) | Brainstorming, plans, TDD, debugging | `npx skills add obra/superpowers` | brainstorming ≈ `cmk:requirements`; writing-plans ≈ `cmk:delivery-spec-plan` |
 | [mattpocock/skills](https://github.com/mattpocock/skills) | grill-me, tdd, triage, handoff | `npx skills add mattpocock/skills` | grill-me beside `cmk:requirements` |
 | [getsentry/skills](https://github.com/getsentry/skills) `security-review` | Reasoning-style security review | `npx skills add getsentry/skills --skill security-review` | lens inside `cmk:delivery-review`, not a replacement |

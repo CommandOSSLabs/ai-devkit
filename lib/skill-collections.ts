@@ -546,6 +546,44 @@ export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
 
   // ─── Workflow & Grill Collection ─────────────────────────────────────
   {
+    id: "coworkers",
+    name: "coworkers",
+    title: "Coworkers — Inline Skill Installer & Cloudflare AI Teammates",
+    tagline:
+      "AI teammates on Cloudflare Durable Objects that each get their own computer, browser, and conversational 'Install skills?' approval card with per-bot or all-bots scoping.",
+    collectionId: "workflow",
+    additionalCollectionIds: ["design", "vendors"],
+    creator: {
+      name: "Fayaz Ahmed",
+      xHandle: "fayazara",
+      xUrl: "https://x.com/fayazara",
+      xPostUrl: "https://x.com/fayazara/status/2116817201764479393",
+      githubRepo: "fayazara/coworkers",
+      githubUrl: "https://github.com/fayazara/coworkers",
+    },
+    source: {
+      platform: "x",
+      postUrl: "https://x.com/fayazara/status/2116817201764479393",
+      profileUrl: "https://x.com/fayazara",
+      handle: "fayazara",
+      thumbnailUrl: "https://pbs.twimg.com/media/HWBxq2vbwAAO66h.jpg?name=large",
+      avatarUrl: "https://pbs.twimg.com/profile_images/2044198899313979393/KepZgE0z_400x400.jpg",
+      bannerUrl: "https://pbs.twimg.com/profile_banners/252099921/1788670760",
+    },
+    thumbnailUrl: "https://pbs.twimg.com/media/HWBxq2vbwAAO66h.jpg?name=large",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/2044198899313979393/KepZgE0z_400x400.jpg",
+    xBannerUrl: "https://pbs.twimg.com/profile_banners/252099921/1788670760",
+    installCommand: "git clone https://github.com/fayazara/coworkers",
+    stylePrompt:
+      "Design an inline 'Install skills?' conversational approval card inside an AI agent chat ('Coworkers' by @fayazara style): (1) warm light-gray rounded container (#F6F6F5) nested inside a clean white chat canvas; (2) header with bold title 'Install skills?' and muted repo + pinned SHA subtitle (e.g. 'emilkowalski/skills · a81dbca'); (3) skill count + 'Select all' action above a white rounded list card containing an inline search bar and selectable skill rows with rounded black checkboxes, bold skill slug, 2-line muted description, and chevron accordion; (4) 'Who gets it' scope bar with a segmented pill toggle ('This bot' / 'All bots'); (5) trust disclaimer caption and bottom action row with high-contrast black pill CTA ('Install 1 skill') and secondary outline pill ('Not now').",
+    pinnedSha: "main",
+    vettedAt: "2026-11-01",
+    starsOrInstalls: "363 stars · @cloudflare",
+    pairsWithCmk: ["agent-vendors", "sync", "delivery-pipeline"],
+    featured: true,
+    isNew: true,
+  },
+  {
     id: "grill-me",
     name: "grill-me",
     title: "Matt Pocock's Grill-Me Interrogation",
