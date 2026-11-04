@@ -88,7 +88,7 @@ checklist: what was covered, and any accepted gaps with their reasons.
 
 ## 3. The pull request
 
-Open the PR against the canonical branch; for what the description must
+Always load and follow `pr-writing` (`skills/pr-writing/SKILL.md`) when writing or updating the pull request description. Open the PR against the canonical branch; for what the description must
 cover and the same-issue-ID rule, see `cmk:delivery-workflow`'s
 `references/pr-traceability.md` — don't restate it here. Its evidence
 section is where step 1's verification output lands.
