@@ -127,6 +127,54 @@ export const SKILL_COLLECTIONS: SkillCollection[] = [
 export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
   // ─── Featured Social & 3D / Design / Workflow Collection ─────────────
   {
+    id: "blank-page",
+    name: "blank-page",
+    title: "Blank Page — Motion Graphics Prompt Expander (Midjourney for Motion)",
+    tagline:
+      "Expands a rough one-line idea into an expressive motion-graphics brief with a visual look, style references, and a sequence of choreographed beats so the first draft is already compelling.",
+    collectionId: "design",
+    additionalCollectionIds: ["3d", "workflow"],
+    creator: {
+      name: "Blake Shao",
+      xHandle: "blak3shao",
+      xUrl: "https://x.com/blak3shao",
+      xPostUrl: "https://x.com/blak3shao/status/2118040585336676378",
+      githubRepo: "StewdioAI/blank-page",
+      githubUrl: "https://github.com/StewdioAI/blank-page",
+    },
+    source: {
+      platform: "x",
+      postUrl: "https://x.com/blak3shao/status/2118040585336676378",
+      profileUrl: "https://x.com/blak3shao",
+      handle: "blak3shao",
+      thumbnailUrl:
+        "https://pbs.twimg.com/amplify_video_thumb/2118000457217925120/img/RdEIu2C2FR_cahiT.jpg",
+      videoUrl:
+        "https://video.twimg.com/amplify_video/2118000457217925120/vid/avc1/1280x720/C1O1CvVM9p85ybAS.mp4?tag=29",
+      avatarUrl:
+        "https://pbs.twimg.com/profile_images/1796725807814938624/7-bJ-Ujk_400x400.jpg",
+      bannerUrl:
+        "https://pbs.twimg.com/profile_banners/1796716358824067072/1717207826",
+    },
+    thumbnailUrl:
+      "https://pbs.twimg.com/amplify_video_thumb/2118000457217925120/img/RdEIu2C2FR_cahiT.jpg",
+    xVideoUrl:
+      "https://video.twimg.com/amplify_video/2118000457217925120/vid/avc1/1280x720/C1O1CvVM9p85ybAS.mp4?tag=29",
+    xAvatarUrl:
+      "https://pbs.twimg.com/profile_images/1796725807814938624/7-bJ-Ujk_400x400.jpg",
+    xBannerUrl:
+      "https://pbs.twimg.com/profile_banners/1796716358824067072/1717207826",
+    installCommand: "npx skills add StewdioAI/blank-page",
+    stylePrompt:
+      "Expand a one-line motion-graphics prompt ('/blank-page' by @blak3shao / StewdioAI style): (1) Art Direction & Palette — define a bold primary stage color (e.g. deep cobalt #002699 or obsidian #0B0D12), tactile surface treatment (pixel/voxel, frosted glass, or editorial vector), and accent highlights; (2) Focal Hero Object — center a single expressive physical or UI object before introducing text; (3) Beat-by-Beat Choreography (0.0s–5.0s) — specify exact entrance physics, camera push/pull, state morph, and clean resolve beat so the first generated draft feels art-directed rather than a generic slide.",
+    pinnedSha: "main",
+    vettedAt: "2026-11-05",
+    starsOrInstalls: "StewdioAI · @blak3shao",
+    pairsWithCmk: ["design", "requirements", "delivery-spec-plan"],
+    featured: true,
+    isNew: true,
+  },
+  {
     id: "pr-writing",
     name: "pr-writing",
     title: "PR Writing — Evidence-First Pull Request Descriptions",
