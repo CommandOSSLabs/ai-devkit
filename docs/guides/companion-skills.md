@@ -81,6 +81,7 @@ this table does not invent one.
 
 | Skill | What it does | Install | Overlap |
 |---|---|---|---|
+| [pr-writing](https://hugorcd.com/writing/what-my-pull-requests-look-like-now) | Write evidence-first pull request descriptions ordered for a skimmer with real before/after proofs and plain-words ELI5 (`@hugorcd`) | `npx skills add https://hugorcd.com --skill pr-writing` | pairs with `cmk:delivery-ship` and `cmk:delivery-review` |
 | [coworkers](https://github.com/fayazara/coworkers) | Cloudflare Durable Object AI teammates with inline `Install skills?` approval card (`@fayazara`) | `git clone https://github.com/fayazara/coworkers` | pairs with `cmk:agent-vendors` and `cmk:sync` |
 | [superpowers](https://github.com/obra/superpowers) | Brainstorming, plans, TDD, debugging | `npx skills add obra/superpowers` | brainstorming ≈ `cmk:requirements`; writing-plans ≈ `cmk:delivery-spec-plan` |
 | [mattpocock/skills](https://github.com/mattpocock/skills) | grill-me, tdd, triage, handoff | `npx skills add mattpocock/skills` | grill-me beside `cmk:requirements` |

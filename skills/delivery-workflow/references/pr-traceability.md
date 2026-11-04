@@ -8,8 +8,7 @@ branch and the PR body.
 
 ## What the description must cover
 
-Headings and organization may vary — section names are guidance, not a
-fixed schema — but the useful content should cover:
+Always load and follow `pr-writing` (`skills/pr-writing/SKILL.md`) when authoring or updating a pull request description. Order the body for a skimmer (1. Problem in one paragraph -> 2. What changed -> 3. Real evidence that fits the change -> 4. Details & trade-offs -> 5. 2–3 sentence ELI5), and ensure it covers:
 
 - context and the primary issue reference near the start;
 - what was achieved and the main code or documentation entry points;

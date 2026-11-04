@@ -127,6 +127,44 @@ export const SKILL_COLLECTIONS: SkillCollection[] = [
 export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
   // ─── Featured Social & 3D / Design / Workflow Collection ─────────────
   {
+    id: "pr-writing",
+    name: "pr-writing",
+    title: "PR Writing — Evidence-First Pull Request Descriptions",
+    tagline:
+      "Write pull request descriptions ordered for a skimmer that prove the change works with real evidence (same-crop before/after UI + phone width, real CLI output, measured benchmarks) and end with a plain-English ELI5.",
+    collectionId: "workflow",
+    additionalCollectionIds: ["security", "explainers"],
+    creator: {
+      name: "Hugo Richard",
+      xHandle: "hugorcd",
+      xUrl: "https://x.com/hugorcd",
+      xPostUrl: "https://x.com/hugorcd/status/2117971965751464075",
+      githubRepo: "HugoRCD/hr-folio",
+      githubUrl: "https://hugorcd.com/writing/what-my-pull-requests-look-like-now",
+    },
+    source: {
+      platform: "x",
+      postUrl: "https://x.com/hugorcd/status/2117971965751464075",
+      profileUrl: "https://x.com/hugorcd",
+      handle: "hugorcd",
+      thumbnailUrl: "https://pbs.twimg.com/media/HWSMQ24aEAEEylF.jpg?name=large",
+      avatarUrl: "https://pbs.twimg.com/profile_images/1989017357910466560/7pg7wTop_200x200.jpg",
+      bannerUrl: "https://pbs.twimg.com/profile_banners/964974856856133632/1733852827",
+    },
+    thumbnailUrl: "https://pbs.twimg.com/media/HWSMQ24aEAEEylF.jpg?name=large",
+    xAvatarUrl: "https://pbs.twimg.com/profile_images/1989017357910466560/7pg7wTop_200x200.jpg",
+    xBannerUrl: "https://pbs.twimg.com/profile_banners/964974856856133632/1733852827",
+    installCommand: "npx skills add https://hugorcd.com --skill pr-writing",
+    stylePrompt:
+      "Write an evidence-first Pull Request description ('pr-writing' by @hugorcd style): (1) The problem in one plain paragraph with real numbers when available; (2) What changed, grouped by area rather than a commit list; (3) Evidence table matching the change type — for UI: side-by-side Before vs After screenshots at identical viewport & crop plus a mobile/phone-width pair and short video for hover/motion; for CLI/build: verbatim command output + exit code; for perf/AI: measured latency/cost rubric on both sides; (4) Reviewer details, trade-offs, and honest limitations; (5) ELI5 summary in 2-3 plain sentences.",
+    pinnedSha: "1.0.0",
+    vettedAt: "2026-11-02",
+    starsOrInstalls: "Vercel / Nuxt · @hugorcd",
+    pairsWithCmk: ["delivery-ship", "delivery-review", "delivery-workflow"],
+    featured: true,
+    isNew: true,
+  },
+  {
     id: "stack-diagram",
     name: "stack-diagram",
     title: "Stack Diagram — Architecture Diagrams with Official Logos",
