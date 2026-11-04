@@ -207,7 +207,7 @@ export function CollectionsView() {
                     href="https://github.com/CommandOSSLabs/ai-devkit/blob/main/lib/skill-collections.ts"
                     target="_blank"
                     rel="noreferrer"
-                    className="font-mono text-[12px] text-[var(--md-fg)] underline decoration-white/25 underline-offset-4 hover:decoration-white/70"
+                    className="font-mono text-[12px] text-[var(--md-fg)] underline decoration-[var(--md-card-border)] underline-offset-4 hover:decoration-[var(--md-fg)]"
                   >
                     lib/skill-collections.ts
                   </a>{" "}
@@ -218,7 +218,7 @@ export function CollectionsView() {
                 href="https://github.com/CommandOSSLabs/ai-devkit/edit/main/lib/skill-collections.ts"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-8 items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.05] px-3.5 text-[12px] font-medium text-[var(--md-fg)] transition-colors hover:bg-white/[0.1]"
+                className="inline-flex h-8 items-center gap-1.5 rounded-full border border-[var(--md-card-border)] bg-[var(--md-card-pill-bg)] px-3.5 text-[12px] font-medium text-[var(--md-fg)] transition-colors hover:bg-[var(--md-fill-control-hover)]"
               >
                 <Plus size={13} />
                 <span>Add via GitHub PR</span>
@@ -303,12 +303,12 @@ export function CollectionsView() {
               type="button"
               onClick={() => setQuery("")}
               aria-label="Clear search"
-              className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/10 text-[var(--md-text-tertiary)] hover:text-[var(--md-fg)]"
+              className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--md-card-pill-bg)] text-[var(--md-text-tertiary)] hover:text-[var(--md-fg)]"
             >
               <X size={11} />
             </button>
           ) : (
-            <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/[0.08] font-mono text-[11px] text-[var(--md-text-tertiary)]">
+            <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--md-card-pill-bg)] font-mono text-[11px] text-[var(--md-text-tertiary)]">
               /
             </span>
           )}
