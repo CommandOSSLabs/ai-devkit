@@ -1,22 +1,67 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Plus, Search, SlidersHorizontal, X } from "lucide-react";
 import type { SkillSummary } from "@/lib/skill-catalog";
 import {
   CURATED_SKILL_REFS,
   SKILL_COLLECTIONS,
   type CuratedSkillRef,
+  type SkillCollection,
 } from "@/lib/skill-collections";
 import { ExploreVisualTile, RefDetailModal } from "./curated-skill-card";
-import { triggerOpenAddRefModal } from "./add-ref-modal";
+import {
+  ADMIN_STORAGE_KEY,
+  COLLECTIONS_UPDATED_EVENT,
+  triggerOpenAddRefModal,
+} from "./add-ref-modal";
 
 export function ExploreView({ skills = [] }: { skills?: SkillSummary[] }) {
+  const [collections, setCollections] =
+    useState<SkillCollection[]>(SKILL_COLLECTIONS);
+  const [refs, setRefs] = useState<CuratedSkillRef[]>(CURATED_SKILL_REFS);
+  const [pendingRefs, setPendingRefs] = useState<CuratedSkillRef[]>([]);
   const [query, setQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState<string>("all");
   const [filterOpen, setFilterOpen] = useState(false);
   const [selectedRef, setSelectedRef] = useState<CuratedSkillRef | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const fetchLiveCollections = useCallback(async () => {
+    try {
+      const adminKey =
+        typeof window !== "undefined"
+          ? window.localStorage.getItem(ADMIN_STORAGE_KEY) || ""
+          : "";
+      const res = await fetch("/api/collections?includePending=1", {
+        cache: "no-store",
+        headers: adminKey ? { "x-admin-secret": adminKey } : undefined,
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (Array.isArray(data?.collections) && data.collections.length > 0) {
+        setCollections(data.collections);
+      }
+      if (Array.isArray(data?.refs) && data.refs.length > 0) {
+        setRefs(data.refs);
+      }
+      if (Array.isArray(data?.pendingRefs)) {
+        setPendingRefs(data.pendingRefs);
+      }
+    } catch {
+      // Retain hydrated static state on network failure
+    }
+  }, []);
+
+  useEffect(() => {
+    void fetchLiveCollections();
+    const handleUpdate = () => {
+      void fetchLiveCollections();
+    };
+    window.addEventListener(COLLECTIONS_UPDATED_EVENT, handleUpdate);
+    return () =>
+      window.removeEventListener(COLLECTIONS_UPDATED_EVENT, handleUpdate);
+  }, [fetchLiveCollections]);
 
   const cmkExploreRefs = useMemo<CuratedSkillRef[]>(
     () =>
@@ -61,15 +106,15 @@ export function ExploreView({ skills = [] }: { skills?: SkillSummary[] }) {
   // Interleave X companion refs and core CMK skills for a rich visual masonry feed
   const allExploreRefs = useMemo(() => {
     const combined: CuratedSkillRef[] = [];
-    const maxLen = Math.max(CURATED_SKILL_REFS.length, cmkExploreRefs.length);
+    const maxLen = Math.max(refs.length, cmkExploreRefs.length);
     for (let i = 0; i < maxLen; i += 1) {
-      if (CURATED_SKILL_REFS[i]) combined.push(CURATED_SKILL_REFS[i]);
+      if (refs[i]) combined.push(refs[i]);
       if (i % 2 === 1 && cmkExploreRefs[Math.floor(i / 2)]) {
         combined.push(cmkExploreRefs[Math.floor(i / 2)]);
       }
     }
     return combined;
-  }, [cmkExploreRefs]);
+  }, [refs, cmkExploreRefs]);
 
   const filteredRefs = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -102,7 +147,10 @@ export function ExploreView({ skills = [] }: { skills?: SkillSummary[] }) {
   }, [allExploreRefs, activeFilter, query]);
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col overflow-y-auto pb-28 pt-2">
+    <div
+      data-pending-count={pendingRefs.length}
+      className="flex min-h-0 flex-1 flex-col overflow-y-auto pb-28 pt-2"
+    >
       {/* marked.dev/explore 4-column visual masonry grid (.ref-grid) */}
       {filteredRefs.length > 0 ? (
         <div className="md-ref-grid">
@@ -159,7 +207,7 @@ export function ExploreView({ skills = [] }: { skills?: SkillSummary[] }) {
             { id: "all", label: "All Refs" },
             { id: "x-companions", label: "X Companion Drops" },
             { id: "cmk-core", label: "Core CMK Skills" },
-            ...SKILL_COLLECTIONS.map((c) => ({ id: c.id, label: c.title })),
+            ...collections.map((c) => ({ id: c.id, label: c.title })),
           ].map((tab) => {
             const active = activeFilter === tab.id;
             return (

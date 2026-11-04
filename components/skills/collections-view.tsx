@@ -1,15 +1,35 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { ChevronRight, Plus, Search, SlidersHorizontal, X } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Check,
+  ChevronDown,
+  ChevronRight,
+  ChevronUp,
+  Clock,
+  ExternalLink,
+  Loader2,
+  Plus,
+  Search,
+  SlidersHorizontal,
+  Sparkles,
+  Trash2,
+  X,
+} from "lucide-react";
 import {
   CURATED_SKILL_REFS,
   SKILL_COLLECTIONS,
   type CuratedSkillRef,
+  type SkillCollection,
 } from "@/lib/skill-collections";
 import { StackedFolderCard } from "./stacked-folder-card";
 import { ExploreVisualTile, RefDetailModal } from "./curated-skill-card";
-import { triggerOpenAddRefModal } from "./add-ref-modal";
+import {
+  ADMIN_STORAGE_KEY,
+  COLLECTIONS_UPDATED_EVENT,
+  notifyCollectionsUpdated,
+  triggerOpenAddRefModal,
+} from "./add-ref-modal";
 
 const COLLECTION_PREVIEW_ACCENTS: Record<string, string[]> = {
   "3d": [
@@ -50,10 +70,56 @@ const COLLECTION_PREVIEW_ACCENTS: Record<string, string[]> = {
 };
 
 export function CollectionsView() {
-  const [activeCollectionId, setActiveCollectionId] = useState<string | null>(null);
+  const [allCollections, setAllCollections] =
+    useState<SkillCollection[]>(SKILL_COLLECTIONS);
+  const [allRefs, setAllRefs] = useState<CuratedSkillRef[]>(CURATED_SKILL_REFS);
+  const [pendingRefs, setPendingRefs] = useState<CuratedSkillRef[]>([]);
+  const [pendingOpen, setPendingOpen] = useState(false);
+  const [busyPendingId, setBusyPendingId] = useState<string | null>(null);
+  const [moderationError, setModerationError] = useState<string | null>(null);
+
+  const [activeCollectionId, setActiveCollectionId] = useState<string | null>(
+    null,
+  );
   const [query, setQuery] = useState("");
   const [selectedRef, setSelectedRef] = useState<CuratedSkillRef | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const fetchLiveCollections = useCallback(async () => {
+    try {
+      const adminKey =
+        typeof window !== "undefined"
+          ? window.localStorage.getItem(ADMIN_STORAGE_KEY) || ""
+          : "";
+      const res = await fetch("/api/collections?includePending=1", {
+        cache: "no-store",
+        headers: adminKey ? { "x-admin-secret": adminKey } : undefined,
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (Array.isArray(data?.collections) && data.collections.length > 0) {
+        setAllCollections(data.collections);
+      }
+      if (Array.isArray(data?.refs) && data.refs.length > 0) {
+        setAllRefs(data.refs);
+      }
+      if (Array.isArray(data?.pendingRefs)) {
+        setPendingRefs(data.pendingRefs);
+      }
+    } catch {
+      // Retain hydrated static state on network failure
+    }
+  }, []);
+
+  useEffect(() => {
+    void fetchLiveCollections();
+    const handleUpdate = () => {
+      void fetchLiveCollections();
+    };
+    window.addEventListener(COLLECTIONS_UPDATED_EVENT, handleUpdate);
+    return () =>
+      window.removeEventListener(COLLECTIONS_UPDATED_EVENT, handleUpdate);
+  }, [fetchLiveCollections]);
 
   useEffect(() => {
     function handleSlashKey(e: KeyboardEvent) {
@@ -70,8 +136,76 @@ export function CollectionsView() {
     return () => window.removeEventListener("keydown", handleSlashKey);
   }, []);
 
-  const allCollections = SKILL_COLLECTIONS;
-  const allRefs = CURATED_SKILL_REFS;
+  async function handleApprovePending(id: string) {
+    setBusyPendingId(id);
+    setModerationError(null);
+    try {
+      const adminKey =
+        typeof window !== "undefined"
+          ? window.localStorage.getItem(ADMIN_STORAGE_KEY) || ""
+          : "";
+      const res = await fetch(
+        `/api/collections/refs/${encodeURIComponent(id)}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            ...(adminKey ? { "x-admin-secret": adminKey } : {}),
+          },
+          body: JSON.stringify({
+            status: "published",
+            adminSecret: adminKey || undefined,
+          }),
+        },
+      );
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data?.error || `Approval failed (${res.status})`);
+      }
+      notifyCollectionsUpdated();
+    } catch (err) {
+      setModerationError(
+        err instanceof Error ? err.message : "Could not approve ref",
+      );
+    } finally {
+      setBusyPendingId(null);
+    }
+  }
+
+  async function handleRejectPending(id: string) {
+    setBusyPendingId(id);
+    setModerationError(null);
+    try {
+      const adminKey =
+        typeof window !== "undefined"
+          ? window.localStorage.getItem(ADMIN_STORAGE_KEY) || ""
+          : "";
+      const res = await fetch(
+        `/api/collections/refs/${encodeURIComponent(id)}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            ...(adminKey ? { "x-admin-secret": adminKey } : {}),
+          },
+          body: JSON.stringify({
+            adminSecret: adminKey || undefined,
+          }),
+        },
+      );
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data?.error || `Delete failed (${res.status})`);
+      }
+      notifyCollectionsUpdated();
+    } catch (err) {
+      setModerationError(
+        err instanceof Error ? err.message : "Could not reject ref",
+      );
+    } finally {
+      setBusyPendingId(null);
+    }
+  }
 
   const refsByCollection = useMemo(() => {
     const map: Record<string, CuratedSkillRef[]> = {};
@@ -152,19 +286,117 @@ export function CollectionsView() {
             </h1>
           )}
 
-          {activeCollection && (
-            <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
+            {pendingRefs.length > 0 && (
               <button
                 type="button"
-                onClick={() => triggerOpenAddRefModal({ mode: "ref" })}
-                className="md-header-cta"
+                onClick={() => setPendingOpen((v) => !v)}
+                className="inline-flex h-10 items-center gap-1.5 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-3.5 font-mono text-[12px] font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--bg-elevated)]"
               >
-                <Plus size={15} />
-                <span>Add ref</span>
+                <Clock size={13} className="text-[#fab12f]" />
+                <span>Pending Review ({pendingRefs.length})</span>
+                {pendingOpen ? (
+                  <ChevronUp size={13} />
+                ) : (
+                  <ChevronDown size={13} />
+                )}
               </button>
-            </div>
-          )}
+            )}
+
+            <button
+              type="button"
+              onClick={() =>
+                triggerOpenAddRefModal({
+                  mode: "ref",
+                  defaultCollectionId: activeCollection?.id,
+                })
+              }
+              className="md-header-cta"
+            >
+              <Plus size={15} />
+              <span>Add ref</span>
+            </button>
+          </div>
         </header>
+
+        {/* Collapsible Pending Review Queue Banner */}
+        {pendingRefs.length > 0 && pendingOpen && (
+          <section
+            aria-label="Pending Review Queue"
+            className="mb-8 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-4"
+          >
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h2 className="text-[14px] font-semibold text-[var(--text-primary)]">
+                  Pending Community Submissions ({pendingRefs.length})
+                </h2>
+                <p className="text-[12px] text-[var(--text-secondary)]">
+                  Approve with your Admin Passkey to publish live to PostgreSQL immediately.
+                </p>
+              </div>
+              {moderationError && (
+                <span className="font-mono text-[11.5px] text-red-400">
+                  {moderationError}
+                </span>
+              )}
+            </div>
+
+            <div className="divide-y divide-[var(--border-subtle)]">
+              {pendingRefs.map((item) => {
+                const isBusy = busyPendingId === item.id;
+                return (
+                  <div
+                    key={item.id}
+                    className="flex flex-wrap items-center justify-between gap-3 py-2.5 first:pt-0 last:pb-0"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="truncate text-[13.5px] font-medium text-[var(--text-primary)]">
+                          {item.title}
+                        </span>
+                        <span className="rounded bg-[var(--bg-elevated)] px-1.5 py-0.5 font-mono text-[10.5px] text-[var(--text-secondary)]">
+                          {item.collectionId}
+                        </span>
+                        <span className="font-mono text-[11px] text-[var(--text-tertiary)]">
+                          @{item.creator.xHandle}
+                        </span>
+                      </div>
+                      <p className="line-clamp-1 text-[12px] text-[var(--text-secondary)]">
+                        {item.tagline}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        disabled={isBusy}
+                        onClick={() => handleApprovePending(item.id)}
+                        className="inline-flex h-8 items-center gap-1 rounded-full bg-[var(--text-primary)] px-3 text-[11.5px] font-medium text-[var(--bg-base)] transition-opacity hover:opacity-90 disabled:opacity-50"
+                      >
+                        {isBusy ? (
+                          <Loader2 size={12} className="animate-spin" />
+                        ) : (
+                          <Check size={12} />
+                        )}
+                        <span>Approve</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        disabled={isBusy}
+                        onClick={() => handleRejectPending(item.id)}
+                        className="inline-flex h-8 items-center gap-1 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-base)] px-3 text-[11.5px] text-[var(--text-secondary)] transition-colors hover:border-red-500/40 hover:text-red-400 disabled:opacity-50"
+                      >
+                        <Trash2 size={12} />
+                        <span>Reject</span>
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
 
         {/* Main Collections Stacked Folder Grid (exact marked.dev/collections layout) */}
         {!activeCollection && (
@@ -184,7 +416,10 @@ export function CollectionsView() {
                   title={collection.title}
                   countLabel={`${count} ${count === 1 ? "ref" : "refs"}`}
                   active={activeCollectionId === collection.id}
-                  previewAccents={COLLECTION_PREVIEW_ACCENTS[collection.id]}
+                  previewAccents={
+                    COLLECTION_PREVIEW_ACCENTS[collection.id] ??
+                    COLLECTION_PREVIEW_ACCENTS.design
+                  }
                   previewItems={items}
                   onClick={() => setActiveCollectionId(collection.id)}
                 />
@@ -202,7 +437,7 @@ export function CollectionsView() {
                   X Video Posts
                 </h2>
                 <p className="mt-1 text-[13.5px] text-[var(--md-text-tertiary)]">
-                  Resolved automatically from <code className="font-mono text-[12px] text-[var(--md-fg)]">xPostUrl</code> in{" "}
+                  Auto-enriched live from X status URLs, GitHub repositories, and{" "}
                   <a
                     href="https://github.com/CommandOSSLabs/ai-devkit/blob/main/lib/skill-collections.ts"
                     target="_blank"
@@ -210,24 +445,40 @@ export function CollectionsView() {
                     className="font-mono text-[12px] text-[var(--md-fg)] underline decoration-[var(--md-card-border)] underline-offset-4 hover:decoration-[var(--md-fg)]"
                   >
                     lib/skill-collections.ts
-                  </a>{" "}
-                  on GitHub.
+                  </a>
+                  .
                 </p>
               </div>
-              <a
-                href="https://github.com/CommandOSSLabs/ai-devkit/edit/main/lib/skill-collections.ts"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex h-8 items-center gap-1.5 rounded-full border border-[var(--md-card-border)] bg-[var(--md-card-pill-bg)] px-3.5 text-[12px] font-medium text-[var(--md-fg)] transition-colors hover:bg-[var(--md-fill-control-hover)]"
-              >
-                <Plus size={13} />
-                <span>Add via GitHub PR</span>
-              </a>
+              <div className="flex flex-wrap items-center gap-2">
+                <a
+                  href="https://github.com/CommandOSSLabs/ai-devkit/blob/main/lib/skill-collections.ts"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex h-8 items-center gap-1 rounded-full px-2.5 font-mono text-[11.5px] text-[var(--md-text-tertiary)] transition-colors hover:text-[var(--md-fg)]"
+                >
+                  <span>GitHub sync</span>
+                  <ExternalLink size={11} />
+                </a>
+                <button
+                  type="button"
+                  onClick={() => triggerOpenAddRefModal({ mode: "ref" })}
+                  className="inline-flex h-8 items-center gap-1.5 rounded-full border border-[var(--md-card-border)] bg-[var(--md-card-pill-bg)] px-3.5 text-[12px] font-medium text-[var(--md-fg)] transition-colors hover:bg-[var(--md-fill-control-hover)]"
+                >
+                  <Sparkles size={13} className="text-[var(--md-card-cmd)]" />
+                  <span>+ Add Link Live</span>
+                </button>
+              </div>
             </div>
 
             <div className="md-ref-grid">
               {allRefs
-                .filter((item) => Boolean(item.xVideoUrl || item.creator.xPostUrl || item.source?.postUrl))
+                .filter((item) =>
+                  Boolean(
+                    item.xVideoUrl ||
+                      item.creator.xPostUrl ||
+                      item.source?.postUrl,
+                  ),
+                )
                 .map((item, index) => (
                   <ExploreVisualTile
                     key={item.id}
@@ -273,7 +524,12 @@ export function CollectionsView() {
                 </p>
                 <button
                   type="button"
-                  onClick={() => triggerOpenAddRefModal({ mode: "ref" })}
+                  onClick={() =>
+                    triggerOpenAddRefModal({
+                      mode: "ref",
+                      defaultCollectionId: activeCollection?.id,
+                    })
+                  }
                   className="md-header-cta mt-4"
                 >
                   <Plus size={15} />
@@ -329,7 +585,9 @@ export function CollectionsView() {
 
       <RefDetailModal
         item={selectedRef}
-        index={selectedRef ? allRefs.findIndex((r) => r.id === selectedRef.id) : 0}
+        index={
+          selectedRef ? allRefs.findIndex((r) => r.id === selectedRef.id) : 0
+        }
         onClose={() => setSelectedRef(null)}
       />
     </div>
