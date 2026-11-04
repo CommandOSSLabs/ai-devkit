@@ -1,7 +1,7 @@
 ---
 name: cmk:agent-instructions
 description: Use when the user asks to "set up CLAUDE.md", "set up AGENTS.md", "agent instructions", "add engineering rules", "make the instructions thinner", or needs to establish or maintain a thin, multi-vendor root instruction file backed by on-demand engineering rules under docs/rules/.
-version: 0.3.2
+version: 0.4.0
 ---
 
 # Agent Instructions
@@ -36,7 +36,7 @@ a given vendor, and stay out of the shared instructions entirely.
 ## Modes
 
 **Init** (default) — seed `CLAUDE.md` from `references/claude-md-template.md`,
-symlink `AGENTS.md` to it, and seed `docs/rules/common/` from the six rules
+symlink `AGENTS.md` to it, and seed `docs/rules/common/` from the seven rules
 templates below. Never overwrite an existing `CLAUDE.md`; for each rules
 topic file, follow the reconciliation rule below rather than skipping or
 overwriting it outright.
@@ -52,7 +52,7 @@ since evolved. Confirm with the user before touching an existing file.
 This skill seeds baseline content into the same `docs/rules/common/{topic}.md`
 file set `cmk:rule` owns and evolves afterward — it never invents a parallel
 vocabulary. Canonical target: `docs/rules/common/{topic}.md`. Doing initial
-setup? Seed these six templates, each into the topic file its conditional
+setup? Seed these seven templates, each into the topic file its conditional
 pointer names:
 
 - Naming anything? `references/rules-naming.md` → `docs/rules/common/naming.md`
@@ -61,6 +61,7 @@ pointer names:
 - Committing or opening a PR? `references/rules-git-workflow.md` → `docs/rules/common/git-workflow.md`
 - Adding or changing a CLI command? `references/rules-cli-surfaces.md` → `docs/rules/common/cli-surfaces.md`
 - Any long-running or background work? `references/rules-agent-conduct.md` → `docs/rules/common/agent-conduct.md`
+- Reading anything the repository didn't author? `references/rules-untrusted-input.md` → `docs/rules/common/untrusted-input.md`
 
 After seeding files into `docs/rules/common/`, add or refresh a row for each
 seeded topic in `docs/rules/README.md` — the index `cmk:rule` maintains
@@ -75,7 +76,7 @@ exists (seeded earlier by this skill, by `cmk:docs`'s baseline scaffold, or
 hand-written by the project), never silently skip it and never silently
 overwrite it. Read it, compare it against the template, and propose a merge
 that keeps every project-specific addition while upgrading the shared
-baseline content the two files have in common. Report each of the six topics
+baseline content the two files have in common. Report each of the seven topics
 as **seeded** (file didn't exist), **merged** (file existed and gained the
 upgraded baseline alongside its own additions), or **kept** (file existed and
 the user declined the merge) — with the reason — rather than reporting bare
