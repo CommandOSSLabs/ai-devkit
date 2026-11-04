@@ -63,7 +63,7 @@ function FolderXThumbnailCard({
   }, [media.thumbnailUrl]);
 
   return (
-    <div className="relative h-[74px] w-24 overflow-hidden rounded-xl border border-white/25 bg-[#121017] p-[3px] shadow-[0_10px_22px_rgba(0,0,0,0.45)] sm:h-[80px] sm:w-28">
+    <div className="relative h-[74px] w-24 overflow-hidden rounded-xl border border-[var(--md-card-border)] bg-[var(--md-card-surface)] p-[3px] shadow-[0_10px_22px_rgba(0,0,0,0.28)] sm:h-[80px] sm:w-28">
       <div className="relative h-full w-full overflow-hidden rounded-[9px] bg-[#1A1721]">
         {media.videoUrl ? (
           <video
@@ -213,11 +213,10 @@ export function StackedFolderIllustration({
       <div
         className="relative mx-auto flex h-full w-[87.5%] items-center justify-center overflow-visible"
         style={{
-          background: "#18151B",
-          boxShadow:
-            "0px 0px 15.7px 16px rgba(79, 73, 85, 0.30) inset, 0 12px 28px rgba(0, 0, 0, 0.45)",
+          background: "var(--md-folder-back-bg)",
+          boxShadow: "var(--md-folder-back-shadow)",
           borderRadius: 10,
-          border: "1px solid rgba(255, 255, 255, 0.08)",
+          border: "1px solid var(--md-folder-back-border)",
         }}
       >
         {PAGE_VARIANTS.map((page, i) => {
@@ -277,7 +276,7 @@ export function StackedFolderIllustration({
             <path
               d={FOLDER_PATH}
               fill={`url(#${fillGradId})`}
-              fillOpacity="0.3"
+              style={{ fillOpacity: "var(--md-folder-flap-opacity)" }}
               stroke={`url(#${strokeGradId})`}
               strokeWidth="0.9"
             />
@@ -293,8 +292,8 @@ export function StackedFolderIllustration({
                 y2="121.7"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stopColor="#2D2535" />
-                <stop offset="1" stopColor="#2A2A2A" />
+                <stop style={{ stopColor: "var(--md-folder-flap-stop-1)" }} />
+                <stop offset="1" style={{ stopColor: "var(--md-folder-flap-stop-2)" }} />
               </linearGradient>
               <linearGradient
                 id={strokeGradId}
@@ -304,9 +303,9 @@ export function StackedFolderIllustration({
                 y2="121.7"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stopColor="#FFFFFF" stopOpacity="0.32" />
+                <stop stopColor="#FFFFFF" stopOpacity="0.45" />
                 <stop offset="0.5" stopColor="#7C738A" stopOpacity="0.22" />
-                <stop offset="1" stopColor="#212121" stopOpacity="0.4" />
+                <stop offset="1" stopColor="#64748B" stopOpacity="0.28" />
               </linearGradient>
             </defs>
           </svg>
@@ -314,16 +313,16 @@ export function StackedFolderIllustration({
           {/* Subtle glass pocket crease / smile detail */}
           <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center pt-7">
             {variant === "new" ? (
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white/80 backdrop-blur-md">
+              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[var(--md-card-border)] bg-[var(--md-card-pill-bg)] text-[var(--md-fg)] backdrop-blur-md">
                 <Plus size={15} strokeWidth={2.2} />
               </span>
             ) : (
               <>
                 <div className="mb-2 flex gap-9">
-                  <div className="h-2 w-2 rounded-full bg-white/25" />
-                  <div className="h-2 w-2 rounded-full bg-white/25" />
+                  <div className="h-2 w-2 rounded-full" style={{ background: "var(--md-folder-crease)" }} />
+                  <div className="h-2 w-2 rounded-full" style={{ background: "var(--md-folder-crease)" }} />
                 </div>
-                <div className="h-1 w-7 rounded-full bg-white/25" />
+                <div className="h-1 w-7 rounded-full" style={{ background: "var(--md-folder-crease)" }} />
               </>
             )}
           </div>

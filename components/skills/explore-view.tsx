@@ -148,7 +148,13 @@ export function ExploreView({ skills = [] }: { skills?: SkillSummary[] }) {
 
       {/* Floating Filter Popover above the dock */}
       {filterOpen && (
-        <div className="fixed bottom-[84px] left-1/2 z-40 flex w-[92vw] max-w-[540px] -translate-x-1/2 flex-wrap items-center justify-center gap-1.5 rounded-[22px] bg-[#171717]/95 p-3 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12),0_20px_48px_rgba(0,0,0,0.75)] backdrop-blur-xl">
+        <div
+          style={{
+            background: "var(--md-surface-menu)",
+            boxShadow: "var(--md-dock-shadow)",
+          }}
+          className="fixed bottom-[84px] left-1/2 z-40 flex w-[92vw] max-w-[540px] -translate-x-1/2 flex-wrap items-center justify-center gap-1.5 rounded-[22px] p-3 backdrop-blur-xl"
+        >
           {[
             { id: "all", label: "All Refs" },
             { id: "x-companions", label: "X Companion Drops" },
@@ -166,8 +172,8 @@ export function ExploreView({ skills = [] }: { skills?: SkillSummary[] }) {
                 }}
                 className={`rounded-full px-3 py-1.5 text-[12.5px] font-medium transition-colors ${
                   active
-                    ? "bg-white text-[#141413]"
-                    : "bg-white/[0.06] text-[#b4b4b4] hover:bg-white/[0.12] hover:text-white"
+                    ? "bg-[var(--md-fg)] text-[var(--md-bg)]"
+                    : "bg-[var(--md-card-pill-bg)] text-[var(--md-text-secondary)] hover:bg-[var(--md-fill-control-hover)] hover:text-[var(--md-fg)]"
                 }`}
               >
                 {tab.label}
@@ -195,12 +201,12 @@ export function ExploreView({ skills = [] }: { skills?: SkillSummary[] }) {
               type="button"
               onClick={() => setQuery("")}
               aria-label="Clear search"
-              className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/10 text-[var(--md-text-tertiary)] hover:text-[var(--md-fg)]"
+              className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--md-card-pill-bg)] text-[var(--md-text-tertiary)] hover:text-[var(--md-fg)]"
             >
               <X size={11} />
             </button>
           ) : (
-            <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/[0.08] font-mono text-[11px] text-[var(--md-text-tertiary)]">
+            <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--md-card-pill-bg)] font-mono text-[11px] text-[var(--md-text-tertiary)]">
               /
             </span>
           )}

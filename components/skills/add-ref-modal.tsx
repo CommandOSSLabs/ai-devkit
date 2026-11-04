@@ -147,8 +147,8 @@ export function AddRefModal() {
           {/* Header */}
           <div className="mb-4 flex items-start justify-between gap-4">
             <div>
-              <div className="mb-1.5 inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.05] px-2.5 py-0.5 font-mono text-[11px] text-[var(--text-secondary)]">
-                <GitPullRequest size={12} className="text-[#c3e88d]" />
+              <div className="mb-1.5 inline-flex items-center gap-1.5 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-base)] px-2.5 py-0.5 font-mono text-[11px] text-[var(--text-secondary)]">
+                <GitPullRequest size={12} className="text-[var(--md-card-cmd)]" />
                 <span>Git-Tracked Curation · Maintainer Vetted</span>
               </div>
               <Drawer.Title className="text-[18px] font-semibold tracking-tight text-[var(--text-primary)]">
@@ -205,7 +205,7 @@ export function AddRefModal() {
             {/* Step 1: Vetting Criteria */}
             <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-base)] p-3.5">
               <div className="flex items-center gap-2 text-[13px] font-medium text-[var(--text-primary)]">
-                <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/10 font-mono text-[11px] text-white">
+                <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--bg-elevated)] font-mono text-[11px] text-[var(--text-primary)]">
                   1
                 </span>
                 <span>
@@ -218,30 +218,30 @@ export function AddRefModal() {
                 {mode === "ref" ? (
                   <>
                     <li className="flex items-start gap-2">
-                      <ShieldCheck size={13} className="mt-0.5 shrink-0 text-[#c3e88d]" />
+                      <ShieldCheck size={13} className="mt-0.5 shrink-0 text-[var(--md-card-cmd)]" />
                       <span>
-                        Public GitHub repo with a valid <code className="font-mono text-white/90">SKILL.md</code> (installable via <code className="font-mono text-white/90">npx skills add</code>) and no unvetted binary/curl-pipe execution.
+                        Public GitHub repo with a valid <code className="font-mono text-[var(--text-primary)]">SKILL.md</code> (installable via <code className="font-mono text-[var(--text-primary)]">npx skills add</code>) and no unvetted binary/curl-pipe execution.
                       </span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <ShieldCheck size={13} className="mt-0.5 shrink-0 text-[#c3e88d]" />
+                      <ShieldCheck size={13} className="mt-0.5 shrink-0 text-[var(--md-card-cmd)]" />
                       <span>
-                        Original creator X status link (<code className="font-mono text-white/90">xPostUrl: &quot;https://x.com/.../status/...&quot;</code>) — the server automatically resolves the X Video Post, thumbnail, and avatar from your GitHub PR.
+                        Original creator X status link (<code className="font-mono text-[var(--text-primary)]">xPostUrl: &quot;https://x.com/.../status/...&quot;</code>) — the server automatically resolves the X Video Post, thumbnail, and avatar from your GitHub PR.
                       </span>
                     </li>
                   </>
                 ) : (
                   <>
                     <li className="flex items-start gap-2">
-                      <ShieldCheck size={13} className="mt-0.5 shrink-0 text-[#c3e88d]" />
+                      <ShieldCheck size={13} className="mt-0.5 shrink-0 text-[var(--md-card-cmd)]" />
                       <span>
                         Group at least <strong>3 vetted X skill references</strong> under a clear SDLC or ecosystem theme so the translucent folder fan-out is populated.
                       </span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <ShieldCheck size={13} className="mt-0.5 shrink-0 text-[#c3e88d]" />
+                      <ShieldCheck size={13} className="mt-0.5 shrink-0 text-[var(--md-card-cmd)]" />
                       <span>
-                        Document how the collection complements core <code className="font-mono text-white/90">cmk:*</code> skills in <code className="font-mono text-white/90">docs/guides/companion-skills.md</code>.
+                        Document how the collection complements core <code className="font-mono text-[var(--text-primary)]">cmk:*</code> skills in <code className="font-mono text-[var(--text-primary)]">docs/guides/companion-skills.md</code>.
                       </span>
                     </li>
                   </>
@@ -253,14 +253,14 @@ export function AddRefModal() {
             <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-base)] p-3.5">
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2 text-[13px] font-medium text-[var(--text-primary)]">
-                  <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/10 font-mono text-[11px] text-white">
+                  <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--bg-elevated)] font-mono text-[11px] text-[var(--text-primary)]">
                     2
                   </span>
                   <span className="inline-flex items-center gap-1.5">
                     <FileCode2 size={14} className="text-[var(--text-secondary)]" />
                     <span>
                       Add to{" "}
-                      <code className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-[11.5px] text-white">
+                      <code className="rounded bg-[var(--bg-elevated)] px-1.5 py-0.5 font-mono text-[11.5px] text-[var(--text-primary)]">
                         lib/skill-collections.ts
                       </code>
                     </span>
@@ -274,8 +274,8 @@ export function AddRefModal() {
                 >
                   {copiedSnippet ? (
                     <>
-                      <Check size={12} className="text-[#c3e88d]" />
-                      <span className="text-[#c3e88d]">Copied</span>
+                      <Check size={12} className="text-[var(--md-card-cmd)]" />
+                      <span className="text-[var(--md-card-cmd)]">Copied</span>
                     </>
                   ) : (
                     <>
@@ -292,7 +292,7 @@ export function AddRefModal() {
                   : "Append your folder entry to SKILL_COLLECTIONS in lib/skill-collections.ts:"}
               </p>
 
-              <pre className="mt-2.5 max-h-48 overflow-x-auto rounded-lg border border-white/[0.06] bg-[#0b0b0e] p-3 font-mono text-[11px] leading-[1.55] text-[#d4d4d8]">
+              <pre className="mt-2.5 max-h-48 overflow-x-auto rounded-lg border border-[var(--border-subtle)] bg-[var(--md-card-inner)] p-3 font-mono text-[11px] leading-[1.55] text-[var(--text-primary)]">
                 <code>{activeSnippet}</code>
               </pre>
             </div>
@@ -300,14 +300,14 @@ export function AddRefModal() {
             {/* Step 3: Open PR or Issue */}
             <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-base)] p-3.5">
               <div className="flex items-center gap-2 text-[13px] font-medium text-[var(--text-primary)]">
-                <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/10 font-mono text-[11px] text-white">
+                <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--bg-elevated)] font-mono text-[11px] text-[var(--text-primary)]">
                   3
                 </span>
                 <span>Open a Pull Request (or Nominate via Issue)</span>
               </div>
               <p className="mt-1.5 pl-7 text-[12.5px] leading-[1.5] text-[var(--text-secondary)]">
                 Admins and contributors can edit{" "}
-                <code className="font-mono text-white/90">lib/skill-collections.ts</code>{" "}
+                <code className="font-mono text-[var(--text-primary)]">lib/skill-collections.ts</code>{" "}
                 directly on GitHub to open a PR, or file a structured GitHub Issue for maintainers to vet and merge.
               </p>
             </div>

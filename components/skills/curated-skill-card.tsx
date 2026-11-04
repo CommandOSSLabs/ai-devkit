@@ -127,12 +127,12 @@ export function TileVisualArtwork({
   if (!imgFailed && imgSrc) {
     return (
       <div
-        className={`relative flex w-full flex-col justify-between overflow-hidden bg-[#111115] ${
+        className={`relative flex w-full flex-col justify-between overflow-hidden bg-[var(--md-card-surface)] text-[var(--md-fg)] ${
           large ? "min-h-[460px] p-5 sm:p-7" : "min-h-[330px] p-4"
         }`}
       >
         {/* Ambient blurred backdrop derived from the X link thumbnail */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-30">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-15 dark:opacity-30">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={imgSrc}
@@ -141,34 +141,46 @@ export function TileVisualArtwork({
             referrerPolicy="no-referrer"
             className="h-full w-full scale-125 object-cover blur-2xl"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#111115]/75 via-[#111115]/65 to-[#111115]/95" />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(180deg, color-mix(in srgb, var(--md-card-surface) 78%, transparent) 0%, color-mix(in srgb, var(--md-card-surface) 70%, transparent) 50%, color-mix(in srgb, var(--md-card-surface) 96%, transparent) 100%)",
+            }}
+          />
         </div>
 
         {/* Top X Source Header */}
-        <div className="relative z-10 mb-3 flex items-center justify-between gap-2">
-          <div className="inline-flex min-w-0 items-center gap-2">
+        <div className="relative z-10 mb-3 flex items-center justify-between gap-2.5">
+          <div className="inline-flex shrink-0 items-center gap-1.5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={media.avatarUrl}
               alt={`@${media.handle}`}
               referrerPolicy="no-referrer"
-              className="h-5 w-5 shrink-0 rounded-full border border-white/20 bg-[#18151B] object-cover"
+              className="h-5 w-5 shrink-0 rounded-full border border-[var(--md-card-border)] bg-[var(--md-card-inner)] object-cover"
             />
-            <span className="truncate font-mono text-[11.5px] font-medium text-white/90">
+            <span className="max-w-[128px] truncate font-mono text-[11.5px] font-medium text-[var(--md-fg)]">
               @{media.handle}
             </span>
             <VerifiedBadge />
           </div>
 
-          <div className="flex shrink-0 items-center gap-1.5">
+          <div
+            className={`flex min-w-0 flex-1 items-center justify-end gap-1.5 ${
+              large
+                ? ""
+                : "transition-opacity duration-150 group-hover:opacity-0 group-focus-within:opacity-0"
+            }`}
+          >
             {item.starsOrInstalls && (
-              <span className="rounded-full border border-white/10 bg-white/[0.06] px-2 py-0.5 font-mono text-[10px] text-white/80">
+              <span className="min-w-0 truncate rounded-full border border-[var(--md-card-border)] bg-[var(--md-card-pill-bg)] px-2 py-0.5 font-mono text-[10px] text-[var(--md-text-secondary)]">
                 {item.starsOrInstalls}
               </span>
             )}
             <span
               title={`Source: ${media.platformLabel}`}
-              className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-white/[0.08] text-white/85"
+              className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--md-card-pill-bg)] text-[var(--md-fg)]"
             >
               <SocialPlatformIcon platform={media.platform} className="h-2.5 w-2.5 fill-current" />
             </span>
@@ -176,7 +188,7 @@ export function TileVisualArtwork({
         </div>
 
         {/* Main X Link Thumbnail / Video Post Frame */}
-        <div className="relative z-10 overflow-hidden rounded-[16px] border border-white/[0.12] bg-[#0b0b0e] shadow-[0_14px_32px_rgba(0,0,0,0.55)]">
+        <div className="relative z-10 overflow-hidden rounded-[16px] border border-[var(--md-card-border)] bg-[#0b0b0e] shadow-[0_10px_28px_rgba(0,0,0,0.22)] dark:shadow-[0_14px_32px_rgba(0,0,0,0.55)]">
           {media.videoUrl ? (
             <div className="relative aspect-[16/10] w-full overflow-hidden bg-black">
               <video
@@ -235,19 +247,19 @@ export function TileVisualArtwork({
         {/* Bottom Caption & CMK Pairing Strip */}
         <div className="relative z-10 mt-3.5 pb-8">
           <div className="flex items-center justify-between gap-2">
-            <h4 className="truncate text-[16px] font-medium leading-[1.25] tracking-[-0.015em] text-white">
+            <h4 className="truncate text-[16px] font-medium leading-[1.25] tracking-[-0.015em] text-[var(--md-fg)]">
               {item.title}
             </h4>
-            <span className="shrink-0 rounded-md bg-white/[0.07] px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-white/70">
+            <span className="shrink-0 rounded-md bg-[var(--md-card-pill-bg)] px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-[var(--md-text-secondary)]">
               {item.collectionId}
             </span>
           </div>
-          <p className="mt-1 line-clamp-2 text-[12.5px] leading-[1.45] text-[#a3a3ad]">
+          <p className="mt-1 line-clamp-2 text-[12.5px] leading-[1.45] text-[var(--md-text-secondary)]">
             {item.tagline}
           </p>
 
-          <div className="mt-2.5 flex flex-wrap items-center justify-between gap-1.5 border-t border-white/[0.07] pt-2.5">
-            <span className="truncate font-mono text-[10.5px] text-[#c3e88d]">
+          <div className="mt-2.5 flex flex-wrap items-center justify-between gap-1.5 border-t border-[var(--md-card-divider)] pt-2.5">
+            <span className="truncate font-mono text-[10.5px] text-[var(--md-card-cmd)]">
               $ {item.installCommand ?? cmdShort}
             </span>
             {item.pairsWithCmk.length > 0 && (
@@ -255,7 +267,7 @@ export function TileVisualArtwork({
                 {item.pairsWithCmk.slice(0, 2).map((cmk) => (
                   <span
                     key={cmk}
-                    className="rounded-full bg-white/[0.07] px-2 py-0.5 font-mono text-[10px] text-[#d4d4d8]"
+                    className="rounded-full bg-[var(--md-card-pill-bg)] px-2 py-0.5 font-mono text-[10px] text-[var(--md-card-pill-text)]"
                   >
                     + cmk:{cmk}
                   </span>
@@ -274,7 +286,7 @@ export function TileVisualArtwork({
   if (variant === 0) {
     return (
       <div
-        className={`relative flex w-full flex-col justify-between overflow-hidden bg-[#131418] p-6 ${
+        className={`relative flex w-full flex-col justify-between overflow-hidden bg-[var(--md-card-surface)] p-6 text-[var(--md-fg)] ${
           large ? "min-h-[460px] sm:p-10" : "min-h-[340px]"
         }`}
       >
@@ -287,43 +299,43 @@ export function TileVisualArtwork({
         />
 
         {/* Top mini browser/window chrome */}
-        <div className="relative z-10 flex items-center justify-between text-[11px] text-[#8a8a8a]">
-          <span className="inline-flex items-center gap-1.5 font-mono">
-            <span className="h-2 w-2 rounded-full bg-[#fab12f]" />
-            {item.creator.githubRepo}
+        <div className="relative z-10 flex items-center justify-between gap-2 text-[11px] text-[var(--md-text-tertiary)]">
+          <span className="inline-flex min-w-0 items-center gap-1.5 truncate font-mono">
+            <span className="h-2 w-2 shrink-0 rounded-full bg-[#fab12f]" />
+            <span className="truncate">{item.creator.githubRepo}</span>
           </span>
           {item.starsOrInstalls && (
-            <span className="rounded-full bg-white/[0.06] px-2.5 py-0.5 font-mono text-[10.5px] text-[#b4b4b4]">
+            <span className="truncate rounded-full bg-[var(--md-card-pill-bg)] px-2.5 py-0.5 font-mono text-[10.5px] text-[var(--md-text-secondary)] transition-opacity duration-150 group-hover:opacity-0">
               {item.starsOrInstalls}
             </span>
           )}
         </div>
 
         {/* Center studio card */}
-        <div className="relative z-10 my-5 rounded-[18px] border border-white/[0.08] bg-[#0b0c0e]/90 p-5 shadow-2xl">
+        <div className="relative z-10 my-5 rounded-[18px] border border-[var(--md-card-border)] bg-[var(--md-card-inner)] p-5 shadow-lg">
           <div className="mb-3 flex items-center justify-between">
-            <span className="rounded-md bg-white/[0.07] px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-[#9a9a9a]">
+            <span className="rounded-md bg-[var(--md-card-pill-bg)] px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-[var(--md-text-tertiary)]">
               {item.collectionId}
             </span>
             {item.isNew && (
-              <span className="rounded-full bg-[#fab12f]/15 px-2 py-0.5 font-mono text-[10px] text-[#fab12f]">
+              <span className="rounded-full bg-[#fab12f]/15 px-2 py-0.5 font-mono text-[10px] text-[#d97706] dark:text-[#fab12f]">
                 Featured
               </span>
             )}
           </div>
-          <h4 className="text-[19px] font-medium leading-[1.22] tracking-[-0.02em] text-white">
+          <h4 className="text-[19px] font-medium leading-[1.22] tracking-[-0.02em] text-[var(--md-fg)]">
             {item.title}
           </h4>
-          <p className="mt-2 line-clamp-3 text-[12.5px] leading-[1.55] text-[#9a9a9a]">
+          <p className="mt-2 line-clamp-3 text-[12.5px] leading-[1.55] text-[var(--md-text-secondary)]">
             {item.tagline}
           </p>
 
           {item.pairsWithCmk.length > 0 && (
-            <div className="mt-4 flex flex-wrap items-center gap-1.5 border-t border-white/[0.06] pt-3">
+            <div className="mt-4 flex flex-wrap items-center gap-1.5 border-t border-[var(--md-card-divider)] pt-3">
               {item.pairsWithCmk.map((cmk) => (
                 <span
                   key={cmk}
-                  className="rounded-full bg-white/[0.06] px-2.5 py-0.5 font-mono text-[10.5px] text-[#d4d4d8]"
+                  className="rounded-full bg-[var(--md-card-pill-bg)] px-2.5 py-0.5 font-mono text-[10.5px] text-[var(--md-card-pill-text)]"
                 >
                   + cmk:{cmk}
                 </span>
@@ -373,33 +385,33 @@ export function TileVisualArtwork({
   if (variant === 2) {
     return (
       <div
-        className={`relative flex w-full flex-col justify-between overflow-hidden bg-[#0c0d10] p-6 ${
+        className={`relative flex w-full flex-col justify-between overflow-hidden bg-[var(--md-card-surface)] p-6 text-[var(--md-fg)] ${
           large ? "min-h-[460px] sm:p-10" : "min-h-[370px]"
         }`}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
-            <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
-            <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[var(--md-text-muted)] opacity-50" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[var(--md-text-muted)] opacity-30" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[var(--md-text-muted)] opacity-30" />
           </div>
-          <span className="font-mono text-[10.5px] text-[#8a8a8a]">
+          <span className="font-mono text-[10.5px] text-[var(--md-text-tertiary)] transition-opacity duration-150 group-hover:opacity-0">
             SHA · {item.pinnedSha ?? "HEAD"}
           </span>
         </div>
 
-        <div className="my-5 space-y-3 rounded-2xl border border-white/[0.07] bg-[#141519] p-4 font-mono text-[11.5px]">
-          <div className="flex items-center gap-2 text-[#9a9a9a]">
-            <Terminal size={13} className="text-[#c3e88d]" />
-            <span className="truncate text-white">{item.title}</span>
+        <div className="my-5 space-y-3 rounded-2xl border border-[var(--md-card-border)] bg-[var(--md-card-inner)] p-4 font-mono text-[11.5px]">
+          <div className="flex items-center gap-2 text-[var(--md-text-tertiary)]">
+            <Terminal size={13} className="text-[var(--md-card-cmd)]" />
+            <span className="truncate text-[var(--md-fg)]">{item.title}</span>
           </div>
-          <div className="rounded-lg bg-black/60 p-3 text-[#c3e88d]">
-            <span className="select-none text-[#6b7280]">$ </span>
+          <div className="rounded-lg border border-[var(--md-card-border)] bg-[var(--md-card-surface)] p-3 text-[var(--md-card-cmd)]">
+            <span className="select-none text-[var(--md-text-muted)]">$ </span>
             <span className="break-all">
               {item.installCommand ?? `git clone ${item.creator.githubUrl}`}
             </span>
           </div>
-          <p className="font-sans text-[12.5px] leading-[1.55] text-[#b4b4b4]">
+          <p className="font-sans text-[12.5px] leading-[1.55] text-[var(--md-text-secondary)]">
             {item.tagline}
           </p>
         </div>
@@ -408,7 +420,7 @@ export function TileVisualArtwork({
           {[item.collectionId, ...item.pairsWithCmk.slice(0, 2)].map((tag) => (
             <span
               key={tag}
-              className="rounded-full border border-white/[0.07] bg-white/[0.03] px-2.5 py-0.5 font-mono text-[10.5px] text-[#9a9a9a]"
+              className="rounded-full border border-[var(--md-card-border)] bg-[var(--md-card-pill-bg)] px-2.5 py-0.5 font-mono text-[10.5px] text-[var(--md-text-secondary)]"
             >
               #{tag}
             </span>
@@ -429,32 +441,32 @@ export function TileVisualArtwork({
 
     return (
       <div
-        className={`relative flex w-full flex-col justify-between overflow-hidden bg-[#151515] p-6 ${
+        className={`relative flex w-full flex-col justify-between overflow-hidden bg-[var(--md-card-surface)] p-6 text-[var(--md-fg)] ${
           large ? "min-h-[460px] sm:p-10" : "min-h-[320px]"
         }`}
       >
-        <div className="flex items-start justify-between">
-          <div>
-            <span className="text-[14px] font-medium text-white">{item.title}</span>
-            <p className="font-mono text-[11px] text-[#8a8a8a]">@{item.creator.xHandle}</p>
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <span className="block truncate text-[14px] font-medium text-[var(--md-fg)]">{item.title}</span>
+            <p className="font-mono text-[11px] text-[var(--md-text-tertiary)]">@{item.creator.xHandle}</p>
           </div>
-          <span className="rounded-full bg-white/[0.08] px-2.5 py-0.5 font-mono text-[10.5px] text-[#b4b4b4]">
+          <span className="shrink-0 rounded-full bg-[var(--md-card-pill-bg)] px-2.5 py-0.5 font-mono text-[10.5px] text-[var(--md-text-secondary)] transition-opacity duration-150 group-hover:opacity-0">
             {item.starsOrInstalls ?? "Vetted"}
           </span>
         </div>
 
         <div className="my-4 flex items-baseline justify-between">
-          <span className="select-none font-sans text-[76px] font-semibold leading-none tracking-[-0.05em] text-white/90">
+          <span className="select-none font-sans text-[76px] font-semibold leading-none tracking-[-0.05em] text-[var(--md-fg)] opacity-90">
             {monogram}
           </span>
           <div className="max-w-[165px] text-right">
-            <p className="line-clamp-3 text-[12px] leading-[1.45] text-[#9a9a9a]">
+            <p className="line-clamp-3 text-[12px] leading-[1.45] text-[var(--md-text-secondary)]">
               {item.tagline}
             </p>
           </div>
         </div>
 
-        <div className="mb-6 h-px w-full bg-white/[0.07]" />
+        <div className="mb-6 h-px w-full bg-[var(--md-card-divider)]" />
       </div>
     );
   }
@@ -463,20 +475,20 @@ export function TileVisualArtwork({
   if (variant === 4) {
     return (
       <div
-        className={`relative flex w-full flex-col justify-between overflow-hidden bg-[#111318] p-6 ${
+        className={`relative flex w-full flex-col justify-between overflow-hidden bg-[var(--md-card-surface)] p-6 text-[var(--md-fg)] ${
           large ? "min-h-[460px] sm:p-10" : "min-h-[350px]"
         }`}
         style={{
           backgroundImage:
-            "radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px)",
+            "radial-gradient(var(--md-card-border) 1px, transparent 1px)",
           backgroundSize: "18px 18px",
         }}
       >
-        <div className="flex items-center justify-between">
-          <span className="rounded-full bg-white/[0.08] px-2.5 py-1 font-mono text-[10.5px] text-white">
+        <div className="flex items-center justify-between gap-2">
+          <span className="rounded-full bg-[var(--md-card-pill-bg)] px-2.5 py-1 font-mono text-[10.5px] text-[var(--md-fg)]">
             Workflow Recipe
           </span>
-          <span className="font-mono text-[11px] text-[#9a9a9a]">
+          <span className="truncate font-mono text-[11px] text-[var(--md-text-tertiary)] transition-opacity duration-150 group-hover:opacity-0">
             {item.creator.githubRepo}
           </span>
         </div>
@@ -486,21 +498,21 @@ export function TileVisualArtwork({
           {item.pairsWithCmk.slice(0, 2).map((cmkId) => (
             <div
               key={cmkId}
-              className="inline-flex items-center gap-2 self-start rounded-xl border border-white/[0.1] bg-[#0a0b0e] px-3.5 py-2 font-mono text-[11.5px] text-[#82aaff] shadow-lg"
+              className="inline-flex items-center gap-2 self-start rounded-xl border border-[var(--md-card-border)] bg-[var(--md-card-inner)] px-3.5 py-2 font-mono text-[11.5px] text-[#3b82f6] dark:text-[#82aaff] shadow-sm"
             >
-              <span className="h-2 w-2 rounded-full bg-[#82aaff]" />
+              <span className="h-2 w-2 rounded-full bg-[#3b82f6] dark:bg-[#82aaff]" />
               cmk:{cmkId}
             </div>
           ))}
-          <div className="ml-5 h-4 w-px bg-white/20" />
-          <div className="rounded-2xl border border-white/[0.14] bg-[#1b1d24] p-4 shadow-xl">
-            <div className="font-mono text-[10.5px] text-[#fab12f]">
+          <div className="ml-5 h-4 w-px bg-[var(--md-card-border)]" />
+          <div className="rounded-2xl border border-[var(--md-card-border)] bg-[var(--md-card-inner)] p-4 shadow-md">
+            <div className="font-mono text-[10.5px] text-[#d97706] dark:text-[#fab12f]">
               + X Companion Skill
             </div>
-            <div className="mt-0.5 text-[16px] font-medium text-white">
+            <div className="mt-0.5 text-[16px] font-medium text-[var(--md-fg)]">
               {item.title}
             </div>
-            <p className="mt-1 line-clamp-2 text-[12px] text-[#9a9a9a]">
+            <p className="mt-1 line-clamp-2 text-[12px] text-[var(--md-text-secondary)]">
               {item.tagline}
             </p>
           </div>
@@ -514,7 +526,7 @@ export function TileVisualArtwork({
   // Variant 5: Minimalist Bento Metric & Feature Card
   return (
     <div
-      className={`relative flex w-full flex-col justify-between overflow-hidden bg-[#161618] p-6 ${
+      className={`relative flex w-full flex-col justify-between overflow-hidden bg-[var(--md-card-surface)] p-6 text-[var(--md-fg)] ${
         large ? "min-h-[460px] sm:p-10" : "min-h-[300px]"
       }`}
     >
@@ -523,28 +535,28 @@ export function TileVisualArtwork({
         style={{ background: AVATAR_GRADIENTS[index % AVATAR_GRADIENTS.length] }}
       />
 
-      <div className="relative z-10 flex items-center justify-between">
-        <span className="font-mono text-[11px] text-[#9a9a9a]">
+      <div className="relative z-10 flex items-center justify-between gap-2">
+        <span className="truncate font-mono text-[11px] text-[var(--md-text-tertiary)]">
           {item.creator.githubRepo}
         </span>
         {item.starsOrInstalls && (
-          <span className="rounded-full border border-white/10 bg-white/[0.05] px-2.5 py-0.5 font-mono text-[10.5px] text-white">
+          <span className="shrink-0 rounded-full border border-[var(--md-card-border)] bg-[var(--md-card-pill-bg)] px-2.5 py-0.5 font-mono text-[10.5px] text-[var(--md-fg)] transition-opacity duration-150 group-hover:opacity-0">
             {item.starsOrInstalls}
           </span>
         )}
       </div>
 
       <div className="relative z-10 my-5">
-        <h4 className="text-[21px] font-medium leading-[1.2] tracking-[-0.02em] text-white">
+        <h4 className="text-[21px] font-medium leading-[1.2] tracking-[-0.02em] text-[var(--md-fg)]">
           {item.title}
         </h4>
-        <p className="mt-2 line-clamp-3 text-[13px] leading-[1.55] text-[#9a9a9a]">
+        <p className="mt-2 line-clamp-3 text-[13px] leading-[1.55] text-[var(--md-text-secondary)]">
           {item.tagline}
         </p>
       </div>
 
-      <div className="relative z-10 mb-7 flex items-center gap-2 font-mono text-[11px] text-[#b4b4b4]">
-        <ShieldCheck size={13} className="text-[#c3e88d]" />
+      <div className="relative z-10 mb-7 flex items-center gap-2 font-mono text-[11px] text-[var(--md-text-secondary)]">
+        <ShieldCheck size={13} className="text-[var(--md-card-cmd)]" />
         <span className="truncate">{cmdShort}</span>
       </div>
     </div>
@@ -598,7 +610,7 @@ export function ExploreVisualTile({
           <TileVisualArtwork item={item} index={index} />
 
           {/* Top-right hover actions (.tile-menu) */}
-          <div className=" absolute right-3.5 top-3.5 z-20 flex items-center gap-1.5 opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100">
+          <div className="absolute right-3.5 top-3 z-20 flex items-center gap-1.5 opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100">
             <button
               type="button"
               onClick={handleCopy}
@@ -609,12 +621,17 @@ export function ExploreVisualTile({
                     ? `Copy: ${item.installCommand}`
                     : "Copy repo URL"
               }
-              className="inline-flex h-[30px] items-center gap-1.5 rounded-full bg-[#171717]/90 px-3 font-mono text-[11px] font-medium text-white shadow-[0_0_0_1px_rgba(255,255,255,0.12),0_4px_12px_rgba(0,0,0,0.4)] backdrop-blur-md transition-transform active:scale-95"
+              style={{
+                background: "var(--md-float-pill-bg)",
+                color: "var(--md-float-pill-fg)",
+                boxShadow: "var(--md-float-pill-shadow)",
+              }}
+              className="inline-flex h-[28px] items-center gap-1.5 rounded-full px-3 font-mono text-[11px] font-medium backdrop-blur-md transition-transform active:scale-95"
             >
               {copied ? (
                 <>
-                  <Check size={12} className="text-[#c3e88d]" />
-                  <span className="text-[#c3e88d]">Copied</span>
+                  <Check size={12} className="text-[var(--md-card-cmd)]" />
+                  <span className="text-[var(--md-card-cmd)]">Copied</span>
                 </>
               ) : (
                 <>
@@ -636,7 +653,12 @@ export function ExploreVisualTile({
               rel="noreferrer"
               onClick={(e) => e.stopPropagation()}
               title={`Shoutout @${item.creator.xHandle} on X`}
-              className="inline-flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#171717]/90 text-white shadow-[0_0_0_1px_rgba(255,255,255,0.12),0_4px_12px_rgba(0,0,0,0.4)] backdrop-blur-md transition-transform hover:scale-105"
+              style={{
+                background: "var(--md-float-pill-bg)",
+                color: "var(--md-float-pill-fg)",
+                boxShadow: "var(--md-float-pill-shadow)",
+              }}
+              className="inline-flex h-[28px] w-[28px] items-center justify-center rounded-full backdrop-blur-md transition-transform hover:scale-105"
             >
               <XLogo className="h-3 w-3 fill-current" />
             </a>
@@ -653,7 +675,7 @@ export function ExploreVisualTile({
               className="pointer-events-auto inline-flex items-center gap-2 rounded-full pr-2.5 transition-transform duration-200 hover:scale-105"
             >
               <span
-                className="relative inline-flex h-[30px] w-[30px] items-center justify-center overflow-hidden rounded-full font-mono text-[11px] font-semibold uppercase text-white shadow-[0_0_0_1px_rgba(255,255,255,0.22),0_2px_8px_rgba(0,0,0,0.45)]"
+                className="relative inline-flex h-[30px] w-[30px] items-center justify-center overflow-hidden rounded-full font-mono text-[11px] font-semibold uppercase text-white shadow-[0_0_0_1px_rgba(255,255,255,0.22),0_2px_8px_rgba(0,0,0,0.25)]"
                 style={{ background: avatarBg }}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -664,7 +686,14 @@ export function ExploreVisualTile({
                   className="h-full w-full object-cover"
                 />
               </span>
-              <span className="inline-flex items-center gap-1 rounded-full bg-[#171717]/90 px-2.5 py-1 font-mono text-[11px] text-white shadow-[0_0_0_1px_rgba(255,255,255,0.1)] backdrop-blur-md">
+              <span
+                style={{
+                  background: "var(--md-float-pill-bg)",
+                  color: "var(--md-float-pill-fg)",
+                  boxShadow: "var(--md-float-pill-shadow)",
+                }}
+                className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 font-mono text-[11px] backdrop-blur-md"
+              >
                 <span>@{media.handle}</span>
                 <SocialPlatformIcon
                   platform={media.platform}
@@ -674,7 +703,14 @@ export function ExploreVisualTile({
             </a>
 
             {item.pairsWithCmk[0] && (
-              <span className="rounded-full bg-[#171717]/85 px-2.5 py-1 font-mono text-[10.5px] text-[#b4b4b4] shadow-[0_0_0_1px_rgba(255,255,255,0.08)] backdrop-blur-md">
+              <span
+                style={{
+                  background: "var(--md-float-pill-bg)",
+                  color: "var(--md-text-secondary)",
+                  boxShadow: "var(--md-float-pill-shadow)",
+                }}
+                className="rounded-full px-2.5 py-1 font-mono text-[10.5px] backdrop-blur-md"
+              >
                 cmk:{item.pairsWithCmk[0]}
               </span>
             )}
@@ -736,7 +772,7 @@ export function RefDetailModal({
       role="dialog"
       aria-modal="true"
       aria-label={item.title}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-md sm:p-8"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-md sm:p-8"
       onClick={onClose}
     >
       {/* Top-right close button (.ref-detail-close) */}
@@ -744,7 +780,7 @@ export function RefDetailModal({
         type="button"
         onClick={onClose}
         aria-label="Close detail"
-        className="fixed right-5 top-5 z-50 inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#202020] text-[#9a9a9a] transition-colors hover:bg-[#2a2a2a] hover:text-white"
+        className="fixed right-5 top-5 z-50 inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--md-card-border)] bg-[var(--md-card-surface)] text-[var(--md-text-secondary)] shadow-lg transition-colors hover:text-[var(--md-fg)]"
       >
         <X size={18} />
       </button>
@@ -752,20 +788,20 @@ export function RefDetailModal({
       {/* Stage shell (.ref-detail-stage-shell) */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className="flex max-h-[88vh] w-full max-w-[1060px] flex-col items-center gap-8 overflow-y-auto md:flex-row md:items-stretch md:justify-center md:gap-11"
+        className="flex max-h-[88vh] w-full max-w-[1080px] flex-col items-center gap-6 overflow-y-auto rounded-[32px] border border-[var(--md-card-border)] bg-[var(--md-card-surface)] p-5 text-[var(--md-fg)] shadow-[0_24px_64px_rgba(0,0,0,0.45)] sm:p-7 md:flex-row md:items-stretch md:justify-center md:gap-8"
       >
         {/* Left/Center Media Stage (.ref-detail-stage) */}
         <div className="flex w-full max-w-[640px] flex-1 flex-col justify-center">
-          <div className="overflow-hidden rounded-[28px] shadow-[0_12px_32px_rgba(0,0,0,0.45),0_2px_6px_rgba(0,0,0,0.3)] outline outline-1 -outline-offset-1 outline-white/[0.08]">
+          <div className="overflow-hidden rounded-[24px] border border-[var(--md-card-border)] shadow-[0_12px_32px_rgba(0,0,0,0.18)]">
             <TileVisualArtwork item={item} index={index} large />
           </div>
         </div>
 
-        {/* Right Side Panel (.ref-detail-side, width 300px) */}
-        <div className="flex w-full shrink-0 flex-col justify-between gap-6 md:w-[310px]">
+        {/* Right Side Panel (.ref-detail-side, width 310px) */}
+        <div className="flex w-full shrink-0 flex-col justify-between gap-6 md:w-[320px]">
           <div className="space-y-5 overflow-y-auto pr-1">
             <div>
-              <h2 className="text-[20px] font-medium leading-[25px] tracking-[-0.015em] text-white">
+              <h2 className="text-[20px] font-medium leading-[25px] tracking-[-0.015em] text-[var(--md-fg)]">
                 {item.title}
               </h2>
 
@@ -775,7 +811,7 @@ export function RefDetailModal({
                   href={resolveRefXLink(item)}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 text-[13.5px] font-medium text-white hover:underline"
+                  className="inline-flex items-center gap-2 text-[13.5px] font-medium text-[var(--md-fg)] hover:underline"
                 >
                   <span
                     className="relative inline-flex h-[22px] w-[22px] items-center justify-center overflow-hidden rounded-full font-mono text-[10px] font-semibold uppercase text-white"
@@ -792,14 +828,14 @@ export function RefDetailModal({
                   <span>{item.creator.name}</span>
                   <VerifiedBadge />
                 </a>
-                <span className="font-mono text-[12px] text-[#8a8a8a]">
+                <span className="font-mono text-[12px] text-[var(--md-text-tertiary)]">
                   @{item.creator.xHandle}
                 </span>
               </div>
             </div>
 
             {/* Description (.ref-detail-text) */}
-            <p className="text-[13.5px] leading-[20px] text-[#b4b4b4]">
+            <p className="text-[13.5px] leading-[20px] text-[var(--md-text-secondary)]">
               {item.tagline}
             </p>
 
@@ -807,18 +843,18 @@ export function RefDetailModal({
             {item.stylePrompt && (
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11.5px] font-medium text-[#8a8a8a]">
+                  <span className="text-[11.5px] font-medium text-[var(--md-text-tertiary)]">
                     UI/UX Style Prompt
                   </span>
                   <button
                     type="button"
                     onClick={handleCopyStylePrompt}
-                    className="inline-flex items-center gap-1 rounded-full bg-white/[0.08] px-2.5 py-0.5 font-mono text-[11px] text-white hover:bg-white/[0.15]"
+                    className="inline-flex items-center gap-1 rounded-full bg-[var(--md-card-pill-bg)] px-2.5 py-0.5 font-mono text-[11px] text-[var(--md-fg)] hover:bg-[var(--md-fill-control-hover)]"
                   >
                     {copiedStyle ? (
                       <>
-                        <Check size={12} className="text-[#c3e88d]" />
-                        <span className="text-[#c3e88d]">Copied</span>
+                        <Check size={12} className="text-[var(--md-card-cmd)]" />
+                        <span className="text-[var(--md-card-cmd)]">Copied</span>
                       </>
                     ) : (
                       <>
@@ -828,7 +864,7 @@ export function RefDetailModal({
                     )}
                   </button>
                 </div>
-                <div className="max-h-[110px] overflow-y-auto rounded-xl bg-white/[0.06] p-3 font-mono text-[11.5px] leading-[1.55] text-[#d4d4d4]">
+                <div className="max-h-[110px] overflow-y-auto rounded-xl border border-[var(--md-card-border)] bg-[var(--md-card-inner)] p-3 font-mono text-[11.5px] leading-[1.55] text-[var(--md-text-secondary)]">
                   {item.stylePrompt}
                 </div>
               </div>
@@ -837,17 +873,17 @@ export function RefDetailModal({
             {/* Install command box */}
             {item.installCommand && (
               <div className="space-y-1.5">
-                <div className="text-[11.5px] font-medium text-[#8a8a8a]">
+                <div className="text-[11.5px] font-medium text-[var(--md-text-tertiary)]">
                   Install Command
                 </div>
-                <div className="flex items-center justify-between gap-2 rounded-xl bg-white/[0.06] px-3 py-2.5 font-mono text-[12px] text-white">
+                <div className="flex items-center justify-between gap-2 rounded-xl border border-[var(--md-card-border)] bg-[var(--md-card-inner)] px-3 py-2.5 font-mono text-[12px] text-[var(--md-fg)]">
                   <code className="truncate">$ {item.installCommand}</code>
                   <button
                     type="button"
                     onClick={handleCopyCommand}
-                    className="shrink-0 text-[#9a9a9a] hover:text-white"
+                    className="shrink-0 text-[var(--md-text-tertiary)] hover:text-[var(--md-fg)]"
                   >
-                    {copiedCmd ? <Check size={14} className="text-[#c3e88d]" /> : <Copy size={14} />}
+                    {copiedCmd ? <Check size={14} className="text-[var(--md-card-cmd)]" /> : <Copy size={14} />}
                   </button>
                 </div>
               </div>
@@ -857,7 +893,7 @@ export function RefDetailModal({
             <div className="space-y-3 pt-1">
               {item.pairsWithCmk.length > 0 && (
                 <div className="space-y-1.5">
-                  <div className="text-[11.5px] font-medium text-[#8a8a8a]">
+                  <div className="text-[11.5px] font-medium text-[var(--md-text-tertiary)]">
                     Pairs with CMK Skills
                   </div>
                   <div className="flex flex-wrap gap-1.5">
@@ -866,7 +902,7 @@ export function RefDetailModal({
                         key={cmkId}
                         href={`/skills/${cmkId}`}
                         onClick={onClose}
-                        className="inline-flex h-[26px] items-center rounded-full bg-white/[0.08] px-2.5 font-mono text-[12px] text-white transition-colors hover:bg-white/[0.15]"
+                        className="inline-flex h-[26px] items-center rounded-full bg-[var(--md-card-pill-bg)] px-2.5 font-mono text-[12px] text-[var(--md-fg)] transition-colors hover:bg-[var(--md-fill-control-hover)]"
                       >
                         cmk:{cmkId}
                       </Link>
@@ -876,19 +912,19 @@ export function RefDetailModal({
               )}
 
               <div className="space-y-1.5">
-                <div className="text-[11.5px] font-medium text-[#8a8a8a]">
+                <div className="text-[11.5px] font-medium text-[var(--md-text-tertiary)]">
                   Collection & Provenance
                 </div>
                 <div className="flex flex-wrap gap-1.5">
-                  <span className="inline-flex h-[26px] items-center rounded-full bg-white/[0.08] px-2.5 text-[12px] text-[#b4b4b4]">
+                  <span className="inline-flex h-[26px] items-center rounded-full bg-[var(--md-card-pill-bg)] px-2.5 text-[12px] text-[var(--md-text-secondary)]">
                     {item.collectionId}
                   </span>
                   {item.pinnedSha && (
-                    <span className="inline-flex h-[26px] items-center rounded-full bg-white/[0.08] px-2.5 font-mono text-[11.5px] text-[#c3e88d]">
+                    <span className="inline-flex h-[26px] items-center rounded-full bg-[var(--md-card-pill-bg)] px-2.5 font-mono text-[11.5px] text-[var(--md-card-cmd)]">
                       SHA:{item.pinnedSha}
                     </span>
                   )}
-                  <span className="inline-flex h-[26px] items-center rounded-full bg-white/[0.08] px-2.5 font-mono text-[11.5px] text-[#b4b4b4]">
+                  <span className="inline-flex h-[26px] items-center rounded-full bg-[var(--md-card-pill-bg)] px-2.5 font-mono text-[11.5px] text-[var(--md-text-secondary)]">
                     Vetted {item.vettedAt}
                   </span>
                 </div>
@@ -901,7 +937,7 @@ export function RefDetailModal({
             <button
               type="button"
               onClick={handleCopyCommand}
-              className="inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-full bg-white px-4 text-[13px] font-medium text-[#141413] transition-colors hover:bg-[#e5e5e3]"
+              className="inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-full bg-[var(--md-fg)] px-4 text-[13px] font-medium text-[var(--md-bg)] transition-opacity hover:opacity-90"
             >
               {copiedCmd ? (
                 <>
@@ -921,7 +957,7 @@ export function RefDetailModal({
               target="_blank"
               rel="noreferrer"
               title={`Shoutout @${item.creator.xHandle} on X`}
-              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/[0.1] text-white transition-colors hover:bg-white/[0.16]"
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--md-card-pill-bg)] text-[var(--md-fg)] transition-colors hover:bg-[var(--md-fill-control-hover)]"
             >
               <XLogo className="h-4 w-4 fill-current" />
             </a>
@@ -931,7 +967,7 @@ export function RefDetailModal({
               target="_blank"
               rel="noreferrer"
               title={`Open ${item.creator.githubRepo} on GitHub`}
-              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/[0.1] text-white transition-colors hover:bg-white/[0.16]"
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--md-card-pill-bg)] text-[var(--md-fg)] transition-colors hover:bg-[var(--md-fill-control-hover)]"
             >
               <ExternalLink size={15} />
             </a>
