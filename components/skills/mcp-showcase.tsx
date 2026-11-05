@@ -79,7 +79,7 @@ const SOURCE_SLOTS = [
 
 const MCP_CAPABILITIES = [
   {
-    title: "Run 23 core cmk:* skills",
+    title: "Run 36 cmk:* skills",
     description:
       "Load canonical engineering workflows — delivery pipeline, design specs, ADRs, and repo setup — straight into your agent.",
     tools: ["cmk:delivery-pipeline", "cmk:design"],

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Collections · AI DevKit Skills",
     description:
-      "AI DevKit is a kit for curating agent skills by craft — 6 translucent folders of vetted X skills paired with 23 cmk:* workflows.",
+      "AI DevKit is a kit for curating agent skills by craft — 7 translucent folders of vetted X skills paired with 36 cmk:* workflows.",
     siteName: "AI DevKit",
     type: "website",
     images: [
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Collections · AI DevKit Skills",
     description:
-      "AI DevKit is a kit for curating agent skills by craft — 6 translucent folders of vetted X skills paired with 23 cmk:* workflows.",
+      "AI DevKit is a kit for curating agent skills by craft — 7 translucent folders of vetted X skills paired with 36 cmk:* workflows.",
     images: [
       {
         url: "https://skills.commandoss.com/og-collections.png?v=4",

@@ -29,11 +29,11 @@ export const metadata: Metadata = {
     template: "%s",
   },
   description:
-    "Make your coding agent feel right. 23 core cmk:* engineering skills, 6 curated X collections, and MCP support for Claude Code, Codex, and Cursor.",
+    "Make your coding agent feel right. 36 cmk:* engineering skills, 7 curated X collections, and MCP support for Claude Code, Codex, and Cursor.",
   openGraph: {
     title: "AI DevKit — Evolvable agent skills for the full SDLC",
     description:
-      "Make your coding agent feel right. 23 core cmk:* engineering skills, 6 curated X collections, and MCP support.",
+      "Make your coding agent feel right. 36 cmk:* engineering skills, 7 curated X collections, and MCP support.",
     siteName: "AI DevKit",
     type: "website",
     images: [
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "AI DevKit — Evolvable agent skills for the full SDLC",
     description:
-      "Make your coding agent feel right. 23 core cmk:* engineering skills, 6 curated X collections, and MCP support.",
+      "Make your coding agent feel right. 36 cmk:* engineering skills, 7 curated X collections, and MCP support.",
     images: [
       {
         url: "https://skills.commandoss.com/og.png?v=4",
