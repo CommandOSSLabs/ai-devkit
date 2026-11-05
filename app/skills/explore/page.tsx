@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Explore · AI DevKit Skills",
     description:
-      "Visual gallery of 23 core cmk:* engineering workflows and vetted X companion skill references.",
+      "Visual gallery of 36 cmk:* engineering workflows and vetted X companion skill references.",
     siteName: "AI DevKit",
     type: "website",
     images: [
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Explore · AI DevKit Skills",
     description:
-      "Visual gallery of 23 core cmk:* engineering workflows and vetted X companion skill references.",
+      "Visual gallery of 36 cmk:* engineering workflows and vetted X companion skill references.",
     images: [
       {
         url: "https://skills.commandoss.com/og-explore.png?v=4",

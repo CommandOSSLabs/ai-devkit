@@ -459,7 +459,7 @@ const INSTALL_COMMANDS: Record<PkgManager, string> = {
   bun: "bunx skills add CommandOSSLabs/ai-devkit",
 };
 
-function Hero({ theme }: { theme: "dark" | "light" }) {
+function Hero({ theme, skillCount }: { theme: "dark" | "light"; skillCount: number }) {
   const isDark = theme === "dark";
   const [pkgManager, setPkgManager] = useState<PkgManager>("npm");
 
@@ -552,7 +552,7 @@ function Hero({ theme }: { theme: "dark" | "light" }) {
                 onClick={(e) => navigateToSection(e, "catalog")}
                 className="group flex w-full items-center justify-between text-[13px] font-medium text-[#E6E8EB] transition-opacity hover:opacity-70"
               >
-                <span>Explore 32 skills</span>
+                <span>Explore {skillCount} skills</span>
                 <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
               </Link>
             </div>
@@ -1912,7 +1912,7 @@ export default function TerminalDarkLandingPage({
         >
           <Nav theme={theme} setTheme={setTheme} />
           <main>
-            <Hero theme={theme} />
+            <Hero theme={theme} skillCount={skills.length} />
             <Quickstart />
             <Architecture />
             <Motivation />

@@ -181,7 +181,7 @@ const DEMO_SCENES: DemoScene[] = [
         skillPath: "skills/agent-vendors/SKILL.md",
         mode: "light",
         accent: "#3b82f6",
-        title: "Synced 23 cmk:* skills into .agents/skills/",
+        title: "Synced 36 cmk:* skills into .agents/skills/",
         detail:
           "Wired one canonical skill directory for Claude Code, Codex, and Cursor.",
         companionLabel: "+ @emilkowalski_/skills",
