@@ -8,5 +8,5 @@
   },
   "repository": "https://github.com/CommandOSSLabs/ai-devkit",
   "license": "MIT",
-  "keywords": ["documentation", "requirements", "design", "adr", "rules", "knowledge", "devkit", "repo-setup", "local-dev", "cicd", "infra", "delivery", "tracker", "linear", "sui", "sync", "vendoring"]
+  "keywords": ["documentation", "requirements", "design", "adr", "rules", "knowledge", "devkit", "repo-setup", "local-dev", "cicd", "infra", "delivery", "tracker", "linear", "sui", "sync", "vendoring", "security", "audit"]
 }

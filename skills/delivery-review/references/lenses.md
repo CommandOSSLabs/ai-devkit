@@ -32,7 +32,10 @@
    authz gaps, trust-boundary confusion, resource exhaustion, secret
    handling, and anything touching signed payloads, domain separators,
    settlement, randomness, or wire parity. Name the scans that backed this
-   lens and the classes that did not run (`cmk:cicd`).
+   lens and the classes that did not run (`cmk:cicd`). Where the diff
+   crosses a trust boundary, borrow `cmk:security-audit`'s guidance mode —
+   its candidate gate and the attack-class blocks the diff implicates —
+   never its full audit workflow inside a review.
 7. **Production readiness** — audit against `cmk:delivery-pipeline`'s
    engineering-principles checklist and the spec's production-readiness
    section: failure modes, config, secrets, migrations, observability,

@@ -16,7 +16,9 @@ quality, cross-surface consistency, edge cases, security, and production
 readiness. Every lens writes `file:line` findings plus a "what I read / ran
 / checked" evidence trail — a review with no findings and no evidence trail
 is a failed review; the security lens additionally names the scans that
-backed it and the classes that did not run (`cmk:cicd`). Findings are
+backed it and the classes that did not run (`cmk:cicd`), and on a diff
+that crosses a trust boundary borrows `cmk:security-audit`'s guidance mode
+(never its full audit). Findings are
 adversarially verified (the `cmk-delivery-verifier` role) before
 disposition: fix now, rescope the criterion, defer with a tracker issue, or
 discard with a reason.

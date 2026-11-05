@@ -1,7 +1,7 @@
 ---
 name: cmk:delivery-review
 description: Use when the user asks to "review my changes", "review this PR", "take a look at this diff", or "is this ready to ship" — before shipping tracked work (phase 4 of cmk:delivery-pipeline) or standalone against any pull request or local diff. Produces a depth-disclosed verdict with evidence-backed findings dispositioned against acceptance criteria (citing requirement IDs when present).
-version: 0.2.4
+version: 0.2.5
 ---
 
 # Delivery Review
