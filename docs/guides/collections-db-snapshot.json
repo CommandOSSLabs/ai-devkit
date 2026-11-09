@@ -1,9 +1,9 @@
 {
-  "syncedAt": "2026-11-04T20:26:33.824Z",
-  "source": "memory-fallback",
+  "syncedAt": "2026-11-09T09:28:28.502Z",
+  "source": "postgres",
   "counts": {
     "collections": 7,
-    "publishedRefs": 32,
+    "publishedRefs": 33,
     "pendingRefs": 0
   },
   "collections": [
@@ -59,6 +59,59 @@
   ],
   "refs": [
     {
+      "id": "fluid-interactions",
+      "name": "fluid-interactions",
+      "title": "Fluid Interactions: Physical Gesture & Spring UI Skill",
+      "tagline": "Teaches coding agents to build web interactions that feel physical: drags that keep their release velocity, sheets that project and land on target detents, swipe back, swipe actions, scrubbing, and interruptible card morphs.",
+      "collectionId": "design",
+      "additionalCollectionIds": [
+        "3d",
+        "workflow"
+      ],
+      "creator": {
+        "name": "Rndr Realm",
+        "xHandle": "rndr_realm",
+        "xUrl": "https://x.com/rndr_realm",
+        "xPostUrl": "https://x.com/rndr_realm/status/2119465800075550868",
+        "postUrl": "https://x.com/rndr_realm/status/2119465800075550868",
+        "platform": "x",
+        "handle": "rndr_realm",
+        "profileUrl": "https://x.com/rndr_realm",
+        "githubRepo": "rndrealm/fluid-interactions",
+        "githubUrl": "https://github.com/rndrealm/fluid-interactions"
+      },
+      "source": {
+        "platform": "x",
+        "postUrl": "https://x.com/rndr_realm/status/2119465800075550868",
+        "profileUrl": "https://x.com/rndr_realm",
+        "handle": "rndr_realm",
+        "thumbnailUrl": "https://pbs.twimg.com/amplify_video_thumb/2119464982773436416/img/03TYPKEi-TJgpDr2.jpg",
+        "videoUrl": "https://video.twimg.com/amplify_video/2119464982773436416/vid/avc1/1278x720/WMiHcUciy5--2QU7.mp4?tag=29",
+        "avatarUrl": "https://pbs.twimg.com/profile_images/1898108050281467904/SBHWlKmt_400x400.jpg",
+        "bannerUrl": "https://pbs.twimg.com/profile_banners/1896503246329368576/1741379610"
+      },
+      "thumbnailUrl": "https://pbs.twimg.com/amplify_video_thumb/2119464982773436416/img/03TYPKEi-TJgpDr2.jpg",
+      "xVideoUrl": "https://video.twimg.com/amplify_video/2119464982773436416/vid/avc1/1278x720/WMiHcUciy5--2QU7.mp4?tag=29",
+      "xAvatarUrl": "https://pbs.twimg.com/profile_images/1898108050281467904/SBHWlKmt_400x400.jpg",
+      "xBannerUrl": "https://pbs.twimg.com/profile_banners/1896503246329368576/1741379610",
+      "installCommand": "npx skills add rndrealm/fluid-interactions",
+      "stylePrompt": "Build physical, interruptible gesture interactions ('fluid-interactions' by @rndr_realm style): (1) Spring Physics over Durations: drive motion with motion/react springs parameterized by response and damping ratio (springFromResponse) rather than fixed durations or cubic-bezier curves; (2) Release Velocity & Projection: track pointer velocity over the last 100ms (VelocityTracker), project the coasting landing point (x.get() + project(velocity.x)), and pass release velocity directly into animate() so flicks never stall for a frame; (3) Rubber-Banding & Direction Lock: apply rubber-band resistance past bounds (applyRubberBand) and lock axis after ~10px before pointer capture so native scroll and taps stay responsive; (4) Full Interruptibility: catch any in-flight spring on pointerdown (x.stop()), decide state from the target detent rather than onComplete, and keep per-frame updates strictly on MotionValues and transform properties (x, y, scale, opacity).",
+      "pinnedSha": "d8d31cf",
+      "vettedAt": "2026-11-09",
+      "starsOrInstalls": "251 likes · 312 bookmarks · 7.2k views · @rndr_realm",
+      "pairsWithCmk": [
+        "design",
+        "requirements",
+        "delivery-spec-plan"
+      ],
+      "featured": true,
+      "isNew": true,
+      "status": "published",
+      "sortPriority": 1000,
+      "createdAt": "2026-11-09T09:28:27.425Z",
+      "updatedAt": "2026-11-09T09:28:27.425Z"
+    },
+    {
       "id": "blank-page",
       "name": "blank-page",
       "title": "Blank Page — Motion Graphics Prompt Expander (Midjourney for Motion)",
@@ -73,6 +126,10 @@
         "xHandle": "blak3shao",
         "xUrl": "https://x.com/blak3shao",
         "xPostUrl": "https://x.com/blak3shao/status/2118040585336676378",
+        "postUrl": "https://x.com/blak3shao/status/2118040585336676378",
+        "platform": "x",
+        "handle": "blak3shao",
+        "profileUrl": "https://x.com/blak3shao",
         "githubRepo": "StewdioAI/blank-page",
         "githubUrl": "https://github.com/StewdioAI/blank-page"
       },
@@ -104,8 +161,8 @@
       "isNew": true,
       "status": "published",
       "sortPriority": 320,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "pr-writing",
@@ -122,6 +179,10 @@
         "xHandle": "hugorcd",
         "xUrl": "https://x.com/hugorcd",
         "xPostUrl": "https://x.com/hugorcd/status/2117971965751464075",
+        "postUrl": "https://x.com/hugorcd/status/2117971965751464075",
+        "platform": "x",
+        "handle": "hugorcd",
+        "profileUrl": "https://x.com/hugorcd",
         "githubRepo": "HugoRCD/hr-folio",
         "githubUrl": "https://hugorcd.com/writing/what-my-pull-requests-look-like-now"
       },
@@ -151,8 +212,8 @@
       "isNew": true,
       "status": "published",
       "sortPriority": 310,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "stack-diagram",
@@ -167,7 +228,12 @@
       "creator": {
         "name": "caru-ini",
         "xHandle": "caru-ini",
-        "xUrl": "https://stacks.caru.moe",
+        "xUrl": "https://github.com/caru-ini",
+        "xPostUrl": "https://github.com/caru-ini/stack-diagram",
+        "postUrl": "https://github.com/caru-ini/stack-diagram",
+        "platform": "github",
+        "handle": "caru-ini",
+        "profileUrl": "https://github.com/caru-ini",
         "githubRepo": "caru-ini/stack-diagram",
         "githubUrl": "https://github.com/caru-ini/stack-diagram"
       },
@@ -197,8 +263,8 @@
       "isNew": true,
       "status": "published",
       "sortPriority": 300,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "coworkers",
@@ -215,6 +281,10 @@
         "xHandle": "fayazara",
         "xUrl": "https://x.com/fayazara",
         "xPostUrl": "https://x.com/fayazara/status/2116817201764479393",
+        "postUrl": "https://x.com/fayazara/status/2116817201764479393",
+        "platform": "x",
+        "handle": "fayazara",
+        "profileUrl": "https://x.com/fayazara",
         "githubRepo": "fayazara/coworkers",
         "githubUrl": "https://github.com/fayazara/coworkers"
       },
@@ -244,8 +314,8 @@
       "isNew": true,
       "status": "published",
       "sortPriority": 290,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "pixel-plays",
@@ -261,6 +331,10 @@
         "xHandle": "AmirMushich",
         "xUrl": "https://x.com/AmirMushich",
         "xPostUrl": "https://x.com/AmirMushich/status/2116509069477621819",
+        "postUrl": "https://x.com/AmirMushich/status/2116509069477621819",
+        "platform": "x",
+        "handle": "AmirMushich",
+        "profileUrl": "https://x.com/AmirMushich",
         "githubRepo": "amirmushichge/pixel-plays",
         "githubUrl": "https://github.com/amirmushichge/pixel-plays"
       },
@@ -275,9 +349,9 @@
         "bannerUrl": "https://pbs.twimg.com/profile_banners/249795230/1767459893"
       },
       "thumbnailUrl": "https://pbs.twimg.com/amplify_video_thumb/2116507953377185792/img/7IPO0A17F2lDnamm.jpg",
+      "xVideoUrl": "https://video.twimg.com/amplify_video/2116507953377185792/vid/avc1/884x720/MgUUucrULvfImfbg.mp4?tag=29",
       "xAvatarUrl": "https://pbs.twimg.com/profile_images/1872350781686321152/P-st4llY_400x400.jpg",
       "xBannerUrl": "https://pbs.twimg.com/profile_banners/249795230/1767459893",
-      "xVideoUrl": "https://video.twimg.com/amplify_video/2116507953377185792/vid/avc1/884x720/MgUUucrULvfImfbg.mp4?tag=29",
       "installCommand": "git clone https://github.com/amirmushichge/pixel-plays",
       "stylePrompt": "Design an interactive 3D isometric pixel-art diorama & mini-game OS ('Pixel Plays' style): (1) pure gallery-white full-viewport stage (#FFFFFF) that lets the isometric diorama float in negative space; (2) crisp nearest-neighbor voxel/pixel rendering with dithered grass fringes, warm timber court borders, and soft angled cast shadows; (3) ultra-minimal OS switcher pill at top-center in monospace (e.g. 'Balote ▾') with zero visual clutter; (4) responsive physics and subtle ambient particle/foliage motion.",
       "vettedAt": "2026-11-01",
@@ -290,8 +364,8 @@
       "isNew": true,
       "status": "published",
       "sortPriority": 280,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "brand-system-skill",
@@ -307,6 +381,10 @@
         "xHandle": "AmirMushich",
         "xUrl": "https://x.com/AmirMushich",
         "xPostUrl": "https://x.com/AmirMushich/status/2116176771385045204",
+        "postUrl": "https://x.com/AmirMushich/status/2116176771385045204",
+        "platform": "x",
+        "handle": "AmirMushich",
+        "profileUrl": "https://x.com/AmirMushich",
         "githubRepo": "amirmushichge/brand-system-skill",
         "githubUrl": "https://github.com/amirmushichge/brand-system-skill"
       },
@@ -321,9 +399,9 @@
         "bannerUrl": "https://pbs.twimg.com/profile_banners/249795230/1767459893"
       },
       "thumbnailUrl": "https://pbs.twimg.com/amplify_video_thumb/2116175518932336640/img/oHR3hAzR5n68rVdy.jpg",
+      "xVideoUrl": "https://video.twimg.com/amplify_video/2116175518932336640/vid/avc1/1280x720/Wj9Z9xIIr2_zrBFq.mp4?tag=29",
       "xAvatarUrl": "https://pbs.twimg.com/profile_images/1872350781686321152/P-st4llY_400x400.jpg",
       "xBannerUrl": "https://pbs.twimg.com/profile_banners/249795230/1767459893",
-      "xVideoUrl": "https://video.twimg.com/amplify_video/2116175518932336640/vid/avc1/1280x720/Wj9Z9xIIr2_zrBFq.mp4?tag=29",
       "installCommand": "npx skills add amirmushichge/brand-system-skill",
       "stylePrompt": "Present brand guidelines and multi-slide decks as an interactive 3D physical book ('Leaf' by @AmirMushich style, https://amirmushich.com/lab/leaf/): (1) clean studio light-gray infinity backdrop (#ECECEE) with soft realistic floor contact shadow; (2) floating 3D landscape hardcover spread with perspective tilt, physical page thickness, and smooth spring page-turn physics; (3) bold oversized display wordmark integrated with photography cutouts and modular grid spreads.",
       "vettedAt": "2026-11-01",
@@ -336,8 +414,8 @@
       "isNew": true,
       "status": "published",
       "sortPriority": 270,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "the-making-of-nhang",
@@ -345,18 +423,33 @@
       "title": "The Making of Nhang — Illustrated Editorial UI/UX Style",
       "tagline": "Warm giay-do rice-paper canvas (#F5F0E6), hand-drawn ultramarine & vermilion colored-pencil cross-hatching in plain JavaScript, bilingual notebook statechart nodes, and step-by-step playback controls.",
       "collectionId": "design",
+      "additionalCollectionIds": [],
       "creator": {
         "name": "Ann Nguyen",
         "xHandle": "ann_nnng",
         "xUrl": "https://x.com/ann_nnng",
         "xPostUrl": "https://x.com/ann_nnng/status/2116811409921372642",
+        "postUrl": "https://x.com/ann_nnng/status/2116811409921372642",
+        "platform": "x",
+        "handle": "ann_nnng",
+        "profileUrl": "https://x.com/ann_nnng",
         "githubRepo": "ann_nnng/the-making-of-nhang",
         "githubUrl": "https://x.com/ann_nnng/status/2116811409921372642"
       },
+      "source": {
+        "platform": "x",
+        "postUrl": "https://x.com/ann_nnng/status/2116811409921372642",
+        "profileUrl": "https://x.com/ann_nnng",
+        "handle": "ann_nnng",
+        "thumbnailUrl": "https://pbs.twimg.com/amplify_video_thumb/2116811213246242816/img/k5NYAZhiuP4gAvKK.jpg",
+        "videoUrl": "https://video.twimg.com/amplify_video/2116811213246242816/vid/avc1/900x720/kyh5C2Q33CYP3Kpn.mp4?tag=29",
+        "avatarUrl": "https://pbs.twimg.com/profile_images/2091330595632861184/QKmUwPaL_400x400.jpg",
+        "bannerUrl": "https://pbs.twimg.com/profile_banners/1160414154974519296/1744434703"
+      },
       "thumbnailUrl": "https://pbs.twimg.com/amplify_video_thumb/2116811213246242816/img/k5NYAZhiuP4gAvKK.jpg",
+      "xVideoUrl": "https://video.twimg.com/amplify_video/2116811213246242816/vid/avc1/900x720/kyh5C2Q33CYP3Kpn.mp4?tag=29",
       "xAvatarUrl": "https://pbs.twimg.com/profile_images/2091330595632861184/QKmUwPaL_400x400.jpg",
       "xBannerUrl": "https://pbs.twimg.com/profile_banners/1160414154974519296/1744434703",
-      "xVideoUrl": "https://video.twimg.com/amplify_video/2116811213246242816/vid/avc1/900x720/kyh5C2Q33CYP3Kpn.mp4?tag=29",
       "installCommand": "npx skills add cursor/plugins --skill statechart",
       "stylePrompt": "Draw an interactive step-by-step illustrated diagram in plain JavaScript using 'The Making of Nhang' editorial UI/UX style: (1) warm Vietnamese giay-do rice-paper background (#F5F0E6) with subtle organic grain; (2) procedural colored-pencil & ballpoint cross-hatch illustrations in ultramarine blue (#1E3296), vermilion red (#D6382E), bamboo green (#5DBB46), and golden ochre (#E8A331) with jittered multi-pass strokes; (3) distressed typewriter slab-serif typography (Special Elite / Courier Prime) with Roman numeral chapter kicker, bold ink-bleed display title, blue italic English subtitle, and red italic Vietnamese caption; (4) lined notebook-paper statechart nodes with red margin rule, bilingual labels, wavy blue pencil bottom edge, and animated state token; (5) fixed bottom playback bar with pill buttons (restart, prev, pause, next, 3x speed) and step counter (e.g. 2/27).",
       "vettedAt": "2026-11-01",
@@ -369,8 +462,8 @@
       "isNew": true,
       "status": "published",
       "sortPriority": 260,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "stageshow",
@@ -378,17 +471,31 @@
       "title": "Stageshow Faux UI & Bento Animations",
       "tagline": "Stageshow: a skill that helps your agent make better faux UI stills, animations, bento grids, and interactive product demos.",
       "collectionId": "design",
+      "additionalCollectionIds": [],
       "creator": {
         "name": "Benji Taylor",
         "xHandle": "benjitaylor",
         "xUrl": "https://x.com/benjitaylor",
         "xPostUrl": "https://x.com/benjitaylor/status/2116593247854453244",
+        "postUrl": "https://x.com/benjitaylor/status/2116593247854453244",
+        "platform": "x",
+        "handle": "benjitaylor",
+        "profileUrl": "https://x.com/benjitaylor",
         "githubRepo": "benjitaylor/skills",
         "githubUrl": "https://github.com/benjitaylor/skills"
       },
+      "source": {
+        "platform": "x",
+        "postUrl": "https://x.com/benjitaylor/status/2116593247854453244",
+        "profileUrl": "https://x.com/benjitaylor",
+        "handle": "benjitaylor",
+        "thumbnailUrl": "https://pbs.twimg.com/amplify_video_thumb/2116591037816971264/img/646-9xgMoEXyzL8m.jpg",
+        "videoUrl": "https://video.twimg.com/amplify_video/2116591037816971264/vid/avc1/1030x720/5_qKCVcaDe2-nLr3.mp4?tag=29",
+        "avatarUrl": "https://pbs.twimg.com/profile_images/1485350275372048384/FwGgXuTk_400x400.png"
+      },
       "thumbnailUrl": "https://pbs.twimg.com/amplify_video_thumb/2116591037816971264/img/646-9xgMoEXyzL8m.jpg",
-      "xAvatarUrl": "https://pbs.twimg.com/profile_images/1485350275372048384/FwGgXuTk_400x400.png",
       "xVideoUrl": "https://video.twimg.com/amplify_video/2116591037816971264/vid/avc1/1030x720/5_qKCVcaDe2-nLr3.mp4?tag=29",
+      "xAvatarUrl": "https://pbs.twimg.com/profile_images/1485350275372048384/FwGgXuTk_400x400.png",
       "installCommand": "npx skills add benjitaylor/skills --skill stageshow",
       "vettedAt": "2026-10-31",
       "starsOrInstalls": "7.2k likes · 420k views",
@@ -400,8 +507,8 @@
       "isNew": true,
       "status": "published",
       "sortPriority": 250,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "dialkit",
@@ -409,18 +516,33 @@
       "title": "DialKit Live Interface & Spring Tuner",
       "tagline": "Live controls and visual timeline editing for React, Svelte, Vue, and JS — tune springs, motion, layout, and shaders by feel.",
       "collectionId": "design",
+      "additionalCollectionIds": [],
       "creator": {
         "name": "Josh Puckett",
         "xHandle": "joshpuckett",
         "xUrl": "https://x.com/joshpuckett",
         "xPostUrl": "https://x.com/joshpuckett/status/2079014450712203291",
+        "postUrl": "https://x.com/joshpuckett/status/2079014450712203291",
+        "platform": "x",
+        "handle": "joshpuckett",
+        "profileUrl": "https://x.com/joshpuckett",
         "githubRepo": "joshpuckett/dialkit",
         "githubUrl": "https://github.com/joshpuckett/dialkit"
       },
+      "source": {
+        "platform": "x",
+        "postUrl": "https://x.com/joshpuckett/status/2079014450712203291",
+        "profileUrl": "https://x.com/joshpuckett",
+        "handle": "joshpuckett",
+        "thumbnailUrl": "https://pbs.twimg.com/amplify_video_thumb/2079013052712894464/img/WhxrTiVmoS2-t0Ax.jpg",
+        "videoUrl": "https://video.twimg.com/amplify_video/2079013052712894464/vid/avc1/992x720/nGFfeEN0DapV_mHw.mp4?tag=29",
+        "avatarUrl": "https://pbs.twimg.com/profile_images/1270368527690522626/-3QQH-bB_400x400.jpg",
+        "bannerUrl": "https://pbs.twimg.com/profile_banners/11777842/1728934714"
+      },
       "thumbnailUrl": "https://pbs.twimg.com/amplify_video_thumb/2079013052712894464/img/WhxrTiVmoS2-t0Ax.jpg",
+      "xVideoUrl": "https://video.twimg.com/amplify_video/2079013052712894464/vid/avc1/992x720/nGFfeEN0DapV_mHw.mp4?tag=29",
       "xAvatarUrl": "https://pbs.twimg.com/profile_images/1270368527690522626/-3QQH-bB_400x400.jpg",
       "xBannerUrl": "https://pbs.twimg.com/profile_banners/11777842/1728934714",
-      "xVideoUrl": "https://video.twimg.com/amplify_video/2079013052712894464/vid/avc1/992x720/nGFfeEN0DapV_mHw.mp4?tag=29",
       "installCommand": "npm install dialkit",
       "vettedAt": "2026-10-31",
       "starsOrInstalls": "1.6k likes · 94k views",
@@ -432,8 +554,8 @@
       "isNew": true,
       "status": "published",
       "sortPriority": 240,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "emilkowalski-skills",
@@ -449,8 +571,21 @@
         "xHandle": "emilkowalski_",
         "xUrl": "https://x.com/emilkowalski_",
         "xPostUrl": "https://x.com/fayazara/status/2116817201764479393",
+        "postUrl": "https://x.com/fayazara/status/2116817201764479393",
+        "platform": "x",
+        "handle": "emilkowalski_",
+        "profileUrl": "https://x.com/emilkowalski_",
         "githubRepo": "emilkowalski/skills",
         "githubUrl": "https://github.com/emilkowalski/skills"
+      },
+      "source": {
+        "platform": "x",
+        "postUrl": "https://x.com/fayazara/status/2116817201764479393",
+        "profileUrl": "https://x.com/emilkowalski_",
+        "handle": "emilkowalski_",
+        "thumbnailUrl": "https://emilkowal.ski/skill/opengraph-image.jpg",
+        "avatarUrl": "https://pbs.twimg.com/profile_images/1469017066795679751/CjEOyirb_400x400.jpg",
+        "bannerUrl": "https://pbs.twimg.com/profile_banners/1255500442898964481/1703289098"
       },
       "thumbnailUrl": "https://emilkowal.ski/skill/opengraph-image.jpg",
       "xAvatarUrl": "https://pbs.twimg.com/profile_images/1469017066795679751/CjEOyirb_400x400.jpg",
@@ -468,8 +603,8 @@
       "isNew": true,
       "status": "published",
       "sortPriority": 230,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "impeccable",
@@ -477,18 +612,33 @@
       "title": "Impeccable Design Language",
       "tagline": "Opinionated design-language layer with /polish, /audit, and /typeset commands plus a comprehensive UI anti-pattern library.",
       "collectionId": "design",
+      "additionalCollectionIds": [],
       "creator": {
         "name": "Paul Bakaus",
         "xHandle": "pbakaus",
         "xUrl": "https://x.com/pbakaus",
         "xPostUrl": "https://x.com/adrien_ninet/status/2041825321721458961",
+        "postUrl": "https://x.com/adrien_ninet/status/2041825321721458961",
+        "platform": "x",
+        "handle": "pbakaus",
+        "profileUrl": "https://x.com/pbakaus",
         "githubRepo": "pbakaus/impeccable",
         "githubUrl": "https://github.com/pbakaus/impeccable"
       },
+      "source": {
+        "platform": "x",
+        "postUrl": "https://x.com/adrien_ninet/status/2041825321721458961",
+        "profileUrl": "https://x.com/pbakaus",
+        "handle": "pbakaus",
+        "thumbnailUrl": "https://impeccable.style/og-image-v6.png",
+        "videoUrl": "https://video.twimg.com/amplify_video/2041825305669857283/vid/avc1/1280x720/tpRpK9gSAglhlRFA.mp4?tag=21",
+        "avatarUrl": "https://pbs.twimg.com/profile_images/1550292580117622784/cT3WhwXw_400x400.jpg",
+        "bannerUrl": "https://pbs.twimg.com/profile_banners/12999402/1777331270"
+      },
       "thumbnailUrl": "https://impeccable.style/og-image-v6.png",
+      "xVideoUrl": "https://video.twimg.com/amplify_video/2041825305669857283/vid/avc1/1280x720/tpRpK9gSAglhlRFA.mp4?tag=21",
       "xAvatarUrl": "https://pbs.twimg.com/profile_images/1550292580117622784/cT3WhwXw_400x400.jpg",
       "xBannerUrl": "https://pbs.twimg.com/profile_banners/12999402/1777331270",
-      "xVideoUrl": "https://video.twimg.com/amplify_video/2041825305669857283/vid/avc1/1280x720/tpRpK9gSAglhlRFA.mp4?tag=21",
       "installCommand": "npx skills add pbakaus/impeccable",
       "vettedAt": "2026-10-11",
       "starsOrInstalls": "79.5k stars",
@@ -497,10 +647,11 @@
         "delivery-simplify"
       ],
       "featured": true,
+      "isNew": false,
       "status": "published",
       "sortPriority": 220,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "taste-skill",
@@ -508,12 +659,24 @@
       "title": "Metric-Driven Taste Skill",
       "tagline": "Quantified layout rhythm, optical alignment, typography hierarchy, and spacing rules for frontend engineering.",
       "collectionId": "design",
+      "additionalCollectionIds": [],
       "creator": {
         "name": "Leon Lin",
         "xHandle": "Leonxlnx",
         "xUrl": "https://x.com/Leonxlnx",
+        "platform": "x",
+        "handle": "Leonxlnx",
+        "profileUrl": "https://x.com/Leonxlnx",
         "githubRepo": "Leonxlnx/taste-skill",
         "githubUrl": "https://github.com/Leonxlnx/taste-skill"
+      },
+      "source": {
+        "platform": "x",
+        "profileUrl": "https://x.com/Leonxlnx",
+        "handle": "Leonxlnx",
+        "thumbnailUrl": "https://repository-images.githubusercontent.com/1162099055/0a968964-fdca-4781-853b-84afc2bc2d31",
+        "avatarUrl": "https://pbs.twimg.com/profile_images/1801274240634937344/rYkSOdHw_400x400.jpg",
+        "bannerUrl": "https://www.tasteskill.dev/og-image.jpg"
       },
       "thumbnailUrl": "https://repository-images.githubusercontent.com/1162099055/0a968964-fdca-4781-853b-84afc2bc2d31",
       "xAvatarUrl": "https://pbs.twimg.com/profile_images/1801274240634937344/rYkSOdHw_400x400.jpg",
@@ -525,10 +688,12 @@
         "design",
         "rule"
       ],
+      "featured": false,
+      "isNew": false,
       "status": "published",
       "sortPriority": 210,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "ui-ux-pro-max",
@@ -536,12 +701,24 @@
       "title": "UI/UX Pro Max System Generator",
       "tagline": "Searchable style, palette, and font pairing database with a design-system generator and WCAG contrast checklist.",
       "collectionId": "design",
+      "additionalCollectionIds": [],
       "creator": {
         "name": "NextLevelBuilder",
         "xHandle": "nextlevelbuild",
         "xUrl": "https://x.com/search?q=ui-ux-pro-max-skill",
+        "platform": "x",
+        "handle": "nextlevelbuild",
+        "profileUrl": "https://x.com/search?q=ui-ux-pro-max-skill",
         "githubRepo": "nextlevelbuilder/ui-ux-pro-max-skill",
         "githubUrl": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill"
+      },
+      "source": {
+        "platform": "x",
+        "profileUrl": "https://x.com/search?q=ui-ux-pro-max-skill",
+        "handle": "nextlevelbuild",
+        "thumbnailUrl": "https://repository-images.githubusercontent.com/1106996539/d7c84c2d-e797-405f-a868-87fb194e8432",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/246974152?v=4",
+        "bannerUrl": "https://uupm.cc/share.png"
       },
       "thumbnailUrl": "https://repository-images.githubusercontent.com/1106996539/d7c84c2d-e797-405f-a868-87fb194e8432",
       "xAvatarUrl": "https://avatars.githubusercontent.com/u/246974152?v=4",
@@ -553,10 +730,12 @@
         "design",
         "requirements"
       ],
+      "featured": false,
+      "isNew": false,
       "status": "published",
       "sortPriority": 200,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "frontend-design",
@@ -564,12 +743,24 @@
       "title": "Anthropic Frontend Design Baseline",
       "tagline": "Anthropic's canonical baseline skill for avoiding generic AI UI layouts, purple gradients, and cookie-cutter card grids.",
       "collectionId": "design",
+      "additionalCollectionIds": [],
       "creator": {
         "name": "Anthropic",
         "xHandle": "AnthropicAI",
         "xUrl": "https://x.com/AnthropicAI",
+        "platform": "x",
+        "handle": "AnthropicAI",
+        "profileUrl": "https://x.com/AnthropicAI",
         "githubRepo": "anthropics/skills",
         "githubUrl": "https://github.com/anthropics/skills/tree/main/skills/frontend-design"
+      },
+      "source": {
+        "platform": "x",
+        "profileUrl": "https://x.com/AnthropicAI",
+        "handle": "AnthropicAI",
+        "thumbnailUrl": "https://pbs.twimg.com/profile_banners/1353836358901501952/1719228429",
+        "avatarUrl": "https://pbs.twimg.com/profile_images/1798110641414443008/XP8gyBaY_400x400.jpg",
+        "bannerUrl": "https://opengraph.githubassets.com/89a9ab61c8e03f11c2ce9cd1c6c4d641aee8037ebbc4e8ce2c1bb1e458e88de1/anthropics/skills"
       },
       "thumbnailUrl": "https://pbs.twimg.com/profile_banners/1353836358901501952/1719228429",
       "xAvatarUrl": "https://pbs.twimg.com/profile_images/1798110641414443008/XP8gyBaY_400x400.jpg",
@@ -581,10 +772,12 @@
         "design",
         "repo-setup"
       ],
+      "featured": false,
+      "isNew": false,
       "status": "published",
       "sortPriority": 190,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "web-design-guidelines",
@@ -592,12 +785,24 @@
       "title": "Vercel Web Interface Guidelines",
       "tagline": "Audits components against Vercel's interface checklist: keyboard focus rings, hit targets, tabular numerals, and layout stability.",
       "collectionId": "design",
+      "additionalCollectionIds": [],
       "creator": {
         "name": "Vercel Labs",
         "xHandle": "vercel",
         "xUrl": "https://x.com/vercel",
+        "platform": "x",
+        "handle": "vercel",
+        "profileUrl": "https://x.com/vercel",
         "githubRepo": "vercel-labs/agent-skills",
         "githubUrl": "https://github.com/vercel-labs/agent-skills"
+      },
+      "source": {
+        "platform": "x",
+        "profileUrl": "https://x.com/vercel",
+        "handle": "vercel",
+        "thumbnailUrl": "https://pbs.twimg.com/profile_banners/4686835494/1768602813",
+        "avatarUrl": "https://pbs.twimg.com/profile_images/1767351110228918272/3Pndc5OT_400x400.png",
+        "bannerUrl": "https://opengraph.githubassets.com/37abb79e97149a7ab6b0f994db64997203f3a6db7813f1edfba229094141f463/vercel-labs/agent-skills"
       },
       "thumbnailUrl": "https://pbs.twimg.com/profile_banners/4686835494/1768602813",
       "xAvatarUrl": "https://pbs.twimg.com/profile_images/1767351110228918272/3Pndc5OT_400x400.png",
@@ -609,10 +814,12 @@
         "delivery-review",
         "rule"
       ],
+      "featured": false,
+      "isNew": false,
       "status": "published",
       "sortPriority": 180,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "shadcn-skill",
@@ -620,12 +827,24 @@
       "title": "Official shadcn/ui Registry Skill",
       "tagline": "Teaches agents shadcn CLI v4, custom component registries, and clean token wiring without overwriting project globals.",
       "collectionId": "design",
+      "additionalCollectionIds": [],
       "creator": {
         "name": "shadcn",
         "xHandle": "shadcn",
         "xUrl": "https://x.com/shadcn",
+        "platform": "x",
+        "handle": "shadcn",
+        "profileUrl": "https://x.com/shadcn",
         "githubRepo": "shadcn-ui/ui",
         "githubUrl": "https://ui.shadcn.com/docs/skills"
+      },
+      "source": {
+        "platform": "x",
+        "profileUrl": "https://x.com/shadcn",
+        "handle": "shadcn",
+        "thumbnailUrl": "https://repository-images.githubusercontent.com/585146387/5afcd3e9-126b-48c8-b8d1-e17240c10d51",
+        "avatarUrl": "https://pbs.twimg.com/profile_images/1593304942210478080/TUYae5z7_400x400.jpg",
+        "bannerUrl": "https://repository-images.githubusercontent.com/585146387/5afcd3e9-126b-48c8-b8d1-e17240c10d51"
       },
       "thumbnailUrl": "https://repository-images.githubusercontent.com/585146387/5afcd3e9-126b-48c8-b8d1-e17240c10d51",
       "xAvatarUrl": "https://pbs.twimg.com/profile_images/1593304942210478080/TUYae5z7_400x400.jpg",
@@ -637,10 +856,12 @@
         "toolchain",
         "project-layout"
       ],
+      "featured": false,
+      "isNew": false,
       "status": "published",
       "sortPriority": 170,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "gamedev-cheatsheet",
@@ -656,13 +877,27 @@
         "xHandle": "NicolasZu",
         "xUrl": "https://x.com/NicolasZu",
         "xPostUrl": "https://x.com/NicolasZu/status/2116601766410326177",
+        "postUrl": "https://x.com/NicolasZu/status/2116601766410326177",
+        "platform": "x",
+        "handle": "NicolasZu",
+        "profileUrl": "https://x.com/NicolasZu",
         "githubRepo": "NicolasZu/gamedev-cheatsheet",
         "githubUrl": "https://gamedev-cheatsheet.com"
       },
+      "source": {
+        "platform": "x",
+        "postUrl": "https://x.com/NicolasZu/status/2116601766410326177",
+        "profileUrl": "https://x.com/NicolasZu",
+        "handle": "NicolasZu",
+        "thumbnailUrl": "https://pbs.twimg.com/amplify_video_thumb/2116599538760781824/img/QnwZuRP1mdCGmX5R.jpg",
+        "videoUrl": "https://video.twimg.com/amplify_video/2116599538760781824/vid/avc1/1032x720/TN7jG4oIxcXmtgxi.mp4?tag=29",
+        "avatarUrl": "https://pbs.twimg.com/profile_images/1592537257008840709/dIE0_SfE_400x400.jpg",
+        "bannerUrl": "https://gamedev-cheatsheet.com/og.jpg"
+      },
       "thumbnailUrl": "https://pbs.twimg.com/amplify_video_thumb/2116599538760781824/img/QnwZuRP1mdCGmX5R.jpg",
+      "xVideoUrl": "https://video.twimg.com/amplify_video/2116599538760781824/vid/avc1/1032x720/TN7jG4oIxcXmtgxi.mp4?tag=29",
       "xAvatarUrl": "https://pbs.twimg.com/profile_images/1592537257008840709/dIE0_SfE_400x400.jpg",
       "xBannerUrl": "https://gamedev-cheatsheet.com/og.jpg",
-      "xVideoUrl": "https://video.twimg.com/amplify_video/2116599538760781824/vid/avc1/1032x720/TN7jG4oIxcXmtgxi.mp4?tag=29",
       "installCommand": "https://gamedev-cheatsheet.com",
       "vettedAt": "2026-10-31",
       "starsOrInstalls": "1.1k likes · 1.9k bookmarks · 61.5k views",
@@ -675,8 +910,8 @@
       "isNew": true,
       "status": "published",
       "sortPriority": 160,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "anatomy",
@@ -684,12 +919,24 @@
       "title": "Anatomy — Explain by Building",
       "tagline": "Explains a technical concept by inventing a working machine whose operation is the concept, rendered as interactive isometric SVG.",
       "collectionId": "explainers",
+      "additionalCollectionIds": [],
       "creator": {
         "name": "Ryan",
         "xHandle": "wheresryan22",
         "xUrl": "https://x.com/wheresryan22",
+        "platform": "x",
+        "handle": "wheresryan22",
+        "profileUrl": "https://x.com/wheresryan22",
         "githubRepo": "wheresryan22/anatomy",
         "githubUrl": "https://github.com/wheresryan22/anatomy"
+      },
+      "source": {
+        "platform": "x",
+        "profileUrl": "https://x.com/wheresryan22",
+        "handle": "wheresryan22",
+        "thumbnailUrl": "https://skills.wheresryan.sh/anatomy/og.png",
+        "avatarUrl": "https://pbs.twimg.com/profile_images/2099342814383308806/jbg4Mcs9_400x400.jpg",
+        "bannerUrl": "https://pbs.twimg.com/profile_banners/1688810283601387520/1770834316"
       },
       "thumbnailUrl": "https://skills.wheresryan.sh/anatomy/og.png",
       "xAvatarUrl": "https://pbs.twimg.com/profile_images/2099342814383308806/jbg4Mcs9_400x400.jpg",
@@ -706,8 +953,8 @@
       "isNew": true,
       "status": "published",
       "sortPriority": 150,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "visual-explainer",
@@ -715,18 +962,33 @@
       "title": "Visual Explainer Decks & Diffs",
       "tagline": "Builds self-contained HTML pages and slide decks with hand-drawn diagrams for architecture reviews, PR recaps, and plan audits.",
       "collectionId": "explainers",
+      "additionalCollectionIds": [],
       "creator": {
         "name": "Nico Bailon",
         "xHandle": "nicobailon",
         "xUrl": "https://x.com/nicobailon",
         "xPostUrl": "https://x.com/JayScambler/status/2088356230968287547",
+        "postUrl": "https://x.com/JayScambler/status/2088356230968287547",
+        "platform": "x",
+        "handle": "nicobailon",
+        "profileUrl": "https://x.com/nicobailon",
         "githubRepo": "nicobailon/visual-explainer",
         "githubUrl": "https://github.com/nicobailon/visual-explainer"
       },
+      "source": {
+        "platform": "x",
+        "postUrl": "https://x.com/JayScambler/status/2088356230968287547",
+        "profileUrl": "https://x.com/nicobailon",
+        "handle": "nicobailon",
+        "thumbnailUrl": "https://pbs.twimg.com/amplify_video_thumb/2088356115289395201/img/YnyFaXJaMAE2smE6.jpg",
+        "videoUrl": "https://video.twimg.com/amplify_video/2088356115289395201/vid/avc1/1128x720/AySRhHycB4Wi4P8B.mp4?tag=29",
+        "avatarUrl": "https://pbs.twimg.com/profile_images/2031940627114463232/JmwSPNSq_200x200.jpg",
+        "bannerUrl": "https://opengraph.githubassets.com/b020eacb9a0242b155f46ef59309925bb23ac7c62bf63012f45b705218ec022e/nicobailon/visual-explainer"
+      },
       "thumbnailUrl": "https://pbs.twimg.com/amplify_video_thumb/2088356115289395201/img/YnyFaXJaMAE2smE6.jpg",
+      "xVideoUrl": "https://video.twimg.com/amplify_video/2088356115289395201/vid/avc1/1128x720/AySRhHycB4Wi4P8B.mp4?tag=29",
       "xAvatarUrl": "https://pbs.twimg.com/profile_images/2031940627114463232/JmwSPNSq_200x200.jpg",
       "xBannerUrl": "https://opengraph.githubassets.com/b020eacb9a0242b155f46ef59309925bb23ac7c62bf63012f45b705218ec022e/nicobailon/visual-explainer",
-      "xVideoUrl": "https://video.twimg.com/amplify_video/2088356115289395201/vid/avc1/1128x720/AySRhHycB4Wi4P8B.mp4?tag=29",
       "installCommand": "npx skills add nicobailon/visual-explainer",
       "vettedAt": "2026-10-11",
       "starsOrInstalls": "10.3k stars",
@@ -736,10 +998,11 @@
         "delivery-review"
       ],
       "featured": true,
+      "isNew": false,
       "status": "published",
       "sortPriority": 140,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "understand-anything",
@@ -747,13 +1010,27 @@
       "title": "Understand-Anything Knowledge Graph",
       "tagline": "Turns an unfamiliar repository into an interactive, queryable knowledge graph that complements progressive-disclosure docs.",
       "collectionId": "explainers",
+      "additionalCollectionIds": [],
       "creator": {
         "name": "Egonex AI",
         "xHandle": "fleetingbits",
         "xUrl": "https://x.com/fleetingbits",
         "xPostUrl": "https://x.com/fleetingbits/status/2088016749849682120",
+        "postUrl": "https://x.com/fleetingbits/status/2088016749849682120",
+        "platform": "x",
+        "handle": "fleetingbits",
+        "profileUrl": "https://x.com/fleetingbits",
         "githubRepo": "Egonex-AI/Understand-Anything",
         "githubUrl": "https://github.com/Egonex-AI/Understand-Anything"
+      },
+      "source": {
+        "platform": "x",
+        "postUrl": "https://x.com/fleetingbits/status/2088016749849682120",
+        "profileUrl": "https://x.com/fleetingbits",
+        "handle": "fleetingbits",
+        "thumbnailUrl": "https://pbs.twimg.com/media/HPofaRHbMAA8NNO.jpg?name=large",
+        "avatarUrl": "https://pbs.twimg.com/profile_images/1905042879460069376/XLCyb9Cr_200x200.jpg",
+        "bannerUrl": "https://pbs.twimg.com/profile_banners/1699179045764612096/1699141885"
       },
       "thumbnailUrl": "https://pbs.twimg.com/media/HPofaRHbMAA8NNO.jpg?name=large",
       "xAvatarUrl": "https://pbs.twimg.com/profile_images/1905042879460069376/XLCyb9Cr_200x200.jpg",
@@ -765,10 +1042,12 @@
         "codebase-docs",
         "discover-efforts"
       ],
+      "featured": false,
+      "isNew": false,
       "status": "published",
       "sortPriority": 130,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "grill-me",
@@ -776,12 +1055,24 @@
       "title": "Matt Pocock's Grill-Me Interrogation",
       "tagline": "Relentlessly interviews you about edge cases, hidden assumptions, and trade-offs before a single line of spec or code is written.",
       "collectionId": "workflow",
+      "additionalCollectionIds": [],
       "creator": {
         "name": "Matt Pocock",
         "xHandle": "mattpocockuk",
         "xUrl": "https://x.com/mattpocockuk",
+        "platform": "x",
+        "handle": "mattpocockuk",
+        "profileUrl": "https://x.com/mattpocockuk",
         "githubRepo": "mattpocock/skills",
         "githubUrl": "https://github.com/mattpocock/skills"
+      },
+      "source": {
+        "platform": "x",
+        "profileUrl": "https://x.com/mattpocockuk",
+        "handle": "mattpocockuk",
+        "thumbnailUrl": "https://res.cloudinary.com/total-typescript/image/upload/v1777381841/skills-og_2x.jpg",
+        "avatarUrl": "https://pbs.twimg.com/profile_images/1666460461884211204/SmBm505D_400x400.jpg",
+        "bannerUrl": "https://pbs.twimg.com/profile_banners/346640777/1779721449"
       },
       "thumbnailUrl": "https://res.cloudinary.com/total-typescript/image/upload/v1777381841/skills-og_2x.jpg",
       "xAvatarUrl": "https://pbs.twimg.com/profile_images/1666460461884211204/SmBm505D_400x400.jpg",
@@ -798,8 +1089,8 @@
       "isNew": true,
       "status": "published",
       "sortPriority": 120,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "plannotator",
@@ -807,19 +1098,33 @@
       "title": "Plannotator — Local Plan & Diff Gate",
       "tagline": "Annotate an agent's implementation plan locally before execution and review diffs PR-style with structured feedback back to the agent.",
       "collectionId": "workflow",
+      "additionalCollectionIds": [],
       "creator": {
         "name": "backnotprop",
         "xHandle": "backnotprop",
         "xUrl": "https://x.com/backnotprop",
         "xPostUrl": "https://x.com/plannotator/status/2093419561077154287",
+        "postUrl": "https://x.com/plannotator/status/2093419561077154287",
+        "platform": "x",
+        "handle": "backnotprop",
+        "profileUrl": "https://x.com/backnotprop",
         "githubRepo": "backnotprop/plannotator",
         "githubUrl": "https://github.com/backnotprop/plannotator"
       },
+      "source": {
+        "platform": "x",
+        "postUrl": "https://x.com/plannotator/status/2093419561077154287",
+        "profileUrl": "https://x.com/backnotprop",
+        "handle": "backnotprop",
+        "thumbnailUrl": "https://pbs.twimg.com/amplify_video_thumb/2093418875631353856/img/iKilY-db-ShvKgyT.jpg",
+        "videoUrl": "https://video.twimg.com/amplify_video/2093418875631353856/vid/avc1/1144x720/bs8zrtzV4LZhUC68.mp4?tag=29",
+        "avatarUrl": "https://pbs.twimg.com/profile_images/1993077560985767936/kJPMmCOb_400x400.jpg",
+        "bannerUrl": "https://plannotator.ai/assets/plannotator-generic-og-v1.jpg"
+      },
       "thumbnailUrl": "https://pbs.twimg.com/amplify_video_thumb/2093418875631353856/img/iKilY-db-ShvKgyT.jpg",
+      "xVideoUrl": "https://video.twimg.com/amplify_video/2093418875631353856/vid/avc1/1144x720/bs8zrtzV4LZhUC68.mp4?tag=29",
       "xAvatarUrl": "https://pbs.twimg.com/profile_images/1993077560985767936/kJPMmCOb_400x400.jpg",
       "xBannerUrl": "https://plannotator.ai/assets/plannotator-generic-og-v1.jpg",
-      "xVideoUrl": "https://video.twimg.com/amplify_video/2093418875631353856/vid/avc1/1144x720/bs8zrtzV4LZhUC68.mp4?tag=29",
-      "installNote": "Use when already installed locally (/plannotator-annotate & /plannotator-review)",
       "pinnedSha": "5e38b79",
       "vettedAt": "2026-10-12",
       "starsOrInstalls": "Pinned SHA 5e38b79",
@@ -832,8 +1137,8 @@
       "isNew": true,
       "status": "published",
       "sortPriority": 110,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "superpowers",
@@ -841,12 +1146,24 @@
       "title": "Obra Superpowers Methodology",
       "tagline": "Battle-tested workflows for structured brainstorming, TDD, systematic debugging, and subagent-driven implementation.",
       "collectionId": "workflow",
+      "additionalCollectionIds": [],
       "creator": {
         "name": "Jesse Vincent",
         "xHandle": "obra",
         "xUrl": "https://x.com/obra",
+        "platform": "x",
+        "handle": "obra",
+        "profileUrl": "https://x.com/obra",
         "githubRepo": "obra/superpowers",
         "githubUrl": "https://github.com/obra/superpowers"
+      },
+      "source": {
+        "platform": "x",
+        "profileUrl": "https://x.com/obra",
+        "handle": "obra",
+        "thumbnailUrl": "https://pbs.twimg.com/profile_banners/289403/1385248556",
+        "avatarUrl": "https://pbs.twimg.com/profile_images/1594449061754843136/gc_DEnhp_400x400.jpg",
+        "bannerUrl": "https://opengraph.githubassets.com/d628990887706651e0730a8cba13a90a76b4c1207d405b2e22917fd1cb869fe9/obra/superpowers"
       },
       "thumbnailUrl": "https://pbs.twimg.com/profile_banners/289403/1385248556",
       "xAvatarUrl": "https://pbs.twimg.com/profile_images/1594449061754843136/gc_DEnhp_400x400.jpg",
@@ -859,10 +1176,12 @@
         "requirements",
         "delivery-spec-plan"
       ],
+      "featured": false,
+      "isNew": false,
       "status": "published",
       "sortPriority": 100,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "compound-engineering",
@@ -870,12 +1189,24 @@
       "title": "Every Inc Compound Engineering",
       "tagline": "Home of the ce-compound session retrospective pattern that turns debugging sessions into durable repository learnings.",
       "collectionId": "workflow",
+      "additionalCollectionIds": [],
       "creator": {
         "name": "Every Inc",
         "xHandle": "every",
         "xUrl": "https://x.com/every",
+        "platform": "x",
+        "handle": "every",
+        "profileUrl": "https://x.com/every",
         "githubRepo": "EveryInc/compound-engineering-plugin",
         "githubUrl": "https://github.com/EveryInc/compound-engineering-plugin"
+      },
+      "source": {
+        "platform": "x",
+        "profileUrl": "https://x.com/every",
+        "handle": "every",
+        "thumbnailUrl": "https://pbs.twimg.com/profile_banners/809565356/1791303348",
+        "avatarUrl": "https://pbs.twimg.com/profile_images/2087946611716472832/m2zR-Rci_400x400.jpg",
+        "bannerUrl": "https://opengraph.githubassets.com/985ac33607f5402a82da2372fc3e648960bef0eb9e895b58347efa89c547a551/EveryInc/compound-engineering-plugin"
       },
       "thumbnailUrl": "https://pbs.twimg.com/profile_banners/809565356/1791303348",
       "xAvatarUrl": "https://pbs.twimg.com/profile_images/2087946611716472832/m2zR-Rci_400x400.jpg",
@@ -888,10 +1219,12 @@
         "rule",
         "delivery-workflow"
       ],
+      "featured": false,
+      "isNew": false,
       "status": "published",
       "sortPriority": 90,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "sentry-security-review",
@@ -899,12 +1232,24 @@
       "title": "Sentry Reasoning Security Review",
       "tagline": "Reasoning-first security review lens from Sentry engineers — traces trust boundaries and exploit paths instead of running a rote checklist.",
       "collectionId": "security",
+      "additionalCollectionIds": [],
       "creator": {
         "name": "Sentry",
         "xHandle": "getsentry",
         "xUrl": "https://x.com/getsentry",
+        "platform": "x",
+        "handle": "getsentry",
+        "profileUrl": "https://x.com/getsentry",
         "githubRepo": "getsentry/skills",
         "githubUrl": "https://github.com/getsentry/skills"
+      },
+      "source": {
+        "platform": "x",
+        "profileUrl": "https://x.com/getsentry",
+        "handle": "getsentry",
+        "thumbnailUrl": "https://pbs.twimg.com/profile_banners/1923107326858493952/1762815857",
+        "avatarUrl": "https://pbs.twimg.com/profile_images/1988020311061917702/0OIJY0PS_400x400.png",
+        "bannerUrl": "https://opengraph.githubassets.com/e07908a205fa8c0df51eec8a77ca91800144c12e827bd0dda23d41886457a762/getsentry/skills"
       },
       "thumbnailUrl": "https://pbs.twimg.com/profile_banners/1923107326858493952/1762815857",
       "xAvatarUrl": "https://pbs.twimg.com/profile_images/1988020311061917702/0OIJY0PS_400x400.png",
@@ -917,10 +1262,11 @@
         "enclave"
       ],
       "featured": true,
+      "isNew": false,
       "status": "published",
       "sortPriority": 80,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "trailofbits-skills",
@@ -928,12 +1274,24 @@
       "title": "Trail of Bits Differential & Audit Suite",
       "tagline": "CodeQL/Semgrep rules, differential security review, and smart-contract / cryptographic audit workflows.",
       "collectionId": "security",
+      "additionalCollectionIds": [],
       "creator": {
         "name": "Trail of Bits",
         "xHandle": "trailofbits",
         "xUrl": "https://x.com/trailofbits",
+        "platform": "x",
+        "handle": "trailofbits",
+        "profileUrl": "https://x.com/trailofbits",
         "githubRepo": "trailofbits/skills",
         "githubUrl": "https://github.com/trailofbits/skills"
+      },
+      "source": {
+        "platform": "x",
+        "profileUrl": "https://x.com/trailofbits",
+        "handle": "trailofbits",
+        "thumbnailUrl": "https://pbs.twimg.com/profile_banners/127289989/1628021425",
+        "avatarUrl": "https://pbs.twimg.com/profile_images/1422651083500003334/FbbYmQT__400x400.png",
+        "bannerUrl": "https://opengraph.githubassets.com/b9091f8c11f1f5fd19e6fc31745aba143b38d1d99f783db325687c45df083d42/trailofbits/skills"
       },
       "thumbnailUrl": "https://pbs.twimg.com/profile_banners/127289989/1628021425",
       "xAvatarUrl": "https://pbs.twimg.com/profile_images/1422651083500003334/FbbYmQT__400x400.png",
@@ -946,10 +1304,12 @@
         "sui-sdk",
         "rust"
       ],
+      "featured": false,
+      "isNew": false,
       "status": "published",
       "sortPriority": 70,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "agent-browser",
@@ -957,12 +1317,24 @@
       "title": "Vercel Agent Browser QA",
       "tagline": "Deterministic browser automation skill for capturing live UI verification evidence before opening a pull request.",
       "collectionId": "security",
+      "additionalCollectionIds": [],
       "creator": {
         "name": "Vercel Labs",
         "xHandle": "vercel",
         "xUrl": "https://x.com/vercel",
+        "platform": "x",
+        "handle": "vercel",
+        "profileUrl": "https://x.com/vercel",
         "githubRepo": "vercel-labs/agent-browser",
         "githubUrl": "https://github.com/vercel-labs/agent-browser"
+      },
+      "source": {
+        "platform": "x",
+        "profileUrl": "https://x.com/vercel",
+        "handle": "vercel",
+        "thumbnailUrl": "https://repository-images.githubusercontent.com/1140553475/42a931e7-9d10-4ffb-8605-41de16eefd0b",
+        "avatarUrl": "https://pbs.twimg.com/profile_images/1767351110228918272/3Pndc5OT_400x400.png",
+        "bannerUrl": "https://pbs.twimg.com/profile_banners/4686835494/1768602813"
       },
       "thumbnailUrl": "https://repository-images.githubusercontent.com/1140553475/42a931e7-9d10-4ffb-8605-41de16eefd0b",
       "xAvatarUrl": "https://pbs.twimg.com/profile_images/1767351110228918272/3Pndc5OT_400x400.png",
@@ -974,10 +1346,12 @@
         "delivery-ship",
         "local-stack"
       ],
+      "featured": false,
+      "isNew": false,
       "status": "published",
       "sortPriority": 60,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "vercel-agent-skills",
@@ -985,12 +1359,24 @@
       "title": "Vercel React & Next.js Best Practices",
       "tagline": "First-party guidance on React 19, Server Actions, caching, and bundle optimization straight from the Next.js team.",
       "collectionId": "vendors",
+      "additionalCollectionIds": [],
       "creator": {
         "name": "Vercel",
         "xHandle": "vercel",
         "xUrl": "https://x.com/vercel",
+        "platform": "x",
+        "handle": "vercel",
+        "profileUrl": "https://x.com/vercel",
         "githubRepo": "vercel-labs/agent-skills",
         "githubUrl": "https://github.com/vercel-labs/agent-skills"
+      },
+      "source": {
+        "platform": "x",
+        "profileUrl": "https://x.com/vercel",
+        "handle": "vercel",
+        "thumbnailUrl": "https://repository-images.githubusercontent.com/1140553475/42a931e7-9d10-4ffb-8605-41de16eefd0b",
+        "avatarUrl": "https://pbs.twimg.com/profile_images/1767351110228918272/3Pndc5OT_400x400.png",
+        "bannerUrl": "https://pbs.twimg.com/profile_banners/4686835494/1768602813"
       },
       "thumbnailUrl": "https://repository-images.githubusercontent.com/1140553475/42a931e7-9d10-4ffb-8605-41de16eefd0b",
       "xAvatarUrl": "https://pbs.twimg.com/profile_images/1767351110228918272/3Pndc5OT_400x400.png",
@@ -1002,10 +1388,12 @@
         "toolchain",
         "codebase-docs"
       ],
+      "featured": false,
+      "isNew": false,
       "status": "published",
       "sortPriority": 50,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "cloudflare-skills",
@@ -1013,12 +1401,24 @@
       "title": "Cloudflare Workers & Edge Platform",
       "tagline": "Up-to-date bindings for Workers, Durable Objects, R2, D1, and Wrangler configuration without stale training-data hallucinations.",
       "collectionId": "vendors",
+      "additionalCollectionIds": [],
       "creator": {
         "name": "Cloudflare",
         "xHandle": "CloudflareDev",
         "xUrl": "https://x.com/CloudflareDev",
+        "platform": "x",
+        "handle": "CloudflareDev",
+        "profileUrl": "https://x.com/CloudflareDev",
         "githubRepo": "cloudflare/skills",
         "githubUrl": "https://github.com/cloudflare/skills"
+      },
+      "source": {
+        "platform": "x",
+        "profileUrl": "https://x.com/CloudflareDev",
+        "handle": "CloudflareDev",
+        "thumbnailUrl": "https://pbs.twimg.com/profile_banners/300637864/1792655993",
+        "avatarUrl": "https://pbs.twimg.com/profile_images/2091957221253173248/kB_huM5C_400x400.jpg",
+        "bannerUrl": "https://opengraph.githubassets.com/d090393fe2bfa9e1aeafc5ba3023239375f0d021c2c741c607d32d5eb18d03f5/cloudflare/skills"
       },
       "thumbnailUrl": "https://pbs.twimg.com/profile_banners/300637864/1792655993",
       "xAvatarUrl": "https://pbs.twimg.com/profile_images/2091957221253173248/kB_huM5C_400x400.jpg",
@@ -1030,10 +1430,12 @@
         "infra",
         "cicd"
       ],
+      "featured": false,
+      "isNew": false,
       "status": "published",
       "sortPriority": 40,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "supabase-skills",
@@ -1041,12 +1443,24 @@
       "title": "Supabase & Postgres Best Practices",
       "tagline": "Row-Level Security policies, indexing strategies, migration hygiene, and edge function patterns from Supabase.",
       "collectionId": "vendors",
+      "additionalCollectionIds": [],
       "creator": {
         "name": "Supabase",
         "xHandle": "supabase",
         "xUrl": "https://x.com/supabase",
+        "platform": "x",
+        "handle": "supabase",
+        "profileUrl": "https://x.com/supabase",
         "githubRepo": "supabase/agent-skills",
         "githubUrl": "https://github.com/supabase/agent-skills"
+      },
+      "source": {
+        "platform": "x",
+        "profileUrl": "https://x.com/supabase",
+        "handle": "supabase",
+        "thumbnailUrl": "https://pbs.twimg.com/profile_banners/1219566488325017602/1747832797",
+        "avatarUrl": "https://pbs.twimg.com/profile_images/1822981431586439168/7xkKXRGQ_400x400.jpg",
+        "bannerUrl": "https://opengraph.githubassets.com/82e8e541cc939613b820854f5fa0e790f57709a511519fd6899649c519a886843/supabase/agent-skills"
       },
       "thumbnailUrl": "https://pbs.twimg.com/profile_banners/1219566488325017602/1747832797",
       "xAvatarUrl": "https://pbs.twimg.com/profile_images/1822981431586439168/7xkKXRGQ_400x400.jpg",
@@ -1058,10 +1472,12 @@
         "local-stack",
         "testcontainers"
       ],
+      "featured": false,
+      "isNew": false,
       "status": "published",
       "sortPriority": 30,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "humanizer",
@@ -1069,12 +1485,24 @@
       "title": "Humanizer — Strip 26 AI Writing Tropes",
       "tagline": "Removes puffery, 'delve/testament/tapestry' vocabulary, and robotic transitions from documentation, PR descriptions, and release notes.",
       "collectionId": "memory",
+      "additionalCollectionIds": [],
       "creator": {
         "name": "blader",
         "xHandle": "blader",
         "xUrl": "https://x.com/blader",
+        "platform": "x",
+        "handle": "blader",
+        "profileUrl": "https://x.com/blader",
         "githubRepo": "blader/humanizer",
         "githubUrl": "https://github.com/blader/humanizer"
+      },
+      "source": {
+        "platform": "x",
+        "profileUrl": "https://x.com/blader",
+        "handle": "blader",
+        "thumbnailUrl": "https://repository-images.githubusercontent.com/1136666433/96e8e1ef-3e9d-4c03-be6f-15d6fd662f6d",
+        "avatarUrl": "https://pbs.twimg.com/profile_images/1600585199800111106/zIdLh9UL_400x400.jpg",
+        "bannerUrl": "https://pbs.twimg.com/profile_banners/4468111/1729962315"
       },
       "thumbnailUrl": "https://repository-images.githubusercontent.com/1136666433/96e8e1ef-3e9d-4c03-be6f-15d6fd662f6d",
       "xAvatarUrl": "https://pbs.twimg.com/profile_images/1600585199800111106/zIdLh9UL_400x400.jpg",
@@ -1088,10 +1516,11 @@
         "requirements"
       ],
       "featured": true,
+      "isNew": false,
       "status": "published",
       "sortPriority": 20,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     },
     {
       "id": "soul-md",
@@ -1099,12 +1528,24 @@
       "title": "SOUL.md Personal Style Builder",
       "tagline": "Interviews you and analyzes your real writing samples to synthesize a personal SOUL.md and STYLE.md preference layer.",
       "collectionId": "memory",
+      "additionalCollectionIds": [],
       "creator": {
         "name": "Aaron Mars",
         "xHandle": "aeonfun",
         "xUrl": "https://x.com/aeonfun",
+        "platform": "x",
+        "handle": "aeonfun",
+        "profileUrl": "https://x.com/aeonfun",
         "githubRepo": "aeonfun/soul.md",
         "githubUrl": "https://github.com/aeonfun/soul.md"
+      },
+      "source": {
+        "platform": "x",
+        "profileUrl": "https://x.com/aeonfun",
+        "handle": "aeonfun",
+        "thumbnailUrl": "https://repository-images.githubusercontent.com/1148236572/202b6911-c8fa-4961-8dca-e085a03ff563",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/10599870?v=4",
+        "bannerUrl": "https://repository-images.githubusercontent.com/1148236572/202b6911-c8fa-4961-8dca-e085a03ff563"
       },
       "thumbnailUrl": "https://repository-images.githubusercontent.com/1148236572/202b6911-c8fa-4961-8dca-e085a03ff563",
       "xAvatarUrl": "https://avatars.githubusercontent.com/u/10599870?v=4",
@@ -1116,11 +1557,12 @@
         "agent-instructions",
         "learn"
       ],
+      "featured": false,
       "isNew": true,
       "status": "published",
       "sortPriority": 10,
-      "createdAt": "2026-11-04T20:26:33.821Z",
-      "updatedAt": "2026-11-04T20:26:33.821Z"
+      "createdAt": "2026-11-04T20:31:03.778Z",
+      "updatedAt": "2026-11-04T20:31:03.778Z"
     }
   ],
   "pendingRefs": []

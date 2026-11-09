@@ -593,6 +593,12 @@ interface CategoryRule {
 
 const CATEGORY_RULES: CategoryRule[] = [
   {
+    collectionId: "design",
+    regex:
+      /\b(design|ui|ux|motion|animation|animations|interaction|interactions|gesture|gestures|spring|springs|drag|swipe|morph|typography|layout|tailwind|css)\b/i,
+    pairsWithCmk: ["design", "requirements", "delivery-spec-plan"],
+  },
+  {
     collectionId: "3d",
     regex: /\b(3d|webgl|three(?:\.js|js)?|shader|shaders|isometric|voxel|game|gamedev)\b/i,
     pairsWithCmk: ["design", "project-layout"],
@@ -667,6 +673,10 @@ function inferCategoryAndPairings(
 function cleanTweetText(rawText: string): string {
   return rawText
     .replace(/https?:\/\/\S+/gi, "")
+    .replace(
+      /(?:npx\s+skills\s+add\s+\S+(?:\s+--skill\s+\S+)?|(?:npm\s+(?:i|install)|pnpm\s+add|yarn\s+add|bun\s+add)\s+\S+|git\s+clone\s+\S+)/gi,
+      "",
+    )
     .replace(/\s+/g, " ")
     .trim();
 }
