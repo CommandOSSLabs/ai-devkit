@@ -55,6 +55,7 @@ this table does not invent one.
 
 | Skill | What it does | Install |
 |---|---|---|
+| [fluid-interactions](https://github.com/rndrealm/fluid-interactions) | Physical, interruptible web gesture interactions (drags, velocity projection, rubber-banding, sheets, swipe back, scrubbing, and morphing cards) built on `motion` (`@rndr_realm`) | `npx skills add rndrealm/fluid-interactions` |
 | [blank-page](https://github.com/StewdioAI/blank-page) | Motion graphics prompt expander ("Midjourney for motion") that turns a one-liner into art direction, references, and choreographed beats (`@blak3shao`) | `npx skills add StewdioAI/blank-page` |
 | [pixel-plays](https://github.com/amirmushichge/pixel-plays) | Open-source 3D isometric voxel & pixel diorama games OS UI/UX by Amir Mušić (`@AmirMushich`) | `git clone https://github.com/amirmushichge/pixel-plays` |
 | [brand-system-skill](https://github.com/amirmushichge/brand-system-skill) | Agent-guided Brand System Skill + Leaf 3D interactive flipbook presentation tool (`amirmushich.com/lab/leaf/`) by Amir Mušić (`@AmirMushich`) | `npx skills add amirmushichge/brand-system-skill` |

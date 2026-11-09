@@ -127,6 +127,54 @@ export const SKILL_COLLECTIONS: SkillCollection[] = [
 export const CURATED_SKILL_REFS: CuratedSkillRef[] = [
   // ─── Featured Social & 3D / Design / Workflow Collection ─────────────
   {
+    id: "fluid-interactions",
+    name: "fluid-interactions",
+    title: "Fluid Interactions: Physical Gesture & Spring UI Skill",
+    tagline:
+      "Teaches coding agents to build web interactions that feel physical: drags that keep their release velocity, sheets that project and land on target detents, swipe back, swipe actions, scrubbing, and interruptible card morphs.",
+    collectionId: "design",
+    additionalCollectionIds: ["3d", "workflow"],
+    creator: {
+      name: "Rndr Realm",
+      xHandle: "rndr_realm",
+      xUrl: "https://x.com/rndr_realm",
+      xPostUrl: "https://x.com/rndr_realm/status/2119465800075550868",
+      githubRepo: "rndrealm/fluid-interactions",
+      githubUrl: "https://github.com/rndrealm/fluid-interactions",
+    },
+    source: {
+      platform: "x",
+      postUrl: "https://x.com/rndr_realm/status/2119465800075550868",
+      profileUrl: "https://x.com/rndr_realm",
+      handle: "rndr_realm",
+      thumbnailUrl:
+        "https://pbs.twimg.com/amplify_video_thumb/2119464982773436416/img/03TYPKEi-TJgpDr2.jpg",
+      videoUrl:
+        "https://video.twimg.com/amplify_video/2119464982773436416/vid/avc1/1278x720/WMiHcUciy5--2QU7.mp4?tag=29",
+      avatarUrl:
+        "https://pbs.twimg.com/profile_images/1898108050281467904/SBHWlKmt_400x400.jpg",
+      bannerUrl:
+        "https://pbs.twimg.com/profile_banners/1896503246329368576/1741379610",
+    },
+    thumbnailUrl:
+      "https://pbs.twimg.com/amplify_video_thumb/2119464982773436416/img/03TYPKEi-TJgpDr2.jpg",
+    xVideoUrl:
+      "https://video.twimg.com/amplify_video/2119464982773436416/vid/avc1/1278x720/WMiHcUciy5--2QU7.mp4?tag=29",
+    xAvatarUrl:
+      "https://pbs.twimg.com/profile_images/1898108050281467904/SBHWlKmt_400x400.jpg",
+    xBannerUrl:
+      "https://pbs.twimg.com/profile_banners/1896503246329368576/1741379610",
+    installCommand: "npx skills add rndrealm/fluid-interactions",
+    stylePrompt:
+      "Build physical, interruptible gesture interactions ('fluid-interactions' by @rndr_realm style): (1) Spring Physics over Durations: drive motion with motion/react springs parameterized by response and damping ratio (springFromResponse) rather than fixed durations or cubic-bezier curves; (2) Release Velocity & Projection: track pointer velocity over the last 100ms (VelocityTracker), project the coasting landing point (x.get() + project(velocity.x)), and pass release velocity directly into animate() so flicks never stall for a frame; (3) Rubber-Banding & Direction Lock: apply rubber-band resistance past bounds (applyRubberBand) and lock axis after ~10px before pointer capture so native scroll and taps stay responsive; (4) Full Interruptibility: catch any in-flight spring on pointerdown (x.stop()), decide state from the target detent rather than onComplete, and keep per-frame updates strictly on MotionValues and transform properties (x, y, scale, opacity).",
+    pinnedSha: "d8d31cf",
+    vettedAt: "2026-11-09",
+    starsOrInstalls: "251 likes · 312 bookmarks · 7.2k views · @rndr_realm",
+    pairsWithCmk: ["design", "requirements", "delivery-spec-plan"],
+    featured: true,
+    isNew: true,
+  },
+  {
     id: "blank-page",
     name: "blank-page",
     title: "Blank Page — Motion Graphics Prompt Expander (Midjourney for Motion)",
