@@ -22,6 +22,7 @@ export const CATEGORY_LABELS: Record<string, string> = {
   docs: "Documentation",
   testing: "Testing & Code",
   sui: "Sui Network",
+  security: "Security",
   session: "Session",
   other: "Other",
 };
@@ -67,6 +68,7 @@ export const CATEGORY_MAP: Record<string, string> = {
   rust: "testing",
   "sui-sdk": "sui",
   "sui-devstack": "sui",
+  "security-audit": "security",
   interpret: "session",
 };
 
@@ -111,6 +113,7 @@ export const SKILL_PURPOSE: Record<string, string> = {
   requirements: "Write requirements and acceptance criteria",
   rule: "Codify a standard the team follows",
   rust: "Rust error handling, features and lints",
+  "security-audit": "Find real vulnerabilities, with verified evidence",
   "sui-devstack": "Wire tests to a local Sui stack",
   "sui-sdk": "Call Sui over gRPC, not JSON-RPC",
   sync: "Pull upstream skill updates into a repo",

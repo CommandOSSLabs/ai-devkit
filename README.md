@@ -109,6 +109,12 @@ This devkit solves that by using structured documentation as the shared state. T
 | `cmk:sui-sdk` | gRPC-first guidance for talking to a Sui full node — JSON-RPC is deprecated |
 | `cmk:sui-devstack` | Worktree-safe local Sui network setup for development and e2e tests |
 
+### Security family
+
+| Skill | Purpose |
+|---|---|
+| `cmk:security-audit` | Source-first vulnerability review — guidance by default, a six-phase audit with independently verified, schema-validated findings on request |
+
 ## Usage
 
 A deeper tour, in the order docs build on each other when starting a new project. Every line in the blocks below is a real trigger — paste and go.
@@ -206,6 +212,16 @@ Deliver tracker-tracked work end to end — intake, spec and plan, implementatio
 Work on TICKET-123
 Review this PR
 Generate a handoff prompt so I can continue this in another agent
+```
+
+### Any stage: Security audit — `cmk:security-audit`
+
+Ask a focused security question and get a source-traced answer with no files written; ask for an audit and get the full workflow — coverage ledger, independently verified findings, reports kept outside the repo. Target code only ever runs in a local sandbox; nothing probes a deployment.
+
+```
+Is the token expiry check in auth/verify.ts safe?
+Security audit this codebase
+Do a quick security audit of ./services/api, output to ~/audits/api
 ```
 
 Throughout, skills warn when a change conflicts with an upstream doc — requirements scope, a recorded decision, a glossary term — and you decide how to resolve it; accepted changes cascade downstream.
